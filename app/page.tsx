@@ -1,69 +1,32 @@
 import Image from "next/image";
+import type { ReactNode } from "react";
+
+const modules = [
+  ["01", "Practice management", "Schedules, patient flow, and team visibility in one shared view.", "#d9edfb"],
+  ["02", "Diagnostics & imaging", "Coordinate labs, ultrasound, echo, and reports without the follow-up chase.", "#dfe8f8"],
+  ["03", "Pharmacy & patient care", "Keep prescriptions, stock, fulfillment, and patient access moving together.", "#d9f0ef"],
+];
+
+const specialists = [
+  ["Dr. Rakhshanda", "Gynecologist", "Women’s health, thoughtfully supported."],
+  ["Dr. Haneef", "Radiologist", "Sharper imaging. Clearer answers."],
+  ["Dr. Suhail", "Pediatrician", "A healthier start for every child."],
+  ["Dr. Akash", "Psychiatrist", "Better mental health starts with being heard."],
+  ["Dr. Basharat", "Neurosurgeon", "Expert care for the brain and spine."],
+];
 
 export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+  return <main className="relative isolate min-h-full overflow-hidden bg-[var(--ink)] text-[var(--paper)]">
+    <div className="space-atmosphere" aria-hidden="true"><span className="space-glow space-glow-one" /><span className="space-glow space-glow-two" /><span className="space-petal space-petal-one" /><span className="space-petal space-petal-two" /><span className="space-petal space-petal-three" /><span className="space-stars space-stars-one" /><span className="space-stars space-stars-two" /><span className="space-dust space-dust-one" /><span className="space-dust space-dust-two" /><span className="space-dust space-dust-three" /><span className="space-meteor space-meteor-one" /><span className="space-meteor space-meteor-two" /><span className="space-meteor space-meteor-three" /><span className="space-meteor space-meteor-four" /></div>
+    <nav className="relative z-10 mx-auto flex max-w-[1240px] items-center justify-between px-6 py-6 lg:px-10"><a href="#top" className="flex items-center gap-3" aria-label="Eternal Polyclinic home"><span className="clinic-mark"><span className="clinic-mark-cross">+</span><span className="clinic-mark-staff">⚕</span></span><span className="flex flex-col text-left"><b className="text-[15px] tracking-[0.12em]">ETERNAL</b><b className="text-[10px] tracking-[0.2em] text-[var(--mint)]">POLYCLINIC</b></span></a><div className="hidden gap-8 text-sm text-[var(--muted)] md:flex"><a href="#platform">Platform</a><a href="#doctors">Doctors</a><a href="#social">Connect</a></div><a href="tel:9541722379" className="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold hover:border-[var(--mint)] hover:text-[var(--mint)]">Call 9541722379 <span className="ml-2">↗</span></a></nav>
+    <section id="top" className="relative z-10 mx-auto max-w-[1240px] px-6 pb-20 pt-10 lg:px-10 lg:pt-16"><div className="grid gap-8 lg:grid-cols-2"><HeroPanel badge="Eternal Polyclinic / Sapore" title={<>Care that<br /><em>moves.</em></>} description="Powered by Eternal Polyclinic. One calm place for appointments, diagnostics, prescriptions, and every patient relationship." primary="Explore the clinic" primaryHref="#platform" secondary="See the platform" secondaryHref="#platform" /><HeroPanel badge="Modern care, close to you" title={<>Your health,<br /><em>our mission.</em></>} description="Welcome to Eternal Polyclinic, where thoughtful doctors, precise diagnostics, and compassionate care come together under one roof." primary="Book your visit" primaryHref="tel:9541722379" secondary="Meet our care team" secondaryHref="#doctors"><p className="mt-7 text-xs text-[var(--muted)]">Call us now: <a className="font-semibold text-white underline underline-offset-4" href="tel:9541722379">9541722379</a></p><div className="owner-portrait"><Image src="/owner-naseer.jpg" alt="Naseer Ah Lone, Founder and Owner of Eternal Polyclinic" fill sizes="(max-width: 1024px) 88vw, 42vw" className="object-cover object-center" /><div className="owner-portrait-shade" /><div className="owner-portrait-label"><span>Founder & Owner</span><strong>Naseer Ah Lone</strong><small>Eternal Polyclinic</small></div></div></HeroPanel></div></section>
+    <section id="platform" className="relative z-10 border-t border-white/10 bg-[#f5f2eb] px-6 py-20 text-[var(--ink)] lg:px-10 lg:py-28"><div className="mx-auto max-w-[1240px]"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#478a70]">One operating system</p><h2 className="mt-4 text-4xl font-semibold leading-tight tracking-[-0.04em] sm:text-5xl">The whole practice,<br /><em className="font-serif font-normal">beautifully connected.</em></h2><div id="specialties" className="mt-14 grid gap-px overflow-hidden rounded-2xl bg-black/10 md:grid-cols-3">{modules.map(([number, title, description, color]) => <article key={number} className="p-7 sm:p-9" style={{ backgroundColor: color }}><span className="text-xs font-bold opacity-50">{number}</span><h3 className="mt-16 text-xl font-semibold">{title}</h3><p className="mt-3 text-sm leading-6 text-black/60">{description}</p><span className="mt-8 inline-block text-xs font-bold uppercase tracking-wider">Explore ↗</span></article>)}</div></div></section>
+    <section id="doctors" className="relative z-10 border-t border-white/10 bg-[#020305] px-6 py-20 text-white lg:px-10 lg:py-28"><div className="mx-auto max-w-[1240px]"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--mint)]">Doctors & specialists</p><h2 className="mt-4 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">Expertise that makes <em className="font-serif font-normal text-[var(--mint)]">care personal.</em></h2><div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{specialists.map(([name, specialty, headline]) => <article key={name} className="rounded-2xl border border-cyan-500/20 bg-white/[0.035] p-6 backdrop-blur-xl transition hover:-translate-y-1 hover:border-cyan-300/60"><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-200">{specialty}</p><h3 className="mt-3 text-xl font-semibold">{name}</h3><p className="mt-4 text-sm font-semibold text-[var(--mint)]">{headline}</p></article>)}</div></div></section>
+    <section id="social" className="relative z-10 border-t border-white/10 bg-[#f5f2eb] px-6 py-20 text-[var(--ink)] lg:px-10 lg:py-24"><div className="mx-auto max-w-[1240px]"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#478a70]">Stay connected</p><h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] sm:text-4xl">Follow the clinic story.</h2><div className="mt-8 flex flex-wrap gap-5 text-base font-semibold"><a className="underline underline-offset-4" href="https://www.instagram.com/its_sahil__here/" target="_blank" rel="noreferrer">Instagram ↗</a><a className="underline underline-offset-4" href="https://www.linkedin.com/in/sahil-naseer-03717b350/" target="_blank" rel="noreferrer">LinkedIn ↗</a></div></div></section>
+    <footer id="contact" className="relative z-10 mx-auto flex max-w-[1240px] flex-col gap-5 px-6 py-10 text-xs text-[var(--muted)] sm:flex-row sm:items-center sm:justify-between lg:px-10"><b className="tracking-[0.12em] text-white">ETERNAL POLYCLINIC / 2026</b><span id="security">Managed under the leadership of Founder & Owner Naseer Ah Lone.</span><a className="text-white underline" href="tel:9541722379">9541722379</a></footer>
+  </main>;
+}
+
+function HeroPanel({ badge, title, description, primary, primaryHref, secondary, secondaryHref, children }: { badge: string; title: ReactNode; description: string; primary: string; primaryHref: string; secondary: string; secondaryHref: string; children?: ReactNode }) {
+  return <article className="rounded-[28px] border border-white/10 bg-white/[0.035] p-6 shadow-2xl backdrop-blur-xl sm:p-9 lg:min-h-[650px]"><p className="hero-kicker">{badge}</p><h1 className="mt-8 text-5xl font-semibold leading-[0.9] tracking-[-0.06em] sm:text-7xl lg:text-[5.3rem]">{title}</h1><p className="mt-8 max-w-lg text-base leading-7 text-[var(--muted)] sm:text-lg">{description}</p><div className="mt-9 flex flex-col gap-3 sm:flex-row"><a href={primaryHref} className="rounded-full bg-[var(--mint)] px-6 py-3.5 text-center text-sm font-bold text-[var(--ink)] shadow-[0_0_28px_rgba(139,211,255,.16)] hover:bg-white">{primary} <span className="ml-2">↗</span></a><a href={secondaryHref} className="rounded-full border border-white/20 px-6 py-3.5 text-center text-sm font-semibold hover:border-[var(--mint)] hover:text-[var(--mint)]">{secondary} <span className="ml-2">↓</span></a></div>{children ?? <div className="mt-32 border-t border-white/10 pt-5"><p className="text-xs text-[var(--muted)]">12 specialties connected</p><p className="mt-2 text-xs text-white/40">Care, in sync. Powered by Eternal Polyclinic.</p></div>}</article>;
 }
