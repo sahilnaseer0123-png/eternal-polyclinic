@@ -1,0 +1,31 @@
+// Eternal Polyclinic emblem (design "A · refined emblem", chosen 23 Oct 2026):
+// winged gold staff, blue swoosh and stethoscope in a teal ring. Print files: brand/ folder.
+
+export function Logo({ className = "size-11", title }: { className?: string; title?: string }) {
+  const wings = (
+    <>
+      <path d="M194 128 C160 100 112 90 64 104 C92 132 146 150 194 152 Z" fill="#0F766E" />
+      <path d="M194 156 C162 136 118 130 80 142 C108 166 154 178 194 180 Z" fill="#14B8A6" />
+      <path d="M194 184 C168 168 134 166 104 178 C128 198 164 206 194 206 Z" fill="#5EEAD4" />
+    </>
+  );
+  return (
+    <svg
+      viewBox="0 0 400 400"
+      className={className}
+      role={title ? "img" : undefined}
+      aria-label={title}
+      aria-hidden={title ? undefined : true}
+    >
+      <circle cx="200" cy="200" r="186" fill="#FFFFFF" stroke="#0F766E" strokeWidth="12" />
+      <g>{wings}</g>
+      <g transform="matrix(-1 0 0 1 400 0)">{wings}</g>
+      <rect x="193" y="96" width="14" height="214" rx="7" fill="#B7862C" />
+      <circle cx="200" cy="90" r="13" fill="#B7862C" />
+      <path d="M116 268 C164 220 236 192 304 196 C250 214 198 240 160 290 C146 286 128 278 116 268 Z" fill="#0284C7" />
+      <path d="M200 304 C200 338 232 352 258 336" fill="none" stroke="#0F172A" strokeWidth="7" strokeLinecap="round" />
+      <circle cx="270" cy="328" r="15" fill="#E2E8F0" stroke="#0F172A" strokeWidth="6" />
+      <circle cx="270" cy="328" r="5" fill="#0F172A" />
+    </svg>
+  );
+}

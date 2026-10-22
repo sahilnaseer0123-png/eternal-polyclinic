@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { clinic } from "@/data/clinic";
 import { PhoneIcon } from "./Icons";
+import { Logo } from "./Logo";
 
 export const NAV = [
   { href: "/doctors", label: "Doctors" },
@@ -25,9 +26,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
         <Link href="/" className="flex items-center gap-3 text-ink" onClick={() => setOpen(false)}>
-          <span aria-hidden="true" className="flex size-11 items-center justify-center rounded-xl bg-brand text-xl font-bold text-white">
-            E
-          </span>
+          <Logo className="size-12 shrink-0" />
           <span className="leading-tight">
             <span className="block font-bold">{clinic.name}</span>
             <span className="block text-sm text-muted">{clinic.address}</span>

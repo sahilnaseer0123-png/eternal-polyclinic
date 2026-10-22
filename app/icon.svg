@@ -1,4 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#0F766E"/>
-  <text x="32" y="45" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="38" font-weight="700" fill="#FFFFFF">E</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Eternal Polyclinic">
+  <!-- Simplified emblem for 16-48px: thicker ring and staff, no stethoscope. -->
+  <circle cx="200" cy="200" r="180" fill="#FFFFFF" stroke="#0F766E" stroke-width="28"/>
+  <path d="M190 122 C156 92 104 82 52 98 C82 132 140 152 190 156 Z" fill="#0F766E"/>
+  <path d="M190 162 C158 140 112 134 70 148 C100 176 150 188 190 190 Z" fill="#14B8A6"/>
+  <path d="M210 122 C244 92 296 82 348 98 C318 132 260 152 210 156 Z" fill="#0F766E"/>
+  <path d="M210 162 C242 140 288 134 330 148 C300 176 250 188 210 190 Z" fill="#14B8A6"/>
+  <rect x="188" y="84" width="24" height="248" rx="12" fill="#B7862C"/>
+  <circle cx="200" cy="80" r="20" fill="#B7862C"/>
+  <path d="M104 282 C156 226 236 196 312 202 C252 222 196 252 156 304 C138 298 118 292 104 282 Z" fill="#0284C7"/>
 </svg>

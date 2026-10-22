@@ -18,6 +18,12 @@ Edit `data/clinic.ts`. Doctors, OPD days, services, hours, phone and fee are all
 
 `https://eternal-polyclinic.vercel.app/book?doctor=akash` opens the booking form with Dr. Akash chosen.
 
+## Logo files
+
+The `brand/` folder has the clinic logo for print and social media: `logo.svg` (any size),
+`logo-2048.png` (transparent), `logo-2048-white.png`, and horizontal lockups with the name
+for light and dark backgrounds.
+
 ## Deploy
 
 Push to GitHub. Vercel builds and deploys every push to `main` automatically.
