@@ -65,12 +65,21 @@ export function DoctorDirectory() {
               <p className="text-base">
                 <span className="font-semibold">Consultation:</span> ₹{clinic.consultationFee}
               </p>
-              <a
-                href={`tel:${clinic.phone}`}
-                className="mt-auto inline-flex min-h-11 items-center self-start rounded-xl border border-brand px-5 text-base font-semibold text-brand hover:bg-brand-tint"
-              >
-                Call to book
-              </a>
+              {opd ? (
+                <a
+                  href={`#book-${doctor.id}`}
+                  className="mt-auto inline-flex min-h-11 items-center self-start rounded-xl bg-brand px-5 text-base font-semibold text-white hover:bg-brand-dark"
+                >
+                  Book {doctor.name ?? "appointment"}
+                </a>
+              ) : (
+                <a
+                  href={`tel:${clinic.phone}`}
+                  className="mt-auto inline-flex min-h-11 items-center self-start rounded-xl border border-brand px-5 text-base font-semibold text-brand hover:bg-brand-tint"
+                >
+                  Call to book
+                </a>
+              )}
             </li>
           );
         })}

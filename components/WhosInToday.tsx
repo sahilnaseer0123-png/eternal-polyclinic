@@ -62,10 +62,10 @@ export async function WhosInToday() {
                 </div>
                 {status !== "done" && (
                   <a
-                    href={`tel:${clinic.phone}`}
+                    href={`#book-${doctor.id}`}
                     className="inline-flex min-h-11 shrink-0 items-center rounded-xl bg-brand px-4 text-base font-semibold text-white hover:bg-brand-dark"
                   >
-                    Call to book
+                    Book
                   </a>
                 )}
               </li>
@@ -84,12 +84,14 @@ export async function WhosInToday() {
               </p>
             )}
           </div>
-          <a
-            href={`tel:${clinic.phone}`}
-            className="inline-flex min-h-11 items-center rounded-xl border border-line bg-white px-4 text-base font-semibold hover:border-brand"
-          >
-            Ask reception
-          </a>
+          {next && (
+            <a
+              href={`#book-${next.doctor.id}`}
+              className="inline-flex min-h-11 items-center rounded-xl bg-brand px-4 text-base font-semibold text-white hover:bg-brand-dark"
+            >
+              Book {next.doctor.name ?? next.doctor.speciality}
+            </a>
+          )}
         </div>
       )}
     </div>

@@ -7,11 +7,16 @@ Booking website for Eternal Polyclinic, Opposite SHD Hospital, Sopore.
 ```bash
 npm install     # first time only
 npm run dev     # then open http://localhost:3000
+npm test        # schedule and booking checks
 ```
 
 ## Change clinic details
 
-Edit `data/clinic.ts`. Doctors, OPD days, hours, phone and fee are all there.
+Edit `data/clinic.ts`. Doctors, OPD days, services, hours, phone and fee are all there.
+
+## Share a booking link for one doctor
+
+`https://eternal-polyclinic.vercel.app/#book-akash` opens the form with Dr. Akash chosen.
 
 ## Deploy
 

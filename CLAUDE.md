@@ -10,12 +10,17 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 
 - Next.js 16 (App Router), TypeScript, Tailwind CSS v4, deployed on Vercel
 - Font: Plus Jakarta Sans, self-hosted via `@fontsource-variable/plus-jakarta-sans`
-- V1 stores bookings in localStorage behind `lib/storage.ts`; V2 swaps that file for Supabase
+- V1 sends booking requests to the clinic on WhatsApp (`lib/booking.ts`); nothing is stored, on the server or the patient's phone.
+  V2 adds a database (Supabase) and the reception view. Keys go in Vercel environment variables, never in the repo (it is public).
+- Validation: zod. Tests: `npm test` (node test runner via tsx, files in `tests/`). Run them before every push.
 
 ## Where things live
 
 - `data/clinic.ts`: every clinic fact (doctors, OPD days, in-house services, hours, phone, fee, founder). The ONLY place these are written. A doctor with `name: null` is unconfirmed: show the speciality, never a placeholder like "[Name]".
-- `lib/schedule.ts`: who's in today, next OPD dates, time slots. Pure functions that take `now`.
+- `lib/schedule.ts`: who's in today, next OPD dates, time slots, display helpers. Pure functions that take `now`.
+- `lib/booking.ts`: booking validation against the real schedule, and the WhatsApp message.
+- `components/`: page sections. `WhosInToday` and `BookingSection` read the time per request with `io()` inside `<Suspense>`.
+- Deep link `/#book-<doctor id>` (e.g. `/#book-akash`) opens the booking form with that doctor chosen.
 - `app/globals.css`: design tokens (`brand`, `ink`, `muted`, `ground`, `line`, `emergency`).
 
 ## Rules
@@ -37,7 +42,7 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 1. Spec ✓  2. Mockups ✓  3. Project setup ✓
 4. Clinic data ✓ (two doctors still need names and OPD days)
 5. Layout: hero, Who's in today, doctor cards ✓
-6. Booking form: doctor → OPD day → time → name and phone, WhatsApp link
-7. Reception view at `/admin`
+6. Booking form: doctor → OPD day → time → name and phone, WhatsApp link ✓
+7. Reception view at `/admin`: needs the V2 database first (localStorage can't reach reception on a public site)
 8. Weekly schedule, FAQ, Visit us, floating WhatsApp
 9. Polish: accessibility, Lighthouse, test on a real phone

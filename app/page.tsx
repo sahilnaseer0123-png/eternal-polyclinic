@@ -7,6 +7,7 @@ import { formatTime } from "@/lib/schedule";
 import { ClinicIllustration } from "@/components/ClinicIllustration";
 import { DoctorDirectory } from "@/components/DoctorDirectory";
 import { WhosInToday, WhosInTodaySkeleton } from "@/components/WhosInToday";
+import { BookingSection, BookingSkeleton } from "@/components/BookingSection";
 import { ChatIcon, ClockIcon, MapPinIcon, PhoneIcon } from "@/components/Icons";
 
 const hours = `${formatTime(clinic.hours.open)} – ${formatTime(clinic.hours.close)}`;
@@ -38,6 +39,7 @@ export default function Home() {
             <a href="#today" className="hover:text-brand">Today</a>
             <a href="#doctors" className="hover:text-brand">Doctors</a>
             <a href="#services" className="hover:text-brand">Services</a>
+            <a href="#book" className="hover:text-brand">Book</a>
             <a href="#visit" className="hover:text-brand">Visit us</a>
           </nav>
           <a
@@ -63,10 +65,10 @@ export default function Home() {
             </p>
             <div className="flex flex-wrap gap-3">
               <a
-                href="#doctors"
+                href="#book"
                 className="inline-flex min-h-13 items-center rounded-2xl bg-brand px-7 text-lg font-semibold text-white hover:bg-brand-dark"
               >
-                Find a doctor
+                Book a doctor
               </a>
               <a
                 href={tel}
@@ -107,6 +109,32 @@ export default function Home() {
               <a href={tel} className="font-semibold text-brand underline">Call reception</a> and they&apos;ll guide you.
             </p>
           </div>
+        </section>
+
+        {/* Booking */}
+        <section aria-labelledby="book-heading" id="book" className="mx-auto grid max-w-6xl gap-10 px-5 py-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
+          <div className="flex flex-col gap-5">
+            <h2 id="book-heading" className="text-3xl font-bold sm:text-4xl">Book in under a minute</h2>
+            <ol className="flex list-decimal flex-col gap-3 pl-6 text-lg">
+              <li>Choose your doctor.</li>
+              <li>Pick one of their OPD days and a time.</li>
+              <li>Add your name and mobile number.</li>
+              <li>Press Send in WhatsApp. Reception calls you to confirm.</li>
+            </ol>
+            <div className="rounded-2xl border border-line bg-white p-5">
+              <p className="font-semibold">Your privacy</p>
+              <p className="text-base text-muted">
+                We ask only your name and number. The message names your doctor, never the reason for your visit, and
+                nothing is saved on your phone.
+              </p>
+            </div>
+            <p className="text-base text-muted">
+              Prefer to talk? <a href={tel} className="font-semibold text-brand underline">Call {clinic.phoneDisplay}</a>
+            </p>
+          </div>
+          <Suspense fallback={<BookingSkeleton />}>
+            <BookingSection />
+          </Suspense>
         </section>
 
         {/* Services */}
@@ -167,22 +195,24 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Phone: sticky Call / WhatsApp bar */}
+      {/* Phone: sticky Call / Book bar */}
       <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-3 border-t border-line bg-white px-4 pb-4 pt-3 sm:hidden">
         <a href={tel} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand font-semibold text-white">
           <PhoneIcon /> Call
         </a>
-        <a href={whatsapp} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-line font-semibold">
-          <ChatIcon /> WhatsApp
+        <a href="#book" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-ink font-semibold text-white">
+          Book
         </a>
       </div>
 
       {/* Desktop: floating WhatsApp button */}
       <a
         href={whatsapp}
-        className="fixed bottom-6 right-6 z-40 hidden min-h-14 items-center gap-2 rounded-full bg-ink px-6 font-semibold text-white shadow-lg hover:bg-slate-800 sm:inline-flex"
+        aria-label="Message the clinic on WhatsApp"
+        title="WhatsApp"
+        className="fixed bottom-6 right-6 z-40 hidden size-14 items-center justify-center rounded-full bg-ink text-white shadow-lg hover:bg-slate-800 sm:inline-flex"
       >
-        <ChatIcon /> WhatsApp
+        <ChatIcon className="size-6" />
       </a>
     </>
   );
