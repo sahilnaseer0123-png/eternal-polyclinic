@@ -107,7 +107,8 @@ export function BookingForm({ nowMs }: { nowMs: number }) {
         </div>
         <h3 className="text-2xl font-bold">One last step: press Send in WhatsApp</h3>
         <p>
-          WhatsApp should have opened with your request to {clinic.name}. Press <strong>Send</strong> there. Reception
+          WhatsApp should have opened with your request to {clinic.name} ({clinic.whatsappDisplay}). Press{" "}
+          <strong>Send</strong> there. Reception
           will call you on <strong>{sent.phone}</strong> to confirm. Your slot isn&apos;t
           confirmed until they do.
         </p>

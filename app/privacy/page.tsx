@@ -44,9 +44,13 @@ export default function PrivacyPage() {
           <section>
             <h2>Who we are</h2>
             <p>
-              {clinic.name}, {clinic.address}. For any question about your details, call or WhatsApp{" "}
+              {clinic.name}, {clinic.address}. For any question about your details, call{" "}
               <a href={tel} className="font-semibold text-brand underline">
                 {clinic.phoneDisplay}
+              </a>{" "}
+              or WhatsApp{" "}
+              <a href={`https://wa.me/${clinic.whatsapp}`} className="font-semibold text-brand underline">
+                {clinic.whatsappDisplay}
               </a>
               .
             </p>
@@ -94,8 +98,8 @@ export default function PrivacyPage() {
             <h2>Your choices</h2>
             <p>
               You can ask us what details we have from you, ask us to correct them, or ask us to delete your messages.
-              Call or WhatsApp {clinic.phoneDisplay}. If you would rather not use WhatsApp, you can book by calling us
-              instead.
+              Call {clinic.phoneDisplay} or WhatsApp {clinic.whatsappDisplay}. If you would rather not use WhatsApp,
+              you can book by calling us instead.
             </p>
           </section>
 

@@ -210,7 +210,7 @@ export default function Home() {
                 <PhoneIcon /> Call {clinic.phoneDisplay}
               </a>
               <a href={whatsapp} className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl border border-line px-6 text-lg font-semibold hover:border-brand">
-                <ChatIcon /> WhatsApp us
+                <ChatIcon /> WhatsApp {clinic.whatsappDisplay}
               </a>
               <a href={clinic.mapUrl} className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl border border-line px-6 text-lg font-semibold hover:border-brand">
                 <MapPinIcon /> Get directions

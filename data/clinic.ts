@@ -38,9 +38,12 @@ export const clinic = {
   siteUrl: "https://eternal-polyclinic.vercel.app",
   founder: "Naseer Ah Lone",
   address: "Opposite SDH Hospital, Sopore",
-  phone: "+919541722379",
-  phoneDisplay: "95417 22379",
-  whatsapp: "919541722379", // TODO: confirm this number is on WhatsApp
+  /** For calls. */
+  phone: "+919797796909",
+  phoneDisplay: "97977 96909",
+  /** For WhatsApp: booking requests arrive here. A different number from calls. */
+  whatsapp: "919419055528",
+  whatsappDisplay: "94190 55528",
   hours: { open: "07:00", close: "20:00" },
   consultationFee: 300,
   timeZone: "Asia/Kolkata",

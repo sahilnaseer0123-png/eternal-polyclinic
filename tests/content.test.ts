@@ -34,3 +34,10 @@ test("address uses the hospital's real name, SDH", () => {
   assert.match(clinic.address, /SDH/);
   assert.doesNotMatch(clinic.address, /SHD/);
 });
+
+test("calls and WhatsApp use the clinic's two different numbers", () => {
+  assert.equal(clinic.phone, "+919797796909");
+  assert.equal(clinic.whatsapp, "919419055528");
+  assert.equal(clinic.phoneDisplay.replace(/\s/g, ""), clinic.phone.slice(3));
+  assert.equal(clinic.whatsappDisplay.replace(/\s/g, ""), clinic.whatsapp.slice(2));
+});
