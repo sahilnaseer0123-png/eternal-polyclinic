@@ -36,7 +36,7 @@ export type Doctor = {
 export const clinic = {
   name: "Eternal Polyclinic",
   founder: "Naseer Ah Lone",
-  address: "Opposite SHD Hospital, Sopore",
+  address: "Opposite SDH Hospital, Sopore",
   phone: "+919541722379",
   phoneDisplay: "95417 22379",
   whatsapp: "919541722379", // TODO: confirm this number is on WhatsApp

@@ -29,3 +29,8 @@ test("map points at coordinates, never a name search", () => {
   assert.match(clinic.mapUrl, /destination=\d+\.\d+,\d+\.\d+/);
   assert.match(clinic.mapEmbedUrl, /q=\d+\.\d+,\d+\.\d+/);
 });
+
+test("address uses the hospital's real name, SDH", () => {
+  assert.match(clinic.address, /SDH/);
+  assert.doesNotMatch(clinic.address, /SHD/);
+});

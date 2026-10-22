@@ -2,7 +2,7 @@
 
 @AGENTS.md
 
-A booking website for Eternal Polyclinic, Opposite SHD Hospital, Sopore (a real clinic).
+A booking website for Eternal Polyclinic, Opposite SDH Hospital, Sopore (a real clinic).
 Patients find a visiting specialist, see the days that doctor sits, and request a slot
 in under 60 seconds with no account. Reception confirms every request by phone.
 

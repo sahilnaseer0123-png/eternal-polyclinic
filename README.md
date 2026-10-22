@@ -1,6 +1,6 @@
 # Eternal Polyclinic website
 
-Booking website for Eternal Polyclinic, Opposite SHD Hospital, Sopore.
+Booking website for Eternal Polyclinic, Opposite SDH Hospital, Sopore.
 
 ## Run it on your computer
 
