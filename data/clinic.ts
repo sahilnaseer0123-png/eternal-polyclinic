@@ -48,13 +48,13 @@ export const clinic = {
   consultationFee: 300,
   timeZone: "Asia/Kolkata",
   /**
-   * The clinic isn't on Google Maps yet, and a search for its name finds a DIFFERENT clinic.
-   * So directions and the map point at the landmark hospital opposite, by coordinates.
-   * TODO: once the clinic has a Google Business Profile, switch to its own pin.
+   * The clinic's exact spot: the Old Municipal Office building, Sopore (plus code 7FV4+G2G),
+   * confirmed by the clinic. Always link by coordinates: a Google Maps search for the clinic's
+   * name finds a DIFFERENT clinic.
    */
-  landmark: { name: "SDH Sopore (Sub-District Hospital)", lat: 34.292932, lng: 74.4550619 },
-  mapUrl: "https://www.google.com/maps/dir/?api=1&destination=34.292932,74.4550619",
-  mapEmbedUrl: "https://maps.google.com/maps?q=34.292932,74.4550619&z=17&output=embed",
+  location: { name: "Old Municipal Office", lat: 34.2938233, lng: 74.455089 },
+  mapUrl: "https://www.google.com/maps/dir/?api=1&destination=34.2938233,74.455089",
+  mapEmbedUrl: "https://maps.google.com/maps?q=34.2938233,74.455089&z=18&output=embed",
 } as const;
 
 /** In-house tests and services. Booked by phone for now (timings not confirmed). */

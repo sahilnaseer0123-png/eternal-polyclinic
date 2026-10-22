@@ -21,8 +21,8 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 - `lib/schedule.ts`: who's in today, next OPD dates, time slots, display helpers. Pure functions that take `now`.
 - `lib/booking.ts`: booking validation against the real schedule, and the WhatsApp message.
 - `data/faq.ts`: FAQ answers; they pull the fee, phone and services from `clinic.ts`.
-- Map: the clinic isn't on Google Maps and a search for its name finds a DIFFERENT clinic. Directions and the map use the
-  landmark hospital's coordinates (`clinic.landmark`). Never link to a name search.
+- Map: the clinic isn't listed on Google Maps and a search for its name finds a DIFFERENT clinic. Directions and the map
+  use the clinic's exact coordinates (`clinic.location`, the Old Municipal Office building). Never link to a name search.
 - `components/`: page sections. `WhosInToday`, `BookingSection` and `WeeklySchedule` are per-request (io() / searchParams) inside `<Suspense>`.
 - Pages: `/` (hero, Who's in today, shortcuts), `/doctors` (cards + weekly schedule), `/book`, `/services`, `/faq`, `/contact`, `/privacy`.
   Header, footer, phone Call/Book bar and WhatsApp button live in `app/layout.tsx` (`SiteHeader`, `SiteChrome`).

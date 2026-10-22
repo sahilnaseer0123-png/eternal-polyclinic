@@ -41,3 +41,10 @@ test("calls and WhatsApp use the clinic's two different numbers", () => {
   assert.equal(clinic.phoneDisplay.replace(/\s/g, ""), clinic.phone.slice(3));
   assert.equal(clinic.whatsappDisplay.replace(/\s/g, ""), clinic.whatsapp.slice(2));
 });
+
+test("map pin is the clinic's confirmed spot (Old Municipal Office)", () => {
+  assert.equal(clinic.location.lat, 34.2938233);
+  assert.equal(clinic.location.lng, 74.455089);
+  assert.ok(clinic.mapUrl.includes(`${clinic.location.lat},${clinic.location.lng}`));
+  assert.ok(clinic.mapEmbedUrl.includes(`${clinic.location.lat},${clinic.location.lng}`));
+});

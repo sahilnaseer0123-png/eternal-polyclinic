@@ -59,14 +59,14 @@ export default function ContactPage() {
             <div className="overflow-hidden rounded-2xl border border-line">
               <iframe
                 src={clinic.mapEmbedUrl}
-                title={`Map: ${clinic.landmark.name}, opposite ${clinic.name}`}
+                title={`Map: ${clinic.name}, ${clinic.location.name}`}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 className="block h-80 w-full border-0"
               />
             </div>
             <p className="text-base text-muted">
-              The pin shows {clinic.landmark.name}. {clinic.name} is directly opposite.
+              The pin marks {clinic.name}, at the {clinic.location.name} building, opposite SDH Hospital.
             </p>
           </div>
         </div>
