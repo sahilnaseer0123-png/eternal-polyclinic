@@ -1,1 +1,43 @@
+# Eternal Polyclinic website
+
 @AGENTS.md
+
+A booking website for Eternal Polyclinic, Opposite SHD Hospital, Sopore (a real clinic).
+Patients find a visiting specialist, see the days that doctor sits, and request a slot
+in under 60 seconds with no account. Reception confirms every request by phone.
+
+## Stack
+
+- Next.js 16 (App Router), TypeScript, Tailwind CSS v4, deployed on Vercel
+- Font: Plus Jakarta Sans, self-hosted via `@fontsource-variable/plus-jakarta-sans`
+- V1 stores bookings in localStorage behind `lib/storage.ts`; V2 swaps that file for Supabase
+
+## Where things live
+
+- `data/clinic.ts`: every clinic fact (doctors, OPD days, in-house services, hours, phone, fee, founder). The ONLY place these are written. A doctor with `name: null` is unconfirmed: show the speciality, never a placeholder like "[Name]".
+- `lib/schedule.ts`: who's in today, next OPD dates, time slots. Pure functions that take `now`.
+- `app/globals.css`: design tokens (`brand`, `ink`, `muted`, `ground`, `line`, `emergency`).
+
+## Rules
+
+1. Never hard-code a doctor, time, phone number or fee in a component. Read it from `data/clinic.ts`.
+2. All dates and times are clinic time, Asia/Kolkata. Use `clinicClock()`; never `new Date().getDay()` directly.
+   Vercel servers run in UTC, so a plain `getDay()` is wrong for 5.5 hours every night.
+3. Anything that depends on today's date ("Who's in today", today's slots) must be computed per request
+   or on the client, never frozen at build time. Check the Next.js 16 docs in `node_modules/next/dist/docs/` for how.
+4. Privacy: the booking form collects name, phone, doctor, date and time only. Never a reason for the visit.
+   WhatsApp texts and confirmations name the doctor, never the speciality.
+5. Accessibility: body text 18px, contrast at least 4.5:1, tap targets at least 44px, real `<button>`/`<a>`/`<label>`.
+6. One brand colour (teal `brand`). Specialities are told apart by name and icon, not colour.
+7. No invented facts: no fake reviews, stats or promises. Missing info stays as a visible TODO.
+8. Small steps: one feature at a time, check it in the browser, then commit.
+
+## Build order
+
+1. Spec ✓  2. Mockups ✓  3. Project setup ✓
+4. Clinic data ✓ (two doctors still need names and OPD days)
+5. Layout: hero, Who's in today, doctor cards
+6. Booking form: doctor → OPD day → time → name and phone, WhatsApp link
+7. Reception view at `/admin`
+8. Weekly schedule, FAQ, Visit us, floating WhatsApp
+9. Polish: accessibility, Lighthouse, test on a real phone

@@ -1,32 +1,132 @@
-import Image from "next/image";
-import type { ReactNode } from "react";
+// V0 public page: doctors, services and contact, all read from data/clinic.ts.
+// Step 5 replaces this with the full design from the mockups (Who's in today, booking form, schedule).
 
-const modules = [
-  ["01", "Practice management", "Schedules, patient flow, and team visibility in one shared view.", "#d9edfb"],
-  ["02", "Diagnostics & imaging", "Coordinate labs, ultrasound, echo, and reports without the follow-up chase.", "#dfe8f8"],
-  ["03", "Pharmacy & patient care", "Keep prescriptions, stock, fulfillment, and patient access moving together.", "#d9f0ef"],
-];
+import { clinic, doctors, services, type Doctor } from "@/data/clinic";
+import { formatTime } from "@/lib/schedule";
 
-const specialists = [
-  ["Dr. Rakhshanda", "Gynecologist", "Women’s health, thoughtfully supported."],
-  ["Dr. Haneef", "Radiologist", "Sharper imaging. Clearer answers."],
-  ["Dr. Suhail", "Pediatrician", "A healthier start for every child."],
-  ["Dr. Akash", "Psychiatrist", "Better mental health starts with being heard."],
-  ["Dr. Basharat", "Neurosurgeon", "Expert care for the brain and spine."],
-];
+const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-export default function Home() {
-  return <main className="relative isolate min-h-full overflow-hidden bg-[var(--ink)] text-[var(--paper)]">
-    <div className="space-atmosphere" aria-hidden="true"><span className="space-glow space-glow-one" /><span className="space-glow space-glow-two" /><span className="space-petal space-petal-one" /><span className="space-petal space-petal-two" /><span className="space-petal space-petal-three" /><span className="space-stars space-stars-one" /><span className="space-stars space-stars-two" /><span className="space-dust space-dust-one" /><span className="space-dust space-dust-two" /><span className="space-dust space-dust-three" /><span className="space-meteor space-meteor-one" /><span className="space-meteor space-meteor-two" /><span className="space-meteor space-meteor-three" /><span className="space-meteor space-meteor-four" /></div>
-    <nav className="relative z-10 mx-auto flex max-w-[1240px] items-center justify-between px-6 py-6 lg:px-10"><a href="#top" className="flex items-center gap-3" aria-label="Eternal Polyclinic home"><span className="clinic-mark"><span className="clinic-mark-cross">+</span><span className="clinic-mark-staff">⚕</span></span><span className="flex flex-col text-left"><b className="text-[15px] tracking-[0.12em]">ETERNAL</b><b className="text-[10px] tracking-[0.2em] text-[var(--mint)]">POLYCLINIC</b></span></a><div className="hidden gap-8 text-sm text-[var(--muted)] md:flex"><a href="#platform">Platform</a><a href="#doctors">Doctors</a><a href="#social">Connect</a></div><a href="tel:9541722379" className="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold hover:border-[var(--mint)] hover:text-[var(--mint)]">Call 9541722379 <span className="ml-2">↗</span></a></nav>
-    <section id="top" className="relative z-10 mx-auto max-w-[1240px] px-6 pb-20 pt-10 lg:px-10 lg:pt-16"><div className="grid gap-8 lg:grid-cols-2"><HeroPanel badge="Eternal Polyclinic / Sapore" title={<>Care that<br /><em>moves.</em></>} description="Powered by Eternal Polyclinic. One calm place for appointments, diagnostics, prescriptions, and every patient relationship." primary="Explore the clinic" primaryHref="#platform" secondary="See the platform" secondaryHref="#platform" /><HeroPanel badge="Modern care, close to you" title={<>Your health,<br /><em>our mission.</em></>} description="Welcome to Eternal Polyclinic, where thoughtful doctors, precise diagnostics, and compassionate care come together under one roof." primary="Book your visit" primaryHref="tel:9541722379" secondary="Meet our care team" secondaryHref="#doctors"><p className="mt-7 text-xs text-[var(--muted)]">Call us now: <a className="font-semibold text-white underline underline-offset-4" href="tel:9541722379">9541722379</a></p><div className="owner-portrait"><Image src="/owner-naseer.jpg" alt="Naseer Ah Lone, Founder and Owner of Eternal Polyclinic" fill sizes="(max-width: 1024px) 88vw, 42vw" className="object-cover object-center" /><div className="owner-portrait-shade" /><div className="owner-portrait-label"><span>Founder & Owner</span><strong>Naseer Ah Lone</strong><small>Eternal Polyclinic</small></div></div></HeroPanel></div></section>
-    <section id="platform" className="relative z-10 border-t border-white/10 bg-[#f5f2eb] px-6 py-20 text-[var(--ink)] lg:px-10 lg:py-28"><div className="mx-auto max-w-[1240px]"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#478a70]">One operating system</p><h2 className="mt-4 text-4xl font-semibold leading-tight tracking-[-0.04em] sm:text-5xl">The whole practice,<br /><em className="font-serif font-normal">beautifully connected.</em></h2><div id="specialties" className="mt-14 grid gap-px overflow-hidden rounded-2xl bg-black/10 md:grid-cols-3">{modules.map(([number, title, description, color]) => <article key={number} className="p-7 sm:p-9" style={{ backgroundColor: color }}><span className="text-xs font-bold opacity-50">{number}</span><h3 className="mt-16 text-xl font-semibold">{title}</h3><p className="mt-3 text-sm leading-6 text-black/60">{description}</p><span className="mt-8 inline-block text-xs font-bold uppercase tracking-wider">Explore ↗</span></article>)}</div></div></section>
-    <section id="doctors" className="relative z-10 border-t border-white/10 bg-[#020305] px-6 py-20 text-white lg:px-10 lg:py-28"><div className="mx-auto max-w-[1240px]"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--mint)]">Doctors & specialists</p><h2 className="mt-4 text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">Expertise that makes <em className="font-serif font-normal text-[var(--mint)]">care personal.</em></h2><div className="mt-10 grid gap-4 md:grid-cols-2 xl:grid-cols-3">{specialists.map(([name, specialty, headline]) => <article key={name} className="rounded-2xl border border-cyan-500/20 bg-white/[0.035] p-6 backdrop-blur-xl transition hover:-translate-y-1 hover:border-cyan-300/60"><p className="text-[10px] font-bold uppercase tracking-[0.18em] text-cyan-200">{specialty}</p><h3 className="mt-3 text-xl font-semibold">{name}</h3><p className="mt-4 text-sm font-semibold text-[var(--mint)]">{headline}</p></article>)}</div></div></section>
-    <section id="social" className="relative z-10 border-t border-white/10 bg-[#f5f2eb] px-6 py-20 text-[var(--ink)] lg:px-10 lg:py-24"><div className="mx-auto max-w-[1240px]"><p className="text-xs font-bold uppercase tracking-[0.2em] text-[#478a70]">Stay connected</p><h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em] sm:text-4xl">Follow the clinic story.</h2><div className="mt-8 flex flex-wrap gap-5 text-base font-semibold"><a className="underline underline-offset-4" href="https://www.instagram.com/its_sahil__here/" target="_blank" rel="noreferrer">Instagram ↗</a><a className="underline underline-offset-4" href="https://www.linkedin.com/in/sahil-naseer-03717b350/" target="_blank" rel="noreferrer">LinkedIn ↗</a></div></div></section>
-    <footer id="contact" className="relative z-10 mx-auto flex max-w-[1240px] flex-col gap-5 px-6 py-10 text-xs text-[var(--muted)] sm:flex-row sm:items-center sm:justify-between lg:px-10"><b className="tracking-[0.12em] text-white">ETERNAL POLYCLINIC / 2026</b><span id="security">Managed under the leadership of Founder & Owner Naseer Ah Lone.</span><a className="text-white underline" href="tel:9541722379">9541722379</a></footer>
-  </main>;
+function opdText(doctor: Doctor): string {
+  if (doctor.opd.length === 0) return "Timings coming soon. Please call.";
+  return doctor.opd
+    .map((s) => `${DAY_NAMES[s.day]}, ${formatTime(s.start)} – ${formatTime(s.end)}`)
+    .join(" · ");
 }
 
-function HeroPanel({ badge, title, description, primary, primaryHref, secondary, secondaryHref, children }: { badge: string; title: ReactNode; description: string; primary: string; primaryHref: string; secondary: string; secondaryHref: string; children?: ReactNode }) {
-  return <article className="rounded-[28px] border border-white/10 bg-white/[0.035] p-6 shadow-2xl backdrop-blur-xl sm:p-9 lg:min-h-[650px]"><p className="hero-kicker">{badge}</p><h1 className="mt-8 text-5xl font-semibold leading-[0.9] tracking-[-0.06em] sm:text-7xl lg:text-[5.3rem]">{title}</h1><p className="mt-8 max-w-lg text-base leading-7 text-[var(--muted)] sm:text-lg">{description}</p><div className="mt-9 flex flex-col gap-3 sm:flex-row"><a href={primaryHref} className="rounded-full bg-[var(--mint)] px-6 py-3.5 text-center text-sm font-bold text-[var(--ink)] shadow-[0_0_28px_rgba(139,211,255,.16)] hover:bg-white">{primary} <span className="ml-2">↗</span></a><a href={secondaryHref} className="rounded-full border border-white/20 px-6 py-3.5 text-center text-sm font-semibold hover:border-[var(--mint)] hover:text-[var(--mint)]">{secondary} <span className="ml-2">↓</span></a></div>{children ?? <div className="mt-32 border-t border-white/10 pt-5"><p className="text-xs text-[var(--muted)]">12 specialties connected</p><p className="mt-2 text-xs text-white/40">Care, in sync. Powered by Eternal Polyclinic.</p></div>}</article>;
+function CallButton({ className = "" }: { className?: string }) {
+  return (
+    <a
+      href={`tel:${clinic.phone}`}
+      className={`inline-flex min-h-12 items-center justify-center rounded-xl bg-brand px-6 font-semibold text-white hover:bg-brand-dark ${className}`}
+    >
+      Call {clinic.phoneDisplay}
+    </a>
+  );
+}
+
+export default function Home() {
+  return (
+    <>
+      <header className="border-b border-line bg-white">
+        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-4">
+          <div className="flex items-center gap-3">
+            <span aria-hidden="true" className="flex size-11 items-center justify-center rounded-xl bg-brand text-xl font-bold text-white">
+              E
+            </span>
+            <div className="leading-tight">
+              <p className="font-bold">{clinic.name}</p>
+              <p className="text-sm text-muted">{clinic.address}</p>
+            </div>
+          </div>
+          <CallButton />
+        </div>
+      </header>
+
+      <main className="mx-auto w-full max-w-5xl px-6">
+        <section className="py-14">
+          <p className="font-semibold text-brand">Specialist doctors in Sopore</p>
+          <h1 className="mt-3 max-w-2xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+            See the right specialist, close to home.
+          </h1>
+          <p className="mt-4 max-w-xl text-lg text-muted">
+            Visiting specialists on fixed days, tests and a pharmacy under one roof. Open 7 am – 8 pm.
+            Consultation ₹{clinic.consultationFee}.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <CallButton />
+            <a
+              href={`https://wa.me/${clinic.whatsapp}`}
+              className="inline-flex min-h-12 items-center justify-center rounded-xl border border-line bg-white px-6 font-semibold hover:border-brand"
+            >
+              WhatsApp us
+            </a>
+          </div>
+        </section>
+
+        <section aria-labelledby="doctors" className="py-10">
+          <h2 id="doctors" className="text-3xl font-bold">Our doctors</h2>
+          <p className="mt-1 text-muted">Each specialist sits on fixed days. Call to book your slot.</p>
+          <ul className="mt-6 grid gap-5 sm:grid-cols-2">
+            {doctors.map((doctor) => (
+              <li key={doctor.id} className="flex flex-col gap-2 rounded-2xl border border-line bg-white p-6">
+                <h3 className="text-xl font-bold">{doctor.name ?? doctor.speciality}</h3>
+                {doctor.name && <p className="font-medium">{doctor.speciality}</p>}
+                <p className="text-muted">
+                  {doctor.degree}
+                  {doctor.experienceYears ? ` · ${doctor.experienceYears} years of experience` : ""}
+                </p>
+                <p className="rounded-xl bg-brand-tint px-4 py-3">
+                  <span className="font-semibold">OPD:</span> {opdText(doctor)}
+                </p>
+                <p>
+                  <span className="font-semibold">Consultation:</span> ₹{clinic.consultationFee}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section aria-labelledby="services" className="py-10">
+          <h2 id="services" className="text-3xl font-bold">Tests and services in-house</h2>
+          <p className="mt-1 text-muted">No need to go elsewhere for scans, reports or medicines.</p>
+          <ul className="mt-6 grid gap-5 sm:grid-cols-2">
+            {services.map((service) => (
+              <li key={service.id} className="rounded-2xl border border-line bg-white p-6">
+                <h3 className="text-xl font-bold">{service.name}</h3>
+                <p className="mt-1 text-muted">{service.description}</p>
+                {service.lead && <p className="mt-2 font-medium">With {service.lead}</p>}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section aria-labelledby="visit" className="py-10">
+          <div className="rounded-2xl border border-line bg-white p-8">
+            <h2 id="visit" className="text-3xl font-bold">Visit us</h2>
+            <p className="mt-3 text-lg">{clinic.address}</p>
+            <p className="text-muted">Open 7:00 am – 8:00 pm</p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <CallButton />
+              <a
+                href={clinic.mapUrl}
+                className="inline-flex min-h-12 items-center justify-center rounded-xl border border-line px-6 font-semibold hover:border-brand"
+              >
+                Get directions
+              </a>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="mt-10 bg-ink py-8 text-slate-300">
+        <div className="mx-auto flex max-w-5xl flex-wrap justify-between gap-4 px-6 text-base">
+          <p className="font-semibold text-white">{clinic.name}, Sopore</p>
+          <p>Founder &amp; Owner: {clinic.founder}</p>
+          <p>
+            {clinic.address} · <a href={`tel:${clinic.phone}`} className="underline">{clinic.phoneDisplay}</a>
+          </p>
+        </div>
+      </footer>
+    </>
+  );
 }
