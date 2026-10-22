@@ -11,7 +11,8 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 - Next.js 16 (App Router), TypeScript, Tailwind CSS v4, deployed on Vercel
 - Font: Plus Jakarta Sans, self-hosted via `@fontsource-variable/plus-jakarta-sans`
 - V1 sends booking requests to the clinic on WhatsApp (`lib/booking.ts`); nothing is stored, on the server or the patient's phone.
-  V2 adds a database (Supabase) and the reception view. Keys go in Vercel environment variables, never in the repo (it is public).
+  Decision (23 Oct 2026): NO database and NO reception view for now. Reception works from WhatsApp.
+  Revisit only if bookings get busy. If ever added: Supabase (Mumbai region), keys in Vercel env vars, never in the repo (it is public).
 - Validation: zod. Tests: `npm test` (node test runner via tsx, files in `tests/`). Run them before every push.
 
 ## Where things live
@@ -47,7 +48,7 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 4. Clinic data ✓ (two doctors still need names and OPD days)
 5. Layout: hero, Who's in today, doctor cards ✓
 6. Booking form: doctor → OPD day → time → name and phone, WhatsApp link ✓
-7. Reception view at `/admin`: needs the V2 database first (localStorage can't reach reception on a public site)
+7. Reception view at `/admin`: dropped for now (see Stack). Don't build it unless asked.
 8. Weekly schedule, FAQ, Visit us with map, floating WhatsApp ✓
 9. Polish ✓: /privacy notice, favicon + apple icon, Open Graph, schema.org MedicalClinic, robots + sitemap.
    Audit baseline (23 Oct 2026): axe 0 violations; Lighthouse mobile 97 / 100 / 100 / 100. Don't ship below it.
