@@ -128,3 +128,45 @@ export function timeSlots(doctor: Doctor, date: string, now: Date): string[] {
   }
   return slots;
 }
+
+// ---------- Display helpers ----------
+
+export const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"] as const;
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+] as const;
+
+/** "2026-10-24" -> "Saturday, 24 October" */
+export function dateLabel(dateKey: string): string {
+  const [, mo, d] = dateKey.split("-").map(Number);
+  return `${DAY_NAMES[weekdayOf(dateKey)]}, ${d} ${MONTH_NAMES[mo - 1]}`;
+}
+
+/** "Wednesday and Saturday, 4:00 pm – 8:00 pm", or null when OPD days aren't confirmed. */
+export function opdSummary(doctor: Doctor): string | null {
+  if (doctor.opd.length === 0) return null;
+  const sameHours = doctor.opd.every((s) => s.start === doctor.opd[0].start && s.end === doctor.opd[0].end);
+  if (sameHours) {
+    const days = doctor.opd.map((s) => DAY_NAMES[s.day]);
+    const dayText = days.length === 1 ? days[0] : `${days.slice(0, -1).join(", ")} and ${days.at(-1)}`;
+    return `${dayText}, ${formatTime(doctor.opd[0].start)} – ${formatTime(doctor.opd[0].end)}`;
+  }
+  return doctor.opd
+    .map((s) => `${DAY_NAMES[s.day]}, ${formatTime(s.start)} – ${formatTime(s.end)}`)
+    .join("; ");
+}
+
+/** Where a sitting is right now: not started, in progress, or over for the day. */
+export function sessionStatus(session: OpdSession, now: Date): "upcoming" | "in" | "done" {
+  const { minutes } = clinicClock(now);
+  if (minutes < toMinutes(session.start)) return "upcoming";
+  if (minutes < toMinutes(session.end)) return "in";
+  return "done";
+}
+
+/** Is the clinic open right now (clinic time)? */
+export function isOpenNow(hours: { open: string; close: string }, now: Date): boolean {
+  const { minutes } = clinicClock(now);
+  return minutes >= toMinutes(hours.open) && minutes < toMinutes(hours.close);
+}

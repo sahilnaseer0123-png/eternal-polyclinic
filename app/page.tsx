@@ -1,132 +1,189 @@
-// V0 public page: doctors, services and contact, all read from data/clinic.ts.
-// Step 5 replaces this with the full design from the mockups (Who's in today, booking form, schedule).
+// Home page (step 5). Everything is read from data/clinic.ts.
+// The page is prebuilt for speed, except "Who's in today", which streams in per visitor.
 
-import { clinic, doctors, services, type Doctor } from "@/data/clinic";
+import { Suspense } from "react";
+import { clinic, services } from "@/data/clinic";
 import { formatTime } from "@/lib/schedule";
+import { ClinicIllustration } from "@/components/ClinicIllustration";
+import { DoctorDirectory } from "@/components/DoctorDirectory";
+import { WhosInToday, WhosInTodaySkeleton } from "@/components/WhosInToday";
+import { ChatIcon, ClockIcon, MapPinIcon, PhoneIcon } from "@/components/Icons";
 
-const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-function opdText(doctor: Doctor): string {
-  if (doctor.opd.length === 0) return "Timings coming soon. Please call.";
-  return doctor.opd
-    .map((s) => `${DAY_NAMES[s.day]}, ${formatTime(s.start)} – ${formatTime(s.end)}`)
-    .join(" · ");
-}
-
-function CallButton({ className = "" }: { className?: string }) {
-  return (
-    <a
-      href={`tel:${clinic.phone}`}
-      className={`inline-flex min-h-12 items-center justify-center rounded-xl bg-brand px-6 font-semibold text-white hover:bg-brand-dark ${className}`}
-    >
-      Call {clinic.phoneDisplay}
-    </a>
-  );
-}
+const hours = `${formatTime(clinic.hours.open)} – ${formatTime(clinic.hours.close)}`;
+const tel = `tel:${clinic.phone}`;
+const whatsapp = `https://wa.me/${clinic.whatsapp}`;
 
 export default function Home() {
   return (
     <>
-      <header className="border-b border-line bg-white">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-6 py-4">
-          <div className="flex items-center gap-3">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2"
+      >
+        Skip to content
+      </a>
+
+      <header className="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
+          <a href="#main" className="flex items-center gap-3 text-ink no-underline">
             <span aria-hidden="true" className="flex size-11 items-center justify-center rounded-xl bg-brand text-xl font-bold text-white">
               E
             </span>
-            <div className="leading-tight">
-              <p className="font-bold">{clinic.name}</p>
-              <p className="text-sm text-muted">{clinic.address}</p>
-            </div>
-          </div>
-          <CallButton />
+            <span className="leading-tight">
+              <span className="block font-bold">{clinic.name}</span>
+              <span className="block text-sm text-muted">{clinic.address}</span>
+            </span>
+          </a>
+          <nav aria-label="Main" className="hidden items-center gap-7 text-base font-medium lg:flex">
+            <a href="#today" className="hover:text-brand">Today</a>
+            <a href="#doctors" className="hover:text-brand">Doctors</a>
+            <a href="#services" className="hover:text-brand">Services</a>
+            <a href="#visit" className="hover:text-brand">Visit us</a>
+          </nav>
+          <a
+            href={tel}
+            className="hidden min-h-11 items-center gap-2 rounded-xl bg-brand px-5 text-base font-semibold text-white hover:bg-brand-dark sm:inline-flex"
+          >
+            <PhoneIcon className="size-4" />
+            {clinic.phoneDisplay}
+          </a>
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl px-6">
-        <section className="py-14">
-          <p className="font-semibold text-brand">Specialist doctors in Sopore</p>
-          <h1 className="mt-3 max-w-2xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-            See the right specialist, close to home.
-          </h1>
-          <p className="mt-4 max-w-xl text-lg text-muted">
-            Visiting specialists on fixed days, tests and a pharmacy under one roof. Open 7 am – 8 pm.
-            Consultation ₹{clinic.consultationFee}.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <CallButton />
-            <a
-              href={`https://wa.me/${clinic.whatsapp}`}
-              className="inline-flex min-h-12 items-center justify-center rounded-xl border border-line bg-white px-6 font-semibold hover:border-brand"
-            >
-              WhatsApp us
-            </a>
+      <main id="main" className="pb-24 sm:pb-0">
+        {/* Hero */}
+        <section className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-12 md:grid-cols-2 md:py-16">
+          <div className="flex flex-col gap-5">
+            <p className="font-semibold text-brand">Specialist doctors in Sopore, on fixed days every week</p>
+            <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+              See the right specialist, close to home.
+            </h1>
+            <p className="text-lg text-muted">
+              Visiting specialists, scans, a lab and a pharmacy under one roof. Consultation ₹{clinic.consultationFee}.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="#doctors"
+                className="inline-flex min-h-13 items-center rounded-2xl bg-brand px-7 text-lg font-semibold text-white hover:bg-brand-dark"
+              >
+                Find a doctor
+              </a>
+              <a
+                href={tel}
+                className="inline-flex min-h-13 items-center gap-2 rounded-2xl border border-line bg-white px-6 text-lg font-semibold hover:border-brand"
+              >
+                <PhoneIcon /> Call {clinic.phoneDisplay}
+              </a>
+            </div>
+            <p className="flex flex-wrap gap-x-6 gap-y-1 text-base text-muted">
+              <span className="inline-flex items-center gap-2"><ClockIcon className="size-4" /> Open {hours}</span>
+              <span className="inline-flex items-center gap-2"><MapPinIcon className="size-4" /> {clinic.address}</span>
+            </p>
+          </div>
+          <div className="overflow-hidden rounded-3xl border border-brand-line">
+            <ClinicIllustration />
           </div>
         </section>
 
-        <section aria-labelledby="doctors" className="py-10">
-          <h2 id="doctors" className="text-3xl font-bold">Our doctors</h2>
-          <p className="mt-1 text-muted">Each specialist sits on fixed days. Call to book your slot.</p>
-          <ul className="mt-6 grid gap-5 sm:grid-cols-2">
-            {doctors.map((doctor) => (
-              <li key={doctor.id} className="flex flex-col gap-2 rounded-2xl border border-line bg-white p-6">
-                <h3 className="text-xl font-bold">{doctor.name ?? doctor.speciality}</h3>
-                {doctor.name && <p className="font-medium">{doctor.speciality}</p>}
-                <p className="text-muted">
-                  {doctor.degree}
-                  {doctor.experienceYears ? ` · ${doctor.experienceYears} years of experience` : ""}
-                </p>
-                <p className="rounded-xl bg-brand-tint px-4 py-3">
-                  <span className="font-semibold">OPD:</span> {opdText(doctor)}
-                </p>
-                <p>
-                  <span className="font-semibold">Consultation:</span> ₹{clinic.consultationFee}
-                </p>
-              </li>
-            ))}
-          </ul>
+        {/* Who's in today */}
+        <section aria-labelledby="today" className="mx-auto max-w-6xl scroll-mt-24 px-5 pb-14">
+          <div className="rounded-3xl border border-line bg-white p-6 sm:p-8">
+            <Suspense fallback={<WhosInTodaySkeleton />}>
+              <WhosInToday />
+            </Suspense>
+          </div>
         </section>
 
-        <section aria-labelledby="services" className="py-10">
-          <h2 id="services" className="text-3xl font-bold">Tests and services in-house</h2>
+        {/* Doctors */}
+        <section aria-labelledby="doctors" className="scroll-mt-20 border-y border-line bg-white py-14">
+          <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5">
+            <div>
+              <h2 id="doctors" className="text-3xl font-bold sm:text-4xl">Our doctors</h2>
+              <p className="mt-1 text-muted">Pick by what&apos;s bothering you. Each specialist sits on fixed days.</p>
+            </div>
+            <DoctorDirectory />
+            <p className="text-base text-muted">
+              More specialists visit every week. Not sure who to see?{" "}
+              <a href={tel} className="font-semibold text-brand underline">Call reception</a> and they&apos;ll guide you.
+            </p>
+          </div>
+        </section>
+
+        {/* Services */}
+        <section aria-labelledby="services" className="mx-auto max-w-6xl scroll-mt-20 px-5 py-14">
+          <h2 id="services" className="text-3xl font-bold sm:text-4xl">Tests and services in-house</h2>
           <p className="mt-1 text-muted">No need to go elsewhere for scans, reports or medicines.</p>
-          <ul className="mt-6 grid gap-5 sm:grid-cols-2">
+          <ul className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {services.map((service) => (
-              <li key={service.id} className="rounded-2xl border border-line bg-white p-6">
+              <li key={service.id} className="flex flex-col gap-1 rounded-2xl border border-line bg-white p-6">
                 <h3 className="text-xl font-bold">{service.name}</h3>
-                <p className="mt-1 text-muted">{service.description}</p>
-                {service.lead && <p className="mt-2 font-medium">With {service.lead}</p>}
+                <p className="text-base text-muted">{service.description}</p>
+                {service.lead && <p className="mt-auto pt-2 text-base font-medium">With {service.lead}</p>}
               </li>
             ))}
           </ul>
         </section>
 
-        <section aria-labelledby="visit" className="py-10">
-          <div className="rounded-2xl border border-line bg-white p-8">
-            <h2 id="visit" className="text-3xl font-bold">Visit us</h2>
-            <p className="mt-3 text-lg">{clinic.address}</p>
-            <p className="text-muted">Open 7:00 am – 8:00 pm</p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <CallButton />
-              <a
-                href={clinic.mapUrl}
-                className="inline-flex min-h-12 items-center justify-center rounded-xl border border-line px-6 font-semibold hover:border-brand"
-              >
-                Get directions
+        {/* Visit us */}
+        <section aria-labelledby="visit" className="mx-auto max-w-6xl scroll-mt-20 px-5 pb-16">
+          <div className="grid gap-8 rounded-3xl border border-line bg-white p-6 sm:p-10 md:grid-cols-2">
+            <div className="flex flex-col gap-4">
+              <h2 id="visit" className="text-3xl font-bold sm:text-4xl">Visit us</h2>
+              <p className="flex items-start gap-3 text-lg">
+                <MapPinIcon className="mt-1 size-5 shrink-0 text-brand" />
+                <span>{clinic.name}<br />{clinic.address}</span>
+              </p>
+              <p className="flex items-start gap-3 text-lg">
+                <ClockIcon className="mt-1 size-5 shrink-0 text-brand" />
+                <span>
+                  Open {hours}
+                  <br />
+                  <span className="text-base text-muted">Specialists sit on their OPD days only.</span>
+                </span>
+              </p>
+            </div>
+            <div className="flex flex-col justify-center gap-3">
+              <a href={tel} className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl bg-brand px-6 text-lg font-semibold text-white hover:bg-brand-dark">
+                <PhoneIcon /> Call {clinic.phoneDisplay}
+              </a>
+              <a href={whatsapp} className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl border border-line px-6 text-lg font-semibold hover:border-brand">
+                <ChatIcon /> WhatsApp us
+              </a>
+              <a href={clinic.mapUrl} className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl border border-line px-6 text-lg font-semibold hover:border-brand">
+                <MapPinIcon /> Get directions
               </a>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="mt-10 bg-ink py-8 text-slate-300">
-        <div className="mx-auto flex max-w-5xl flex-wrap justify-between gap-4 px-6 text-base">
+      <footer className="bg-ink pb-28 pt-10 text-slate-300 sm:pb-10">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 text-base sm:flex-row sm:flex-wrap sm:justify-between">
           <p className="font-semibold text-white">{clinic.name}, Sopore</p>
           <p>Founder &amp; Owner: {clinic.founder}</p>
           <p>
-            {clinic.address} · <a href={`tel:${clinic.phone}`} className="underline">{clinic.phoneDisplay}</a>
+            {clinic.address} · <a href={tel} className="underline">{clinic.phoneDisplay}</a>
           </p>
         </div>
       </footer>
+
+      {/* Phone: sticky Call / WhatsApp bar */}
+      <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-3 border-t border-line bg-white px-4 pb-4 pt-3 sm:hidden">
+        <a href={tel} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand font-semibold text-white">
+          <PhoneIcon /> Call
+        </a>
+        <a href={whatsapp} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-line font-semibold">
+          <ChatIcon /> WhatsApp
+        </a>
+      </div>
+
+      {/* Desktop: floating WhatsApp button */}
+      <a
+        href={whatsapp}
+        className="fixed bottom-6 right-6 z-40 hidden min-h-14 items-center gap-2 rounded-full bg-ink px-6 font-semibold text-white shadow-lg hover:bg-slate-800 sm:inline-flex"
+      >
+        <ChatIcon /> WhatsApp
+      </a>
     </>
   );
 }

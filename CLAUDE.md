@@ -36,7 +36,7 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 
 1. Spec ✓  2. Mockups ✓  3. Project setup ✓
 4. Clinic data ✓ (two doctors still need names and OPD days)
-5. Layout: hero, Who's in today, doctor cards
+5. Layout: hero, Who's in today, doctor cards ✓
 6. Booking form: doctor → OPD day → time → name and phone, WhatsApp link
 7. Reception view at `/admin`
 8. Weekly schedule, FAQ, Visit us, floating WhatsApp

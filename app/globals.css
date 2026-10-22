@@ -19,6 +19,15 @@
 /* Body text is 18px: many patients are older, nobody should need to zoom. */
 html {
   font-size: 18px;
+  /* Section links shouldn't land under the sticky header. */
+  scroll-padding-top: 5.5rem;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
