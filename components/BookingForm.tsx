@@ -183,7 +183,6 @@ export function BookingForm({ nowMs }: { nowMs: number }) {
                       key={d}
                       type="button"
                       aria-pressed={d === date}
-                      aria-label={dateLabel(d)}
                       onClick={() => {
                         setDate(d);
                         setTime("");
@@ -195,6 +194,7 @@ export function BookingForm({ nowMs }: { nowMs: number }) {
                       <span className="font-bold">
                         {day} {SHORT_MONTH[mo - 1]}
                       </span>
+                      <span className="sr-only">, {dateLabel(d)}</span>
                     </button>
                   );
                 })}

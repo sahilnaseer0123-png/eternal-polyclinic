@@ -35,6 +35,7 @@ export type Doctor = {
 
 export const clinic = {
   name: "Eternal Polyclinic",
+  siteUrl: "https://eternal-polyclinic.vercel.app",
   founder: "Naseer Ah Lone",
   address: "Opposite SDH Hospital, Sopore",
   phone: "+919541722379",

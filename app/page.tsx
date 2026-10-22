@@ -10,6 +10,8 @@ import { WhosInToday, WhosInTodaySkeleton } from "@/components/WhosInToday";
 import { BookingSection, BookingSkeleton } from "@/components/BookingSection";
 import { ScheduleView, WeeklySchedule } from "@/components/WeeklySchedule";
 import { Faq } from "@/components/Faq";
+import { SiteFooter } from "@/components/SiteChrome";
+import Link from "next/link";
 import { ChatIcon, ClockIcon, MapPinIcon, PhoneIcon } from "@/components/Icons";
 
 const hours = `${formatTime(clinic.hours.open)} – ${formatTime(clinic.hours.close)}`;
@@ -137,7 +139,10 @@ export default function Home() {
               <p className="font-semibold">Your privacy</p>
               <p className="text-base text-muted">
                 We ask only your name and number. The message names your doctor, never the reason for your visit, and
-                nothing is saved on your phone.
+                nothing is saved on your phone.{" "}
+                <Link href="/privacy" className="font-semibold text-brand underline">
+                  Privacy notice
+                </Link>
               </p>
             </div>
             <p className="text-base text-muted">
@@ -215,35 +220,32 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="bg-ink pb-28 pt-10 text-slate-300 sm:pb-10">
-        <div className="mx-auto flex max-w-6xl flex-col gap-3 px-5 text-base sm:flex-row sm:flex-wrap sm:justify-between">
-          <p className="font-semibold text-white">{clinic.name}, Sopore</p>
-          <p>Founder &amp; Owner: {clinic.founder}</p>
-          <p>
-            {clinic.address} · <a href={tel} className="underline">{clinic.phoneDisplay}</a>
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
 
       {/* Phone: sticky Call / Book bar */}
-      <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-3 border-t border-line bg-white px-4 pb-4 pt-3 sm:hidden">
+      <nav
+        aria-label="Quick actions"
+        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-3 border-t border-line bg-white px-4 pb-4 pt-3 sm:hidden"
+      >
         <a href={tel} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand font-semibold text-white">
           <PhoneIcon /> Call
         </a>
         <a href="#book" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-ink font-semibold text-white">
           Book
         </a>
-      </div>
+      </nav>
 
       {/* Desktop: floating WhatsApp button */}
-      <a
-        href={whatsapp}
-        aria-label="Message the clinic on WhatsApp"
-        title="WhatsApp"
-        className="fixed bottom-6 right-6 z-40 hidden size-14 items-center justify-center rounded-full bg-ink text-white shadow-lg hover:bg-slate-800 sm:inline-flex"
-      >
-        <ChatIcon className="size-6" />
-      </a>
+      <aside aria-label="WhatsApp">
+        <a
+          href={whatsapp}
+          aria-label="Message the clinic on WhatsApp"
+          title="WhatsApp"
+          className="fixed bottom-6 right-6 z-40 hidden size-14 items-center justify-center rounded-full bg-ink text-white shadow-lg hover:bg-slate-800 sm:inline-flex"
+        >
+          <ChatIcon className="size-6" />
+        </a>
+      </aside>
     </>
   );
 }

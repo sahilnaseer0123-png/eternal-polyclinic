@@ -24,6 +24,7 @@ in under 60 seconds with no account. Reception confirms every request by phone.
   landmark hospital's coordinates (`clinic.landmark`). Never link to a name search.
 - `components/`: page sections. `WhosInToday`, `BookingSection` and `WeeklySchedule` read the time per request with `io()` inside `<Suspense>`.
 - Deep link `/#book-<doctor id>` (e.g. `/#book-akash`) opens the booking form with that doctor chosen.
+- `app/privacy/page.tsx`: privacy notice. Update its date and text whenever data handling changes (e.g. the V2 database).
 - `app/globals.css`: design tokens (`brand`, `ink`, `muted`, `ground`, `line`, `emergency`).
 
 ## Rules
@@ -48,4 +49,5 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 6. Booking form: doctor → OPD day → time → name and phone, WhatsApp link ✓
 7. Reception view at `/admin`: needs the V2 database first (localStorage can't reach reception on a public site)
 8. Weekly schedule, FAQ, Visit us with map, floating WhatsApp ✓
-9. Polish: accessibility, Lighthouse, test on a real phone
+9. Polish ✓: /privacy notice, favicon + apple icon, Open Graph, schema.org MedicalClinic, robots + sitemap.
+   Audit baseline (23 Oct 2026): axe 0 violations; Lighthouse mobile 97 / 100 / 100 / 100. Don't ship below it.
