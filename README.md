@@ -16,7 +16,7 @@ Edit `data/clinic.ts`. Doctors, OPD days, services, hours, phone and fee are all
 
 ## Share a booking link for one doctor
 
-`https://eternal-polyclinic.vercel.app/#book-akash` opens the form with Dr. Akash chosen.
+`https://eternal-polyclinic.vercel.app/book?doctor=akash` opens the booking form with Dr. Akash chosen.
 
 ## Deploy
 

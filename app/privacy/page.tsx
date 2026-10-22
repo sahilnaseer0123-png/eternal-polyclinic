@@ -2,12 +2,10 @@
 // The clinic owner should read and approve it; update "Last updated" with every change.
 
 import type { Metadata } from "next";
-import Link from "next/link";
 import { clinic } from "@/data/clinic";
-import { SiteFooter } from "@/components/SiteChrome";
 
 export const metadata: Metadata = {
-  title: `Privacy notice | ${clinic.name}`,
+  title: "Privacy notice",
   description: `How ${clinic.name} handles the details you share when you book an appointment.`,
 };
 
@@ -17,18 +15,7 @@ export default function PrivacyPage() {
   const tel = `tel:${clinic.phone}`;
   return (
     <>
-      <header className="border-b border-line bg-white">
-        <div className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-5 py-4">
-          <Link href="/" className="font-bold">
-            ← {clinic.name}
-          </Link>
-          <a href={tel} className="font-semibold text-brand underline">
-            {clinic.phoneDisplay}
-          </a>
-        </div>
-      </header>
-
-      <main id="main" className="mx-auto w-full max-w-3xl px-5 py-12">
+      <div className="mx-auto w-full max-w-3xl px-5 py-12">
         <h1 className="text-4xl font-bold">Privacy notice</h1>
         <p className="mt-2 text-muted">Last updated {LAST_UPDATED}</p>
 
@@ -108,9 +95,7 @@ export default function PrivacyPage() {
             <p>If we change how we handle your details, we will update this page and the date at the top.</p>
           </section>
         </div>
-      </main>
-
-      <SiteFooter />
+      </div>
     </>
   );
 }

@@ -1,0 +1,53 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Suspense } from "react";
+import { clinic } from "@/data/clinic";
+import { BookingSection, BookingSkeleton } from "@/components/BookingSection";
+import { PageIntro } from "@/components/SiteChrome";
+
+export const metadata: Metadata = {
+  title: "Book an appointment",
+  description: `Request a slot with a specialist at ${clinic.name}, Sopore. No account needed; reception confirms by phone.`,
+};
+
+export default function BookPage({ searchParams }: PageProps<"/book">) {
+  return (
+    <>
+      <PageIntro title="Book an appointment">Takes under a minute. No account needed.</PageIntro>
+
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 pb-16 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+        <Suspense fallback={<BookingSkeleton />}>
+          <BookingSection searchParams={searchParams} />
+        </Suspense>
+
+        <div className="flex flex-col gap-5">
+          <h2 className="text-2xl font-bold">How it works</h2>
+          <ol className="flex list-decimal flex-col gap-3 pl-6 text-lg">
+            <li>Choose your doctor.</li>
+            <li>Pick one of their OPD days and a time.</li>
+            <li>Add your name and mobile number.</li>
+            <li>
+              Press Send in WhatsApp ({clinic.whatsappDisplay}). Reception calls you to confirm.
+            </li>
+          </ol>
+          <div className="rounded-2xl border border-line bg-white p-5">
+            <p className="font-semibold">Your privacy</p>
+            <p className="text-base text-muted">
+              We ask only your name and number. The message names your doctor, never the reason for your visit, and
+              nothing is saved on your phone.{" "}
+              <Link href="/privacy" className="font-semibold text-brand underline">
+                Privacy notice
+              </Link>
+            </p>
+          </div>
+          <p className="text-base text-muted">
+            Prefer to talk?{" "}
+            <a href={`tel:${clinic.phone}`} className="font-semibold text-brand underline">
+              Call {clinic.phoneDisplay}
+            </a>
+          </p>
+        </div>
+      </div>
+    </>
+  );
+}

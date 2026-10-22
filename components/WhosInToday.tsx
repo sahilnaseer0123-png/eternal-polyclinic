@@ -2,6 +2,7 @@
 // `await io()` keeps this out of the prebuilt page, so the day is never frozen at build time.
 // Rendered inside <Suspense> in app/page.tsx; WhosInTodaySkeleton is the placeholder.
 
+import Link from "next/link";
 import { io } from "next/cache";
 import { clinic, doctors } from "@/data/clinic";
 import {
@@ -61,12 +62,12 @@ export async function WhosInToday() {
                   </p>
                 </div>
                 {status !== "done" && (
-                  <a
-                    href={`#book-${doctor.id}`}
+                  <Link
+                    href={`/book?doctor=${doctor.id}`}
                     className="inline-flex min-h-11 shrink-0 items-center rounded-xl bg-brand px-4 text-base font-semibold text-white hover:bg-brand-dark"
                   >
                     Book
-                  </a>
+                  </Link>
                 )}
               </li>
             );
@@ -85,12 +86,12 @@ export async function WhosInToday() {
             )}
           </div>
           {next && (
-            <a
-              href={`#book-${next.doctor.id}`}
+            <Link
+              href={`/book?doctor=${next.doctor.id}`}
               className="inline-flex min-h-11 items-center rounded-xl bg-brand px-4 text-base font-semibold text-white hover:bg-brand-dark"
             >
               Book {next.doctor.name ?? next.doctor.speciality}
-            </a>
+            </Link>
           )}
         </div>
       )}

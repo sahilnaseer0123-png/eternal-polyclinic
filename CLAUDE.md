@@ -23,8 +23,11 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 - `data/faq.ts`: FAQ answers; they pull the fee, phone and services from `clinic.ts`.
 - Map: the clinic isn't on Google Maps and a search for its name finds a DIFFERENT clinic. Directions and the map use the
   landmark hospital's coordinates (`clinic.landmark`). Never link to a name search.
-- `components/`: page sections. `WhosInToday`, `BookingSection` and `WeeklySchedule` read the time per request with `io()` inside `<Suspense>`.
-- Deep link `/#book-<doctor id>` (e.g. `/#book-akash`) opens the booking form with that doctor chosen.
+- `components/`: page sections. `WhosInToday`, `BookingSection` and `WeeklySchedule` are per-request (io() / searchParams) inside `<Suspense>`.
+- Pages: `/` (hero, Who's in today, shortcuts), `/doctors` (cards + weekly schedule), `/book`, `/services`, `/faq`, `/contact`, `/privacy`.
+  Header, footer, phone Call/Book bar and WhatsApp button live in `app/layout.tsx` (`SiteHeader`, `SiteChrome`).
+- Deep link `/book?doctor=<doctor id>` (e.g. `/book?doctor=akash`) opens the form with that doctor chosen.
+  Old one-page links (`/#book-akash`) are forwarded by `LegacyBookingLink`.
 - `app/privacy/page.tsx`: privacy notice. Update its date and text whenever data handling changes (e.g. the V2 database).
 - `app/globals.css`: design tokens (`brand`, `ink`, `muted`, `ground`, `line`, `emergency`).
 

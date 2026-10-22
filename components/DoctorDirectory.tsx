@@ -2,6 +2,7 @@
 
 // Doctor cards with a speciality filter. The list itself comes from data/clinic.ts.
 
+import Link from "next/link";
 import { useState } from "react";
 import { categories, clinic, doctors, type DoctorCategory } from "@/data/clinic";
 import { opdSummary } from "@/lib/schedule";
@@ -66,12 +67,12 @@ export function DoctorDirectory() {
                 <span className="font-semibold">Consultation:</span> ₹{clinic.consultationFee}
               </p>
               {opd ? (
-                <a
-                  href={`#book-${doctor.id}`}
+                <Link
+                  href={`/book?doctor=${doctor.id}`}
                   className="mt-auto inline-flex min-h-11 items-center self-start rounded-xl bg-brand px-5 text-base font-semibold text-white hover:bg-brand-dark"
                 >
                   Book {doctor.name ?? "appointment"}
-                </a>
+                </Link>
               ) : (
                 <a
                   href={`tel:${clinic.phone}`}

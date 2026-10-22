@@ -3,9 +3,9 @@
 // Booking form: doctor → OPD day → time → name and phone → WhatsApp.
 // `nowMs` comes from the server at request time, so the server and browser draw the same dates.
 // The request is re-checked against the real clock when the patient presses the button.
-// Deep link: /#book-akash opens the form with Dr. Akash already chosen.
+// Deep link: /book?doctor=akash opens the form with Dr. Akash already chosen.
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { clinic, doctors } from "@/data/clinic";
 import { bookingMessage, validateBooking, whatsappLink, type BookingErrors } from "@/lib/booking";
 import {
@@ -38,9 +38,9 @@ function FieldError({ id, message }: { id: string; message?: string }) {
   );
 }
 
-export function BookingForm({ nowMs }: { nowMs: number }) {
+export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; initialDoctorId?: string }) {
   const now = new Date(nowMs);
-  const [doctorId, setDoctorId] = useState("");
+  const [doctorId, setDoctorId] = useState(initialDoctorId);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [name, setName] = useState("");
@@ -60,21 +60,6 @@ export function BookingForm({ nowMs }: { nowMs: number }) {
     setErrors((e) => ({ ...e, doctorId: undefined, date: undefined, time: undefined }));
   }
 
-  // Open with a doctor chosen when the address ends in #book-<doctor id>.
-  useEffect(() => {
-    function fromHash() {
-      const match = window.location.hash.match(/^#book-([\w-]+)$/);
-      if (!match || !doctors.some((d) => d.id === match[1])) return;
-      setDoctorId(match[1]);
-      setDate("");
-      setTime("");
-      setSent(null);
-      document.getElementById("book")?.scrollIntoView();
-    }
-    fromHash();
-    window.addEventListener("hashchange", fromHash);
-    return () => window.removeEventListener("hashchange", fromHash);
-  }, []);
 
   function submit() {
     const result = validateBooking({ doctorId, date, time, name, phone }, doctors, new Date());
