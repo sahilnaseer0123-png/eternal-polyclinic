@@ -19,7 +19,10 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 - `data/clinic.ts`: every clinic fact (doctors, OPD days, in-house services, hours, phone, fee, founder). The ONLY place these are written. A doctor with `name: null` is unconfirmed: show the speciality, never a placeholder like "[Name]".
 - `lib/schedule.ts`: who's in today, next OPD dates, time slots, display helpers. Pure functions that take `now`.
 - `lib/booking.ts`: booking validation against the real schedule, and the WhatsApp message.
-- `components/`: page sections. `WhosInToday` and `BookingSection` read the time per request with `io()` inside `<Suspense>`.
+- `data/faq.ts`: FAQ answers; they pull the fee, phone and services from `clinic.ts`.
+- Map: the clinic isn't on Google Maps and a search for its name finds a DIFFERENT clinic. Directions and the map use the
+  landmark hospital's coordinates (`clinic.landmark`). Never link to a name search.
+- `components/`: page sections. `WhosInToday`, `BookingSection` and `WeeklySchedule` read the time per request with `io()` inside `<Suspense>`.
 - Deep link `/#book-<doctor id>` (e.g. `/#book-akash`) opens the booking form with that doctor chosen.
 - `app/globals.css`: design tokens (`brand`, `ink`, `muted`, `ground`, `line`, `emergency`).
 
@@ -44,5 +47,5 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 5. Layout: hero, Who's in today, doctor cards ✓
 6. Booking form: doctor → OPD day → time → name and phone, WhatsApp link ✓
 7. Reception view at `/admin`: needs the V2 database first (localStorage can't reach reception on a public site)
-8. Weekly schedule, FAQ, Visit us, floating WhatsApp
+8. Weekly schedule, FAQ, Visit us with map, floating WhatsApp ✓
 9. Polish: accessibility, Lighthouse, test on a real phone

@@ -170,3 +170,8 @@ export function isOpenNow(hours: { open: string; close: string }, now: Date): bo
   const { minutes } = clinicClock(now);
   return minutes >= toMinutes(hours.open) && minutes < toMinutes(hours.close);
 }
+
+/** "16:00" -> "4 pm", "16:20" -> "4:20 pm" (for tight spaces like the weekly grid) */
+export function formatTimeShort(hhmm: string): string {
+  return formatTime(hhmm).replace(":00", "");
+}

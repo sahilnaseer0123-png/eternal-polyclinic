@@ -1,5 +1,5 @@
-// Home page (step 5). Everything is read from data/clinic.ts.
-// The page is prebuilt for speed, except "Who's in today", which streams in per visitor.
+// Home page. Everything is read from data/clinic.ts and data/faq.ts.
+// The page is prebuilt for speed; parts that depend on today's date stream in per visitor.
 
 import { Suspense } from "react";
 import { clinic, services } from "@/data/clinic";
@@ -8,6 +8,8 @@ import { ClinicIllustration } from "@/components/ClinicIllustration";
 import { DoctorDirectory } from "@/components/DoctorDirectory";
 import { WhosInToday, WhosInTodaySkeleton } from "@/components/WhosInToday";
 import { BookingSection, BookingSkeleton } from "@/components/BookingSection";
+import { ScheduleView, WeeklySchedule } from "@/components/WeeklySchedule";
+import { Faq } from "@/components/Faq";
 import { ChatIcon, ClockIcon, MapPinIcon, PhoneIcon } from "@/components/Icons";
 
 const hours = `${formatTime(clinic.hours.open)} – ${formatTime(clinic.hours.close)}`;
@@ -36,10 +38,11 @@ export default function Home() {
             </span>
           </a>
           <nav aria-label="Main" className="hidden items-center gap-7 text-base font-medium lg:flex">
-            <a href="#today" className="hover:text-brand">Today</a>
             <a href="#doctors" className="hover:text-brand">Doctors</a>
-            <a href="#services" className="hover:text-brand">Services</a>
+            <a href="#schedule" className="hover:text-brand">Schedule</a>
             <a href="#book" className="hover:text-brand">Book</a>
+            <a href="#services" className="hover:text-brand">Services</a>
+            <a href="#faq" className="hover:text-brand">FAQ</a>
             <a href="#visit" className="hover:text-brand">Visit us</a>
           </nav>
           <a
@@ -111,6 +114,15 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Weekly schedule */}
+        <section aria-labelledby="schedule" className="mx-auto max-w-6xl px-5 pt-14">
+          <h2 id="schedule" className="text-3xl font-bold sm:text-4xl">Weekly OPD schedule</h2>
+          <p className="mb-6 mt-1 text-muted">Plan your visit. Timings can change on holidays, so call if you&apos;re unsure.</p>
+          <Suspense fallback={<ScheduleView />}>
+            <WeeklySchedule />
+          </Suspense>
+        </section>
+
         {/* Booking */}
         <section aria-labelledby="book-heading" id="book" className="mx-auto grid max-w-6xl gap-10 px-5 py-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
           <div className="flex flex-col gap-5">
@@ -152,6 +164,12 @@ export default function Home() {
           </ul>
         </section>
 
+        {/* FAQ */}
+        <section aria-labelledby="faq" className="mx-auto max-w-4xl px-5 pb-14">
+          <h2 id="faq" className="mb-6 text-3xl font-bold sm:text-4xl">Questions patients ask</h2>
+          <Faq />
+        </section>
+
         {/* Visit us */}
         <section aria-labelledby="visit" className="mx-auto max-w-6xl scroll-mt-20 px-5 pb-16">
           <div className="grid gap-8 rounded-3xl border border-line bg-white p-6 sm:p-10 md:grid-cols-2">
@@ -170,7 +188,19 @@ export default function Home() {
                 </span>
               </p>
             </div>
-            <div className="flex flex-col justify-center gap-3">
+            <div className="flex flex-col gap-3">
+              <div className="overflow-hidden rounded-2xl border border-line">
+                <iframe
+                  src={clinic.mapEmbedUrl}
+                  title={`Map: ${clinic.landmark.name}, opposite ${clinic.name}`}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="block h-64 w-full border-0"
+                />
+              </div>
+              <p className="text-base text-muted">
+                The pin shows {clinic.landmark.name}. {clinic.name} is directly opposite.
+              </p>
               <a href={tel} className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl bg-brand px-6 text-lg font-semibold text-white hover:bg-brand-dark">
                 <PhoneIcon /> Call {clinic.phoneDisplay}
               </a>

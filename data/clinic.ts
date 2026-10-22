@@ -43,7 +43,14 @@ export const clinic = {
   hours: { open: "07:00", close: "20:00" },
   consultationFee: 300,
   timeZone: "Asia/Kolkata",
-  mapUrl: "https://www.google.com/maps/search/?api=1&query=Eternal+Polyclinic+Sopore",
+  /**
+   * The clinic isn't on Google Maps yet, and a search for its name finds a DIFFERENT clinic.
+   * So directions and the map point at the landmark hospital opposite, by coordinates.
+   * TODO: once the clinic has a Google Business Profile, switch to its own pin.
+   */
+  landmark: { name: "SDH Sopore (Sub-District Hospital)", lat: 34.292932, lng: 74.4550619 },
+  mapUrl: "https://www.google.com/maps/dir/?api=1&destination=34.292932,74.4550619",
+  mapEmbedUrl: "https://maps.google.com/maps?q=34.292932,74.4550619&z=17&output=embed",
 } as const;
 
 /** In-house tests and services. Booked by phone for now (timings not confirmed). */
