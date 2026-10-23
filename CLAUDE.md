@@ -49,6 +49,9 @@ in under 60 seconds with no account. Reception confirms every request by phone.
   (`logo.svg`, PNGs, horizontal lockups). The favicon `app/icon.svg` is `brand/logo-small.svg`, a simplified
   version for 16–48px. `app/apple-icon.png` is the full emblem on white. The logo's gold and blue are the only
   colours allowed outside rule 6, and only inside the emblem.
+- Page transitions (23 Oct 2026): `PageTransition` (React `<ViewTransition>`) in `app/template.tsx` and `app/doctors/template.tsx`;
+  old page fades out, new one fades and rises 12px; header, tab bar and WhatsApp button are pinned (`view-transition-name`).
+  `data-scroll-behavior="smooth"` on `<html>` is required in Next 16, or new pages open scrolled down under the header.
 - Motion and rhythm (23 Oct 2026): rounded buttons/cards press in, card links lift on hover, hero text `.rise`s,
   sections below the fold use `.reveal` (one-time fade-in via `RevealOnScroll.tsx`), the More sheet slides up.
   All of it is off under prefers-reduced-motion. Home alternates bands: hero over `FeatherPattern`, specialists,

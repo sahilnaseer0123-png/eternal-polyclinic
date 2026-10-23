@@ -76,7 +76,7 @@ export function TabBar() {
 
       <nav
         aria-label="Quick links"
-        className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-4 border-t border-line bg-white px-2 pb-[max(0.25rem,env(safe-area-inset-bottom))] pt-1"
+        className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-4 [view-transition-name:tab-bar] border-t border-line bg-white px-2 pb-[max(0.25rem,env(safe-area-inset-bottom))] pt-1"
       >
         {TABS.map(({ href, label, Icon }) => {
           const on = pathname === href;

@@ -126,7 +126,7 @@ export function QuickActions() {
           href={`https://wa.me/${clinic.whatsapp}`}
           aria-label={`Message the clinic on WhatsApp, ${clinic.whatsappDisplay}`}
           title="WhatsApp"
-          className="fixed bottom-6 right-6 z-40 hidden size-14 items-center justify-center rounded-full bg-ink text-white shadow-lg hover:bg-slate-800 lg:inline-flex"
+          className="fixed bottom-6 right-6 z-40 hidden [view-transition-name:wa-float] size-14 items-center justify-center rounded-full bg-ink text-white shadow-lg hover:bg-slate-800 lg:inline-flex"
         >
           <ChatIcon className="size-6" />
         </a>

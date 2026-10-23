@@ -31,7 +31,9 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
+    // data-scroll-behavior: globals.css scrolls smoothly for in-page links; this tells Next.js 16 to switch that off
+    // while it jumps to the top of a new page. Without it, new pages landed ~100px down, title under the header.
+    <html lang="en" className="h-full antialiased" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className="min-h-full flex flex-col">
         {/* Marks the page ready for scroll fade-ins before anything paints (see globals.css). */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('reveal-ready')" }} />
