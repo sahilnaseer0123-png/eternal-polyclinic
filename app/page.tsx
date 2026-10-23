@@ -82,7 +82,7 @@ export default function Home() {
 
       {/* Specialists */}
       <section aria-labelledby="specialists" className="mx-auto max-w-6xl pt-10 sm:pt-14">
-        <div className="flex items-baseline justify-between px-5">
+        <div className="flex items-center justify-between px-5">
           <h2 id="specialists" className="text-xl font-extrabold tracking-tight sm:text-3xl">
             Specialists
           </h2>

@@ -144,8 +144,9 @@ export function ServiceIcon({ id, className = "size-6" }: IconProps & { id: stri
     case "ultrasound":
       return (
         <svg {...base} className={className}>
-          <path d="M12 21L4 8.5a9.5 9.5 0 0 1 16 0z" />
-          <path d="M8.5 12a5 5 0 0 1 7 0M10.5 15.5a2.2 2.2 0 0 1 3 0" />
+          <rect x="3" y="3" width="18" height="14" rx="2" />
+          <path d="M12 6l-4.5 7a6 6 0 0 0 9 0z" />
+          <path d="M9 21h6M12 17v4" />
         </svg>
       );
     case "echo":

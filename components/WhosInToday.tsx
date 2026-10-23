@@ -99,7 +99,9 @@ export async function WhosInToday() {
               <p className="text-slate-300">
                 Next: {next.doctor.name ?? next.doctor.speciality} ({next.doctor.speciality}),{" "}
                 {next.daysAhead === 1 ? "tomorrow" : DAY_NAMES[weekdayOf(addDays(clock.dateKey, next.daysAhead))]},{" "}
-                {formatTime(next.session.start)} – {formatTime(next.session.end)}
+                <span className="whitespace-nowrap">
+                  {formatTimeShort(next.session.start)}–{formatTimeShort(next.session.end)}
+                </span>
               </p>
             )}
           </div>
