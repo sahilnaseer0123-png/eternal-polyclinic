@@ -17,7 +17,7 @@ export function DoctorDirectory() {
   const options: { id: Filter; label: string }[] = [{ id: "all", label: "All" }, ...categories];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       <div role="group" aria-label="Filter doctors by speciality" className="flex flex-wrap gap-2">
         {options.map((o) => {
           const on = filter === o.id;
@@ -27,7 +27,7 @@ export function DoctorDirectory() {
               type="button"
               aria-pressed={on}
               onClick={() => setFilter(o.id)}
-              className={`min-h-11 rounded-full border px-5 text-base font-semibold ${
+              className={`min-h-11 rounded-full border px-4 text-[0.95rem] font-semibold sm:px-5 sm:text-base ${
                 on ? "border-brand bg-brand text-white" : "border-line bg-white text-ink hover:border-brand"
               }`}
             >
@@ -37,46 +37,42 @@ export function DoctorDirectory() {
         })}
       </div>
 
-      <ul className="grid gap-5 md:grid-cols-2">
+      {/* The fee is the same for every doctor, so it's said once in the page intro, not on each card. */}
+      <ul className="grid gap-3 sm:gap-5 md:grid-cols-2">
         {shown.map((doctor) => {
           const opd = opdSummary(doctor);
           return (
-            <li key={doctor.id} className="flex flex-col gap-3 rounded-2xl border border-line bg-white p-6">
-              <div className="flex items-center gap-4">
-                <DoctorAvatar doctor={doctor} size={72} />
+            <li key={doctor.id} className="flex flex-col gap-3 rounded-2xl border border-line bg-white p-4 sm:p-6">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <DoctorAvatar doctor={doctor} size={56} />
                 <div className="min-w-0">
-                  <h3 className="text-xl font-bold leading-snug">{doctor.name ?? doctor.speciality}</h3>
-                  {doctor.name && <p className="font-medium">{doctor.speciality}</p>}
+                  <h3 className="text-lg font-bold leading-snug sm:text-xl">{doctor.name ?? doctor.speciality}</h3>
+                  <p className="text-[0.95rem] text-muted sm:text-base">
+                    {doctor.name ? `${doctor.speciality} · ` : ""}
+                    {doctor.degree}
+                    {doctor.experienceYears ? ` · ${doctor.experienceYears} yrs` : ""}
+                  </p>
                 </div>
               </div>
-              <span className="inline-flex items-center gap-2 self-start rounded-lg bg-brand-tint px-3 py-1 text-base font-semibold text-brand">
+              <span className="inline-flex items-center gap-2 self-start rounded-lg bg-brand-tint px-3 py-1 text-[0.95rem] font-semibold text-brand sm:text-base">
                 <CategoryIcon category={doctor.category} />
                 {doctor.categoryLabel}
               </span>
-              <p className="text-base text-muted">
-                {doctor.degree}
-                {doctor.experienceYears ? ` · ${doctor.experienceYears} years of experience` : ""}
-              </p>
-              <p className="flex items-start gap-3 rounded-xl bg-ground px-4 py-3 text-base">
+              <p className="flex items-start gap-2 text-[0.95rem] sm:text-base">
                 <CalendarIcon className="mt-0.5 size-5 shrink-0 text-brand" />
-                <span>
-                  <span className="font-semibold">OPD:</span> {opd ?? "Timings coming soon. Please call."}
-                </span>
-              </p>
-              <p className="text-base">
-                <span className="font-semibold">Consultation:</span> ₹{clinic.consultationFee}
+                <span>{opd ?? "Days coming soon. Please call to ask."}</span>
               </p>
               {opd ? (
                 <Link
                   href={`/book?doctor=${doctor.id}`}
-                  className="mt-auto inline-flex min-h-11 items-center self-start rounded-xl bg-brand px-5 text-base font-semibold text-white hover:bg-brand-dark"
+                  className="mt-auto inline-flex min-h-11 items-center justify-center rounded-xl bg-brand px-5 font-semibold text-white hover:bg-brand-dark sm:self-start sm:text-base"
                 >
                   Book {doctor.name ?? "appointment"}
                 </Link>
               ) : (
                 <a
                   href={`tel:${clinic.phone}`}
-                  className="mt-auto inline-flex min-h-11 items-center self-start rounded-xl border border-brand px-5 text-base font-semibold text-brand hover:bg-brand-tint"
+                  className="mt-auto inline-flex min-h-11 items-center justify-center rounded-xl border border-brand px-5 font-semibold text-brand hover:bg-brand-tint sm:self-start sm:text-base"
                 >
                   Call to book
                 </a>

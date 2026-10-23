@@ -86,19 +86,20 @@ export default function Home() {
       </section>
 
       {/* Shortcuts */}
-      <section aria-labelledby="shortcuts" className="mx-auto max-w-6xl px-5 pb-16">
+      <section aria-labelledby="shortcuts" className="mx-auto max-w-6xl px-5 pb-10 sm:pb-16">
         <h2 id="shortcuts" className="sr-only">
           Find what you need
         </h2>
-        <ul className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+        {/* Phones: a 2×2 grid of title-only tiles. Wider screens add the description. */}
+        <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
           {shortcuts.map((s) => (
             <li key={s.href}>
               <Link
                 href={s.href}
-                className="flex h-full flex-col gap-1 rounded-2xl border border-line bg-white p-4 hover:border-brand sm:gap-2 sm:p-6"
+                className="flex h-full min-h-20 flex-col justify-center gap-1 rounded-2xl border border-line bg-white p-4 hover:border-brand sm:gap-2 sm:p-6"
               >
-                <span className="text-lg font-bold sm:text-xl">{s.title} →</span>
-                <span className="text-[0.95rem] text-muted sm:text-base">{s.text}</span>
+                <span className="font-bold leading-snug sm:text-xl">{s.title} →</span>
+                <span className="hidden text-base text-muted sm:block">{s.text}</span>
               </Link>
             </li>
           ))}

@@ -59,8 +59,8 @@ export function ScheduleView({ today }: { today?: Weekday }) {
         </table>
       </div>
 
-      {/* Phones: day by day */}
-      <ul className="flex flex-col gap-2 md:hidden">
+      {/* Phones: one compact row per day inside a single card */}
+      <ul className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-white md:hidden">
         {WEEK.map((day) => {
           const sittings = confirmed.flatMap((d) => {
             const s = sessionOn(d, day);
@@ -68,28 +68,24 @@ export function ScheduleView({ today }: { today?: Weekday }) {
           });
           const isToday = day === today;
           return (
-            <li
-              key={day}
-              className={`rounded-2xl border p-4 ${isToday ? "border-brand bg-brand-tint" : "border-line bg-white"}`}
-            >
-              <p className="font-bold">
-                {DAY_NAMES[day]}
-                {isToday && <span className="ml-2 rounded-md bg-brand px-2 py-0.5 text-sm text-white">Today</span>}
-              </p>
+            <li key={day} className={`flex gap-3 px-4 py-3 text-[0.95rem] ${isToday ? "bg-brand-tint" : ""}`}>
+              <span className="w-12 shrink-0 font-bold">
+                {DAY_NAMES[day].slice(0, 3)}
+                {isToday && <span className="block text-xs font-semibold text-brand">Today</span>}
+              </span>
               {sittings.length > 0 ? (
-                <ul className="mt-1">
+                <ul className="flex flex-col">
                   {sittings.map(({ doctor, s }) => (
-                    <li key={doctor.id} className="text-base">
+                    <li key={doctor.id}>
                       <span className="font-semibold">{doctor.name ?? doctor.speciality}</span>{" "}
-                      <span className="text-muted">({doctor.speciality})</span> ·{" "}
-                      <span className="whitespace-nowrap">
+                      <span className="whitespace-nowrap text-muted">
                         {formatTimeShort(s.start)}–{formatTimeShort(s.end)}
                       </span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-base text-muted">No visiting specialist</p>
+                <span className="text-muted">—<span className="sr-only">No visiting specialist</span></span>
               )}
             </li>
           );
@@ -97,7 +93,7 @@ export function ScheduleView({ today }: { today?: Weekday }) {
       </ul>
 
       {unconfirmed.length > 0 && (
-        <p className="text-base text-muted">
+        <p className="text-[0.95rem] text-muted sm:text-base">
           Timings for the {unconfirmed.map((d) => d.speciality.toLowerCase()).join(" and ")} are coming soon. Call to
           ask.
         </p>
