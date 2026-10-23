@@ -58,6 +58,17 @@ export default function PrivacyPage() {
           </section>
 
           <section>
+            <h2>Visitor statistics</h2>
+            <p>
+              To see which pages and doctors people look at, the website counts page visits with Vercel Web Analytics.
+              It uses no cookies and does not record who you are, your IP address, or anything you type. It records the
+              page address, the website that sent you here, your rough location (country and city), and your device and
+              browser type, and only uses these for totals. A visitor is recognised for at most 24 hours. Words you type
+              into the search box are removed from the page address before anything is counted.
+            </p>
+          </section>
+
+          <section>
             <h2>How we use your details</h2>
             <p>
               Only to arrange and confirm your appointment, which usually means calling you on the number you gave. We
@@ -73,7 +84,7 @@ export default function PrivacyPage() {
               </li>
               <li>
                 <strong>Vercel</strong> hosts this website and keeps basic technical logs, such as IP addresses, for
-                security and to keep the site running.
+                security and to keep the site running. It also provides the visitor statistics described above.
               </li>
               <li>
                 <strong>Google Maps</strong> shows the map in &quot;Visit us&quot;. Google may collect data when the map

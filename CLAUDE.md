@@ -38,6 +38,11 @@ in under 60 seconds with no account. Reception confirms every request by phone.
   Old one-page links (`/#book-akash`) are forwarded by `LegacyBookingLink`.
 - `app/privacy/page.tsx`: privacy notice. Update its date and text whenever data handling changes (e.g. the V2 database).
   Wording rule: the WEBSITE saves nothing, but the WhatsApp message stays in the patient's chat. Never say "nothing is saved on your phone".
+- Visitor stats (23 Oct 2026): `SiteAnalytics` = Vercel Web Analytics (no cookies, page views only; custom events need a paid plan).
+  `lib/analytics.ts` strips every query param except `type` and `doctor` before sending, so searches (`?q=`) never leave the
+  browser. Counting starts only when Analytics is enabled in the Vercel dashboard. The privacy notice describes it; keep them in step.
+- `lib/structured-data.ts`: all schema.org JSON-LD (clinic in the layout; IndividualPhysician + breadcrumbs on doctor pages,
+  named doctors only). No FAQPage: Google dropped FAQ rich results in May 2026.
 - `app/opengraph-image.png` (+ `.alt.txt`): the preview picture when the link is shared on WhatsApp. Regenerate if the logo or name changes.
 - `app/not-found.tsx`: friendly 404 with Home, Book and Call.
 - Logo (emblem "A", chosen 23 Oct 2026): `components/Logo.tsx` in the header; print files in `brand/`
