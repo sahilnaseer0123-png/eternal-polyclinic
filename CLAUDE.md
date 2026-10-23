@@ -23,9 +23,15 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 - `data/faq.ts`: FAQ answers; they pull the fee, phone and services from `clinic.ts`.
 - Map: the clinic isn't listed on Google Maps and a search for its name finds a DIFFERENT clinic. Directions and the map
   use the clinic's exact coordinates (`clinic.location`, the Old Municipal Office building). Never link to a name search.
-- `components/`: page sections. `WhosInToday`, `BookingSection` and `WeeklySchedule` are per-request (io() / searchParams) inside `<Suspense>`.
-- Pages: `/` (hero, Who's in today, shortcuts), `/doctors` (cards + weekly schedule), `/book`, `/services`, `/faq`, `/contact`, `/privacy`.
-  Header, footer, phone Call/Book bar and WhatsApp button live in `app/layout.tsx` (`SiteHeader`, `SiteChrome`).
+- `components/`: page sections. `WhosInToday`, `BookingSection`, `WeeklySchedule` and the doctors `?type=` reader are per-request
+  (io() / searchParams) inside `<Suspense>`. Their placeholders are sized like the real thing (no layout jump; keep it that way).
+- Pages: `/` (hero with find box and chips, dark Today card, specialists, tests, visit), `/doctors` (find box, chips, cards,
+  weekly schedule; `/doctors?type=skin` opens with a chip chosen), `/book`, `/services`, `/faq`, `/contact`, `/privacy`.
+  Header (`SiteHeader`), footer and WhatsApp button (`SiteChrome`), and the phone/tablet bottom tab bar (`TabBar`: Home,
+  Doctors, Book, More sheet) are mounted in `app/layout.tsx`.
+- Design C (chosen 23 Oct 2026, mockups on the design canvas): ground `#f4f6f5`, white `card` surfaces (a utility in
+  globals.css; pair with `rounded-3xl`) without borders, pill buttons, ink (`bg-ink`) for primary actions and the Today card,
+  `glow` for teal text on ink. Doctors show `DoctorMark` (initial, or speciality icon) until real photos arrive.
 - Deep link `/book?doctor=<doctor id>` (e.g. `/book?doctor=akash`) opens the form with that doctor chosen.
   Old one-page links (`/#book-akash`) are forwarded by `LegacyBookingLink`.
 - `app/privacy/page.tsx`: privacy notice. Update its date and text whenever data handling changes (e.g. the V2 database).
@@ -33,7 +39,7 @@ in under 60 seconds with no account. Reception confirms every request by phone.
   (`logo.svg`, PNGs, horizontal lockups). The favicon `app/icon.svg` is `brand/logo-small.svg`, a simplified
   version for 16–48px. `app/apple-icon.png` is the full emblem on white. The logo's gold and blue are the only
   colours allowed outside rule 6, and only inside the emblem.
-- `app/globals.css`: design tokens (`brand`, `ink`, `muted`, `ground`, `line`, `emergency`).
+- `app/globals.css`: design tokens (`brand`, `ink`, `muted`, `ground`, `line`, `emergency`, `glow`), the `card` utility, the phone type scale.
 
 ## Rules
 
@@ -59,4 +65,6 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 7. Reception view at `/admin`: dropped for now (see Stack). Don't build it unless asked.
 8. Weekly schedule, FAQ, Visit us with map, floating WhatsApp ✓
 9. Polish ✓: /privacy notice, favicon + apple icon, Open Graph, schema.org MedicalClinic, robots + sitemap.
-   Audit baseline (23 Oct 2026): axe 0 violations; Lighthouse mobile 97 / 100 / 100 / 100. Don't ship below it.
+   Audit baseline (23 Oct 2026, design C): axe 0 violations on all pages; Lighthouse mobile home 98, other pages 95–99,
+   accessibility / best practices / SEO 100, layout shift 0. Don't ship below it.
+10. Design C redesign ✓ (built on branch `redesign-c`, merged 23 Oct 2026).

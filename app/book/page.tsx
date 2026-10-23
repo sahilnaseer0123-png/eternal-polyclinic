@@ -21,7 +21,7 @@ export default function BookPage({ searchParams }: PageProps<"/book">) {
         </Suspense>
 
         <div className="flex flex-col gap-5">
-          <h2 className="text-2xl font-bold">How it works</h2>
+          <h2 className="text-xl font-extrabold tracking-tight sm:text-2xl">How it works</h2>
           <ol className="flex list-decimal flex-col gap-3 pl-6 text-lg">
             <li>Choose your doctor.</li>
             <li>Pick one of their OPD days and a time.</li>
@@ -30,7 +30,7 @@ export default function BookPage({ searchParams }: PageProps<"/book">) {
               Press Send in WhatsApp ({clinic.whatsappDisplay}). Reception calls you to confirm.
             </li>
           </ol>
-          <div className="rounded-2xl border border-line bg-white p-5">
+          <div className="card rounded-3xl p-5">
             <p className="font-semibold">Your privacy</p>
             <p className="text-base text-muted">
               We ask only your name and number. The message names your doctor, never the reason for your visit, and

@@ -15,5 +15,6 @@ export async function BookingSection({ searchParams }: { searchParams: Promise<R
 }
 
 export function BookingSkeleton() {
-  return <div className="h-96 animate-pulse rounded-3xl border border-line bg-white" aria-busy="true" />;
+  // Same height as the empty form, so the page doesn't jump when the form streams in.
+  return <div className="card h-[44.5rem] animate-pulse rounded-3xl sm:h-[40rem]" aria-busy="true" />;
 }

@@ -106,6 +106,9 @@ export const categories: { id: DoctorCategory; label: string }[] = [
   { id: "brain", label: "Brain & spine" },
 ];
 
+/** True for a speciality id like "skin", e.g. from /doctors?type=skin. */
+export const isCategory = (v: unknown): v is DoctorCategory => categories.some((c) => c.id === v);
+
 export const doctors: Doctor[] = [
   {
     id: "mubashir",

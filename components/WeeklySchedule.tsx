@@ -13,7 +13,7 @@ export function ScheduleView({ today }: { today?: Weekday }) {
   return (
     <div className="flex flex-col gap-4">
       {/* Wider screens: grid */}
-      <div className="hidden overflow-x-auto rounded-2xl border border-line bg-white md:block">
+      <div className="card hidden overflow-x-auto rounded-3xl md:block">
         <table className="w-full min-w-[46rem] table-fixed border-collapse text-base">
           <caption className="sr-only">Weekly OPD schedule by doctor and day</caption>
           <thead>
@@ -60,7 +60,7 @@ export function ScheduleView({ today }: { today?: Weekday }) {
       </div>
 
       {/* Phones: one compact row per day inside a single card */}
-      <ul className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-white md:hidden">
+      <ul className="card divide-y divide-line overflow-hidden rounded-3xl md:hidden">
         {WEEK.map((day) => {
           const sittings = confirmed.flatMap((d) => {
             const s = sessionOn(d, day);
@@ -93,7 +93,7 @@ export function ScheduleView({ today }: { today?: Weekday }) {
       </ul>
 
       {unconfirmed.length > 0 && (
-        <p className="text-base text-muted sm:text-base">
+        <p className="text-muted">
           Timings for the {unconfirmed.map((d) => d.speciality.toLowerCase()).join(" and ")} are coming soon. Call to
           ask.
         </p>

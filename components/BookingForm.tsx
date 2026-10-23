@@ -86,11 +86,11 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
 
   if (sent && doctor) {
     return (
-      <div className="flex flex-col gap-5 rounded-3xl border border-line bg-white p-6 sm:p-8" aria-live="polite">
+      <div className="flex flex-col gap-5 card rounded-3xl p-6 sm:p-8" aria-live="polite">
         <div className="flex size-14 items-center justify-center rounded-full bg-brand-tint text-brand" aria-hidden="true">
           <ChatIcon className="size-7" />
         </div>
-        <h3 className="text-2xl font-bold">One last step: press Send in WhatsApp</h3>
+        <h3 className="text-xl font-extrabold tracking-tight sm:text-2xl">One last step: press Send in WhatsApp</h3>
         <p>
           WhatsApp should have opened with your request to {clinic.name} ({clinic.whatsappDisplay}). Press{" "}
           <strong>Send</strong> there. Reception
@@ -117,7 +117,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
         </a>
         <a
           href={`tel:${clinic.phone}`}
-          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-line px-6 font-semibold hover:border-brand"
+          className="inline-flex min-h-12 items-center justify-center gap-2 card rounded-2xl px-6 font-semibold hover:text-brand"
         >
           <PhoneIcon /> Or call {clinic.phoneDisplay}
         </a>
@@ -129,7 +129,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
   }
 
   return (
-    <div ref={formRef} className="min-w-0 flex flex-col gap-6 rounded-2xl border border-line bg-white p-4 sm:gap-7 sm:rounded-3xl sm:p-8">
+    <div ref={formRef} className="min-w-0 flex flex-col gap-6 card rounded-3xl p-4 sm:gap-7 sm:p-8">
       {/* 1. Doctor */}
       <fieldset className="min-w-0 flex flex-col gap-3">
         <legend className="mb-2 text-lg font-bold sm:mb-3">1. Doctor</legend>

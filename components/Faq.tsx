@@ -4,7 +4,7 @@ import { faqs } from "@/data/faq";
 
 export function Faq() {
   return (
-    <div className="divide-y divide-line rounded-2xl border border-line bg-white">
+    <div className="card divide-y divide-line overflow-hidden rounded-3xl">
       {faqs.map((faq, i) => (
         <details key={faq.question} className="group px-5 sm:px-6" open={i === 0}>
           <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 text-lg font-semibold [&::-webkit-details-marker]:hidden">

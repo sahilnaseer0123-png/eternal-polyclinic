@@ -16,7 +16,7 @@ export default function ContactPage() {
     <>
       <PageIntro title="Visit us" />
       <section aria-label="Address and contact" className="mx-auto max-w-6xl px-5 pb-16">
-        <div className="grid gap-8 rounded-3xl border border-line bg-white p-6 sm:p-10 md:grid-cols-2">
+        <div className="grid gap-8 card rounded-3xl p-6 sm:p-10 md:grid-cols-2">
           <div className="flex flex-col gap-5">
             <p className="flex items-start gap-3 text-lg">
               <MapPinIcon className="mt-1 size-5 shrink-0 text-brand" />
@@ -43,13 +43,13 @@ export default function ContactPage() {
               </a>
               <a
                 href={`https://wa.me/${clinic.whatsapp}`}
-                className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl border border-line px-6 text-lg font-semibold hover:border-brand"
+                className="inline-flex min-h-13 items-center justify-center gap-2 card rounded-2xl px-6 text-lg font-semibold hover:text-brand"
               >
                 <ChatIcon /> WhatsApp {clinic.whatsappDisplay}
               </a>
               <a
                 href={clinic.mapUrl}
-                className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl border border-line px-6 text-lg font-semibold hover:border-brand"
+                className="inline-flex min-h-13 items-center justify-center gap-2 card rounded-2xl px-6 text-lg font-semibold hover:text-brand"
               >
                 <MapPinIcon /> Get directions
               </a>

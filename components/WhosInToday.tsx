@@ -26,7 +26,9 @@ const STATUS_TEXT = {
   done: () => "Finished for today",
 } as const;
 
-const shell = "flex h-full flex-col gap-5 rounded-3xl bg-ink p-5 text-white sm:p-7";
+// min-h matches the usual card height, so the placeholder and the real card are the same size
+// and nothing below jumps when it streams in.
+const shell = "flex h-full min-h-[25rem] flex-col gap-5 rounded-3xl bg-ink p-5 text-white sm:p-7";
 const whiteButton =
   "inline-flex min-h-12 items-center justify-center rounded-2xl bg-white px-5 font-bold text-ink hover:bg-slate-100";
 
@@ -137,6 +139,7 @@ export function WhosInTodaySkeleton() {
     <div className={shell} aria-busy="true">
       <h2 className="text-sm font-bold uppercase tracking-wider text-glow">Who&apos;s in today</h2>
       <div className="h-24 animate-pulse rounded-2xl bg-white/10" />
+      <div className="mt-auto h-28 animate-pulse rounded-2xl bg-white/10" />
     </div>
   );
 }
