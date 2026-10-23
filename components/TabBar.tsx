@@ -82,7 +82,7 @@ export function TabBar() {
           const on = pathname === href;
           return (
             <Link key={href} href={href} aria-current={on ? "page" : undefined} className={tabClass(on)}>
-              <Icon />
+              <Icon className="size-6" />
               {label}
             </Link>
           );

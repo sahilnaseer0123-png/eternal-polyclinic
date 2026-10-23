@@ -40,7 +40,10 @@ function FieldError({ id, message }: { id: string; message?: string }) {
 }
 
 export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; initialDoctorId?: string }) {
-  const now = new Date(nowMs);
+  // Starts at the server's time; refreshed on every submit, so a page left open for a while
+  // stops offering times that have already passed.
+  const [nowAt, setNowAt] = useState(nowMs);
+  const now = new Date(nowAt);
   const [doctorId, setDoctorId] = useState(initialDoctorId);
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -63,7 +66,9 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
 
 
   function submit() {
-    const result = validateBooking({ doctorId, date, time, name, phone }, doctors, new Date());
+    const current = new Date();
+    setNowAt(current.getTime());
+    const result = validateBooking({ doctorId, date, time, name, phone }, doctors, current);
     if (!result.ok) {
       setErrors(result.errors);
       formRef.current?.querySelector<HTMLElement>("[role=alert]")?.scrollIntoView({ block: "center" });

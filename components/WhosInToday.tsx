@@ -16,6 +16,7 @@ import {
   nextSpecialist,
   sessionOn,
   sessionStatus,
+  timeSlots,
   weekdayOf,
 } from "@/lib/schedule";
 import { DoctorMark } from "./DoctorMark";
@@ -66,6 +67,8 @@ export async function WhosInToday() {
         <ul className="flex flex-col gap-4">
           {today.map(({ doctor, session }) => {
             const status = sessionStatus(session, now);
+            // Late in the sitting every slot may have passed; then the button books their next day instead.
+            const slotsLeftToday = timeSlots(doctor, clock.dateKey, now).length > 0;
             return (
               <li key={doctor.id} className="flex flex-col gap-4">
                 <div className="flex items-center gap-4">
@@ -80,11 +83,10 @@ export async function WhosInToday() {
                     </p>
                   </div>
                 </div>
-                {status !== "done" && (
-                  <Link href={`/book?doctor=${doctor.id}`} className={whiteButton}>
-                    Book {doctor.name ?? doctor.speciality} today
-                  </Link>
-                )}
+                <Link href={`/book?doctor=${doctor.id}`} className={whiteButton}>
+                  Book {doctor.name ?? doctor.speciality}
+                  {slotsLeftToday ? " today" : ", next visit"}
+                </Link>
               </li>
             );
           })}

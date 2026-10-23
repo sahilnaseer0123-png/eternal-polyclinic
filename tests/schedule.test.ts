@@ -88,3 +88,10 @@ test("opdShort gives a compact line for cards", () => {
   assert.equal(opdShort(byId("akash")), "Wed, Sat · 4 pm–8 pm");
   assert.equal(opdShort(byId("physician")), null);
 });
+
+test("late in a sitting no slots are left today, so the home card offers the next visit", () => {
+  const akash = doctors.find((d) => d.id === "akash")!;
+  const wed745pm = new Date("2026-10-28T19:45:00+05:30"); // a Wednesday, last slot (7:40 pm) has passed
+  assert.deepEqual(timeSlots(akash, "2026-10-28", wed745pm), []);
+  assert.equal(nextOpdDates(akash, wed745pm, 1)[0].date, "2026-10-31"); // Saturday
+});

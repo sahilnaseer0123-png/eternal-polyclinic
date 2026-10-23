@@ -52,7 +52,8 @@ export default function PrivacyPage() {
             <p className="mt-3">
               The website does not store these. When you press &quot;Send request on WhatsApp&quot;, they are put into a
               WhatsApp message on your own phone. We receive them only if you press Send in WhatsApp. Nothing is saved
-              in your browser.
+              in your browser. Once sent, the message stays in the WhatsApp chat on your phone and on the clinic&apos;s
+              phone, like any WhatsApp message; you can delete it from your side at any time.
             </p>
           </section>
 

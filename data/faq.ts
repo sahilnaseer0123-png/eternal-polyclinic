@@ -9,7 +9,7 @@ const serviceList = services.map((s) => s.name.toLowerCase()).join(", ").replace
 export const faqs: Faq[] = [
   {
     question: "Which doctor should I see?",
-    answer: `Use the filter under "Our doctors" to pick by problem area. If you're not sure, call ${clinic.phoneDisplay} and reception will guide you.`,
+    answer: `On the Doctors page, search or tap a speciality (Skin, Mind, General, Brain & spine). If you're not sure, call ${clinic.phoneDisplay} and reception will guide you.`,
   },
   {
     question: "Do I need an account to book?",
@@ -19,7 +19,7 @@ export const faqs: Faq[] = [
   {
     question: "Will anyone know why I'm visiting?",
     answer:
-      "The website only asks for your name and number. The booking message names your doctor, never the speciality or the reason for your visit, and nothing is saved on your phone.",
+      "The website only asks for your name and number, and saves nothing. The booking message names your doctor, never the speciality or the reason for your visit. Like any WhatsApp message, it stays in your chat, so delete it if others use your phone.",
   },
   {
     question: "How much does a consultation cost?",
@@ -35,6 +35,6 @@ export const faqs: Faq[] = [
   },
   {
     question: "Where exactly is the clinic?",
-    answer: `${clinic.address}. If you can't find it, call ${clinic.phoneDisplay}.`,
+    answer: `${clinic.address}, in the ${clinic.location.name} building. The Contact page has a map and directions. If you can't find it, call ${clinic.phoneDisplay}.`,
   },
 ];

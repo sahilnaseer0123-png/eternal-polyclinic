@@ -46,7 +46,7 @@ export default function Home() {
               id="home-find"
               name="q"
               type="search"
-              placeholder="Find a doctor or service"
+              placeholder="Doctor or test"
               autoComplete="off"
               className="min-h-13 min-w-0 flex-1 bg-transparent text-lg outline-none placeholder:text-muted sm:min-h-15"
             />

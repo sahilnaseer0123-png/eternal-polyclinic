@@ -33,8 +33,9 @@ export default function BookPage({ searchParams }: PageProps<"/book">) {
           <div className="card rounded-3xl p-5">
             <p className="font-semibold">Your privacy</p>
             <p className="text-base text-muted">
-              We ask only your name and number. The message names your doctor, never the reason for your visit, and
-              nothing is saved on your phone.{" "}
+              We ask only your name and number, and the website saves nothing. The message names your doctor, never the
+              reason for your visit. It stays in your WhatsApp chat like any message, so delete it if others use your
+              phone.{" "}
               <Link href="/privacy" className="font-semibold text-brand underline">
                 Privacy notice
               </Link>

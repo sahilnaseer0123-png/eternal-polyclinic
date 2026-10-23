@@ -35,6 +35,9 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 - Deep link `/book?doctor=<doctor id>` (e.g. `/book?doctor=akash`) opens the form with that doctor chosen.
   Old one-page links (`/#book-akash`) are forwarded by `LegacyBookingLink`.
 - `app/privacy/page.tsx`: privacy notice. Update its date and text whenever data handling changes (e.g. the V2 database).
+  Wording rule: the WEBSITE saves nothing, but the WhatsApp message stays in the patient's chat. Never say "nothing is saved on your phone".
+- `app/opengraph-image.png` (+ `.alt.txt`): the preview picture when the link is shared on WhatsApp. Regenerate if the logo or name changes.
+- `app/not-found.tsx`: friendly 404 with Home, Book and Call.
 - Logo (emblem "A", chosen 23 Oct 2026): `components/Logo.tsx` in the header; print files in `brand/`
   (`logo.svg`, PNGs, horizontal lockups). The favicon `app/icon.svg` is `brand/logo-small.svg`, a simplified
   version for 16–48px. `app/apple-icon.png` is the full emblem on white. The logo's gold and blue are the only

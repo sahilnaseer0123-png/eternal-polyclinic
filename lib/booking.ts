@@ -1,5 +1,5 @@
 // Booking request: validation and the WhatsApp message.
-// V1 sends requests to the clinic on WhatsApp; nothing is stored on the patient's phone.
+// V1 sends requests to the clinic on WhatsApp. The website stores nothing; the message lives in the WhatsApp chat.
 // V2 will save the same validated data to the database.
 
 import { z } from "zod";
