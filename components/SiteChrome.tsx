@@ -60,9 +60,9 @@ export function QuickActions() {
 /** Title block at the top of inner pages. */
 export function PageIntro({ title, children }: { title: string; children?: React.ReactNode }) {
   return (
-    <div className="mx-auto max-w-6xl px-5 pb-6 pt-10 sm:pt-14">
-      <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">{title}</h1>
-      {children && <div className="mt-3 max-w-2xl text-lg text-muted">{children}</div>}
+    <div className="mx-auto max-w-6xl px-5 pb-5 pt-7 sm:pb-6 sm:pt-14">
+      <h1 className="text-[2rem] font-bold leading-tight tracking-tight sm:text-5xl">{title}</h1>
+      {children && <div className="mt-2 max-w-2xl text-muted sm:mt-3 sm:text-lg">{children}</div>}
     </div>
   );
 }

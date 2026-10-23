@@ -129,7 +129,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
   }
 
   return (
-    <div ref={formRef} className="min-w-0 flex flex-col gap-7 rounded-3xl border border-line bg-white p-6 sm:p-8">
+    <div ref={formRef} className="min-w-0 flex flex-col gap-6 rounded-3xl border border-line bg-white p-5 sm:gap-7 sm:p-8">
       {/* 1. Doctor */}
       <fieldset className="min-w-0 flex flex-col gap-3">
         <legend className="mb-3 text-lg font-bold">1. Doctor</legend>

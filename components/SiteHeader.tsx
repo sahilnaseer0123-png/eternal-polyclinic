@@ -26,10 +26,14 @@ export function SiteHeader() {
     <header className="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
         <Link href="/" className="flex items-center gap-3 text-ink" onClick={() => setOpen(false)}>
-          <Logo className="size-12 shrink-0" />
+          <Logo className="size-10 shrink-0 sm:size-12" />
           <span className="leading-tight">
             <span className="block font-bold">{clinic.name}</span>
-            <span className="block text-sm text-muted">{clinic.address}</span>
+            {/* Phones: just the town, so the header stays one line. Wider screens: the full address. */}
+            <span className="block text-sm text-muted">
+              <span className="sm:hidden">{clinic.address.split(", ").pop()}</span>
+              <span className="hidden sm:inline">{clinic.address}</span>
+            </span>
           </span>
         </Link>
 

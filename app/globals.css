@@ -16,12 +16,19 @@
   --color-emergency: #b91c1c;
 }
 
-/* Body text is 18px: many patients are older, nobody should need to zoom. */
+/* Body text is 16px on phones (18px felt oversized there) and 18px from tablets up.
+   Everything is in rem, so spacing and tap targets scale with it: min-h-11 is still 44px on phones. */
 html {
-  font-size: 18px;
+  font-size: 16px;
   /* Section links shouldn't land under the sticky header. */
   scroll-padding-top: 5.5rem;
   scroll-behavior: smooth;
+}
+
+@media (min-width: 640px) {
+  html {
+    font-size: 18px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

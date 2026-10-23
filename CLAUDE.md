@@ -44,7 +44,7 @@ in under 60 seconds with no account. Reception confirms every request by phone.
    or on the client, never frozen at build time. Check the Next.js 16 docs in `node_modules/next/dist/docs/` for how.
 4. Privacy: the booking form collects name, phone, doctor, date and time only. Never a reason for the visit.
    WhatsApp texts and confirmations name the doctor, never the speciality.
-5. Accessibility: body text 18px, contrast at least 4.5:1, tap targets at least 44px, real `<button>`/`<a>`/`<label>`.
+5. Accessibility: body text 16px on phones, 18px from 640px up (set on `html` in globals.css; 18px on phones felt too big, changed 23 Oct 2026). Contrast at least 4.5:1, tap targets at least 44px, real `<button>`/`<a>`/`<label>`.
 6. One brand colour (teal `brand`). Specialities are told apart by name and icon, not colour.
 7. No invented facts: no fake reviews, stats or promises. Missing info stays as a visible TODO.
 8. Small steps: one feature at a time, check it in the browser, then commit.

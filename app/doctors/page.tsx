@@ -32,7 +32,7 @@ export default function DoctorsPage() {
       </section>
 
       <section aria-labelledby="schedule" className="mx-auto max-w-6xl scroll-mt-24 px-5 pb-16 pt-10">
-        <h2 id="schedule" className="text-3xl font-bold sm:text-4xl">
+        <h2 id="schedule" className="text-2xl font-bold sm:text-4xl">
           Weekly OPD schedule
         </h2>
         <p className="mb-6 mt-1 text-muted">Timings can change on holidays, so call if you&apos;re unsure.</p>

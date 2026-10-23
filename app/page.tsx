@@ -32,30 +32,31 @@ export default function Home() {
       <LegacyBookingLink />
 
       {/* Hero */}
-      <section className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-12 md:grid-cols-2 md:py-16">
-        <div className="flex flex-col gap-5">
-          <p className="font-semibold text-brand">Specialist doctors in Sopore, on fixed days every week</p>
-          <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+      <section className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-6 pt-7 sm:py-12 md:grid-cols-2 md:py-16">
+        <div className="flex flex-col gap-4 sm:gap-5">
+          <p className="text-[0.95rem] font-semibold text-brand sm:text-base">Specialist doctors in Sopore, on fixed days every week</p>
+          <h1 className="text-[2rem] font-bold leading-tight tracking-tight sm:text-5xl">
             See the right specialist, close to home.
           </h1>
-          <p className="text-lg text-muted">
+          <p className="text-muted sm:text-lg">
             Visiting specialists, scans, a lab and a pharmacy under one roof. Consultation ₹{clinic.consultationFee}.
           </p>
+          {/* On phones the Call/Book bar at the bottom already has both, so only Book shows here. */}
           <div className="flex flex-wrap gap-3">
             <Link
               href="/book"
-              className="inline-flex min-h-13 items-center rounded-2xl bg-brand px-7 text-lg font-semibold text-white hover:bg-brand-dark"
+              className="inline-flex min-h-12 items-center rounded-2xl bg-brand px-6 font-semibold text-white hover:bg-brand-dark sm:min-h-13 sm:px-7 sm:text-lg"
             >
               Book a doctor
             </Link>
             <a
               href={`tel:${clinic.phone}`}
-              className="inline-flex min-h-13 items-center gap-2 rounded-2xl border border-line bg-white px-6 text-lg font-semibold hover:border-brand"
+              className="hidden min-h-13 items-center gap-2 rounded-2xl border border-line bg-white px-6 text-lg font-semibold hover:border-brand sm:inline-flex"
             >
               <PhoneIcon /> Call {clinic.phoneDisplay}
             </a>
           </div>
-          <p className="flex flex-wrap gap-x-6 gap-y-1 text-base text-muted">
+          <p className="flex flex-wrap gap-x-6 gap-y-1 text-[0.95rem] text-muted sm:text-base">
             <span className="inline-flex items-center gap-2">
               <ClockIcon className="size-4" /> Open {hours}
             </span>
@@ -64,14 +65,15 @@ export default function Home() {
             </span>
           </p>
         </div>
-        <div className="overflow-hidden rounded-3xl border border-brand-line">
+        {/* Hidden on phones so "Who's in today" sits right under the hero. */}
+        <div className="hidden overflow-hidden rounded-3xl border border-brand-line md:block">
           <ClinicIllustration />
         </div>
       </section>
 
       {/* Who's in today */}
-      <section aria-labelledby="today" className="mx-auto max-w-6xl px-5 pb-12">
-        <div className="rounded-3xl border border-line bg-white p-6 sm:p-8">
+      <section aria-labelledby="today" className="mx-auto max-w-6xl px-5 pb-8 sm:pb-12">
+        <div className="rounded-3xl border border-line bg-white p-5 sm:p-8">
           <Suspense fallback={<WhosInTodaySkeleton />}>
             <WhosInToday />
           </Suspense>
@@ -88,15 +90,15 @@ export default function Home() {
         <h2 id="shortcuts" className="sr-only">
           Find what you need
         </h2>
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
           {shortcuts.map((s) => (
             <li key={s.href}>
               <Link
                 href={s.href}
-                className="flex h-full flex-col gap-2 rounded-2xl border border-line bg-white p-6 hover:border-brand"
+                className="flex h-full flex-col gap-1 rounded-2xl border border-line bg-white p-4 hover:border-brand sm:gap-2 sm:p-6"
               >
-                <span className="text-xl font-bold">{s.title} →</span>
-                <span className="text-base text-muted">{s.text}</span>
+                <span className="text-lg font-bold sm:text-xl">{s.title} →</span>
+                <span className="text-[0.95rem] text-muted sm:text-base">{s.text}</span>
               </Link>
             </li>
           ))}
