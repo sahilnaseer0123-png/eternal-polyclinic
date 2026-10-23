@@ -3,6 +3,7 @@ import { clinic } from "@/data/clinic";
 import { formatTime } from "@/lib/schedule";
 import { PageIntro } from "@/components/SiteChrome";
 import { ChatIcon, ClockIcon, MapPinIcon, PhoneIcon } from "@/components/Icons";
+import { EmergencyNote } from "@/components/EmergencyNote";
 
 export const metadata: Metadata = {
   title: "Contact and directions",
@@ -15,6 +16,9 @@ export default function ContactPage() {
   return (
     <>
       <PageIntro title="Visit us" />
+      <div className="mx-auto max-w-6xl px-5 pb-5">
+        <EmergencyNote />
+      </div>
       <section aria-label="Address and contact" className="mx-auto max-w-6xl px-5 pb-16">
         <div className="grid gap-8 card rounded-3xl p-6 sm:p-10 md:grid-cols-2">
           <div className="flex flex-col gap-5">

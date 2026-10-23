@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { clinic } from "@/data/clinic";
 import { BookingSection, BookingSkeleton } from "@/components/BookingSection";
 import { PageIntro } from "@/components/SiteChrome";
+import { EmergencyNote } from "@/components/EmergencyNote";
 
 export const metadata: Metadata = {
   title: "Book an appointment",
@@ -14,6 +15,9 @@ export default function BookPage({ searchParams }: PageProps<"/book">) {
   return (
     <>
       <PageIntro title="Book an appointment">Takes under a minute. No account needed.</PageIntro>
+      <div className="mx-auto max-w-6xl px-5 pb-5">
+        <EmergencyNote />
+      </div>
 
       <div className="mx-auto grid max-w-6xl gap-10 px-5 pb-16 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <Suspense fallback={<BookingSkeleton />}>

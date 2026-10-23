@@ -167,6 +167,36 @@ export function opdShort(doctor: Doctor): string | null {
   return doctor.opd.map((s) => `${day(s)} ${hours(s)}`).join(" · ");
 }
 
+/** The doctor's next bookable slot from `now`, or null when no days are set. */
+export function nextSlot(doctor: Doctor, now: Date): { date: string; time: string } | null {
+  const first = nextOpdDates(doctor, now, 1)[0];
+  if (!first) return null;
+  const time = timeSlots(doctor, first.date, now)[0];
+  return time ? { date: first.date, time } : null;
+}
+
+const SHORT_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+/**
+ * "Today, 4:20 pm" / "Tomorrow, 4:00 pm" / "Sat 31 Oct, 4:00 pm".
+ * `short` for tight cards: "Tomorrow, 4 pm" / "Sun, 8 am" (the date is left out within the coming week).
+ */
+export function slotLabel(slot: { date: string; time: string }, now: Date, short = false): string {
+  const today = clinicClock(now).dateKey;
+  const [, mo, d] = slot.date.split("-").map(Number);
+  const weekday = DAY_NAMES[weekdayOf(slot.date)].slice(0, 3);
+  const withinWeek = slot.date < addDays(today, 7);
+  const day =
+    slot.date === today
+      ? "Today"
+      : slot.date === addDays(today, 1)
+        ? "Tomorrow"
+        : short && withinWeek
+          ? weekday
+          : `${weekday} ${d} ${SHORT_MONTHS[mo - 1]}`;
+  return `${day}, ${short ? formatTimeShort(slot.time) : formatTime(slot.time)}`;
+}
+
 /** Where a sitting is right now: not started, in progress, or over for the day. */
 export function sessionStatus(session: OpdSession, now: Date): "upcoming" | "in" | "done" {
   const { minutes } = clinicClock(now);

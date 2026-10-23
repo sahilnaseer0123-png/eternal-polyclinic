@@ -52,6 +52,12 @@ in under 60 seconds with no account. Reception confirms every request by phone.
   Plus Jakarta Sans. Both self-hosted via @fontsource-variable.
 - `app/manifest.ts` + `public/icons/`: add-to-home-screen app (standalone). Icons rendered from `brand/logo.svg`.
 - Footer (`SiteFooter`): clinic, hours, pages, contact columns; on phones Hours + Contact sit side by side and Pages wraps last.
+- Live "next free slot" (23 Oct 2026): `NextAvailable` + `useClinicMinute` compute `nextSlot()`/`slotLabel()` in the visitor's
+  browser in clinic time (static pages stay static; the server snapshot is null and shows a same-height fallback line).
+- `concerns` on each doctor in clinic.ts: common reasons in patient words, used by the home "What brings you in?" row,
+  the doctors search, cards ("Helps with") and doctor pages. General guidance, still to be confirmed with each doctor.
+- `EmergencyNote` (Book, Contact) + footer line + FAQ: not an emergency service; go to SDH Hospital opposite or call 112
+  (`clinic.emergency`).
 - `app/globals.css`: design tokens (`brand`, `ink`, `muted`, `ground`, `line`, `emergency`, `glow`), the `card` utility, the phone type scale.
 
 ## Rules

@@ -12,6 +12,10 @@ export const faqs: Faq[] = [
     answer: `On the Doctors page, search or tap a speciality (Skin, Mind, General, Brain & spine). If you're not sure, call ${clinic.phoneDisplay} and reception will guide you.`,
   },
   {
+    question: "What if it's an emergency?",
+    answer: `Don't book online. ${clinic.name} is not an emergency service. Go to ${clinic.emergency.place}, or call ${clinic.emergency.phone}.`,
+  },
+  {
     question: "Do I need an account to book?",
     answer:
       "No. Choose a doctor, a day and a time, add your name and mobile number, and send the request on WhatsApp. Reception calls you to confirm the slot.",

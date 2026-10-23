@@ -8,6 +8,7 @@ import { clinic, doctors } from "@/data/clinic";
 import { DAY_NAMES, formatTime, opdSummary } from "@/lib/schedule";
 import { DoctorMark } from "@/components/DoctorMark";
 import { ShareButton } from "@/components/ShareButton";
+import { NextAvailable } from "@/components/NextAvailable";
 import { CalendarIcon, CategoryIcon, ChevronRightIcon, PhoneIcon } from "@/components/Icons";
 
 export function generateStaticParams() {
@@ -81,6 +82,11 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
           ) : (
             <p className="text-slate-300">Days coming soon. Please call and reception will tell you when to come.</p>
           )}
+          {doctor.opd.length > 0 && (
+            <p className="font-semibold text-white">
+              <NextAvailable doctorId={doctor.id} fallback={"\u00a0"} prefix="Next free slot: " />
+            </p>
+          )}
           <p className="text-slate-400">
             Consultation ₹{clinic.consultationFee}. {clinic.address}.
           </p>
@@ -105,8 +111,29 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
         </section>
       </div>
 
+      {/* Common reasons to visit */}
+      <section aria-labelledby="reasons" className="reveal mt-8 sm:mt-12">
+        <h2 id="reasons" className="text-xl font-extrabold sm:text-3xl">
+          Common reasons to see {doctor.name ? doctor.name : `a ${doctor.speciality.toLowerCase()}`}
+        </h2>
+        <ul className="mt-4 flex flex-wrap gap-2">
+          {doctor.concerns.map((c) => (
+            <li key={c} className="card rounded-full px-4 py-2 font-semibold">
+              {c}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 text-muted">
+          Not sure this is the right doctor?{" "}
+          <a href={`tel:${clinic.phone}`} className="font-semibold text-brand underline">
+            Call {clinic.phoneDisplay}
+          </a>{" "}
+          and reception will guide you.
+        </p>
+      </section>
+
       {/* Other doctors */}
-      <section aria-labelledby="others" className="reveal mt-10 sm:mt-14">
+      <section aria-labelledby="others" className="reveal mt-8 sm:mt-12">
         <h2 id="others" className="text-xl font-extrabold sm:text-3xl">
           Other specialists
         </h2>

@@ -8,6 +8,7 @@ import { formatTime, opdShort } from "@/lib/schedule";
 import { WhosInToday, WhosInTodaySkeleton } from "@/components/WhosInToday";
 import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { DoctorMark } from "@/components/DoctorMark";
+import { NextAvailable } from "@/components/NextAvailable";
 import { FeatherPattern } from "@/components/FeatherPattern";
 import { WhatsAppPreview } from "@/components/WhatsAppPreview";
 import {
@@ -21,6 +22,9 @@ import {
 } from "@/components/Icons";
 
 const hours = `${formatTime(clinic.hours.open)} – ${formatTime(clinic.hours.close)}`;
+
+// Two common reasons per doctor (from clinic.ts), for the "What brings you in?" row.
+const REASONS = doctors.flatMap((d) => d.concerns.slice(0, 2));
 
 const STEPS = [
   {
@@ -120,6 +124,28 @@ export default function Home() {
         </section>
       </div>
 
+      {/* What brings you in? Common problems, each opening the doctors that help with it. */}
+      <section aria-labelledby="reasons" className="reveal mx-auto max-w-6xl pt-9 sm:pt-14">
+        <div className="px-5">
+          <h2 id="reasons" className="text-xl font-extrabold tracking-tight sm:text-3xl">
+            What brings you in?
+          </h2>
+          <p className="mt-1 text-muted">Tap a problem to see who can help. Not sure? Call reception.</p>
+        </div>
+        <ul className="mt-3 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:flex-wrap">
+          {REASONS.map((r) => (
+            <li key={r} className="shrink-0">
+              <Link
+                href={`/doctors?q=${encodeURIComponent(r.toLowerCase())}`}
+                className="card inline-flex min-h-11 items-center rounded-full px-4 font-semibold hover:text-brand"
+              >
+                {r}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       {/* Specialists */}
       <section
         aria-labelledby="specialists"
@@ -166,6 +192,9 @@ export default function Home() {
                     <span className="pt-1.5 text-sm font-semibold text-brand">
                       {days ?? "Days coming soon"}
                     </span>
+                    {days && (
+                      <NextAvailable doctorId={doctor.id} fallback={"\u00a0"} short className="truncate text-sm font-semibold text-ink" />
+                    )}
                   </span>
                 </Link>
               </li>

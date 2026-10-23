@@ -29,6 +29,11 @@ export type Doctor = {
   slotMinutes: number;
   /** Path under /public, or null to show the DoctorMark tile (initial or speciality icon). */
   photo: string | null;
+  /**
+   * Common reasons patients see this kind of specialist, in patient words. General guidance for
+   * "What brings you in?" and search, not a promise of treatment. TODO: confirm with each doctor.
+   */
+  concerns: string[];
 };
 
 export const clinic = {
@@ -53,6 +58,8 @@ export const clinic = {
   location: { name: "Old Municipal Office", lat: 34.2938233, lng: 74.455089 },
   mapUrl: "https://www.google.com/maps/dir/?api=1&destination=34.2938233,74.455089",
   mapEmbedUrl: "https://maps.google.com/maps?q=34.2938233,74.455089&z=18&output=embed",
+  /** Shown wherever patients might book: the clinic is not an emergency service. 112 = India's emergency number. */
+  emergency: { phone: "112", place: "the emergency department at SDH Hospital, right opposite" },
 } as const;
 
 /** In-house tests and services. Booked by phone for now (timings not confirmed). */
@@ -119,6 +126,7 @@ export const doctors: Doctor[] = [
     registrationNo: null, // TODO: get from the doctor
     opd: [{ day: 0, start: "08:00", end: "13:00" }],
     slotMinutes: 20,
+    concerns: ["Acne", "Hair fall", "Rashes and itching", "Skin infections", "Dandruff", "Nail problems"],
     photo: null,
   },
   {
@@ -135,6 +143,7 @@ export const doctors: Doctor[] = [
       { day: 6, start: "16:00", end: "20:00" },
     ],
     slotMinutes: 20,
+    concerns: ["Stress and anxiety", "Low mood", "Sleep problems", "Panic attacks", "Addiction", "Memory problems"],
     photo: null,
   },
   {
@@ -148,6 +157,7 @@ export const doctors: Doctor[] = [
     registrationNo: null,
     opd: [],
     slotMinutes: 20,
+    concerns: ["Fever and infections", "Blood pressure", "Diabetes", "Thyroid", "Stomach problems", "General check-up"],
     photo: null,
   },
   {
@@ -161,6 +171,7 @@ export const doctors: Doctor[] = [
     registrationNo: null,
     opd: [],
     slotMinutes: 20,
+    concerns: ["Slipped disc", "Back or neck pain with numbness", "Head injury", "Spine injury"],
     photo: null,
   },
 ];

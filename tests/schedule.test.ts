@@ -10,7 +10,9 @@ import {
   doctorsInToday,
   formatTime,
   isOpenNow,
+  nextSlot,
   opdShort,
+  slotLabel,
   nextOpdDates,
   nextSpecialist,
   opdSummary,
@@ -94,4 +96,28 @@ test("late in a sitting no slots are left today, so the home card offers the nex
   const wed745pm = new Date("2026-10-28T19:45:00+05:30"); // a Wednesday, last slot (7:40 pm) has passed
   assert.deepEqual(timeSlots(akash, "2026-10-28", wed745pm), []);
   assert.equal(nextOpdDates(akash, wed745pm, 1)[0].date, "2026-10-31"); // Saturday
+});
+
+test("nextSlot and slotLabel: the next free slot in patient words", () => {
+  const akash = doctors.find((d) => d.id === "akash")!;
+  const fri = new Date("2026-10-23T11:00:00+05:30"); // Friday morning
+  const slot = nextSlot(akash, fri)!;
+  assert.deepEqual(slot, { date: "2026-10-24", time: "16:00" });
+  assert.equal(slotLabel(slot, fri), "Tomorrow, 4:00 pm");
+  const sat415 = new Date("2026-10-24T16:15:00+05:30"); // during Saturday's sitting
+  assert.equal(slotLabel(nextSlot(akash, sat415)!, sat415), "Today, 4:20 pm");
+  const sun = new Date("2026-10-25T10:00:00+05:30");
+  assert.equal(slotLabel(nextSlot(akash, sun)!, sun), "Wed 28 Oct, 4:00 pm");
+  assert.equal(nextSlot(doctors.find((d) => d.id === "physician")!, fri), null);
+});
+
+test("every doctor lists common reasons to visit", () => {
+  for (const d of doctors) assert.ok(d.concerns.length >= 3, d.id);
+});
+
+test("slotLabel short form fits small cards", () => {
+  const fri = new Date("2026-10-23T11:00:00+05:30");
+  assert.equal(slotLabel({ date: "2026-10-24", time: "16:00" }, fri, true), "Tomorrow, 4 pm");
+  assert.equal(slotLabel({ date: "2026-10-25", time: "08:00" }, fri, true), "Sun, 8 am");
+  assert.equal(slotLabel({ date: "2026-11-01", time: "08:00" }, fri, true), "Sun 1 Nov, 8 am");
 });
