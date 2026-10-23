@@ -13,7 +13,7 @@ export default function ServicesPage() {
     <>
       <PageIntro title="Tests and services">No need to go elsewhere for scans, reports or medicines.</PageIntro>
       <section aria-label="Services" className="mx-auto max-w-6xl px-5 pb-16">
-        <ul className="grid gap-3 sm:grid-cols-2 sm:gap-5">
+        <ul className="reveal grid gap-3 sm:grid-cols-2 sm:gap-5">
           {services.map((service) => (
             <li key={service.id} className="card flex flex-col gap-1 rounded-3xl p-5 sm:p-6">
               <span className="mb-2 flex size-12 items-center justify-center rounded-2xl bg-brand-tint text-brand">

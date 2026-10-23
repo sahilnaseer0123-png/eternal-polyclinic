@@ -13,7 +13,7 @@ export default function FaqPage() {
     <>
       <PageIntro title="Questions patients ask" />
       <section aria-label="Questions and answers" className="mx-auto max-w-6xl px-5 pb-16">
-        <div className="max-w-3xl">
+        <div className="reveal max-w-3xl">
           <Faq />
         </div>
         <p className="mt-6 text-muted">

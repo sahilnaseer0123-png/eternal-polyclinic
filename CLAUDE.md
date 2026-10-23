@@ -42,6 +42,10 @@ in under 60 seconds with no account. Reception confirms every request by phone.
   (`logo.svg`, PNGs, horizontal lockups). The favicon `app/icon.svg` is `brand/logo-small.svg`, a simplified
   version for 16–48px. `app/apple-icon.png` is the full emblem on white. The logo's gold and blue are the only
   colours allowed outside rule 6, and only inside the emblem.
+- Motion and rhythm (23 Oct 2026): rounded buttons/cards press in, card links lift on hover, hero text `.rise`s,
+  sections below the fold use `.reveal` (one-time fade-in via `RevealOnScroll.tsx`), the More sheet slides up.
+  All of it is off under prefers-reduced-motion. Home alternates bands: hero over `FeatherPattern`, specialists,
+  teal "Book in 3 steps", tinted tests band. Never animate opacity on above-the-fold text (it delays LCP).
 - `app/globals.css`: design tokens (`brand`, `ink`, `muted`, `ground`, `line`, `emergency`, `glow`), the `card` utility, the phone type scale.
 
 ## Rules

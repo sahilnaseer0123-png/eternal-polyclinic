@@ -58,9 +58,95 @@ html {
   }
 }
 
+/* ---------- Motion (23 Oct 2026): small, quick, and off for anyone who asks their phone for less motion ---------- */
+
+/* Every rounded button, pill and card link presses in slightly when tapped (plain text links don't). */
+:where(a, button)[class*="rounded-"] {
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+:where(a, button)[class*="rounded-"]:active {
+  transform: scale(0.97);
+}
+
+/* Card links lift a little under the mouse (desktop only; phones have no hover). */
+@media (hover: hover) {
+  a.card:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 12px 28px rgb(15 23 42 / 0.1),
+      0 2px 6px rgb(15 23 42 / 0.06);
+  }
+}
+
+/* Hero: text and the Today card rise into place on load. Transform only (no fading),
+   so the text is visible at once and the page doesn't count as slower to load. */
+@keyframes rise {
+  from {
+    transform: translateY(14px);
+  }
+}
+.rise {
+  animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.rise-2 {
+  animation-delay: 0.08s;
+}
+.rise-3 {
+  animation-delay: 0.16s;
+}
+
+/* Sections further down fade and slide in once, when they come into view (RevealOnScroll.tsx adds
+   .is-visible). Only after the page has marked itself .reveal-ready, so without JavaScript nothing is hidden. */
+html.reveal-ready .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+html.reveal-ready .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* The More menu slides up; its backdrop fades in. */
+@keyframes sheet-in {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+.sheet-in {
+  animation: sheet-in 0.22s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.fade-in {
+  animation: fade-in 0.2s ease both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  :where(a, button)[class*="rounded-"]:active,
+  a.card:hover,
+  html.reveal-ready .reveal {
+    transform: none;
+    opacity: 1;
   }
 }
 

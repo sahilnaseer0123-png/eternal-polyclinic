@@ -32,12 +32,12 @@ export function TabBar() {
             aria-label="Close menu"
             tabIndex={-1}
             onClick={() => setOpen(false)}
-            className="fixed inset-0 z-40 bg-ink/30"
+            className="fade-in fixed inset-0 z-40 bg-ink/30"
           />
           <nav
             id="more-menu"
             aria-label="More"
-            className="fixed inset-x-3 bottom-[4.75rem] z-50 rounded-3xl bg-white p-2 shadow-xl"
+            className="sheet-in fixed inset-x-3 bottom-[4.75rem] z-50 rounded-3xl bg-white p-2 shadow-xl"
           >
             <ul>
               {[...NAV.filter((n) => n.href !== "/doctors"), { href: "/privacy", label: "Privacy notice" }].map((item) => (

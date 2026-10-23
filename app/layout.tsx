@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { clinic } from "@/data/clinic";
 import { SiteHeader } from "@/components/SiteHeader";
 import { QuickActions, SiteFooter } from "@/components/SiteChrome";
+import { RevealOnScroll } from "@/components/RevealOnScroll";
 import "./globals.css";
 
 const description = `Book a specialist at ${clinic.name}, ${clinic.address}. Dermatology, psychiatry, general medicine, neurosurgery, ultrasound, echo, lab and pharmacy. Consultation ₹${clinic.consultationFee}.`;
@@ -44,8 +45,10 @@ const structuredData = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className="h-full antialiased">
+    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <body className="min-h-full flex flex-col">
+        {/* Marks the page ready for scroll fade-ins before anything paints (see globals.css). */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('reveal-ready')" }} />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2"
@@ -58,6 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </main>
         <SiteFooter />
         <QuickActions />
+        <RevealOnScroll />
         <script
           type="application/ld+json"
           // JSON.stringify of our own static data; "<" escaped so it can't close the script tag.
