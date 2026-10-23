@@ -27,10 +27,8 @@ export type Doctor = {
   /** Empty list = OPD days not confirmed yet; the site tells patients to call. */
   opd: OpdSession[];
   slotMinutes: number;
-  /** Path under /public, or null to show the cartoon avatar. */
+  /** Path under /public, or null to show the DoctorMark tile (initial or speciality icon). */
   photo: string | null;
-  /** Colours for the cartoon avatar used until real photos arrive. */
-  avatar: { skin: string; hair: string; beard: boolean };
 };
 
 export const clinic = {
@@ -122,7 +120,6 @@ export const doctors: Doctor[] = [
     opd: [{ day: 0, start: "08:00", end: "13:00" }],
     slotMinutes: 20,
     photo: null,
-    avatar: { skin: "#E8B98F", hair: "#1F2937", beard: true },
   },
   {
     id: "akash",
@@ -139,7 +136,6 @@ export const doctors: Doctor[] = [
     ],
     slotMinutes: 20,
     photo: null,
-    avatar: { skin: "#F2C9A0", hair: "#3F2A1D", beard: false },
   },
   {
     id: "physician",
@@ -153,7 +149,6 @@ export const doctors: Doctor[] = [
     opd: [],
     slotMinutes: 20,
     photo: null,
-    avatar: { skin: "#EFC3A0", hair: "#6B7280", beard: true },
   },
   {
     id: "neurosurgeon",
@@ -167,6 +162,5 @@ export const doctors: Doctor[] = [
     opd: [],
     slotMinutes: 20,
     photo: null,
-    avatar: { skin: "#D9A47C", hair: "#111827", beard: false },
   },
 ];

@@ -10,12 +10,13 @@ export const metadata: Metadata = {
   description: `Specialists at ${clinic.name}, Sopore, the days they sit, and how to book. Consultation ₹${clinic.consultationFee}.`,
 };
 
-// Reads ?type=skin so shared links open with that speciality chosen. Per-request, so it sits in <Suspense>;
+// Reads ?type=skin (shared links open with that speciality chosen) and ?q= (the home page search box). Per-request, so it sits in <Suspense>;
 // the fallback is the full list, which is what gets prebuilt.
 async function DirectoryFromLink({ searchParams }: { searchParams: PageProps<"/doctors">["searchParams"] }) {
-  const { type } = await searchParams;
+  const { type, q } = await searchParams;
   const initialFilter = isCategory(type) ? type : "all";
-  return <DoctorDirectory key={initialFilter} initialFilter={initialFilter} />;
+  const initialQuery = typeof q === "string" ? q.slice(0, 60) : ""; // from the home page search box
+  return <DoctorDirectory key={`${initialFilter}|${initialQuery}`} initialFilter={initialFilter} initialQuery={initialQuery} />;
 }
 
 export default function DoctorsPage({ searchParams }: PageProps<"/doctors">) {

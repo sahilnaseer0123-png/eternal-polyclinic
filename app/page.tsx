@@ -1,5 +1,6 @@
 // Home (design C): "Which doctor do you need?", the dark Today card, specialists, tests, and how to find us.
 
+import Form from "next/form";
 import Link from "next/link";
 import { Suspense } from "react";
 import { categories, clinic, doctors, services } from "@/data/clinic";
@@ -30,13 +31,29 @@ export default function Home() {
             Visiting specialists on fixed days, with scans, a lab and a pharmacy under one roof. Consultation ₹
             {clinic.consultationFee}.
           </p>
-          <Link
-            href="/doctors#find"
-            className="card flex min-h-13 max-w-xl items-center gap-3 rounded-2xl px-4 text-muted hover:text-ink sm:min-h-15 sm:px-5"
+          {/* A real search box: typing here opens /doctors?q=... with the results. */}
+          <Form
+            action="/doctors"
+            role="search"
+            className="card flex max-w-xl items-center gap-2 rounded-2xl pl-4 pr-1.5 focus-within:outline-3 focus-within:outline-ink sm:pl-5"
           >
-            <SearchIcon className="size-5 text-brand" />
-            Find a doctor or service
-          </Link>
+            <SearchIcon className="size-5 shrink-0 text-brand" />
+            <label htmlFor="home-find" className="sr-only">
+              Find a doctor or service
+            </label>
+            {/* text-lg keeps it 16px on phones, so iPhones don't zoom in */}
+            <input
+              id="home-find"
+              name="q"
+              type="search"
+              placeholder="Find a doctor or service"
+              autoComplete="off"
+              className="min-h-13 min-w-0 flex-1 bg-transparent text-lg outline-none placeholder:text-muted sm:min-h-15"
+            />
+            <button type="submit" className="min-h-11 shrink-0 rounded-xl bg-ink px-4 font-semibold text-white hover:bg-slate-800">
+              Find
+            </button>
+          </Form>
           <ul aria-label="Browse by speciality" className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:flex-wrap">
             <li className="shrink-0">
               <Link href="/doctors" className="inline-flex min-h-11 items-center rounded-full bg-ink px-4 font-semibold text-white">

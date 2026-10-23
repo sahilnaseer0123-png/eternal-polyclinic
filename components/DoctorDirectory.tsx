@@ -16,9 +16,9 @@ export type Filter = "all" | DoctorCategory;
 const matches = (query: string, ...fields: (string | null | undefined)[]) =>
   fields.some((f) => f?.toLowerCase().includes(query));
 
-export function DoctorDirectory({ initialFilter = "all" }: { initialFilter?: Filter }) {
+export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { initialFilter?: Filter; initialQuery?: string }) {
   const [filter, setFilter] = useState<Filter>(initialFilter);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   const q = query.trim().toLowerCase();
 
   const shown = doctors.filter(

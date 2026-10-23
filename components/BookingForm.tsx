@@ -23,9 +23,10 @@ import { ChatIcon, PhoneIcon } from "./Icons";
 const SHORT_DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const SHORT_MONTH = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+// Design C: chosen = solid ink pill, others = white with a thin line.
 function chipClass(on: boolean) {
-  return `rounded-xl border text-base ${
-    on ? "border-2 border-brand bg-brand-tint font-semibold" : "border-line bg-white hover:border-brand"
+  return `rounded-2xl border-2 text-base ${
+    on ? "border-ink bg-ink font-semibold text-white" : "border-line bg-white hover:border-ink"
   }`;
 }
 
@@ -143,7 +144,9 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
               className={`${chipClass(d.id === doctorId)} flex min-h-12 flex-col items-start justify-center px-4 py-2 sm:min-h-14 text-left`}
             >
               <span className="font-semibold">{d.name ?? d.speciality}</span>
-              <span className="text-sm text-muted">{d.name ? `${d.speciality} · ${d.categoryLabel}` : d.categoryLabel}</span>
+              <span className={`text-sm ${d.id === doctorId ? "text-slate-300" : "text-muted"}`}>
+                {d.name ? `${d.speciality} · ${d.categoryLabel}` : d.categoryLabel}
+              </span>
             </button>
           ))}
         </div>
