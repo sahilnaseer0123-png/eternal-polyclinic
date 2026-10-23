@@ -11,6 +11,7 @@ import { ShareButton } from "@/components/ShareButton";
 import { NextAvailable } from "@/components/NextAvailable";
 import { EmergencyNote } from "@/components/EmergencyNote";
 import { CalendarIcon, CategoryIcon, ChevronRightIcon, PhoneIcon } from "@/components/Icons";
+import { doctorBreadcrumbs, doctorSchema, jsonLd } from "@/lib/structured-data";
 
 export function generateStaticParams() {
   return doctors.map((d) => ({ id: d.id }));
@@ -34,9 +35,12 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
   if (!doctor) notFound();
   const others = doctors.filter((d) => d.id !== doctor.id);
   const facts = [doctor.degree, doctor.experienceYears ? `${doctor.experienceYears} years of experience` : null].filter(Boolean);
+  // For search engines: who this doctor is and where they practise, plus Home > Doctors > this page.
+  const schema = [doctorSchema(doctor), doctorBreadcrumbs(doctor)].filter(Boolean);
 
   return (
     <div className="mx-auto max-w-6xl px-5 pb-12 pt-5 sm:pb-16 sm:pt-8">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
       <Link href="/doctors" className="inline-flex min-h-11 items-center gap-1 font-semibold text-brand">
         <ChevronRightIcon className="size-4 rotate-180" /> All doctors
       </Link>
