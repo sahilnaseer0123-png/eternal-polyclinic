@@ -12,6 +12,9 @@ in under 60 seconds with no account. Reception confirms every request by phone.
   forbids business sites; Pro is ~₹2,000/month). The site is a static export (`output: "export"` → `out/`): every page is a
   ready-made file, so there is no server code. Cloudflare builds `main` on every push (preset "Next.js (Static HTML Export)",
   build `npx next build`, output `out`). Live at `clinic.siteUrl` (https://eternal-polyclinic.pages.dev).
+- Deploys stop silently if Cloudflare loses access to this repo (yellow "disconnected" banner in the Pages project).
+  Fix: GitHub → Settings → Applications → Cloudflare Workers and Pages → Configure → Repository access must list
+  BOTH tamyiz and eternal-polyclinic → Save. (Happened 23 Oct 2026.)
 - Font: Plus Jakarta Sans, self-hosted via `@fontsource-variable/plus-jakarta-sans`
 - V1 sends booking requests to the clinic on WhatsApp (`lib/booking.ts`); nothing is stored, on the server or the patient's phone.
   Decision (23 Oct 2026): NO database and NO reception view for now. Reception works from WhatsApp.
