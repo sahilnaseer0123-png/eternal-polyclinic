@@ -97,6 +97,6 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 7. Reception view at `/admin`: dropped for now (see Stack). Don't build it unless asked.
 8. Weekly schedule, FAQ, Visit us with map, floating WhatsApp ✓
 9. Polish ✓: /privacy notice, favicon + apple icon, Open Graph, schema.org MedicalClinic, robots + sitemap.
-   Audit baseline (23 Oct 2026, design C; recheck after the Cloudflare move): axe 0 violations on all pages; Lighthouse mobile home 98, other pages 95–99,
+   Audit baseline (23 Oct 2026, rechecked on the Cloudflare static build): axe 0 violations on all pages; Lighthouse mobile 92–100 (noisy run to run),
    accessibility / best practices / SEO 100, layout shift 0. Don't ship below it.
 10. Design C redesign ✓ (built on branch `redesign-c`, merged 23 Oct 2026).
