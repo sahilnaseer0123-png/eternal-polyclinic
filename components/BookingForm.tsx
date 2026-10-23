@@ -158,7 +158,8 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
         <FieldError id="err-doctor" message={errors.doctorId} />
       </fieldset>
 
-      {/* 2. Day */}
+      {/* 2. Day (until a doctor is chosen, a muted note keeps the numbering 1-2-3-4 visible) */}
+      {!doctor && <StepHint title="2. Day and 3. Time" hint="Choose a doctor first. Their days and times appear here." />}
       {doctor && (
         <fieldset className="min-w-0 flex flex-col gap-3">
           <legend className="mb-2 text-lg font-bold sm:mb-3">2. Day</legend>
@@ -208,6 +209,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
       )}
 
       {/* 3. Time */}
+      {doctor && dates.length > 0 && !date && <StepHint title="3. Time" hint="Pick a day first." />}
       {doctor && date && (
         <fieldset className="min-w-0 flex flex-col gap-3">
           <legend className="mb-2 text-lg font-bold sm:mb-3">3. Time</legend>
@@ -291,6 +293,16 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
           Reception calls you to confirm.
         </p>
       </div>
+    </div>
+  );
+}
+
+/** A step that isn't available yet: same heading style as a fieldset legend, muted. */
+function StepHint({ title, hint }: { title: string; hint: string }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <p className="text-lg font-bold text-muted">{title}</p>
+      <p className="text-base text-muted">{hint}</p>
     </div>
   );
 }

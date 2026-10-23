@@ -19,5 +19,5 @@ export function BookingSection() {
 
 export function BookingSkeleton() {
   // Same height as the empty form, so the page doesn't jump when the form appears.
-  return <div className="card h-[44.5rem] animate-pulse rounded-3xl sm:h-[40rem]" aria-busy="true" />;
+  return <div className="card h-[51rem] animate-pulse rounded-3xl sm:h-[52.5rem] lg:h-[54rem] xl:h-[51rem]" aria-busy="true" />;
 }

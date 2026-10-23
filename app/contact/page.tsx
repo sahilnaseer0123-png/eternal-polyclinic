@@ -6,6 +6,7 @@ import { ChatIcon, ClockIcon, MapPinIcon, PhoneIcon } from "@/components/Icons";
 import { EmergencyNote } from "@/components/EmergencyNote";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/contact" },
   title: "Contact and directions",
   description: `${clinic.name}, ${clinic.address}. Call ${clinic.phoneDisplay}, WhatsApp ${clinic.whatsappDisplay}.`,
 };

@@ -7,6 +7,7 @@ import { ScheduleView, WeeklySchedule } from "@/components/WeeklySchedule";
 import { PageIntro } from "@/components/SiteChrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/doctors" },
   title: "Our doctors and OPD schedule",
   description: `Specialists at ${clinic.name}, Sopore, the days they sit, and how to book. Consultation ₹${clinic.consultationFee}.`,
 };

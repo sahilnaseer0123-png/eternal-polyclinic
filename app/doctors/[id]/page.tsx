@@ -25,6 +25,7 @@ export async function generateMetadata({ params }: PageProps<"/doctors/[id]">): 
   if (!doctor) return {};
   const days = opdSummary(doctor);
   return {
+    alternates: { canonical: `/doctors/${doctor.id}` },
     title: doctor.name ? `${doctor.name}, ${doctor.speciality}` : doctor.speciality,
     description: `${title(doctor)} at ${clinic.name}, Sopore. ${days ? `Sits on ${days}.` : "Days coming soon."} Consultation ₹${clinic.consultationFee}.`,
   };
@@ -48,9 +49,9 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
       <div className="mt-3 grid gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-8">
         {/* Who */}
         <section className="rise card flex flex-col gap-5 rounded-3xl p-5 sm:flex-row sm:items-center sm:p-8">
-          <DoctorMark doctor={doctor} className="size-24 rounded-3xl bg-brand-tint text-5xl text-brand sm:size-32 sm:text-6xl" />
+          <DoctorMark doctor={doctor} className="size-24 rounded-3xl bg-brand-tint text-5xl text-brand sm:size-32 sm:text-6xl lg:size-24 lg:text-5xl xl:size-32 xl:text-6xl" />
           <div className="min-w-0">
-            <h1 className="text-[1.75rem] font-extrabold leading-tight sm:text-5xl">{title(doctor)}</h1>
+            <h1 className="text-[1.75rem] font-extrabold leading-tight [overflow-wrap:anywhere] sm:text-5xl lg:text-4xl xl:text-5xl">{title(doctor)}</h1>
             <p className="mt-1 text-muted sm:text-lg">
               {doctor.name ? doctor.speciality : "Name to be confirmed"}
               {facts.length > 0 && ` · ${facts.join(" · ")}`}
@@ -95,7 +96,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
           <p className="text-slate-400">
             Consultation ₹{clinic.consultationFee}. {clinic.address}.
           </p>
-          <div className="mt-auto grid gap-2 sm:grid-cols-2">
+          <div className="mt-auto grid gap-2 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
             {doctor.opd.length > 0 ? (
               <Link
                 href={`/book?doctor=${doctor.id}`}
@@ -144,7 +145,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
         <h2 id="others" className="text-xl font-extrabold sm:text-3xl">
           Other specialists
         </h2>
-        <ul className="mt-4 grid gap-3 sm:grid-cols-3 sm:gap-4">
+        <ul className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           {others.map((d) => (
             <li key={d.id}>
               <Link href={`/doctors/${d.id}`} className="card flex items-center gap-3 rounded-3xl p-3 sm:p-4">

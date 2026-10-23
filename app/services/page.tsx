@@ -4,6 +4,7 @@ import { PageIntro } from "@/components/SiteChrome";
 import { ServiceIcon } from "@/components/Icons";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/services" },
   title: "Tests and services",
   description: `${services.map((s) => s.name).join(", ")} at ${clinic.name}, Sopore.`,
 };

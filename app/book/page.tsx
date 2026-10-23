@@ -7,6 +7,7 @@ import { PageIntro } from "@/components/SiteChrome";
 import { EmergencyNote } from "@/components/EmergencyNote";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/book" },
   title: "Book an appointment",
   description: `Request a slot with a specialist at ${clinic.name}, Sopore. No account needed; reception confirms by phone.`,
 };

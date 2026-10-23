@@ -18,7 +18,6 @@ export const metadata: Metadata = {
     siteName: clinic.name,
     title: `${clinic.name}, Sopore`,
     description,
-    url: "/",
   },
   formatDetection: { telephone: true },
 };

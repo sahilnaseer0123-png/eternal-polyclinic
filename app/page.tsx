@@ -1,5 +1,6 @@
 // Home (design C): "Which doctor do you need?", the dark Today card, specialists, tests, and how to find us.
 
+import type { Metadata } from "next";
 import Form from "next/form";
 import Link from "next/link";
 import { categories, clinic, doctors, services } from "@/data/clinic";
@@ -19,6 +20,9 @@ import {
   ServiceIcon,
   UserIcon,
 } from "@/components/Icons";
+
+// Every page names its own address for search engines (alternates.canonical); this is "/".
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const hours = `${formatTime(clinic.hours.open)} – ${formatTime(clinic.hours.close)}`;
 

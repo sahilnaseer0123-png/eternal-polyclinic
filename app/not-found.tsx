@@ -1,8 +1,11 @@
 // Shown for any address that doesn't exist (old or mistyped links).
 
+import type { Metadata } from "next";
 import Link from "next/link";
 import { clinic } from "@/data/clinic";
 import { PhoneIcon } from "@/components/Icons";
+
+export const metadata: Metadata = { title: "Page not found" };
 
 export default function NotFound() {
   return (

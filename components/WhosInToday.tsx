@@ -29,9 +29,12 @@ const STATUS_TEXT = {
   done: () => "Finished for today",
 } as const;
 
-// min-h matches the usual card height, so the placeholder and the real card are the same size
-// and nothing below jumps when it streams in.
-const shell = "flex h-full min-h-[25rem] flex-col gap-5 rounded-3xl bg-ink p-5 text-white sm:p-7";
+// The card fills in on the visitor's device, and its height depends on the day (taller when a doctor is in).
+// min-h is set above the tallest real card (measured 23 Oct 2026: 320px phone 509px, 390px phone 441px, tablet 510px, desktop 510px, 1024px 536px),
+// so the placeholder and every real card are the same size and nothing jumps (rem is 18px from 640px up, so
+// lg:min-h-[30rem] = 540px). Re-measure if doctors are added.
+const shell =
+  "flex h-full min-h-[28rem] flex-col gap-5 rounded-3xl bg-ink p-5 text-white max-[359px]:min-h-[32rem] sm:min-h-[28.5rem] sm:p-7 lg:min-h-[30rem]";
 const whiteButton =
   "inline-flex min-h-12 items-center justify-center rounded-2xl bg-white px-5 font-bold text-ink hover:bg-slate-100";
 

@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { clinic } from "@/data/clinic";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/privacy" },
   title: "Privacy notice",
   description: `How ${clinic.name} handles the details you share when you book an appointment.`,
 };

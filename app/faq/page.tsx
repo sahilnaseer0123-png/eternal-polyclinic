@@ -4,6 +4,7 @@ import { Faq } from "@/components/Faq";
 import { PageIntro } from "@/components/SiteChrome";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/faq" },
   title: "Questions patients ask",
   description: `Booking, fees, privacy and directions for ${clinic.name}, Sopore.`,
 };
