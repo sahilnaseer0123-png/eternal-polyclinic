@@ -8,13 +8,7 @@ import { usePathname } from "next/navigation";
 import { clinic } from "@/data/clinic";
 import { PhoneIcon } from "./Icons";
 import { Logo } from "./Logo";
-
-export const NAV = [
-  { href: "/doctors", label: "Doctors" },
-  { href: "/services", label: "Services" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/contact", label: "Contact" },
-] as const;
+import { NAV } from "./nav";
 
 export function SiteHeader() {
   const pathname = usePathname();

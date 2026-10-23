@@ -91,7 +91,11 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                 <div className="flex items-center gap-3 sm:gap-4">
                   <DoctorMark doctor={doctor} className="size-14 rounded-2xl bg-brand-tint text-2xl text-brand sm:size-16" />
                   <div className="min-w-0">
-                    <h3 className="text-lg font-bold leading-snug sm:text-xl">{doctor.name ?? doctor.speciality}</h3>
+                    <h3 className="text-lg font-bold leading-snug sm:text-xl">
+                      <Link href={`/doctors/${doctor.id}`} className="underline-offset-4 hover:text-brand hover:underline">
+                        {doctor.name ?? doctor.speciality}
+                      </Link>
+                    </h3>
                     <p className="text-muted">
                       {doctor.name ? `${doctor.speciality} · ` : ""}
                       {doctor.degree}

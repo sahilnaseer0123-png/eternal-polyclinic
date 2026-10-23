@@ -1,9 +1,12 @@
 @import "tailwindcss";
 @import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource-variable/bricolage-grotesque";
 
 /* Design tokens from the spec. Use these names in classes: bg-brand, text-ink, bg-ground ... */
 @theme {
   --font-sans: "Plus Jakarta Sans Variable", system-ui, sans-serif;
+  /* Headings (23 Oct 2026): a display face with more character; body text stays Plus Jakarta Sans. */
+  --font-display: "Bricolage Grotesque Variable", "Plus Jakarta Sans Variable", system-ui, sans-serif;
 
   --color-brand: #0f766e;
   --color-brand-dark: #115e59;
@@ -155,6 +158,16 @@ body {
   color: var(--color-ink);
   font-family: var(--font-sans);
   line-height: 1.6;
+}
+
+/* In the base layer, so utility classes like tracking-wider on a heading still win. */
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
 }
 
 /* A clear focus ring for keyboard users, everywhere. */

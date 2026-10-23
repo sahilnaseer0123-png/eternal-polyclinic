@@ -25,8 +25,10 @@ in under 60 seconds with no account. Reception confirms every request by phone.
   use the clinic's exact coordinates (`clinic.location`, the Old Municipal Office building). Never link to a name search.
 - `components/`: page sections. `WhosInToday`, `BookingSection`, `WeeklySchedule` and the doctors `?type=` reader are per-request
   (io() / searchParams) inside `<Suspense>`. Their placeholders are sized like the real thing (no layout jump; keep it that way).
-- Pages: `/` (hero with find box and chips, dark Today card, specialists, tests, visit), `/doctors` (find box, chips, cards,
-  weekly schedule; `/doctors?type=skin` opens with a chip chosen), `/book`, `/services`, `/faq`, `/contact`, `/privacy`.
+- Pages: `/` (hero with find box and chips, dark Today card, specialists, Book-in-3-steps band with `WhatsAppPreview`, tests, visit),
+  `/doctors` (find box, chips, cards, weekly schedule; `/doctors?type=skin` opens with a chip chosen), `/doctors/[id]`
+  (one static page per doctor: details, days, Book/Call, `ShareButton`), `/book`, `/services`, `/faq`, `/contact`, `/privacy`.
+  Page links shared by header, More sheet and footer live in `components/nav.ts` (a plain module: server and client can import it).
   Header (`SiteHeader`), footer and WhatsApp button (`SiteChrome`), and the phone/tablet bottom tab bar (`TabBar`: Home,
   Doctors, Book, More sheet) are mounted in `app/layout.tsx`.
 - Design C (chosen 23 Oct 2026, mockups on the design canvas): ground `#f4f6f5`, white `card` surfaces (a utility in
@@ -46,6 +48,10 @@ in under 60 seconds with no account. Reception confirms every request by phone.
   sections below the fold use `.reveal` (one-time fade-in via `RevealOnScroll.tsx`), the More sheet slides up.
   All of it is off under prefers-reduced-motion. Home alternates bands: hero over `FeatherPattern`, specialists,
   teal "Book in 3 steps", tinted tests band. Never animate opacity on above-the-fold text (it delays LCP).
+- Fonts: headings h1–h3 use Bricolage Grotesque (`--font-display`, set in a base layer so utilities still win), body uses
+  Plus Jakarta Sans. Both self-hosted via @fontsource-variable.
+- `app/manifest.ts` + `public/icons/`: add-to-home-screen app (standalone). Icons rendered from `brand/logo.svg`.
+- Footer (`SiteFooter`): clinic, hours, pages, contact columns; on phones Hours + Contact sit side by side and Pages wraps last.
 - `app/globals.css`: design tokens (`brand`, `ink`, `muted`, `ground`, `line`, `emergency`, `glow`), the `card` utility, the phone type scale.
 
 ## Rules

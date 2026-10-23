@@ -9,6 +9,7 @@ import { WhosInToday, WhosInTodaySkeleton } from "@/components/WhosInToday";
 import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { DoctorMark } from "@/components/DoctorMark";
 import { FeatherPattern } from "@/components/FeatherPattern";
+import { WhatsAppPreview } from "@/components/WhatsAppPreview";
 import {
   CalendarIcon,
   ChatIcon,
@@ -148,7 +149,7 @@ export default function Home() {
                 className="w-44 shrink-0 snap-start sm:w-auto"
               >
                 <Link
-                  href={days ? `/book?doctor=${doctor.id}` : "/doctors"}
+                  href={`/doctors/${doctor.id}`}
                   className="card flex h-full flex-col gap-3 rounded-3xl p-3 sm:p-4"
                 >
                   <DoctorMark
@@ -178,43 +179,37 @@ export default function Home() {
         aria-labelledby="how"
         className="mt-10 bg-brand text-white sm:mt-14"
       >
-        <div className="reveal mx-auto grid max-w-6xl gap-6 px-5 py-10 sm:py-14 lg:grid-cols-[1fr_2fr] lg:items-center lg:gap-10">
+        <div className="reveal mx-auto grid max-w-6xl gap-8 px-5 py-10 sm:py-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:items-center lg:gap-16">
           <div>
-            <h2
-              id="how"
-              className="text-xl font-extrabold tracking-tight sm:text-3xl"
-            >
+            <h2 id="how" className="text-2xl font-extrabold tracking-tight sm:text-4xl">
               Book in 3 steps
             </h2>
-            <p className="mt-2 text-teal-50">
-              No account and no app. Under a minute, from any phone.
-            </p>
+            <p className="mt-2 text-teal-50 sm:text-lg">No account and no app. Under a minute, from any phone.</p>
+            <ol className="mt-5 grid gap-2 sm:mt-6 sm:gap-3">
+              {STEPS.map(({ Icon, title, text }, i) => (
+                <li key={title} className="flex items-center gap-4 rounded-3xl bg-brand-dark p-3 sm:p-4">
+                  <span className="relative flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white text-brand">
+                    <Icon className="size-6" />
+                    <span className="absolute -right-1.5 -top-1.5 flex size-6 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">
+                      {i + 1}
+                    </span>
+                  </span>
+                  <span className="flex flex-col">
+                    <span className="font-bold">{title}</span>
+                    <span className="text-teal-50">{text}</span>
+                  </span>
+                </li>
+              ))}
+            </ol>
             <Link
               href="/book"
-              className="mt-5 inline-flex min-h-12 items-center rounded-2xl bg-white px-6 font-bold text-ink hover:bg-teal-50"
+              className="mt-6 inline-flex min-h-12 items-center rounded-2xl bg-white px-6 font-bold text-ink hover:bg-teal-50"
             >
               Book a doctor
             </Link>
           </div>
-          <ol className="grid gap-3 sm:grid-cols-3 sm:gap-4">
-            {STEPS.map(({ Icon, title, text }, i) => (
-              <li
-                key={title}
-                className="flex items-start gap-4 rounded-3xl bg-brand-dark p-4 sm:flex-col sm:gap-3 sm:p-5"
-              >
-                <span className="relative flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white text-brand">
-                  <Icon className="size-6" />
-                  <span className="absolute -right-1.5 -top-1.5 flex size-6 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">
-                    {i + 1}
-                  </span>
-                </span>
-                <span className="flex flex-col">
-                  <span className="font-bold">{title}</span>
-                  <span className="text-teal-50">{text}</span>
-                </span>
-              </li>
-            ))}
-          </ol>
+          {/* What the request looks like when it reaches the clinic */}
+          <WhatsAppPreview className="mx-auto hidden w-full max-w-sm sm:block lg:rotate-2" />
         </div>
       </section>
 

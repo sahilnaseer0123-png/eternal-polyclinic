@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { clinic } from "@/data/clinic";
 import { CalendarIcon, ChatIcon, ChevronRightIcon, CloseIcon, HomeIcon, MenuIcon, PhoneIcon, UserIcon } from "./Icons";
-import { NAV } from "./SiteHeader";
+import { NAV } from "./nav";
 
 const TABS = [
   { href: "/", label: "Home", Icon: HomeIcon },
