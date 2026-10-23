@@ -10,6 +10,7 @@ import {
   doctorsInToday,
   formatTime,
   isOpenNow,
+  opdShort,
   nextOpdDates,
   nextSpecialist,
   opdSummary,
@@ -79,4 +80,11 @@ test("display helpers", () => {
   assert.equal(isOpenNow(hours, at("2026-10-23T06:59:00+05:30")), false);
   assert.equal(isOpenNow(hours, at("2026-10-23T07:00:00+05:30")), true);
   assert.equal(isOpenNow(hours, at("2026-10-23T20:00:00+05:30")), false);
+});
+
+test("opdShort gives a compact line for cards", () => {
+  const byId = (id: string) => doctors.find((d) => d.id === id)!;
+  assert.equal(opdShort(byId("mubashir")), "Sun · 8 am–1 pm");
+  assert.equal(opdShort(byId("akash")), "Wed, Sat · 4 pm–8 pm");
+  assert.equal(opdShort(byId("physician")), null);
 });

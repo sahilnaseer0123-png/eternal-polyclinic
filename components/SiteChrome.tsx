@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { clinic } from "@/data/clinic";
-import { ChatIcon, PhoneIcon } from "./Icons";
+import { ChatIcon } from "./Icons";
+import { TabBar } from "./TabBar";
 
 export function SiteFooter() {
   return (
-    <footer className="bg-ink pb-24 pt-7 text-slate-300 sm:pb-10 sm:pt-10">
+    <footer className="bg-ink pb-24 pt-7 text-slate-300 sm:pt-10 lg:pb-10">
       <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 text-base sm:flex-row sm:flex-wrap sm:justify-between sm:gap-3 sm:text-base">
         <p className="font-semibold text-white">{clinic.name}, Sopore</p>
         <p>Founder &amp; Owner: {clinic.founder}</p>
@@ -29,26 +30,16 @@ export function SiteFooter() {
 export function QuickActions() {
   return (
     <>
-      {/* Phones: sticky Call / Book bar */}
-      <nav
-        aria-label="Quick actions"
-        className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-line bg-white px-3 pb-3 pt-2 sm:hidden"
-      >
-        <a href={`tel:${clinic.phone}`} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand font-semibold text-white">
-          <PhoneIcon /> Call
-        </a>
-        <Link href="/book" className="inline-flex min-h-11 items-center justify-center rounded-xl bg-ink font-semibold text-white">
-          Book
-        </Link>
-      </nav>
+      {/* Phones and tablets: bottom tab bar with Home, Doctors, Book and More */}
+      <TabBar />
 
-      {/* Larger screens: floating WhatsApp button */}
+      {/* Wide screens: floating WhatsApp button */}
       <aside aria-label="WhatsApp">
         <a
           href={`https://wa.me/${clinic.whatsapp}`}
           aria-label={`Message the clinic on WhatsApp, ${clinic.whatsappDisplay}`}
           title="WhatsApp"
-          className="fixed bottom-6 right-6 z-40 hidden size-14 items-center justify-center rounded-full bg-ink text-white shadow-lg hover:bg-slate-800 sm:inline-flex"
+          className="fixed bottom-6 right-6 z-40 hidden size-14 items-center justify-center rounded-full bg-ink text-white shadow-lg hover:bg-slate-800 lg:inline-flex"
         >
           <ChatIcon className="size-6" />
         </a>

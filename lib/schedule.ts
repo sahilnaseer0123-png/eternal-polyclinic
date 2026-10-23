@@ -157,6 +157,16 @@ export function opdSummary(doctor: Doctor): string | null {
     .join("; ");
 }
 
+/** Short form for small cards: "Wed, Sat · 4 pm–8 pm", or null when OPD days aren't confirmed. */
+export function opdShort(doctor: Doctor): string | null {
+  if (doctor.opd.length === 0) return null;
+  const hours = (s: OpdSession) => `${formatTimeShort(s.start)}–${formatTimeShort(s.end)}`;
+  const sameHours = doctor.opd.every((s) => hours(s) === hours(doctor.opd[0]));
+  const day = (s: OpdSession) => DAY_NAMES[s.day].slice(0, 3);
+  if (sameHours) return `${doctor.opd.map(day).join(", ")} · ${hours(doctor.opd[0])}`;
+  return doctor.opd.map((s) => `${day(s)} ${hours(s)}`).join(" · ");
+}
+
 /** Where a sitting is right now: not started, in progress, or over for the day. */
 export function sessionStatus(session: OpdSession, now: Date): "upcoming" | "in" | "done" {
   const { minutes } = clinicClock(now);

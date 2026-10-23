@@ -61,6 +61,8 @@ export const clinic = {
 export type Service = {
   id: string;
   name: string;
+  /** One or two words for small tiles, e.g. "Echo". */
+  short: string;
   description: string;
   /** Who runs it, e.g. "Dr. Haneef". */
   lead: string | null;
@@ -69,24 +71,28 @@ export type Service = {
 export const services: Service[] = [
   {
     id: "ultrasound",
+    short: "Ultrasound",
     name: "Ultrasound",
     description: "Scans and reports, in the clinic.",
     lead: "Dr. Haneef",
   },
   {
     id: "echo",
+    short: "Echo",
     name: "Echo and cardiac imaging",
     description: "Heart scans, in the clinic.",
     lead: "Dr. Adil Lankar",
   },
   {
     id: "lab",
+    short: "Lab",
     name: "Diagnostic lab",
     description: "Blood tests and lab reports.",
     lead: "Musadiq",
   },
   {
     id: "pharmacy",
+    short: "Pharmacy",
     name: "In-house pharmacy",
     description: "Get your prescribed medicines before you leave.",
     lead: null,

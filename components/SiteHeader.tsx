@@ -1,10 +1,10 @@
 "use client";
 
-// Header on every page: logo, menu (collapses to a "Menu" button on phones), call button.
+// Header on every page (design C). Wide screens: pill menu, Call and Book.
+// Phones and tablets: logo and a round Call button; the menu lives in the bottom tab bar (TabBar.tsx).
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import { clinic } from "@/data/clinic";
 import { PhoneIcon } from "./Icons";
 import { Logo } from "./Logo";
@@ -18,17 +18,15 @@ export const NAV = [
 
 export function SiteHeader() {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-  const linkClass = (href: string) =>
-    `rounded-lg px-3 py-2 hover:text-brand ${pathname === href ? "font-semibold text-brand" : ""}`;
+  const current = (href: string) => (pathname === href ? "page" : undefined);
 
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-2 sm:py-3">
-        <Link href="/" className="flex min-h-11 items-center gap-3 text-ink" onClick={() => setOpen(false)}>
+        <Link href="/" className="flex min-h-11 items-center gap-3 text-ink">
           <Logo className="size-10 shrink-0 sm:size-12" />
           <span className="leading-tight">
-            <span className="block font-bold">{clinic.name}</span>
+            <span className="block font-extrabold tracking-tight">{clinic.name}</span>
             {/* Phones: just the town, so the header stays one line. Wider screens: the full address. */}
             <span className="block text-sm text-muted">
               <span className="sm:hidden">{clinic.address.split(", ").pop()}</span>
@@ -37,57 +35,43 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 text-base font-medium lg:flex">
+        <nav aria-label="Main" className="hidden items-center gap-1 text-base font-semibold lg:flex">
           {NAV.map((item) => (
-            <Link key={item.href} href={item.href} className={linkClass(item.href)} aria-current={pathname === item.href ? "page" : undefined}>
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-current={current(item.href)}
+              className={`inline-flex min-h-11 items-center rounded-full px-4 ${
+                pathname === item.href ? "bg-brand-tint text-brand" : "hover:bg-ground"
+              }`}
+            >
               {item.label}
             </Link>
           ))}
-          <Link
-            href="/book"
-            aria-current={pathname === "/book" ? "page" : undefined}
-            className="ml-3 inline-flex min-h-11 items-center rounded-xl bg-brand px-5 font-semibold text-white hover:bg-brand-dark"
-          >
-            Book
-          </Link>
           <a
             href={`tel:${clinic.phone}`}
-            className="ml-2 inline-flex min-h-11 items-center gap-2 rounded-xl border border-line px-4 font-semibold hover:border-brand"
+            className="ml-2 inline-flex min-h-11 items-center gap-2 rounded-full bg-brand-tint px-4 text-brand hover:bg-brand-line/40"
           >
             <PhoneIcon className="size-4" />
             {clinic.phoneDisplay}
           </a>
+          <Link
+            href="/book"
+            aria-current={current("/book")}
+            className="ml-1 inline-flex min-h-11 items-center rounded-full bg-ink px-5 text-white hover:bg-slate-800"
+          >
+            Book
+          </Link>
         </nav>
 
-        <button
-          type="button"
-          className="inline-flex min-h-11 items-center rounded-xl border border-line px-4 font-semibold lg:hidden"
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          onClick={() => setOpen((o) => !o)}
+        <a
+          href={`tel:${clinic.phone}`}
+          aria-label={`Call the clinic, ${clinic.phoneDisplay}`}
+          className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-brand-tint text-brand lg:hidden"
         >
-          {open ? "Close" : "Menu"}
-        </button>
+          <PhoneIcon />
+        </a>
       </div>
-
-      {open && (
-        <nav id="mobile-menu" aria-label="Main" className="border-t border-line bg-white px-5 pb-5 pt-2 lg:hidden">
-          <ul className="flex flex-col">
-            {[{ href: "/", label: "Home" }, ...NAV, { href: "/book", label: "Book an appointment" }].map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  aria-current={pathname === item.href ? "page" : undefined}
-                  className={`flex min-h-12 items-center border-b border-line text-lg ${pathname === item.href ? "font-semibold text-brand" : ""}`}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )}
     </header>
   );
 }

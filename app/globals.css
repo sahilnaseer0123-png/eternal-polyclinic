@@ -9,11 +9,20 @@
   --color-brand-dark: #115e59;
   --color-brand-tint: #f0fdfa;
   --color-brand-line: #99f6e4;
-  --color-ground: #fafaf7;
+  --color-ground: #f4f6f5;
   --color-ink: #0f172a;
   --color-muted: #475569;
   --color-line: #e2e8f0;
   --color-emergency: #b91c1c;
+  /* Design C (23 Oct 2026): teal highlight on the dark ink cards, and the soft card shadow. */
+  --color-glow: #5eead4;
+  --shadow-card: 0 1px 3px rgb(15 23 42 / 0.08), 0 1px 2px rgb(15 23 42 / 0.04);
+}
+
+/* Design C card surface: white with a soft shadow, no border. Pair it with a rounded-* class. */
+@utility card {
+  background-color: #ffffff;
+  box-shadow: var(--shadow-card);
 }
 
 /* Body text is 16px on phones (18px felt oversized there) and 18px from tablets up.

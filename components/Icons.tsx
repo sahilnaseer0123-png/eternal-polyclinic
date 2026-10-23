@@ -87,3 +87,86 @@ export function CategoryIcon({ category, className = "size-4" }: IconProps & { c
       );
   }
 }
+
+export function SearchIcon({ className = "size-5" }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <circle cx="11" cy="11" r="7" />
+      <path d="M20 20l-4-4" />
+    </svg>
+  );
+}
+
+export function HomeIcon({ className = "size-6" }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z" />
+    </svg>
+  );
+}
+
+export function UserIcon({ className = "size-6" }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21c1-4 4-6 8-6s7 2 8 6" />
+    </svg>
+  );
+}
+
+export function MenuIcon({ className = "size-6" }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M4 7h16M4 12h16M4 17h16" />
+    </svg>
+  );
+}
+
+export function CloseIcon({ className = "size-6" }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}
+
+export function ChevronRightIcon({ className = "size-5" }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M9 6l6 6-6 6" />
+    </svg>
+  );
+}
+
+/** One icon per in-house service id in data/clinic.ts. */
+export function ServiceIcon({ id, className = "size-6" }: IconProps & { id: string }) {
+  switch (id) {
+    case "ultrasound":
+      return (
+        <svg {...base} className={className}>
+          <path d="M12 21L4 8.5a9.5 9.5 0 0 1 16 0z" />
+          <path d="M8.5 12a5 5 0 0 1 7 0M10.5 15.5a2.2 2.2 0 0 1 3 0" />
+        </svg>
+      );
+    case "echo":
+      return (
+        <svg {...base} className={className}>
+          <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z" />
+          <path d="M8 12h2l1-2 2 4 1-2h2" />
+        </svg>
+      );
+    case "lab":
+      return (
+        <svg {...base} className={className}>
+          <path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3M7.5 15h9" />
+        </svg>
+      );
+    default:
+      return (
+        <svg {...base} className={className}>
+          <rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-45 12 12)" />
+          <path d="M9.5 9.5l5 5" />
+        </svg>
+      );
+  }
+}
