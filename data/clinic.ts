@@ -31,9 +31,12 @@ export type Doctor = {
   photo: string | null;
   /**
    * Common reasons patients see this kind of specialist, in patient words. General guidance for
-   * "What brings you in?" and search, not a promise of treatment. TODO: confirm with each doctor.
+   * "What brings you in?" and search, not a promise of treatment. Checked 23 Oct 2026 against hospital and
+   * medical references (Healthline, Cleveland Clinic, Banner Health, Hinduja Hospital). The first two show on the home page.
    */
   concerns: string[];
+  /** Optional: signs that need emergency care instead of a booking, shown on the doctor's page. */
+  emergencyHint?: string;
 };
 
 export const clinic = {
@@ -58,8 +61,9 @@ export const clinic = {
   location: { name: "Old Municipal Office", lat: 34.2938233, lng: 74.455089 },
   mapUrl: "https://www.google.com/maps/dir/?api=1&destination=34.2938233,74.455089",
   mapEmbedUrl: "https://maps.google.com/maps?q=34.2938233,74.455089&z=18&output=embed",
-  /** Shown wherever patients might book: the clinic is not an emergency service. 112 = India's emergency number. */
-  emergency: { phone: "112", place: "the emergency department at SDH Hospital, right opposite" },
+  /** Shown wherever patients might book: the clinic is not an emergency service. 112 = India's emergency number.
+   *  SDH Hospital's 24-hour emergency department confirmed by the clinic, 23 Oct 2026. */
+  emergency: { phone: "112", place: "the emergency department at SDH Hospital, right opposite (open 24 hours)" },
 } as const;
 
 /** In-house tests and services. Booked by phone for now (timings not confirmed). */
@@ -126,7 +130,7 @@ export const doctors: Doctor[] = [
     registrationNo: null, // TODO: get from the doctor
     opd: [{ day: 0, start: "08:00", end: "13:00" }],
     slotMinutes: 20,
-    concerns: ["Acne", "Hair fall", "Rashes and itching", "Skin infections", "Dandruff", "Nail problems"],
+    concerns: ["Acne", "Hair fall", "Rashes and itching", "Eczema and psoriasis", "Fungal and skin infections", "Pigmentation and dark spots", "Warts and moles", "Dandruff", "Nail problems"],
     photo: null,
   },
   {
@@ -143,7 +147,7 @@ export const doctors: Doctor[] = [
       { day: 6, start: "16:00", end: "20:00" },
     ],
     slotMinutes: 20,
-    concerns: ["Stress and anxiety", "Low mood", "Sleep problems", "Panic attacks", "Addiction", "Memory problems"],
+    concerns: ["Stress and anxiety", "Depression and low mood", "Sleep problems", "Panic attacks", "OCD", "Bipolar disorder", "Addiction (alcohol, drugs, smoking)"],
     photo: null,
   },
   {
@@ -157,7 +161,7 @@ export const doctors: Doctor[] = [
     registrationNo: null,
     opd: [],
     slotMinutes: 20,
-    concerns: ["Fever and infections", "Blood pressure", "Diabetes", "Thyroid", "Stomach problems", "General check-up"],
+    concerns: ["Fever and infections", "Blood pressure", "Diabetes", "Thyroid", "Cough and chest infections", "Stomach problems", "High cholesterol", "Asthma", "Headaches", "General check-up"],
     photo: null,
   },
   {
@@ -171,7 +175,9 @@ export const doctors: Doctor[] = [
     registrationNo: null,
     opd: [],
     slotMinutes: 20,
-    concerns: ["Slipped disc", "Back or neck pain with numbness", "Head injury", "Spine injury"],
+    concerns: ["Slipped disc", "Back or neck pain with numbness", "Sciatica (pain down the leg)", "Pinched nerves", "Brain or spine tumours", "Head or spine injury (after first aid)"],
+    emergencyHint:
+      "A head injury with fainting, vomiting or confusion, a sudden severe headache, or new weakness or numbness is an emergency.",
     photo: null,
   },
 ];

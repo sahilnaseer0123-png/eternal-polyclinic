@@ -55,9 +55,10 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 - Live "next free slot" (23 Oct 2026): `NextAvailable` + `useClinicMinute` compute `nextSlot()`/`slotLabel()` in the visitor's
   browser in clinic time (static pages stay static; the server snapshot is null and shows a same-height fallback line).
 - `concerns` on each doctor in clinic.ts: common reasons in patient words, used by the home "What brings you in?" row,
-  the doctors search, cards ("Helps with") and doctor pages. General guidance, still to be confirmed with each doctor.
+  the doctors search, cards ("Helps with") and doctor pages. General guidance, checked against medical references
+  23 Oct 2026 (the owner asked us to research it). Optional `emergencyHint` per doctor shows on their page (neurosurgeon: head injury signs).
 - `EmergencyNote` (Book, Contact) + footer line + FAQ: not an emergency service; go to SDH Hospital opposite or call 112
-  (`clinic.emergency`).
+  (`clinic.emergency`). The clinic confirmed SDH's emergency department is open 24 hours (23 Oct 2026).
 - `app/globals.css`: design tokens (`brand`, `ink`, `muted`, `ground`, `line`, `emergency`, `glow`), the `card` utility, the phone type scale.
 
 ## Rules

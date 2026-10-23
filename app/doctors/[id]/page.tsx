@@ -9,6 +9,7 @@ import { DAY_NAMES, formatTime, opdSummary } from "@/lib/schedule";
 import { DoctorMark } from "@/components/DoctorMark";
 import { ShareButton } from "@/components/ShareButton";
 import { NextAvailable } from "@/components/NextAvailable";
+import { EmergencyNote } from "@/components/EmergencyNote";
 import { CalendarIcon, CategoryIcon, ChevronRightIcon, PhoneIcon } from "@/components/Icons";
 
 export function generateStaticParams() {
@@ -110,6 +111,8 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
           </div>
         </section>
       </div>
+
+      {doctor.emergencyHint && <EmergencyNote hint={doctor.emergencyHint} className="mt-5" />}
 
       {/* Common reasons to visit */}
       <section aria-labelledby="reasons" className="reveal mt-8 sm:mt-12">

@@ -93,7 +93,7 @@ export function SiteFooter() {
         <p className="py-3">
           {clinic.name}, Sopore.{" "}
           <span className="text-slate-300">
-            Emergency? Go to SDH Hospital, right opposite, or call{" "}
+            Emergency? Go to SDH Hospital, right opposite (open 24 hours), or call{" "}
             <a
               href={`tel:${clinic.emergency.phone}`}
               className="font-semibold text-white underline"
