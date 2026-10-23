@@ -1,9 +1,11 @@
-// Weekly OPD schedule: a doctor × day grid on wider screens, a day-by-day list on phones.
-// The grid itself is static; WeeklySchedule adds today's highlight per request (io() + Suspense).
+"use client";
 
-import { io } from "next/cache";
+// Weekly OPD schedule: a doctor × day grid on wider screens, a day-by-day list on phones.
+// The grid itself is prebuilt; WeeklySchedule adds today's highlight in the visitor's browser.
+
 import { doctors, type Weekday } from "@/data/clinic";
 import { clinicClock, DAY_NAMES, formatTimeShort, sessionOn } from "@/lib/schedule";
+import { useClinicMinute } from "./useClinicMinute";
 
 const WEEK: Weekday[] = [1, 2, 3, 4, 5, 6, 0]; // Monday first
 const confirmed = doctors.filter((d) => d.opd.length > 0);
@@ -102,7 +104,8 @@ export function ScheduleView({ today }: { today?: Weekday }) {
   );
 }
 
-export async function WeeklySchedule() {
-  await io();
-  return <ScheduleView today={clinicClock(new Date()).weekday} />;
+/** Highlights today's column, worked out in the visitor's browser (the prebuilt page shows no highlight). */
+export function WeeklySchedule() {
+  const minute = useClinicMinute();
+  return <ScheduleView today={minute === null ? undefined : clinicClock(new Date(minute)).weekday} />;
 }

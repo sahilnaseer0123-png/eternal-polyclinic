@@ -60,11 +60,10 @@ export default function PrivacyPage() {
           <section>
             <h2>Visitor statistics</h2>
             <p>
-              To see which pages and doctors people look at, the website counts page visits with Vercel Web Analytics.
-              It uses no cookies and does not record who you are, your IP address, or anything you type. It records the
-              page address, the website that sent you here, your rough location (country and city), and your device and
-              browser type, and only uses these for totals. A visitor is recognised for at most 24 hours. Words you type
-              into the search box are removed from the page address before anything is counted.
+              To see which pages people look at, the website counts page visits with Cloudflare Web Analytics. It uses no
+              cookies and stores nothing on your device, does not follow you across other websites, and never records
+              anything you type, including search words. It counts the pages viewed, the website that sent you here,
+              your country, and your device and browser type, and only as totals.
             </p>
           </section>
 
@@ -83,8 +82,8 @@ export default function PrivacyPage() {
                 <strong>WhatsApp</strong> carries your booking message, under WhatsApp&apos;s own privacy policy.
               </li>
               <li>
-                <strong>Vercel</strong> hosts this website and keeps basic technical logs, such as IP addresses, for
-                security and to keep the site running. It also provides the visitor statistics described above.
+                <strong>Cloudflare</strong> hosts this website. It handles basic technical data, such as IP addresses, to
+                deliver the pages and protect the site from attacks, and provides the visitor statistics described above.
               </li>
               <li>
                 <strong>Google Maps</strong> shows the map in &quot;Visit us&quot;. Google may collect data when the map

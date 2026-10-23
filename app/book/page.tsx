@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description: `Request a slot with a specialist at ${clinic.name}, Sopore. No account needed; reception confirms by phone.`,
 };
 
-export default function BookPage({ searchParams }: PageProps<"/book">) {
+export default function BookPage() {
   return (
     <>
       <PageIntro title="Book an appointment">Takes under a minute. No account needed.</PageIntro>
@@ -21,7 +21,7 @@ export default function BookPage({ searchParams }: PageProps<"/book">) {
 
       <div className="mx-auto grid max-w-6xl gap-10 px-5 pb-16 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <Suspense fallback={<BookingSkeleton />}>
-          <BookingSection searchParams={searchParams} />
+          <BookingSection />
         </Suspense>
 
         <div className="flex flex-col gap-5">

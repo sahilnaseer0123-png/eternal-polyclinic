@@ -1,20 +1,23 @@
-// Gives the booking form the real time for this visitor, and the doctor from /book?doctor=<id>.
-// Reading searchParams makes this per-request, so days and slots are never frozen at build time.
+"use client";
 
-import { io } from "next/cache";
+// Gives the booking form the visitor's own clock and the doctor from /book?doctor=<id>.
+// Runs in the browser: the prebuilt page holds BookingSkeleton (same height), so days and slots are
+// never frozen at build time (CLAUDE.md rule 3). useSearchParams needs the <Suspense> in app/book/page.tsx.
+
+import { useSearchParams } from "next/navigation";
 import { doctors } from "@/data/clinic";
 import { BookingForm } from "./BookingForm";
+import { useClinicMinute } from "./useClinicMinute";
 
-export async function BookingSection({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  const params = await searchParams;
-  await io();
-  const requested = typeof params.doctor === "string" ? params.doctor : "";
+export function BookingSection() {
+  const requested = useSearchParams().get("doctor") ?? "";
+  const minute = useClinicMinute();
+  if (minute === null) return <BookingSkeleton />;
   const initialDoctorId = doctors.some((d) => d.id === requested) ? requested : "";
-  const now = new Date(); // per request, as the Next.js 16 docs show
-  return <BookingForm key={initialDoctorId} nowMs={now.getTime()} initialDoctorId={initialDoctorId} />;
+  return <BookingForm key={initialDoctorId} nowMs={minute} initialDoctorId={initialDoctorId} />;
 }
 
 export function BookingSkeleton() {
-  // Same height as the empty form, so the page doesn't jump when the form streams in.
+  // Same height as the empty form, so the page doesn't jump when the form appears.
   return <div className="card h-[44.5rem] animate-pulse rounded-3xl sm:h-[40rem]" aria-busy="true" />;
 }

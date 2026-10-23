@@ -16,7 +16,7 @@ Edit `data/clinic.ts`. Doctors, OPD days, services, hours, phone and fee are all
 
 ## Share a booking link for one doctor
 
-`https://eternal-polyclinic.vercel.app/book?doctor=akash` opens the booking form with Dr. Akash chosen.
+`https://eternal-polyclinic.pages.dev/book?doctor=akash` opens the booking form with Dr. Akash chosen.
 
 ## Logo files
 
@@ -26,4 +26,4 @@ for light and dark backgrounds.
 
 ## Deploy
 
-Push to GitHub. Vercel builds and deploys every push to `main` automatically.
+Push to GitHub. Cloudflare Pages builds `main` (`npx next build`, output `out/`) and deploys it automatically.

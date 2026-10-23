@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { clinic, isCategory } from "@/data/clinic";
+import { clinic } from "@/data/clinic";
 import { DoctorDirectory } from "@/components/DoctorDirectory";
+import { DirectoryFromLink } from "@/components/DirectoryFromLink";
 import { ScheduleView, WeeklySchedule } from "@/components/WeeklySchedule";
 import { PageIntro } from "@/components/SiteChrome";
 
@@ -10,16 +11,7 @@ export const metadata: Metadata = {
   description: `Specialists at ${clinic.name}, Sopore, the days they sit, and how to book. Consultation ₹${clinic.consultationFee}.`,
 };
 
-// Reads ?type=skin (shared links open with that speciality chosen) and ?q= (the home page search box). Per-request, so it sits in <Suspense>;
-// the fallback is the full list, which is what gets prebuilt.
-async function DirectoryFromLink({ searchParams }: { searchParams: PageProps<"/doctors">["searchParams"] }) {
-  const { type, q } = await searchParams;
-  const initialFilter = isCategory(type) ? type : "all";
-  const initialQuery = typeof q === "string" ? q.slice(0, 60) : ""; // from the home page search box
-  return <DoctorDirectory key={`${initialFilter}|${initialQuery}`} initialFilter={initialFilter} initialQuery={initialQuery} />;
-}
-
-export default function DoctorsPage({ searchParams }: PageProps<"/doctors">) {
+export default function DoctorsPage() {
   return (
     <>
       <PageIntro title="Our doctors">
@@ -31,7 +23,7 @@ export default function DoctorsPage({ searchParams }: PageProps<"/doctors">) {
           All doctors
         </h2>
         <Suspense fallback={<DoctorDirectory />}>
-          <DirectoryFromLink searchParams={searchParams} />
+          <DirectoryFromLink />
         </Suspense>
         <p className="mt-5 text-muted sm:mt-6">
           More specialists visit every week. Not sure who to see?{" "}

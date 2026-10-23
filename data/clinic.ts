@@ -41,7 +41,8 @@ export type Doctor = {
 
 export const clinic = {
   name: "Eternal Polyclinic",
-  siteUrl: "https://eternal-polyclinic.vercel.app",
+  /** The live address. Cloudflare Pages project "eternal-polyclinic" (moved from Vercel 23 Oct 2026). */
+  siteUrl: "https://eternal-polyclinic.pages.dev",
   founder: "Naseer Ah Lone",
   address: "Opposite SDH Hospital, Sopore",
   /** For calls. */

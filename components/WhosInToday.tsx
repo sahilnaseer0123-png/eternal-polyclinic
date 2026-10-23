@@ -1,9 +1,10 @@
-// "Who's in today" (design C dark card): worked out fresh for every visitor, in clinic time (Asia/Kolkata).
-// `await io()` keeps this out of the prebuilt page, so the day is never frozen at build time.
-// Rendered inside <Suspense> in app/page.tsx; WhosInTodaySkeleton is the placeholder.
+"use client";
+
+// "Who's in today" (design C dark card): worked out in the visitor's browser, in clinic time (Asia/Kolkata),
+// and refreshed every minute. The prebuilt page holds WhosInTodaySkeleton (same size), so the day is never
+// frozen at build time (CLAUDE.md rule 3) and nothing jumps when the real card appears.
 
 import Link from "next/link";
-import { io } from "next/cache";
 import { clinic, doctors } from "@/data/clinic";
 import {
   addDays,
@@ -20,6 +21,7 @@ import {
   weekdayOf,
 } from "@/lib/schedule";
 import { DoctorMark } from "./DoctorMark";
+import { useClinicMinute } from "./useClinicMinute";
 
 const STATUS_TEXT = {
   upcoming: (start: string) => `Starts at ${formatTime(start)}`,
@@ -33,9 +35,10 @@ const shell = "flex h-full min-h-[25rem] flex-col gap-5 rounded-3xl bg-ink p-5 t
 const whiteButton =
   "inline-flex min-h-12 items-center justify-center rounded-2xl bg-white px-5 font-bold text-ink hover:bg-slate-100";
 
-export async function WhosInToday() {
-  await io();
-  const now = new Date();
+export function WhosInToday() {
+  const minute = useClinicMinute();
+  if (minute === null) return <WhosInTodaySkeleton />;
+  const now = new Date(minute);
   const clock = clinicClock(now);
   const today = doctorsInToday(doctors, now);
   const next = nextSpecialist(doctors, now);

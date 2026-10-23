@@ -2,10 +2,9 @@
 
 import Form from "next/form";
 import Link from "next/link";
-import { Suspense } from "react";
 import { categories, clinic, doctors, services } from "@/data/clinic";
 import { formatTime, opdShort } from "@/lib/schedule";
-import { WhosInToday, WhosInTodaySkeleton } from "@/components/WhosInToday";
+import { WhosInToday } from "@/components/WhosInToday";
 import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { DoctorMark } from "@/components/DoctorMark";
 import { NextAvailable } from "@/components/NextAvailable";
@@ -117,9 +116,7 @@ export default function Home() {
           </div>
 
           <section aria-labelledby="today" className="rise rise-3 min-w-0">
-            <Suspense fallback={<WhosInTodaySkeleton />}>
-              <WhosInToday />
-            </Suspense>
+            <WhosInToday />
           </section>
         </section>
       </div>

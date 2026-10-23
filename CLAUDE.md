@@ -8,11 +8,14 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 
 ## Stack
 
-- Next.js 16 (App Router), TypeScript, Tailwind CSS v4, deployed on Vercel
+- Next.js 16 (App Router), TypeScript, Tailwind CSS v4. Hosting (23 Oct 2026): Cloudflare Pages, free plan (Vercel's free plan
+  forbids business sites; Pro is ~₹2,000/month). The site is a static export (`output: "export"` → `out/`): every page is a
+  ready-made file, so there is no server code. Cloudflare builds `main` on every push (preset "Next.js (Static HTML Export)",
+  build `npx next build`, output `out`). Live at `clinic.siteUrl` (https://eternal-polyclinic.pages.dev).
 - Font: Plus Jakarta Sans, self-hosted via `@fontsource-variable/plus-jakarta-sans`
 - V1 sends booking requests to the clinic on WhatsApp (`lib/booking.ts`); nothing is stored, on the server or the patient's phone.
   Decision (23 Oct 2026): NO database and NO reception view for now. Reception works from WhatsApp.
-  Revisit only if bookings get busy. If ever added: Supabase (Mumbai region), keys in Vercel env vars, never in the repo (it is public).
+  Revisit only if bookings get busy. If ever added: Supabase (Mumbai region), keys in environment variables, never in the repo (it is public). A database means server code, so it would need Cloudflare Workers/Functions or a move back to a server host: decide then.
 - Validation: zod. Tests: `npm test` (node test runner via tsx, files in `tests/`). Run them before every push.
 
 ## Where things live
@@ -23,8 +26,9 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 - `data/faq.ts`: FAQ answers; they pull the fee, phone and services from `clinic.ts`.
 - Map: the clinic isn't listed on Google Maps and a search for its name finds a DIFFERENT clinic. Directions and the map
   use the clinic's exact coordinates (`clinic.location`, the Old Municipal Office building). Never link to a name search.
-- `components/`: page sections. `WhosInToday`, `BookingSection`, `WeeklySchedule` and the doctors `?type=` reader are per-request
-  (io() / searchParams) inside `<Suspense>`. Their placeholders are sized like the real thing (no layout jump; keep it that way).
+- `components/`: page sections. `WhosInToday`, `BookingSection`, `WeeklySchedule` and `DirectoryFromLink` (reads `?type=`/`?q=`)
+  run in the visitor's browser (`useClinicMinute` / `useSearchParams`); the prebuilt pages hold placeholders sized like the
+  real thing (no layout jump; keep it that way). `useSearchParams` users sit inside `<Suspense>`.
 - Pages: `/` (hero with find box and chips, dark Today card, specialists, Book-in-3-steps band with `WhatsAppPreview`, tests, visit),
   `/doctors` (find box, chips, cards, weekly schedule; `/doctors?type=skin` opens with a chip chosen), `/doctors/[id]`
   (one static page per doctor: details, days, Book/Call, `ShareButton`), `/book`, `/services`, `/faq`, `/contact`, `/privacy`.
@@ -38,9 +42,9 @@ in under 60 seconds with no account. Reception confirms every request by phone.
   Old one-page links (`/#book-akash`) are forwarded by `LegacyBookingLink`.
 - `app/privacy/page.tsx`: privacy notice. Update its date and text whenever data handling changes (e.g. the V2 database).
   Wording rule: the WEBSITE saves nothing, but the WhatsApp message stays in the patient's chat. Never say "nothing is saved on your phone".
-- Visitor stats (23 Oct 2026): `SiteAnalytics` = Vercel Web Analytics (no cookies, page views only; custom events need a paid plan).
-  `lib/analytics.ts` strips every query param except `type` and `doctor` before sending, so searches (`?q=`) never leave the
-  browser. Counting starts only when Analytics is enabled in the Vercel dashboard. The privacy notice describes it; keep them in step.
+- Visitor stats: Cloudflare Web Analytics, switched on in the Pages project (Metrics → Enable); Cloudflare injects the
+  beacon on deploy, no code here. No cookies, no stored state, and it never logs query strings, so searches (`?q=`) stay
+  private. The privacy notice describes it; keep them in step.
 - `lib/structured-data.ts`: all schema.org JSON-LD (clinic in the layout; IndividualPhysician + breadcrumbs on doctor pages,
   named doctors only). No FAQPage: Google dropped FAQ rich results in May 2026.
 - `app/opengraph-image.png` (+ `.alt.txt`): the preview picture when the link is shared on WhatsApp. Regenerate if the logo or name changes.
@@ -73,9 +77,9 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 
 1. Never hard-code a doctor, time, phone number or fee in a component. Read it from `data/clinic.ts`.
 2. All dates and times are clinic time, Asia/Kolkata. Use `clinicClock()`; never `new Date().getDay()` directly.
-   Vercel servers run in UTC, so a plain `getDay()` is wrong for 5.5 hours every night.
-3. Anything that depends on today's date ("Who's in today", today's slots) must be computed per request
-   or on the client, never frozen at build time. Check the Next.js 16 docs in `node_modules/next/dist/docs/` for how.
+   Build machines run in UTC and visitors may be anywhere, so a plain `getDay()` is wrong for 5.5 hours every night.
+3. Anything that depends on today's date ("Who's in today", today's slots) must be computed in the visitor's browser
+   (`useClinicMinute`), never frozen at build time: the site is static files, so build time is the only "server time".
 4. Privacy: the booking form collects name, phone, doctor, date and time only. Never a reason for the visit.
    WhatsApp texts and confirmations name the doctor, never the speciality.
 5. Accessibility: phones use a compact scale (body 15px, h1 24px, set by the `max-width: 639px` block in globals.css;
@@ -93,6 +97,6 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 7. Reception view at `/admin`: dropped for now (see Stack). Don't build it unless asked.
 8. Weekly schedule, FAQ, Visit us with map, floating WhatsApp ✓
 9. Polish ✓: /privacy notice, favicon + apple icon, Open Graph, schema.org MedicalClinic, robots + sitemap.
-   Audit baseline (23 Oct 2026, design C): axe 0 violations on all pages; Lighthouse mobile home 98, other pages 95–99,
+   Audit baseline (23 Oct 2026, design C; recheck after the Cloudflare move): axe 0 violations on all pages; Lighthouse mobile home 98, other pages 95–99,
    accessibility / best practices / SEO 100, layout shift 0. Don't ship below it.
 10. Design C redesign ✓ (built on branch `redesign-c`, merged 23 Oct 2026).

@@ -1,9 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Build the whole site as ready-made files in out/ for Cloudflare Pages (free, business use allowed).
+  // Anything that depends on today's date runs in the visitor's browser (useClinicMinute).
+  output: "export",
   turbopack: {
     rules: {
       "*.css": {

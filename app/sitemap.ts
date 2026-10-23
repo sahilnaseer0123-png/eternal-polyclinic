@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { clinic, doctors } from "@/data/clinic";
 
+// Built once into out/ for the static site.
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: clinic.siteUrl, changeFrequency: "weekly", priority: 1 },
