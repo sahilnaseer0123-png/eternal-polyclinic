@@ -58,7 +58,7 @@ export async function WhosInToday() {
         <h2 id="today" className="text-sm font-bold uppercase tracking-wider text-glow">
           Who&apos;s in today · {DAY_NAMES[clock.weekday]}
         </h2>
-        <p className="text-sm text-slate-300">
+        <p className="text-sm text-slate-400">
           {open ? `Open now, until ${formatTime(clinic.hours.close)}` : `Closed now, opens ${formatTime(clinic.hours.open)}`}
         </p>
       </div>
@@ -74,11 +74,11 @@ export async function WhosInToday() {
                 <div className="flex items-center gap-4">
                   <DoctorMark doctor={doctor} className="size-14 rounded-2xl bg-white/10 text-2xl sm:size-16" />
                   <div className="min-w-0">
-                    <p className="text-xl font-extrabold sm:text-2xl">{doctor.name ?? doctor.speciality}</p>
-                    <p className="text-slate-300">
+                    <p className="text-xl font-bold tracking-tight text-slate-50 sm:text-2xl">{doctor.name ?? doctor.speciality}</p>
+                    <p className="text-slate-400">
                       {doctor.speciality} · {formatTime(session.start)} – {formatTime(session.end)}
                     </p>
-                    <p className={`font-semibold ${status === "in" ? "text-glow" : "text-slate-300"}`}>
+                    <p className={`font-semibold ${status === "in" ? "text-glow" : "text-slate-400"}`}>
                       {STATUS_TEXT[status](session.start)}
                     </p>
                   </div>
@@ -94,13 +94,20 @@ export async function WhosInToday() {
       ) : (
         <div className="flex flex-col gap-4">
           <div>
-            <p className="text-xl font-extrabold sm:text-2xl">No visiting specialist today</p>
+            <p className="text-xl font-bold tracking-tight text-slate-50 sm:text-2xl">No visiting specialist today</p>
             {next && (
-              <p className="text-slate-300">
-                Next: {next.doctor.name ?? next.doctor.speciality} ({next.doctor.speciality}),{" "}
-                {next.daysAhead === 1 ? "tomorrow" : DAY_NAMES[weekdayOf(addDays(clock.dateKey, next.daysAhead))]},{" "}
-                <span className="whitespace-nowrap">
-                  {formatTimeShort(next.session.start)}–{formatTimeShort(next.session.end)}
+              // Split into short lines (who, then when) instead of one crowded sentence.
+              <p className="mt-3 flex flex-col gap-0.5">
+                <span className="text-sm text-slate-400">Next visit</span>
+                <span className="font-semibold text-slate-100">
+                  {next.doctor.name ?? next.doctor.speciality}
+                  {next.doctor.name && <span className="font-normal text-slate-400">, {next.doctor.speciality}</span>}
+                </span>
+                <span className="text-slate-400">
+                  {next.daysAhead === 1 ? "Tomorrow" : DAY_NAMES[weekdayOf(addDays(clock.dateKey, next.daysAhead))]} ·{" "}
+                  <span className="whitespace-nowrap">
+                    {formatTimeShort(next.session.start)}–{formatTimeShort(next.session.end)}
+                  </span>
                 </span>
               </p>
             )}
@@ -116,17 +123,17 @@ export async function WhosInToday() {
       {week.length > 0 && (
         <div className="mt-auto border-t border-slate-700 pt-4">
           <div className="mb-2 flex items-baseline justify-between">
-            <h3 className="text-sm font-semibold text-slate-300">This week</h3>
+            <h3 className="text-sm font-semibold text-slate-400">This week</h3>
             <Link href="/doctors#schedule" className="inline-flex min-h-11 items-center text-sm font-semibold text-white underline">
               Full schedule
             </Link>
           </div>
           <ul className="flex flex-col gap-1.5 text-base">
             {week.map(({ key, label, doctor, s, isToday }) => (
-              <li key={key} className={`flex gap-3 ${isToday ? "font-bold" : ""}`}>
+              <li key={key} className={`flex gap-3 ${isToday ? "font-semibold" : ""}`}>
                 <span className="w-20 shrink-0 font-semibold text-glow">{label}</span>
-                <span className="min-w-0 flex-1">{doctor.name ?? doctor.speciality}</span>
-                <span className="whitespace-nowrap text-slate-300">
+                <span className="min-w-0 flex-1 text-slate-200">{doctor.name ?? doctor.speciality}</span>
+                <span className="whitespace-nowrap text-slate-400">
                   {formatTimeShort(s.start)}–{formatTimeShort(s.end)}
                 </span>
               </li>
