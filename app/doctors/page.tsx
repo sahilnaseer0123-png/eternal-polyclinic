@@ -22,7 +22,7 @@ export default function DoctorsPage() {
           All doctors
         </h2>
         <DoctorDirectory />
-        <p className="mt-5 text-[0.95rem] text-muted sm:mt-6 sm:text-base">
+        <p className="mt-5 text-base text-muted sm:mt-6 sm:text-base">
           More specialists visit every week. Not sure who to see?{" "}
           <a href={`tel:${clinic.phone}`} className="font-semibold text-brand underline">
             Call {clinic.phoneDisplay}
@@ -35,7 +35,7 @@ export default function DoctorsPage() {
         <h2 id="schedule" className="text-2xl font-bold sm:text-4xl">
           Weekly OPD schedule
         </h2>
-        <p className="mb-4 mt-1 text-[0.95rem] text-muted sm:mb-6 sm:text-base">Timings can change on holidays, so call if you&apos;re unsure.</p>
+        <p className="mb-4 mt-1 text-base text-muted sm:mb-6 sm:text-base">Timings can change on holidays, so call if you&apos;re unsure.</p>
         <Suspense fallback={<ScheduleView />}>
           <WeeklySchedule />
         </Suspense>

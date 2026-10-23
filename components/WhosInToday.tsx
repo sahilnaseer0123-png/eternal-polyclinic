@@ -32,7 +32,7 @@ export async function WhosInToday() {
   const open = isOpenNow(clinic.hours, now);
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-3 sm:gap-5">
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
         <h2 id="today" className="text-2xl font-bold sm:text-3xl">
           Who&apos;s in today
@@ -46,12 +46,12 @@ export async function WhosInToday() {
       </div>
 
       {today.length > 0 ? (
-        <ul className="grid gap-4 sm:grid-cols-2">
+        <ul className="grid gap-3 sm:grid-cols-2 sm:gap-4">
           {today.map(({ doctor, session }) => {
             const status = sessionStatus(session, now);
             return (
-              <li key={doctor.id} className="flex items-center gap-4 rounded-2xl border border-brand-line bg-brand-tint p-4">
-                <DoctorAvatar doctor={doctor} size={56} />
+              <li key={doctor.id} className="flex items-center gap-3 rounded-2xl border border-brand-line bg-brand-tint p-3 sm:gap-4 sm:p-4">
+                <DoctorAvatar doctor={doctor} size={48} />
                 <div className="min-w-0 flex-1">
                   <p className="font-bold">{doctor.name ?? doctor.speciality}</p>
                   <p className="text-base">
@@ -74,7 +74,7 @@ export async function WhosInToday() {
           })}
         </ul>
       ) : (
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-ground p-5">
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-ground p-4 sm:p-5">
           <div>
             <p className="font-semibold">No visiting specialist today.</p>
             {next && (

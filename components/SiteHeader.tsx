@@ -24,8 +24,8 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-white/95 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3">
-        <Link href="/" className="flex items-center gap-3 text-ink" onClick={() => setOpen(false)}>
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-2 sm:py-3">
+        <Link href="/" className="flex min-h-11 items-center gap-3 text-ink" onClick={() => setOpen(false)}>
           <Logo className="size-10 shrink-0 sm:size-12" />
           <span className="leading-tight">
             <span className="block font-bold">{clinic.name}</span>

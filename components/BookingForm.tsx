@@ -129,10 +129,10 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
   }
 
   return (
-    <div ref={formRef} className="min-w-0 flex flex-col gap-6 rounded-3xl border border-line bg-white p-5 sm:gap-7 sm:p-8">
+    <div ref={formRef} className="min-w-0 flex flex-col gap-6 rounded-2xl border border-line bg-white p-4 sm:gap-7 sm:rounded-3xl sm:p-8">
       {/* 1. Doctor */}
       <fieldset className="min-w-0 flex flex-col gap-3">
-        <legend className="mb-3 text-lg font-bold">1. Doctor</legend>
+        <legend className="mb-2 text-lg font-bold sm:mb-3">1. Doctor</legend>
         <div className="grid gap-2 sm:grid-cols-2">
           {doctors.map((d) => (
             <button
@@ -140,7 +140,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
               type="button"
               aria-pressed={d.id === doctorId}
               onClick={() => chooseDoctor(d.id)}
-              className={`${chipClass(d.id === doctorId)} flex min-h-14 flex-col items-start justify-center px-4 py-2 text-left`}
+              className={`${chipClass(d.id === doctorId)} flex min-h-12 flex-col items-start justify-center px-4 py-2 sm:min-h-14 text-left`}
             >
               <span className="font-semibold">{d.name ?? d.speciality}</span>
               <span className="text-sm text-muted">{d.name ? `${d.speciality} · ${d.categoryLabel}` : d.categoryLabel}</span>
@@ -153,7 +153,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
       {/* 2. Day */}
       {doctor && (
         <fieldset className="min-w-0 flex flex-col gap-3">
-          <legend className="mb-3 text-lg font-bold">2. Day</legend>
+          <legend className="mb-2 text-lg font-bold sm:mb-3">2. Day</legend>
           {dates.length > 0 ? (
             <>
               <p className="text-base text-muted">
@@ -174,7 +174,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
                         setTime("");
                         setErrors((e) => ({ ...e, date: undefined, time: undefined }));
                       }}
-                      className={`${chipClass(d === date)} flex min-h-16 flex-col items-center justify-center`}
+                      className={`${chipClass(d === date)} flex min-h-14 flex-col items-center justify-center sm:min-h-16`}
                     >
                       <span className="text-sm">{top}</span>
                       <span className="font-bold">
@@ -202,7 +202,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
       {/* 3. Time */}
       {doctor && date && (
         <fieldset className="min-w-0 flex flex-col gap-3">
-          <legend className="mb-3 text-lg font-bold">3. Time</legend>
+          <legend className="mb-2 text-lg font-bold sm:mb-3">3. Time</legend>
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
             {slots.map((s) => (
               <button
@@ -225,7 +225,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
 
       {/* 4. Details */}
       <fieldset className="min-w-0 flex flex-col gap-4">
-        <legend className="mb-3 text-lg font-bold">4. Your details</legend>
+        <legend className="mb-2 text-lg font-bold sm:mb-3">4. Your details</legend>
         <div className="flex flex-col gap-2">
           <label htmlFor="bk-name" className="font-semibold">
             Name
@@ -241,7 +241,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
             }}
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? "err-name" : undefined}
-            className="min-h-13 rounded-xl border border-slate-400 bg-white px-4 text-lg"
+            className="min-h-12 rounded-xl border border-slate-400 bg-white px-4 text-lg sm:min-h-13"
           />
           <FieldError id="err-name" message={errors.name} />
         </div>
@@ -263,7 +263,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
               }}
               aria-invalid={!!errors.phone}
               aria-describedby={errors.phone ? "err-phone" : undefined}
-              className="min-h-13 min-w-0 flex-1 px-4 text-lg outline-none"
+              className="min-h-12 min-w-0 flex-1 px-4 text-lg outline-none sm:min-h-13"
             />
           </div>
           <FieldError id="err-phone" message={errors.phone} />
@@ -274,7 +274,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
         <button
           type="button"
           onClick={submit}
-          className="inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl bg-brand px-6 text-lg font-bold text-white hover:bg-brand-dark"
+          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-brand px-6 text-lg font-bold sm:min-h-14 text-white hover:bg-brand-dark"
         >
           <ChatIcon /> Send request on WhatsApp
         </button>

@@ -31,6 +31,24 @@ html {
   }
 }
 
+/* Phones: a compact type scale (body 15px, smaller headings). Spacing stays on the 16px rem,
+   so tap targets (min-h-11 = 44px) don't shrink. Tailwind's text-* utilities read these variables. */
+@media (max-width: 639px) {
+  :root {
+    --text-sm: 0.8125rem;
+    --text-base: 0.9375rem;
+    --text-lg: 1rem;
+    --text-xl: 1.125rem;
+    --text-2xl: 1.25rem;
+    --text-3xl: 1.375rem;
+    --text-4xl: 1.5rem;
+    --text-5xl: 1.625rem;
+  }
+  body {
+    font-size: 0.9375rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

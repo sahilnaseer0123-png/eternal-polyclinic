@@ -34,8 +34,8 @@ export default function Home() {
       {/* Hero */}
       <section className="mx-auto grid max-w-6xl items-center gap-10 px-5 pb-6 pt-7 sm:py-12 md:grid-cols-2 md:py-16">
         <div className="flex flex-col gap-4 sm:gap-5">
-          <p className="text-[0.95rem] font-semibold text-brand sm:text-base">Specialist doctors in Sopore, on fixed days every week</p>
-          <h1 className="text-[2rem] font-bold leading-tight tracking-tight sm:text-5xl">
+          <p className="text-base font-semibold text-brand sm:text-base">Specialist doctors in Sopore, on fixed days every week</p>
+          <h1 className="text-[1.5rem] font-bold leading-tight tracking-tight sm:text-5xl">
             See the right specialist, close to home.
           </h1>
           <p className="text-muted sm:text-lg">
@@ -56,7 +56,7 @@ export default function Home() {
               <PhoneIcon /> Call {clinic.phoneDisplay}
             </a>
           </div>
-          <p className="flex flex-wrap gap-x-6 gap-y-1 text-[0.95rem] text-muted sm:text-base">
+          <p className="flex flex-wrap gap-x-6 gap-y-1 text-base text-muted sm:text-base">
             <span className="inline-flex items-center gap-2">
               <ClockIcon className="size-4" /> Open {hours}
             </span>
@@ -73,11 +73,11 @@ export default function Home() {
 
       {/* Who's in today */}
       <section aria-labelledby="today" className="mx-auto max-w-6xl px-5 pb-8 sm:pb-12">
-        <div className="rounded-3xl border border-line bg-white p-5 sm:p-8">
+        <div className="rounded-2xl border border-line bg-white p-4 sm:rounded-3xl sm:p-8">
           <Suspense fallback={<WhosInTodaySkeleton />}>
             <WhosInToday />
           </Suspense>
-          <p className="mt-5 text-base">
+          <p className="mt-3 text-base sm:mt-5">
             <Link href="/doctors#schedule" className="inline-flex min-h-11 items-center gap-2 font-semibold text-brand underline">
               <CalendarIcon className="size-4" /> See the full weekly schedule
             </Link>

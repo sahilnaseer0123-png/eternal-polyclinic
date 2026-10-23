@@ -68,7 +68,7 @@ export function ScheduleView({ today }: { today?: Weekday }) {
           });
           const isToday = day === today;
           return (
-            <li key={day} className={`flex gap-3 px-4 py-3 text-[0.95rem] ${isToday ? "bg-brand-tint" : ""}`}>
+            <li key={day} className={`flex gap-3 px-4 py-3 text-base ${isToday ? "bg-brand-tint" : ""}`}>
               <span className="w-12 shrink-0 font-bold">
                 {DAY_NAMES[day].slice(0, 3)}
                 {isToday && <span className="block text-xs font-semibold text-brand">Today</span>}
@@ -93,7 +93,7 @@ export function ScheduleView({ today }: { today?: Weekday }) {
       </ul>
 
       {unconfirmed.length > 0 && (
-        <p className="text-[0.95rem] text-muted sm:text-base">
+        <p className="text-base text-muted sm:text-base">
           Timings for the {unconfirmed.map((d) => d.speciality.toLowerCase()).join(" and ")} are coming soon. Call to
           ask.
         </p>

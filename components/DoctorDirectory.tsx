@@ -27,7 +27,7 @@ export function DoctorDirectory() {
               type="button"
               aria-pressed={on}
               onClick={() => setFilter(o.id)}
-              className={`min-h-11 rounded-full border px-4 text-[0.95rem] font-semibold sm:px-5 sm:text-base ${
+              className={`min-h-11 rounded-full border px-4 text-base font-semibold sm:px-5 sm:text-base ${
                 on ? "border-brand bg-brand text-white" : "border-line bg-white text-ink hover:border-brand"
               }`}
             >
@@ -42,23 +42,23 @@ export function DoctorDirectory() {
         {shown.map((doctor) => {
           const opd = opdSummary(doctor);
           return (
-            <li key={doctor.id} className="flex flex-col gap-3 rounded-2xl border border-line bg-white p-4 sm:p-6">
+            <li key={doctor.id} className="flex flex-col gap-2.5 rounded-2xl border border-line bg-white p-4 sm:gap-3 sm:p-6">
               <div className="flex items-center gap-3 sm:gap-4">
-                <DoctorAvatar doctor={doctor} size={56} />
+                <DoctorAvatar doctor={doctor} size={48} />
                 <div className="min-w-0">
                   <h3 className="text-lg font-bold leading-snug sm:text-xl">{doctor.name ?? doctor.speciality}</h3>
-                  <p className="text-[0.95rem] text-muted sm:text-base">
+                  <p className="text-base text-muted sm:text-base">
                     {doctor.name ? `${doctor.speciality} · ` : ""}
                     {doctor.degree}
                     {doctor.experienceYears ? ` · ${doctor.experienceYears} yrs` : ""}
                   </p>
                 </div>
               </div>
-              <span className="inline-flex items-center gap-2 self-start rounded-lg bg-brand-tint px-3 py-1 text-[0.95rem] font-semibold text-brand sm:text-base">
+              <span className="hidden items-center gap-2 self-start rounded-lg sm:inline-flex bg-brand-tint px-3 py-1 text-base font-semibold text-brand sm:text-base">
                 <CategoryIcon category={doctor.category} />
                 {doctor.categoryLabel}
               </span>
-              <p className="flex items-start gap-2 text-[0.95rem] sm:text-base">
+              <p className="flex items-start gap-2 text-base">
                 <CalendarIcon className="mt-0.5 size-5 shrink-0 text-brand" />
                 <span>{opd ?? "Days coming soon. Please call to ask."}</span>
               </p>

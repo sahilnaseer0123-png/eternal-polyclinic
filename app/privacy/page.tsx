@@ -16,7 +16,7 @@ export default function PrivacyPage() {
   return (
     <>
       <div className="mx-auto w-full max-w-3xl px-5 py-8 sm:py-12">
-        <h1 className="text-[2rem] font-bold leading-tight sm:text-4xl">Privacy notice</h1>
+        <h1 className="text-[1.5rem] font-bold leading-tight sm:text-4xl">Privacy notice</h1>
         <p className="mt-2 text-muted">Last updated {LAST_UPDATED}</p>
 
         <div className="mt-10 flex flex-col gap-10 [&_h2]:mb-3 [&_h2]:text-2xl [&_h2]:font-bold [&_li]:mt-1 [&_ul]:list-disc [&_ul]:pl-6">

@@ -7,7 +7,7 @@ import { ChatIcon, PhoneIcon } from "./Icons";
 export function SiteFooter() {
   return (
     <footer className="bg-ink pb-24 pt-7 text-slate-300 sm:pb-10 sm:pt-10">
-      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 text-[0.95rem] sm:flex-row sm:flex-wrap sm:justify-between sm:gap-3 sm:text-base">
+      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-5 text-base sm:flex-row sm:flex-wrap sm:justify-between sm:gap-3 sm:text-base">
         <p className="font-semibold text-white">{clinic.name}, Sopore</p>
         <p>Founder &amp; Owner: {clinic.founder}</p>
         <p>
@@ -34,10 +34,10 @@ export function QuickActions() {
         aria-label="Quick actions"
         className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-line bg-white px-3 pb-3 pt-2 sm:hidden"
       >
-        <a href={`tel:${clinic.phone}`} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand font-semibold text-white">
+        <a href={`tel:${clinic.phone}`} className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand font-semibold text-white">
           <PhoneIcon /> Call
         </a>
-        <Link href="/book" className="inline-flex min-h-12 items-center justify-center rounded-xl bg-ink font-semibold text-white">
+        <Link href="/book" className="inline-flex min-h-11 items-center justify-center rounded-xl bg-ink font-semibold text-white">
           Book
         </Link>
       </nav>
@@ -61,7 +61,7 @@ export function QuickActions() {
 export function PageIntro({ title, children }: { title: string; children?: React.ReactNode }) {
   return (
     <div className="mx-auto max-w-6xl px-5 pb-5 pt-7 sm:pb-6 sm:pt-14">
-      <h1 className="text-[2rem] font-bold leading-tight tracking-tight sm:text-5xl">{title}</h1>
+      <h1 className="text-[1.5rem] font-bold leading-tight tracking-tight sm:text-5xl">{title}</h1>
       {children && <div className="mt-2 max-w-2xl text-muted sm:mt-3 sm:text-lg">{children}</div>}
     </div>
   );
