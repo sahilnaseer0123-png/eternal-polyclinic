@@ -170,10 +170,13 @@ body {
   }
 }
 
-/* A clear focus ring for keyboard users, everywhere. */
-:focus-visible {
-  outline: 3px solid var(--color-ink);
-  outline-offset: 2px;
+/* A clear focus ring for keyboard users, everywhere. In the base layer so `outline-none` on an input whose
+   box draws its own rounded ring (focus-within) still wins; otherwise a square ring shows inside the pill. */
+@layer base {
+  :focus-visible {
+    outline: 3px solid var(--color-ink);
+    outline-offset: 2px;
+  }
 }
 
 /* Page-to-page motion (components/PageTransition.tsx). The old page leaves fast; the new one fades in
