@@ -4,6 +4,7 @@ import { formatTime } from "@/lib/schedule";
 import { PageIntro } from "@/components/SiteChrome";
 import { ChatIcon, ClockIcon, MapPinIcon, PhoneIcon } from "@/components/Icons";
 import { EmergencyNote } from "@/components/EmergencyNote";
+import { ReceptionPhoto } from "@/components/ClinicPhoto";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
@@ -20,9 +21,22 @@ export default function ContactPage() {
       <div className="mx-auto max-w-6xl px-5 pb-5">
         <EmergencyNote />
       </div>
-      <section aria-label="Address and contact" className="mx-auto max-w-6xl px-5 pb-16">
+      <section
+        aria-label="Address and contact"
+        className="mx-auto max-w-6xl px-5 pb-16"
+      >
         <div className="grid gap-8 card rounded-3xl p-6 sm:p-10 md:grid-cols-2">
           <div className="flex flex-col gap-5">
+            <figure>
+              <ReceptionPhoto
+                className="aspect-[3/2] rounded-2xl"
+                eager
+                sizes="(min-width: 1152px) 500px, (min-width: 768px) 45vw, 100vw"
+              />
+              <figcaption className="mt-2 text-base text-muted">
+                Our reception, inside the clinic.
+              </figcaption>
+            </figure>
             <p className="flex items-start gap-3 text-lg">
               <MapPinIcon className="mt-1 size-5 shrink-0 text-brand" />
               <span>
@@ -36,7 +50,9 @@ export default function ContactPage() {
               <span>
                 Open {hours}
                 <br />
-                <span className="text-base text-muted">Specialists sit on their OPD days only.</span>
+                <span className="text-base text-muted">
+                  Specialists sit on their OPD days only.
+                </span>
               </span>
             </p>
             <div className="flex flex-col gap-3">
@@ -61,17 +77,18 @@ export default function ContactPage() {
             </div>
           </div>
           <div className="flex flex-col gap-3">
-            <div className="overflow-hidden rounded-2xl border border-line">
+            <div className="flex-1 overflow-hidden rounded-2xl border border-line">
               <iframe
                 src={clinic.mapEmbedUrl}
                 title={`Map: ${clinic.name}, ${clinic.location.name}`}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                className="block h-80 w-full border-0"
+                className="block h-80 w-full border-0 md:h-full md:min-h-80"
               />
             </div>
             <p className="text-base text-muted">
-              The pin marks {clinic.name}, at the {clinic.location.name} building, opposite SDH Hospital.
+              The pin marks {clinic.name}, at the {clinic.location.name}{" "}
+              building, opposite SDH Hospital.
             </p>
           </div>
         </div>

@@ -51,6 +51,9 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 - `lib/structured-data.ts`: all schema.org JSON-LD (clinic in the layout; IndividualPhysician + breadcrumbs on doctor pages,
   named doctors only). No FAQPage: Google dropped FAQ rich results in May 2026.
 - `app/opengraph-image.png` (+ `.alt.txt`): the preview picture when the link is shared on WhatsApp. Regenerate if the logo or name changes.
+- Photos (24 Oct 2026): the clinic's real reception photo, `clinic.receptionPhoto` → `public/photos/reception-{640,1200}.webp`
+  (3:2, cropped from the clinic's phone photo), drawn by `components/ClinicPhoto.tsx` (plain `<img>` with srcset: static
+  export, so no next/image resizing). Shown on the home visit card and at the top of /contact (eager there: it's on screen at load).
 - `app/not-found.tsx`: friendly 404 with Home, Book and Call.
 - Logo (emblem "A", chosen 23 Oct 2026): `components/Logo.tsx` in the header; print files in `brand/`
   (`logo.svg`, PNGs, horizontal lockups). The favicon `app/icon.svg` is `brand/logo-small.svg`, a simplified

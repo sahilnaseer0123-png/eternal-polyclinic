@@ -60,6 +60,13 @@ export const clinic = {
    * name finds a DIFFERENT clinic.
    */
   location: { name: "Old Municipal Office", lat: 34.2938233, lng: 74.455089 },
+  /** Real photo sent by the clinic (24 Oct 2026). Files in public/photos/, 3:2, at 640 and 1200 px wide. */
+  receptionPhoto: {
+    src: "/photos/reception",
+    alt: "The reception desk at Eternal Polyclinic",
+    width: 1200,
+    height: 800,
+  },
   mapUrl: "https://www.google.com/maps/dir/?api=1&destination=34.2938233,74.455089",
   mapEmbedUrl: "https://maps.google.com/maps?q=34.2938233,74.455089&z=18&output=embed",
   /** Shown wherever patients might book: the clinic is not an emergency service. 112 = India's emergency number.

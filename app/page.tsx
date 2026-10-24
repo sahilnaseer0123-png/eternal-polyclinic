@@ -11,6 +11,7 @@ import { DoctorMark } from "@/components/DoctorMark";
 import { NextAvailable } from "@/components/NextAvailable";
 import { FeatherPattern } from "@/components/FeatherPattern";
 import { WhatsAppPreview } from "@/components/WhatsAppPreview";
+import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import {
   CalendarIcon,
   ChatIcon,
@@ -126,12 +127,20 @@ export default function Home() {
       </div>
 
       {/* What brings you in? Common problems, each opening the doctors that help with it. */}
-      <section aria-labelledby="reasons" className="reveal mx-auto max-w-6xl pt-9 sm:pt-14">
+      <section
+        aria-labelledby="reasons"
+        className="reveal mx-auto max-w-6xl pt-9 sm:pt-14"
+      >
         <div className="px-5">
-          <h2 id="reasons" className="text-xl font-extrabold tracking-tight sm:text-3xl">
+          <h2
+            id="reasons"
+            className="text-xl font-extrabold tracking-tight sm:text-3xl"
+          >
             What brings you in?
           </h2>
-          <p className="mt-1 text-muted">Tap a problem to see who can help. Not sure? Call reception.</p>
+          <p className="mt-1 text-muted">
+            Tap a problem to see who can help. Not sure? Call reception.
+          </p>
         </div>
         <ul className="mt-3 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:flex-wrap">
           {REASONS.map((r) => (
@@ -194,7 +203,12 @@ export default function Home() {
                       {days ?? "Days coming soon"}
                     </span>
                     {days && (
-                      <NextAvailable doctorId={doctor.id} fallback={"\u00a0"} short className="truncate text-sm font-semibold text-ink" />
+                      <NextAvailable
+                        doctorId={doctor.id}
+                        fallback={"\u00a0"}
+                        short
+                        className="truncate text-sm font-semibold text-ink"
+                      />
                     )}
                   </span>
                 </Link>
@@ -211,13 +225,21 @@ export default function Home() {
       >
         <div className="reveal mx-auto grid max-w-6xl gap-8 px-5 py-10 sm:py-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:items-center lg:gap-16">
           <div>
-            <h2 id="how" className="text-2xl font-extrabold tracking-tight sm:text-4xl">
+            <h2
+              id="how"
+              className="text-2xl font-extrabold tracking-tight sm:text-4xl"
+            >
               Book in 3 steps
             </h2>
-            <p className="mt-2 text-teal-50 sm:text-lg">No account and no app. Under a minute, from any phone.</p>
+            <p className="mt-2 text-teal-50 sm:text-lg">
+              No account and no app. Under a minute, from any phone.
+            </p>
             <ol className="mt-5 grid gap-2 sm:mt-6 sm:gap-3">
               {STEPS.map(({ Icon, title, text }, i) => (
-                <li key={title} className="flex items-center gap-4 rounded-3xl bg-brand-dark p-3 sm:p-4">
+                <li
+                  key={title}
+                  className="flex items-center gap-4 rounded-3xl bg-brand-dark p-3 sm:p-4"
+                >
                   <span className="relative flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white text-brand">
                     <Icon className="size-6" />
                     <span className="absolute -right-1.5 -top-1.5 flex size-6 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">
@@ -269,20 +291,26 @@ export default function Home() {
 
           <Link
             href="/contact"
-            className="card flex items-center gap-4 rounded-3xl p-4 sm:p-5"
+            className="card flex flex-col gap-4 rounded-3xl p-3 sm:p-4 lg:flex-row lg:items-center"
           >
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand-tint text-brand">
-              <MapPinIcon className="size-6" />
-            </span>
-            <span className="flex min-w-0 flex-1 flex-col leading-snug">
-              <span className="font-bold">
-                {clinic.address.replace(/, Sopore$/, "")}
+            <ReceptionPhoto
+              className="aspect-[3/2] rounded-2xl lg:w-[46%] lg:shrink-0"
+              sizes="(min-width: 1024px) 180px, 100vw"
+            />
+            <span className="flex min-w-0 flex-1 items-center gap-4 px-1 pb-1 lg:px-0 lg:pb-0">
+              <span className="flex size-12 shrink-0 lg:hidden items-center justify-center rounded-2xl bg-brand-tint text-brand">
+                <MapPinIcon className="size-6" />
               </span>
-              <span className="text-sm text-muted sm:text-base">
-                {clinic.location.name} building, Sopore · Map and directions
+              <span className="flex min-w-0 flex-1 flex-col leading-snug">
+                <span className="font-bold">
+                  {clinic.address.replace(/, Sopore$/, "")}
+                </span>
+                <span className="text-sm text-muted sm:text-base">
+                  {clinic.location.name} building, Sopore · Map and directions
+                </span>
               </span>
+              <ChevronRightIcon className="size-5 shrink-0 text-slate-400" />
             </span>
-            <ChevronRightIcon className="size-5 shrink-0 text-slate-400" />
           </Link>
         </div>
       </section>
