@@ -85,6 +85,35 @@ export function CategoryIcon({ category, className = "size-4" }: IconProps & { c
           <path d="M12 2v20M8 5h8M7 10h10M8 15h8M9 20h6" />
         </svg>
       );
+    case "urology":
+      return (
+        <svg {...base} className={className}>
+          <path d="M12 2a5 5 0 0 0-5 5v3a5 5 0 0 0 10 0V7a5 5 0 0 0-5-5z" />
+          <path d="M7 12c0 3 2.5 5 5 5s5-2 5-5" />
+          <path d="M12 17v5" />
+        </svg>
+      );
+    case "children":
+      return (
+        <svg {...base} className={className}>
+          <circle cx="12" cy="7" r="4" />
+          <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
+          <path d="M9 11a3 3 0 0 0 6 0" />
+        </svg>
+      );
+    case "women":
+      return (
+        <svg {...base} className={className}>
+          <circle cx="12" cy="8" r="5" />
+          <path d="M12 13v8M9 17h6" />
+        </svg>
+      );
+    case "heart":
+      return (
+        <svg {...base} className={className}>
+          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+        </svg>
+      );
   }
 }
 

@@ -68,16 +68,23 @@ export function addDays(dateKey: string, days: number): string {
   return new Date(Date.UTC(y, mo - 1, d + days)).toISOString().slice(0, 10);
 }
 
-/** The doctor's OPD sitting on that weekday, if any. */
-export function sessionOn(doctor: Doctor, day: Weekday): OpdSession | undefined {
-  return doctor.opd.find((s) => s.day === day);
+/** The doctor's OPD sitting on that weekday (and optional dateKey for recurrence), if any. */
+export function sessionOn(doctor: Doctor, day: Weekday, dateKey?: string): OpdSession | undefined {
+  return doctor.opd.find((s) => {
+    if (s.day !== day) return false;
+    if (s.recurrence === "first-of-month" && dateKey) {
+      const [, , d] = dateKey.split("-").map(Number);
+      return d >= 1 && d <= 7;
+    }
+    return true;
+  });
 }
 
 /** Doctors sitting today, with today's sitting. */
 export function doctorsInToday(list: Doctor[], now: Date) {
-  const { weekday } = clinicClock(now);
+  const { dateKey, weekday } = clinicClock(now);
   return list.flatMap((doctor) => {
-    const session = sessionOn(doctor, weekday);
+    const session = sessionOn(doctor, weekday, dateKey);
     return session ? [{ doctor, session }] : [];
   });
 }
@@ -89,7 +96,7 @@ export function nextSpecialist(list: Doctor[], now: Date) {
     const date = addDays(dateKey, i);
     const day = weekdayOf(date);
     for (const doctor of list) {
-      const session = sessionOn(doctor, day);
+      const session = sessionOn(doctor, day, date);
       if (session) return { doctor, session, date, daysAhead: i };
     }
   }
@@ -106,7 +113,7 @@ export function nextOpdDates(doctor: Doctor, now: Date, count = 4) {
   const dates: { date: string; session: OpdSession }[] = [];
   for (let i = 0; i < 60 && dates.length < count; i++) {
     const date = addDays(clock.dateKey, i);
-    const session = sessionOn(doctor, weekdayOf(date));
+    const session = sessionOn(doctor, weekdayOf(date), date);
     if (!session) continue;
     if (i === 0 && timeSlots(doctor, date, now).length === 0) continue;
     dates.push({ date, session });
@@ -116,7 +123,7 @@ export function nextOpdDates(doctor: Doctor, now: Date, count = 4) {
 
 /** Bookable start times ("HH:mm") for a doctor on a date. Past times today are left out. */
 export function timeSlots(doctor: Doctor, date: string, now: Date): string[] {
-  const session = sessionOn(doctor, weekdayOf(date));
+  const session = sessionOn(doctor, weekdayOf(date), date);
   if (!session) return [];
   const clock = clinicClock(now);
   const start = toMinutes(session.start);
@@ -146,14 +153,21 @@ export function dateLabel(dateKey: string): string {
 /** "Wednesday and Saturday, 4:00 pm – 8:00 pm", or null when OPD days aren't confirmed. */
 export function opdSummary(doctor: Doctor): string | null {
   if (doctor.opd.length === 0) return null;
-  const sameHours = doctor.opd.every((s) => s.start === doctor.opd[0].start && s.end === doctor.opd[0].end);
+  const sameHours = doctor.opd.every((s) => !s.recurrence && s.start === doctor.opd[0].start && s.end === doctor.opd[0].end);
   if (sameHours) {
     const days = doctor.opd.map((s) => DAY_NAMES[s.day]);
     const dayText = days.length === 1 ? days[0] : `${days.slice(0, -1).join(", ")} and ${days.at(-1)}`;
     return `${dayText}, ${formatTime(doctor.opd[0].start)} – ${formatTime(doctor.opd[0].end)}`;
   }
   return doctor.opd
-    .map((s) => `${DAY_NAMES[s.day]}, ${formatTime(s.start)} – ${formatTime(s.end)}`)
+    .map((s) => {
+      const day = s.recurrence === "first-of-month"
+        ? `First ${DAY_NAMES[s.day]} of every month`
+        : s.recurrence === "alternate"
+        ? `Alternate ${DAY_NAMES[s.day]}s`
+        : DAY_NAMES[s.day];
+      return `${day}, ${formatTime(s.start)} – ${formatTime(s.end)}`;
+    })
     .join("; ");
 }
 
@@ -161,10 +175,14 @@ export function opdSummary(doctor: Doctor): string | null {
 export function opdShort(doctor: Doctor): string | null {
   if (doctor.opd.length === 0) return null;
   const hours = (s: OpdSession) => `${formatTimeShort(s.start)}–${formatTimeShort(s.end)}`;
-  const sameHours = doctor.opd.every((s) => hours(s) === hours(doctor.opd[0]));
-  const day = (s: OpdSession) => DAY_NAMES[s.day].slice(0, 3);
-  if (sameHours) return `${doctor.opd.map(day).join(", ")} · ${hours(doctor.opd[0])}`;
-  return doctor.opd.map((s) => `${day(s)} ${hours(s)}`).join(" · ");
+  const sameHours = doctor.opd.every((s) => !s.recurrence && hours(s) === hours(doctor.opd[0]));
+  const day = (s: OpdSession) => {
+    if (s.recurrence === "first-of-month") return `1st ${DAY_NAMES[s.day].slice(0, 3)}/mo`;
+    if (s.recurrence === "alternate") return `Alt ${DAY_NAMES[s.day].slice(0, 3)}`;
+    return DAY_NAMES[s.day].slice(0, 3);
+  };
+  if (sameHours && doctor.opd.length > 1) return `${doctor.opd.map(day).join(", ")} · ${hours(doctor.opd[0])}`;
+  return doctor.opd.map((s) => `${day(s)} · ${hours(s)}`).join(" · ");
 }
 
 /** The doctor's next bookable slot from `now`, or null when no days are set. */

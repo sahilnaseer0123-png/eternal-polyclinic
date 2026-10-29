@@ -9,9 +9,19 @@ export type OpdSession = {
   day: Weekday;
   start: string;
   end: string;
+  recurrence?: "weekly" | "first-of-month" | "alternate";
+  note?: string;
 };
 
-export type DoctorCategory = "skin" | "mind" | "general" | "brain";
+export type DoctorCategory =
+  | "skin"
+  | "mind"
+  | "brain"
+  | "urology"
+  | "children"
+  | "women"
+  | "heart"
+  | "general";
 
 export type Doctor = {
   id: string;
@@ -31,20 +41,25 @@ export type Doctor = {
   photo: string | null;
   /**
    * Common reasons patients see this kind of specialist, in patient words. General guidance for
-   * "What brings you in?" and search, not a promise of treatment. Checked 23 Oct 2026 against hospital and
-   * medical references (Healthline, Cleveland Clinic, Banner Health, Hinduja Hospital). The first two show on the home page.
+   * "What brings you in?" and search, not a promise of treatment.
    */
   concerns: string[];
   /** Optional: signs that need emergency care instead of a booking, shown on the doctor's page. */
   emergencyHint?: string;
+  /** Title, hospital post or academic affiliation. */
+  designation?: string;
+  /** Key honors, fellowships or former consultant positions. */
+  credentials?: string;
+  /** Specialized procedures or diagnostic facilities offered by this doctor. */
+  facilities?: string[];
 };
 
 export const clinic = {
   name: "Eternal Polyclinic",
-  /** The live address. Cloudflare Pages project "eternal-polyclinic" (moved from Vercel 23 Oct 2026). */
+  /** The live address. Cloudflare Pages project "eternal-polyclinic". */
   siteUrl: "https://eternal-polyclinic.pages.dev",
   founder: "Naseer Ah Lone",
-  address: "Opposite SDH Hospital, Sopore",
+  address: "1st Floor, Lone Complex, Opposite SDH Hospital, Sopore",
   /** For calls. */
   phone: "+919797796909",
   phoneDisplay: "97977 96909",
@@ -74,14 +89,14 @@ export const clinic = {
   emergency: { phone: "112", place: "the emergency department at SDH Hospital, right opposite (open 24 hours)" },
 } as const;
 
-/** In-house tests and services. Booked by phone for now (timings not confirmed). */
+/** In-house tests and services. Booked by phone for now (timings confirmed with reception). */
 export type Service = {
   id: string;
   name: string;
   /** One or two words for small tiles, e.g. "Echo". */
   short: string;
   description: string;
-  /** Who runs it, e.g. "Dr. Haneef". */
+  /** Who runs it. */
   lead: string | null;
 };
 
@@ -89,22 +104,36 @@ export const services: Service[] = [
   {
     id: "ultrasound",
     short: "Ultrasound",
-    name: "Ultrasound",
-    description: "Scans and reports, in the clinic.",
-    lead: "Dr. Haneef",
+    name: "Ultrasound (USG)",
+    description: "Scans and reports in the clinic. Available 4 days a week.",
+    lead: "Dr. M. Hanief Tantray (MD Radiologist)",
   },
   {
-    id: "echo",
-    short: "Echo",
-    name: "Echo and cardiac imaging",
-    description: "Heart scans, in the clinic.",
-    lead: "Dr. Adil Lankar",
+    id: "pediatric-echo",
+    short: "Pediatric Echo",
+    name: "Fetal & Pediatric Echocardiography",
+    description: "Fetal echo and pediatric heart scans performed directly by the specialist.",
+    lead: "Dr. Audil Mohmad Lanker (Pediatric Cardiologist)",
+  },
+  {
+    id: "adult-echo",
+    short: "Adult Echo",
+    name: "Adult Echocardiography",
+    description: "Heart scans and echocardiography assessments.",
+    lead: "Dr. Mustafa Bashir (DM Cardiology)",
+  },
+  {
+    id: "uroflowmetry",
+    short: "Uroflowmetry",
+    name: "Uroflowmetry & Urodynamics",
+    description: "Specialized urinary flow and bladder diagnostic studies.",
+    lead: "Dr. Imtiyaz Ahmad Sofi (Urologist)",
   },
   {
     id: "lab",
     short: "Lab",
     name: "Diagnostic lab",
-    description: "Blood tests and lab reports.",
+    description: "Blood tests and pathology reports.",
     lead: "Musadiq",
   },
   {
@@ -117,10 +146,14 @@ export const services: Service[] = [
 ];
 
 export const categories: { id: DoctorCategory; label: string }[] = [
-  { id: "skin", label: "Skin" },
+  { id: "skin", label: "Skin & hair" },
   { id: "mind", label: "Mind" },
-  { id: "general", label: "General" },
   { id: "brain", label: "Brain & spine" },
+  { id: "urology", label: "Urology & kidney" },
+  { id: "children", label: "Children" },
+  { id: "women", label: "Women's health" },
+  { id: "heart", label: "Heart" },
+  { id: "general", label: "General & scans" },
 ];
 
 /** True for a speciality id like "skin", e.g. from /doctors?type=skin. */
@@ -128,64 +161,323 @@ export const isCategory = (v: unknown): v is DoctorCategory => categories.some((
 
 export const doctors: Doctor[] = [
   {
-    id: "mubashir",
-    name: "Dr. Mubashir",
-    speciality: "Dermatologist",
-    category: "skin",
-    categoryLabel: "Skin, hair and nails",
-    degree: "MD",
-    experienceYears: 10,
-    registrationNo: null, // TODO: get from the doctor
-    opd: [{ day: 0, start: "08:00", end: "13:00" }],
-    slotMinutes: 20,
-    concerns: ["Acne", "Hair fall", "Rashes and itching", "Eczema and psoriasis", "Fungal and skin infections", "Pigmentation and dark spots", "Warts and moles", "Dandruff", "Nail problems"],
-    photo: null,
-  },
-  {
     id: "akash",
-    name: "Dr. Akash",
-    speciality: "Psychiatrist",
+    name: "Dr. Akash Yousuf Khan",
+    speciality: "Consultant Neuropsychiatrist",
     category: "mind",
-    categoryLabel: "Mind and mental health",
+    categoryLabel: "Mind & neuropsychiatry",
     degree: "MD",
-    experienceYears: 10,
-    registrationNo: null, // TODO: get from the doctor
+    experienceYears: 20,
+    registrationNo: null,
     opd: [
-      { day: 3, start: "16:00", end: "20:00" },
-      { day: 6, start: "16:00", end: "20:00" },
+      { day: 4, start: "09:00", end: "14:00" },
+      { day: 6, start: "09:00", end: "17:00" },
     ],
     slotMinutes: 20,
-    concerns: ["Stress and anxiety", "Depression and low mood", "Sleep problems", "Panic attacks", "OCD", "Bipolar disorder", "Addiction (alcohol, drugs, smoking)"],
+    concerns: [
+      "Stress and anxiety",
+      "Depression and low mood",
+      "Sleep problems",
+      "Panic attacks",
+      "OCD",
+      "Bipolar disorder",
+      "Addiction (alcohol, drugs, smoking)",
+      "Memory loss & neuropsychiatric conditions",
+    ],
     photo: null,
   },
   {
-    id: "physician",
-    name: null, // TODO: name and OPD days from the clinic
-    speciality: "General Physician",
-    category: "general",
-    categoryLabel: "General health",
-    degree: "MD",
-    experienceYears: null,
-    registrationNo: null,
-    opd: [],
-    slotMinutes: 20,
-    concerns: ["Fever and infections", "Blood pressure", "Diabetes", "Thyroid", "Cough and chest infections", "Stomach problems", "High cholesterol", "Asthma", "Headaches", "General check-up"],
-    photo: null,
-  },
-  {
-    id: "neurosurgeon",
-    name: null, // TODO: name and OPD days from the clinic
+    id: "basharat",
+    name: "Dr. Mir Basharat Ahmad Kanth",
     speciality: "Neurosurgeon",
     category: "brain",
-    categoryLabel: "Brain, spine and nerves",
-    degree: "MS, MCh",
+    categoryLabel: "Brain, spine & nerves",
+    degree: "MBBS, MS, MCh (SKIMS Soura)",
     experienceYears: null,
     registrationNo: null,
-    opd: [],
+    credentials: "Member, Neuro Surgical Society of India",
+    facilities: [
+      "Microscopic disc surgery",
+      "Endoscopic disc surgery",
+      "Spine and brain tumors",
+      "Spine and brain trauma",
+    ],
+    opd: [
+      { day: 3, start: "07:00", end: "14:00", recurrence: "first-of-month", note: "1st Wednesday of every month" },
+    ],
     slotMinutes: 20,
-    concerns: ["Slipped disc", "Back or neck pain with numbness", "Sciatica (pain down the leg)", "Pinched nerves", "Brain or spine tumours", "Head or spine injury (after first aid)"],
+    concerns: [
+      "Brain and spine conditions",
+      "Slipped disc & disc prolapse",
+      "Microscopic and endoscopic disc surgery",
+      "Spine and brain tumors",
+      "Spine and brain trauma",
+      "Severe back or neck pain with numbness",
+      "Sciatica (radiating leg pain)",
+    ],
     emergencyHint:
       "A head injury with fainting, vomiting or confusion, a sudden severe headache, or new weakness or numbness is an emergency.",
+    photo: null,
+  },
+  {
+    id: "imtiyaz",
+    name: "Dr. Imtiyaz Ahmad Sofi",
+    speciality: "Urologist, Andrologist & Renal Transplant Surgeon",
+    category: "urology",
+    categoryLabel: "Urology, kidney & men's health",
+    degree: "MBBS, MS, DNB (Urology)",
+    experienceYears: 10,
+    registrationNo: null,
+    designation: "First Robotic Surgeon of Kashmir",
+    credentials: "Former Consultant Urologist, Fortis Hospital, Bangalore",
+    facilities: [
+      "Uroflowmetry",
+      "RIRS (Retrograde Intrarenal Surgery)",
+      "Vascular access in CKD patients",
+      "Laser enucleation of prostate",
+      "BMG urethroplasty",
+      "Kidney transplant consultation",
+      "Urodynamic studies",
+    ],
+    opd: [
+      { day: 0, start: "10:00", end: "13:00" },
+    ],
+    slotMinutes: 20,
+    concerns: [
+      "Kidney stones & ureteric stones",
+      "Prostate enlargement (BPH) & laser treatment",
+      "Uroflowmetry & urodynamic testing",
+      "Urinary tract infections (UTI)",
+      "Blood in urine (hematuria)",
+      "Vascular access in CKD patients",
+      "Kidney transplant consultation",
+      "Male fertility & andrology",
+    ],
+    photo: null,
+  },
+  {
+    id: "audil",
+    name: "Dr. Audil Mohmad Lanker",
+    speciality: "Pediatric Cardiologist",
+    category: "heart",
+    categoryLabel: "Pediatric & fetal cardiology",
+    degree: "Pediatric Cardiologist",
+    experienceYears: 15,
+    registrationNo: null,
+    facilities: [
+      "Fetal echocardiography",
+      "Pediatric echocardiography",
+      "Echocardiograms performed directly by the doctor",
+    ],
+    opd: [
+      { day: 5, start: "09:00", end: "12:00" },
+    ],
+    slotMinutes: 20,
+    concerns: [
+      "Fetal echocardiography (pregnancy heart scans)",
+      "Pediatric echocardiography",
+      "Congenital heart defects (hole in heart)",
+      "Heart murmurs in children",
+      "Blue baby / cyanosis (bluish lips or skin)",
+      "Chest pain or palpitations in children",
+      "Breathlessness or poor feeding in infants",
+    ],
+    photo: null,
+  },
+  {
+    id: "amjad",
+    name: "Dr. Amjad Ali",
+    speciality: "Dermatologist",
+    category: "skin",
+    categoryLabel: "Skin, hair & infections",
+    degree: "MBBS (SKIMS Soura), PG (Dermatology) SMHS, DDVD, M.I.A.D.V.I. (India)",
+    experienceYears: null,
+    registrationNo: null,
+    designation: "Specialist in skin conditions, sexually transmitted diseases and leprosy",
+    opd: [
+      { day: 3, start: "16:00", end: "20:00" },
+    ],
+    slotMinutes: 20,
+    concerns: [
+      "Skin conditions & stubborn allergies",
+      "Sexually transmitted diseases (STDs)",
+      "Leprosy diagnosis & management",
+      "Acne and facial pigmentation",
+      "Psoriasis, eczema & dermatitis",
+      "Fungal, bacterial and viral skin infections",
+      "Hair fall, dandruff & scalp problems",
+    ],
+    photo: null,
+  },
+  {
+    id: "mudasir",
+    name: "Dr. Mudasir Hamid Buch",
+    speciality: "Pediatric and Neonatal Surgeon",
+    category: "children",
+    categoryLabel: "Pediatric & neonatal surgery",
+    degree: "MS General & Minimal Access Surgery, MCh Pediatric & Neonatal Surgery",
+    experienceYears: 12,
+    registrationNo: null,
+    opd: [
+      { day: 0, start: "10:00", end: "13:00" },
+    ],
+    slotMinutes: 20,
+    concerns: [
+      "Pediatric surgical conditions",
+      "Neonatal (newborn) surgical problems",
+      "Hernia and hydrocele in children",
+      "Undescended testis",
+      "Appendicitis in children",
+      "Congenital surgical malformations",
+      "Minimal access & laparoscopic surgery in children",
+    ],
+    photo: null,
+  },
+  {
+    id: "suhail",
+    name: "Dr. Suhail Naik",
+    speciality: "Pediatrician and Neonatologist",
+    category: "children",
+    categoryLabel: "Pediatric care & vaccination",
+    degree: "MD Pediatrics",
+    experienceYears: null,
+    registrationNo: null,
+    designation: "Associate Professor, Children Hospital Bemina",
+    facilities: [
+      "Pediatric care & regular child checkups",
+      "Newborn & neonatal care",
+      "Complete child vaccinations",
+    ],
+    opd: [
+      { day: 0, start: "09:00", end: "15:00" },
+    ],
+    slotMinutes: 20,
+    concerns: [
+      "Child fever and acute infections",
+      "Vaccinations and immunization schedules",
+      "Newborn care and infant health",
+      "Child growth, nutrition and weight issues",
+      "Childhood asthma, cough and wheezing",
+      "Vomiting, diarrhea and dehydration in kids",
+      "Developmental delay & milestones",
+    ],
+    photo: null,
+  },
+  {
+    id: "hilal",
+    name: "Dr. Hilal Ahmad Ganaie",
+    speciality: "Neurologist / Interventional Neurologist",
+    category: "brain",
+    categoryLabel: "Brain, nerves & neurology",
+    degree: "MD Medicine (SKIMS Soura), DM Neurology (WBUHS), FINR, FINS",
+    experienceYears: null,
+    registrationNo: null,
+    designation: "Associate Director – Neurology",
+    facilities: [
+      "Interventional neurology",
+      "Stroke management",
+      "Epilepsy & seizure evaluation",
+    ],
+    opd: [
+      { day: 5, start: "16:00", end: "20:00", recurrence: "alternate", note: "Alternate Fridays after 4:00 PM" },
+    ],
+    slotMinutes: 20,
+    concerns: [
+      "Frequent headaches and chronic migraine",
+      "Stroke and transient ischemic attack (mini-stroke)",
+      "Epilepsy and seizures",
+      "Parkinson’s disease, tremors & stiffness",
+      "Meningitis and brain infections",
+      "Nerve pain, neuropathy, numbness & tingling",
+      "Memory disorders and dementia",
+    ],
+    emergencyHint:
+      "Sudden weakness or numbness on one side of the face or body, difficulty speaking, or a sudden thunderclap headache requires immediate emergency care.",
+    photo: null,
+  },
+  {
+    id: "rakhshanda",
+    name: "Dr. Rakhshanda Rashid",
+    speciality: "Gynaecologist",
+    category: "women",
+    categoryLabel: "Women's health & gynaecology",
+    degree: "Former Registrar, LD Hospital",
+    experienceYears: 20,
+    registrationNo: null,
+    opd: [
+      { day: 0, start: "10:30", end: "14:30" },
+    ],
+    slotMinutes: 20,
+    concerns: [
+      "Pregnancy care and antenatal checkups",
+      "Irregular periods & heavy menstrual bleeding",
+      "PCOS / PCOD management",
+      "Infertility & conception guidance",
+      "Pelvic pain, cysts and fibroids",
+      "White discharge and vaginal infections",
+      "Menopause symptoms & hormonal balance",
+    ],
+    photo: null,
+  },
+  {
+    id: "mubashir",
+    name: "Dr. Syed Mubashir",
+    speciality: "Dermatologist",
+    category: "skin",
+    categoryLabel: "Skin, hair and dermatosurgery",
+    degree: "MBBS, MD, FRGUHS (Dermatosurgery), Postdoctoral Fellowship in Dermatosurgery & Hair Transplant",
+    experienceYears: 10,
+    registrationNo: null,
+    designation: "HOD, Department of Dermatology, Kashmir Medical College",
+    facilities: [
+      "Dermatosurgery",
+      "Hair transplant consultation",
+      "Advanced skin laser and aesthetic procedures",
+    ],
+    opd: [
+      { day: 0, start: "10:30", end: "14:00" },
+    ],
+    slotMinutes: 20,
+    concerns: [
+      "Acne & deep pimple scars",
+      "Hair fall, thinning & hair transplant consultation",
+      "Rashes, hives and severe itching",
+      "Eczema, psoriasis and vitiligo",
+      "Fungal, bacterial and skin infections",
+      "Facial pigmentation, melasma and dark spots",
+      "Warts, skin tags, moles and cysts",
+      "Nail problems & scalp conditions",
+    ],
+    photo: null,
+  },
+  {
+    id: "hanief",
+    name: "Dr. M. Hanief Tantray",
+    speciality: "Radiologist",
+    category: "general",
+    categoryLabel: "Ultrasound & radiology",
+    degree: "MD (Radiology)",
+    experienceYears: null,
+    registrationNo: null,
+    designation: "Consultant Radiologist",
+    facilities: [
+      "Ultrasound (USG) available 4 days a week",
+      "Whole abdomen & pelvic ultrasound",
+      "Obstetric & pregnancy scans",
+      "KUB (Kidney, Ureter, Bladder) scans",
+      "Neck & thyroid scans",
+    ],
+    opd: [],
+    slotMinutes: 20,
+    concerns: [
+      "Abdominal pain & whole abdomen ultrasound",
+      "Pelvic & pregnancy scans (fetal wellbeing)",
+      "Kidney stones & urinary tract scans (KUB)",
+      "Gallbladder & liver ultrasound",
+      "Thyroid and neck swelling scans",
+      "Scrotal & testicular ultrasound",
+      "Soft tissue and musculoskeletal scans",
+    ],
     photo: null,
   },
 ];

@@ -13,10 +13,14 @@ const SPECIALTY: Record<DoctorCategory, string[]> = {
   mind: ["Psychiatric"],
   general: ["PrimaryCare"],
   brain: ["Neurologic", "Surgical"],
+  urology: ["Urologic", "Renal"],
+  children: ["Pediatric"],
+  women: ["Gynecologic", "Obstetric"],
+  heart: ["Cardiovascular"],
 };
 
 /** In-house tests that are medical tests in schema.org terms. The pharmacy isn't one, so it's left out. */
-const TESTS = new Set(["ultrasound", "echo", "lab"]);
+const TESTS = new Set(["ultrasound", "pediatric-echo", "adult-echo", "uroflowmetry", "lab"]);
 
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 

@@ -56,6 +56,12 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
               {doctor.name ? doctor.speciality : "Name to be confirmed"}
               {facts.length > 0 && ` · ${facts.join(" · ")}`}
             </p>
+            {doctor.designation && (
+              <p className="mt-1 text-base font-semibold text-slate-800">{doctor.designation}</p>
+            )}
+            {doctor.credentials && (
+              <p className="mt-1 text-sm text-muted">{doctor.credentials}</p>
+            )}
             <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-brand-tint px-3 py-1 text-sm font-semibold text-brand">
               <CategoryIcon category={doctor.category} />
               {doctor.categoryLabel}
@@ -74,10 +80,14 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
           {doctor.opd.length > 0 ? (
             <ul className="flex flex-col divide-y divide-slate-700">
               {doctor.opd.map((s) => (
-                <li key={s.day} className="flex items-center justify-between gap-4 py-2.5">
+                <li key={`${s.day}-${s.start}`} className="flex items-center justify-between gap-4 py-2.5">
                   <span className="flex items-center gap-2 font-semibold">
                     <CalendarIcon className="size-5 text-glow" />
-                    {DAY_NAMES[s.day]}
+                    {s.recurrence === "first-of-month"
+                      ? `1st ${DAY_NAMES[s.day]} of month`
+                      : s.recurrence === "alternate"
+                        ? `Alt ${DAY_NAMES[s.day]}s`
+                        : DAY_NAMES[s.day]}
                   </span>
                   <span className="text-slate-300">
                     {formatTime(s.start)} – {formatTime(s.end)}
@@ -118,6 +128,22 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
       </div>
 
       {doctor.emergencyHint && <EmergencyNote hint={doctor.emergencyHint} className="mt-5" />}
+
+      {/* Facilities & procedures if any */}
+      {doctor.facilities && doctor.facilities.length > 0 && (
+        <section aria-labelledby="facilities" className="reveal mt-8 sm:mt-12">
+          <h2 id="facilities" className="text-xl font-extrabold sm:text-2xl">
+            Specialized facilities &amp; procedures
+          </h2>
+          <ul className="mt-4 flex flex-wrap gap-2.5">
+            {doctor.facilities.map((f) => (
+              <li key={f} className="card rounded-2xl px-4 py-2 text-base font-semibold text-brand-dark">
+                {f}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Common reasons to visit */}
       <section aria-labelledby="reasons" className="reveal mt-8 sm:mt-12">

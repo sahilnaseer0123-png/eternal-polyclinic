@@ -9,7 +9,7 @@ const serviceList = services.map((s) => s.name.toLowerCase()).join(", ").replace
 export const faqs: Faq[] = [
   {
     question: "Which doctor should I see?",
-    answer: `On the Doctors page, search or tap a speciality (Skin, Mind, General, Brain & spine). If you're not sure, call ${clinic.phoneDisplay} and reception will guide you.`,
+    answer: `On the Doctors page, search or tap a speciality (Skin, Mind, Brain & spine, Urology, Children, Women's health, Heart). If you're not sure, call ${clinic.phoneDisplay} and reception will guide you.`,
   },
   {
     question: "What if it's an emergency?",

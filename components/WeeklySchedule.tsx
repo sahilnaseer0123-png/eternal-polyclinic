@@ -48,6 +48,12 @@ export function ScheduleView({ today }: { today?: Weekday }) {
                         <span className="font-semibold text-brand">
                           {formatTimeShort(s.start)}–<wbr />
                           {formatTimeShort(s.end)}
+                          {s.recurrence === "first-of-month" && (
+                            <span className="block text-xs font-normal text-muted">1st of mo</span>
+                          )}
+                          {s.recurrence === "alternate" && (
+                            <span className="block text-xs font-normal text-muted">Alt week</span>
+                          )}
                         </span>
                       ) : (
                         <span className="text-slate-400" aria-label="Not sitting">—</span>
@@ -82,6 +88,7 @@ export function ScheduleView({ today }: { today?: Weekday }) {
                       <span className="font-semibold">{doctor.name ?? doctor.speciality}</span>{" "}
                       <span className="whitespace-nowrap text-muted">
                         {formatTimeShort(s.start)}–{formatTimeShort(s.end)}
+                        {s.recurrence === "first-of-month" ? " (1st of mo)" : s.recurrence === "alternate" ? " (Alt week)" : ""}
                       </span>
                     </li>
                   ))}

@@ -41,20 +41,20 @@ test("a day the doctor doesn't sit is rejected", () => {
 });
 
 test("a time outside OPD hours is rejected", () => {
-  const r = validateBooking({ ...good, time: "10:00" }, doctors, friday);
+  const r = validateBooking({ ...good, time: "18:00" }, doctors, friday);
   assert.equal(r.ok, false);
   if (!r.ok) assert.ok(r.errors.time);
 });
 
 test("a slot that has already passed today is rejected", () => {
-  const sat5pm = new Date("2026-10-24T17:05:00+05:30");
-  const r = validateBooking({ ...good, time: "16:20" }, doctors, sat5pm);
+  const sat430pm = new Date("2026-10-24T16:30:00+05:30");
+  const r = validateBooking({ ...good, time: "16:20" }, doctors, sat430pm);
   assert.equal(r.ok, false);
   if (!r.ok) assert.ok(r.errors.time);
 });
 
 test("doctors without OPD days can't be booked online", () => {
-  const r = validateBooking({ ...good, doctorId: "physician" }, doctors, friday);
+  const r = validateBooking({ ...good, doctorId: "hanief" }, doctors, friday);
   assert.equal(r.ok, false);
   if (!r.ok) assert.match(r.errors.doctorId ?? "", /call/i);
 });
