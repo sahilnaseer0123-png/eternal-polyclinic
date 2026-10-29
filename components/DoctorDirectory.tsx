@@ -7,17 +7,32 @@
 import Link from "next/link";
 import { useState } from "react";
 import { categories, clinic, doctors, services, type DoctorCategory } from "@/data/clinic";
-import { opdSummary } from "@/lib/schedule";
+import { formatProseItem, opdSummary } from "@/lib/schedule";
 import { DoctorMark } from "./DoctorMark";
 import { NextAvailable } from "./NextAvailable";
 import { CalendarIcon, ChevronRightIcon, SearchIcon, ServiceIcon } from "./Icons";
 
 export type Filter = "all" | DoctorCategory;
 
-// Every word typed must appear somewhere in the doctor's details, so "back pain" finds
-// "Back or neck pain with numbness" and "skin rash" finds the dermatologist.
+/**
+ * Strips explanatory phrases in parentheses (e.g. "(bluish lips or skin)", "(radiating leg pain)")
+ * while preserving acronyms like "(BPH)", "(UTI)", "(STDs)", "(USG)", "(KUB)".
+ */
+const cleanForSearch = (s: string) =>
+  s.replace(/\([^)]*?\)/g, (match) => {
+    const inner = match.slice(1, -1).trim();
+    if (/^[A-Z0-9/ -]{2,6}$/.test(inner)) return ` ${inner} `;
+    return " ";
+  });
+
+// Every word typed must appear somewhere in the doctor's details.
+// Specialty and category take priority over secondary mentions.
 const matches = (query: string, ...fields: (string | null | undefined)[]) => {
-  const text = fields.filter(Boolean).join(" ").toLowerCase();
+  const text = fields
+    .filter(Boolean)
+    .map((f) => cleanForSearch(String(f)))
+    .join(" ")
+    .toLowerCase();
   return query.split(/\s+/).every((word) => text.includes(word));
 };
 
@@ -26,11 +41,22 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
   const [query, setQuery] = useState(initialQuery);
   const q = query.trim().toLowerCase();
 
-  const shown = doctors.filter(
-    (d) =>
-      (filter === "all" || d.category === filter) &&
-      (!q || matches(q, d.name, d.speciality, d.categoryLabel, categories.find((c) => c.id === d.category)?.label, ...d.concerns)),
-  );
+  const shown = doctors.filter((d) => {
+    if (filter !== "all" && d.category !== filter) return false;
+    if (!q) return true;
+    // When searching specifically for "skin", only dermatology specialists should match
+    if (q === "skin" && d.category !== "skin" && !d.speciality.toLowerCase().includes("skin") && !d.speciality.toLowerCase().includes("dermat")) {
+      return false;
+    }
+    return matches(
+      q,
+      d.name,
+      d.speciality,
+      d.categoryLabel,
+      categories.find((c) => c.id === d.category)?.label,
+      ...d.concerns,
+    );
+  });
   const shownServices = q ? services.filter((s) => matches(q, s.name, s.short, s.description)) : [];
   const options: { id: Filter; label: string }[] = [{ id: "all", label: "All" }, ...categories];
 
@@ -102,8 +128,10 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                       </Link>
                     </h3>
                     <p className="text-muted">
-                      {doctor.name ? `${doctor.speciality} · ` : ""}
-                      {doctor.degree}
+                      {doctor.name ? `${doctor.speciality}` : ""}
+                      {doctor.degree && doctor.degree.toLowerCase() !== doctor.speciality.toLowerCase()
+                        ? ` · ${doctor.degree}`
+                        : ""}
                       {doctor.experienceYears ? ` · ${doctor.experienceYears} yrs` : ""}
                     </p>
                     <p className="text-sm font-semibold text-brand">{doctor.categoryLabel}</p>
@@ -112,14 +140,15 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                 <p className="flex items-start gap-2 rounded-2xl bg-ground px-3 py-2.5">
                   <CalendarIcon className="mt-0.5 size-5 shrink-0 text-brand" />
                   <span className="flex flex-col">
-                    <span>{opd ?? "Days coming soon. Please call to ask."}</span>
+                    <span>{opd ?? doctor.availability ?? "Days coming soon. Please call to ask."}</span>
                     {opd && (
                       <NextAvailable doctorId={doctor.id} fallback={"\u00a0"} prefix="Next free slot: " className="font-semibold text-brand" />
                     )}
                   </span>
                 </p>
                 <p className="text-muted">
-                  <span className="font-semibold text-ink">Helps with:</span> {doctor.concerns.slice(0, 4).join(", ").toLowerCase()}
+                  <span className="font-semibold text-ink">Helps with:</span>{" "}
+                  {doctor.concerns.slice(0, 4).map(formatProseItem).join(", ")}
                 </p>
                 {opd ? (
                   <Link

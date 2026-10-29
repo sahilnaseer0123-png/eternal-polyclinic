@@ -276,7 +276,7 @@ export default function Home() {
               {services.map((s) => (
                 <li key={s.id}>
                   <Link
-                    href="/services"
+                    href={`/services#${s.id}`}
                     className="flex h-full flex-col items-center gap-2 text-center text-sm font-semibold sm:card sm:items-start sm:rounded-3xl sm:p-5 sm:text-left sm:text-base"
                   >
                     <span className="card flex size-16 items-center justify-center rounded-2xl text-brand sm:size-12 sm:bg-brand-tint sm:shadow-none">

@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { clinic } from "@/data/clinic";
 import { DoctorDirectory } from "@/components/DoctorDirectory";
 import { DirectoryFromLink } from "@/components/DirectoryFromLink";
-import { ScheduleView, WeeklySchedule } from "@/components/WeeklySchedule";
+import { WeeklySchedule } from "@/components/WeeklySchedule";
 import { PageIntro } from "@/components/SiteChrome";
 
 export const metadata: Metadata = {
@@ -40,9 +40,7 @@ export default function DoctorsPage() {
           Weekly OPD schedule
         </h2>
         <p className="mb-4 mt-1 text-muted sm:mb-6">Timings can change on holidays, so call if you&apos;re unsure.</p>
-        <Suspense fallback={<ScheduleView />}>
-          <WeeklySchedule />
-        </Suspense>
+        <WeeklySchedule />
       </section>
     </>
   );

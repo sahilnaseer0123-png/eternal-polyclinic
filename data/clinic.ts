@@ -52,6 +52,8 @@ export type Doctor = {
   credentials?: string;
   /** Specialized procedures or diagnostic facilities offered by this doctor. */
   facilities?: string[];
+  /** When OPD days aren't fixed weekly (e.g. 4 days/week or by appointment). */
+  availability?: string;
 };
 
 export const clinic = {
@@ -134,7 +136,7 @@ export const services: Service[] = [
     short: "Lab",
     name: "Diagnostic lab",
     description: "Blood tests and pathology reports.",
-    lead: "Musadiq",
+    lead: "Musadiq Ahmad (Lab Technician)",
   },
   {
     id: "pharmacy",
@@ -261,7 +263,7 @@ export const doctors: Doctor[] = [
     speciality: "Pediatric Cardiologist",
     category: "heart",
     categoryLabel: "Pediatric & fetal cardiology",
-    degree: "Pediatric Cardiologist",
+    degree: "MD, Fellowship in Pediatric Cardiology",
     experienceYears: 15,
     registrationNo: null,
     facilities: [
@@ -278,9 +280,40 @@ export const doctors: Doctor[] = [
       "Pediatric echocardiography",
       "Congenital heart defects (hole in heart)",
       "Heart murmurs in children",
-      "Blue baby / cyanosis (bluish lips or skin)",
+      "Blue baby / cyanosis (bluish discoloration of lips)",
       "Chest pain or palpitations in children",
       "Breathlessness or poor feeding in infants",
+    ],
+    photo: null,
+  },
+  {
+    id: "mustafa",
+    name: "Dr. Mustafa Bashir",
+    speciality: "Adult Cardiologist",
+    category: "heart",
+    categoryLabel: "Heart & adult cardiology",
+    degree: "DM (Cardiology)",
+    experienceYears: null,
+    registrationNo: null,
+    designation: "Consultant Cardiologist",
+    facilities: [
+      "Adult Echocardiography",
+      "Cardiac evaluations & ECG",
+      "Hypertension & heart disease management",
+    ],
+    availability:
+      "Adult Echocardiography and cardiology consultations by prior appointment. Call reception at 97977 96909 to confirm timing and book.",
+    opd: [],
+    slotMinutes: 20,
+    concerns: [
+      "Chest pain and angina",
+      "High blood pressure (hypertension)",
+      "Heart attack (post-MI recovery)",
+      "Palpitations & irregular heartbeat",
+      "Breathlessness on exertion",
+      "Heart failure & cardiac weakness",
+      "Cholesterol & lipid disorders",
+      "Adult echocardiography (heart scans)",
     ],
     photo: null,
   },
@@ -460,6 +493,8 @@ export const doctors: Doctor[] = [
     experienceYears: null,
     registrationNo: null,
     designation: "Consultant Radiologist",
+    availability:
+      "Ultrasound (USG) available 4 days a week. Call reception at 97977 96909 to confirm today's scan timings and book a slot.",
     facilities: [
       "Ultrasound (USG) available 4 days a week",
       "Whole abdomen & pelvic ultrasound",

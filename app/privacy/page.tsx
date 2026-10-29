@@ -97,8 +97,15 @@ export default function PrivacyPage() {
             <h2>Your choices</h2>
             <p>
               You can ask us what details we have from you, ask us to correct them, or ask us to delete your messages.
-              Call {clinic.phoneDisplay} or WhatsApp {clinic.whatsappDisplay}. If you would rather not use WhatsApp,
-              you can book by calling us instead.
+              Call{" "}
+              <a href={tel} className="font-semibold text-brand underline">
+                {clinic.phoneDisplay}
+              </a>{" "}
+              or WhatsApp{" "}
+              <a href={`https://wa.me/${clinic.whatsapp}`} className="font-semibold text-brand underline">
+                {clinic.whatsappDisplay}
+              </a>
+              . If you would rather not use WhatsApp, you can book by calling us instead.
             </p>
           </section>
 

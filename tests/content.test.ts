@@ -2,9 +2,9 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { clinic, doctors } from "@/data/clinic";
+import { clinic, doctors, services } from "@/data/clinic";
 import { faqs } from "@/data/faq";
-import { formatTimeShort } from "@/lib/schedule";
+import { formatTimeShort, formatProseItem } from "@/lib/schedule";
 
 test("short times drop :00 only", () => {
   assert.equal(formatTimeShort("16:00"), "4 pm");
@@ -47,4 +47,28 @@ test("map pin is the clinic's confirmed spot (Old Municipal Office)", () => {
   assert.equal(clinic.location.lng, 74.455089);
   assert.ok(clinic.mapUrl.includes(`${clinic.location.lat},${clinic.location.lng}`));
   assert.ok(clinic.mapEmbedUrl.includes(`${clinic.location.lat},${clinic.location.lng}`));
+});
+
+test("formatProseItem preserves medical acronyms and proper nouns", () => {
+  assert.equal(formatProseItem("Prostate enlargement (BPH)"), "prostate enlargement (BPH)");
+  assert.equal(formatProseItem("Urinary tract infections (UTI)"), "urinary tract infections (UTI)");
+  assert.equal(formatProseItem("Sexually transmitted diseases (STDs)"), "sexually transmitted diseases (STDs)");
+  assert.equal(formatProseItem("Parkinson’s disease"), "Parkinson’s disease");
+  assert.equal(formatProseItem("PCOS / PCOD management"), "PCOS / PCOD management");
+  assert.equal(formatProseItem("Kidney stones & urinary tract scans (KUB)"), "kidney stones & urinary tract scans (KUB)");
+  assert.equal(formatProseItem("Ultrasound (USG)"), "ultrasound (USG)");
+});
+
+test("doctor data checks: Dr. Audil degree not duplicated, Dr. Mustafa listed in heart, Musadiq formatted", () => {
+  const audil = doctors.find((d) => d.id === "audil")!;
+  assert.ok(audil.degree !== audil.speciality);
+  assert.match(audil.degree, /Fellowship|MD/i);
+
+  const mustafa = doctors.find((d) => d.id === "mustafa")!;
+  assert.ok(mustafa);
+  assert.equal(mustafa.category, "heart");
+  assert.equal(mustafa.degree, "DM (Cardiology)");
+
+  const lab = services.find((s) => s.id === "lab")!;
+  assert.equal(lab.lead, "Musadiq Ahmad (Lab Technician)");
 });

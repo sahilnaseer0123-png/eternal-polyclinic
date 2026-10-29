@@ -35,7 +35,10 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
   const doctor = find((await params).id);
   if (!doctor) notFound();
   const others = doctors.filter((d) => d.id !== doctor.id);
-  const facts = [doctor.degree, doctor.experienceYears ? `${doctor.experienceYears} years of experience` : null].filter(Boolean);
+  const facts = [
+    doctor.degree && doctor.degree.toLowerCase() !== doctor.speciality.toLowerCase() ? doctor.degree : null,
+    doctor.experienceYears ? `${doctor.experienceYears} years of experience` : null,
+  ].filter(Boolean);
   // For search engines: who this doctor is and where they practise, plus Home > Doctors > this page.
   const schema = [doctorSchema(doctor), doctorBreadcrumbs(doctor)].filter(Boolean);
 
@@ -96,7 +99,9 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
               ))}
             </ul>
           ) : (
-            <p className="text-slate-300">Days coming soon. Please call and reception will tell you when to come.</p>
+            <p className="text-slate-300">
+              {doctor.availability ?? "Days coming soon. Please call and reception will tell you when to come."}
+            </p>
           )}
           {doctor.opd.length > 0 && (
             <p className="font-semibold text-white">

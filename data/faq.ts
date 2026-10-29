@@ -1,10 +1,14 @@
 // FAQ answers. Clinic facts come from clinic.ts so they never drift apart.
 
 import { clinic, services } from "./clinic";
+import { formatProseItem } from "@/lib/schedule";
 
 export type Faq = { question: string; answer: string };
 
-const serviceList = services.map((s) => s.name.toLowerCase()).join(", ").replace(/, ([^,]*)$/, " and $1");
+const serviceList = services
+  .map((s) => formatProseItem(s.name))
+  .join(", ")
+  .replace(/, ([^,]*)$/, " and $1");
 
 export const faqs: Faq[] = [
   {

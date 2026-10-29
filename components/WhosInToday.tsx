@@ -51,7 +51,7 @@ export function WhosInToday() {
   const week = Array.from({ length: 7 }, (_, i) => addDays(clock.dateKey, i)).flatMap((dateKey, i) => {
     const day = weekdayOf(dateKey);
     return doctors.flatMap((doctor) => {
-      const s = sessionOn(doctor, day);
+      const s = sessionOn(doctor, day, dateKey);
       if (!s) return [];
       const label = i === 0 ? "Today" : i === 1 ? "Tomorrow" : DAY_NAMES[day].slice(0, 3);
       return [{ key: `${dateKey}-${doctor.id}`, label, doctor, s, isToday: i === 0 }];
@@ -83,6 +83,16 @@ export function WhosInToday() {
                     <p className="text-xl font-bold tracking-tight text-slate-50 sm:text-2xl">{doctor.name ?? doctor.speciality}</p>
                     <p className="text-slate-400">
                       {doctor.speciality} · {formatTime(session.start)} – {formatTime(session.end)}
+                      {session.recurrence === "first-of-month" && (
+                        <span className="ml-2 inline-block rounded-md bg-white/15 px-2 py-0.5 text-xs font-semibold text-glow">
+                          1st of mo
+                        </span>
+                      )}
+                      {session.recurrence === "alternate" && (
+                        <span className="ml-2 inline-block rounded-md bg-white/15 px-2 py-0.5 text-xs font-semibold text-glow">
+                          Alternate Fridays (Call to confirm)
+                        </span>
+                      )}
                     </p>
                     <p className={`font-semibold ${status === "in" ? "text-glow" : "text-slate-400"}`}>
                       {STATUS_TEXT[status](session.start)}
@@ -136,10 +146,22 @@ export function WhosInToday() {
           </div>
           <ul className="flex flex-col gap-1.5 text-base">
             {week.map(({ key, label, doctor, s, isToday }) => (
-              <li key={key} className={`flex gap-3 ${isToday ? "font-semibold" : ""}`}>
-                <span className="w-20 shrink-0 font-semibold text-glow">{label}</span>
-                <span className="min-w-0 flex-1 text-slate-200">{doctor.name ?? doctor.speciality}</span>
-                <span className="whitespace-nowrap text-slate-400">
+              <li key={key} className={`flex items-baseline gap-2 sm:gap-3 ${isToday ? "font-semibold" : ""}`}>
+                <span className="w-16 shrink-0 font-semibold text-glow">{label}</span>
+                <span className="min-w-0 flex-1 truncate text-slate-200">
+                  {doctor.name ?? doctor.speciality}
+                  {s.recurrence === "first-of-month" && (
+                    <span className="ml-1.5 text-xs font-normal text-glow">
+                      (1st of mo)
+                    </span>
+                  )}
+                  {s.recurrence === "alternate" && (
+                    <span className="ml-1.5 text-xs font-normal text-glow">
+                      (Alt week)
+                    </span>
+                  )}
+                </span>
+                <span className="whitespace-nowrap text-sm text-slate-400">
                   {formatTimeShort(s.start)}–{formatTimeShort(s.end)}
                 </span>
               </li>

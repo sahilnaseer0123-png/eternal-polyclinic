@@ -77,13 +77,16 @@ export default function ContactPage() {
             </div>
           </div>
           <div className="flex flex-col gap-3">
-            <div className="flex-1 overflow-hidden rounded-2xl border border-line">
+            <div className="relative min-h-[22rem] flex-1 overflow-hidden rounded-2xl border border-line bg-ground md:min-h-[28rem]">
               <iframe
                 src={clinic.mapEmbedUrl}
-                title={`Map: ${clinic.name}, ${clinic.location.name}`}
+                title={`Map: ${clinic.name}, ${clinic.location.name}, Sopore`}
+                width="100%"
+                height="100%"
                 loading="lazy"
+                allowFullScreen
                 referrerPolicy="no-referrer-when-downgrade"
-                className="block h-80 w-full border-0 md:h-full md:min-h-80"
+                className="absolute inset-0 h-full w-full border-0"
               />
             </div>
             <p className="text-base text-muted">

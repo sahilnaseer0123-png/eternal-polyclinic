@@ -233,3 +233,57 @@ export function isOpenNow(hours: { open: string; close: string }, now: Date): bo
 export function formatTimeShort(hhmm: string): string {
   return formatTime(hhmm).replace(":00", "");
 }
+
+const PRESERVED_ACRONYMS = new Set([
+  "BPH",
+  "UTI",
+  "STDs",
+  "STD",
+  "PCOS",
+  "PCOD",
+  "KUB",
+  "USG",
+  "ECG",
+  "ECHO",
+  "CKD",
+  "RIRS",
+  "BMG",
+  "OCD",
+  "TIA",
+  "MRI",
+  "CT",
+  "SKIMS",
+  "SMHS",
+]);
+
+const PROPER_NOUNS = new Set([
+  "Parkinson’s",
+  "Parkinson's",
+  "Parkinson",
+  "Alzheimer’s",
+  "Alzheimer's",
+  "Kashmir",
+  "Soura",
+  "Bemina",
+]);
+
+/**
+ * Formats a list item for prose display by lowercasing only the leading character of standard words
+ * while strictly preserving all-caps medical acronyms (BPH, UTI, STDs, PCOS, PCOD, KUB, USG)
+ * and proper nouns (Parkinson’s).
+ */
+export function formatProseItem(text: string): string {
+  if (!text) return "";
+  return text.replace(/\b[A-Za-z0-9/’']+\b/g, (token, offset) => {
+    if (PRESERVED_ACRONYMS.has(token) || (token.length >= 2 && token === token.toUpperCase() && /^[A-Z0-9/]+$/.test(token))) {
+      return token;
+    }
+    if (PROPER_NOUNS.has(token)) {
+      return token;
+    }
+    if (offset === 0) {
+      return token.charAt(0).toLowerCase() + token.slice(1);
+    }
+    return token;
+  });
+}
