@@ -31,7 +31,7 @@ export default function Home() {
       {/* Hero + Today, over a faint feather pattern from the logo */}
       <div className="relative overflow-hidden">
         <FeatherPattern className="-right-24 -top-6 w-[22rem] opacity-[0.09] sm:w-[30rem] lg:-left-40 lg:right-auto lg:-top-16 lg:w-[46rem] lg:opacity-[0.07]" />
-        <section className="relative mx-auto grid max-w-6xl gap-6 px-5 pt-4 sm:pt-6 lg:grid-cols-[1.15fr_1fr] lg:gap-8 lg:pt-8">
+        <section className="relative mx-auto flex max-w-6xl flex-col gap-7 px-5 pt-6 sm:gap-8 sm:pt-8 lg:gap-10 lg:pt-10">
           <div className="rise flex min-w-0 flex-col gap-4 sm:gap-5">
             <p className="text-sm font-semibold text-brand sm:text-base">
               Open {hours}
@@ -40,7 +40,7 @@ export default function Home() {
             <h1 className="text-[1.75rem] font-extrabold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
               Which doctor do you need?
             </h1>
-            <p className="max-w-xl text-muted sm:text-lg">
+            <p className="max-w-2xl text-muted sm:text-lg">
               Visiting specialists on fixed days, with scans, a lab and a
               pharmacy under one roof. Consultation ₹{clinic.consultationFee}.
             </p>
@@ -48,7 +48,7 @@ export default function Home() {
             <Form
               action="/doctors"
               role="search"
-              className="card flex max-w-xl items-center gap-2 rounded-2xl pl-4 pr-1.5 focus-within:outline-3 focus-within:outline-ink sm:pl-5"
+              className="card flex max-w-2xl items-center gap-2 rounded-2xl pl-4 pr-1.5 focus-within:outline-3 focus-within:outline-ink sm:pl-5"
             >
               <SearchIcon className="size-5 shrink-0 text-brand" />
               <label htmlFor="home-find" className="sr-only">
@@ -65,7 +65,7 @@ export default function Home() {
               />
               <button
                 type="submit"
-                className="min-h-11 shrink-0 rounded-xl bg-ink px-4 font-semibold text-white hover:bg-slate-800"
+                className="min-h-11 shrink-0 rounded-xl bg-ink px-5 font-semibold text-white hover:bg-slate-800"
               >
                 Find
               </button>
