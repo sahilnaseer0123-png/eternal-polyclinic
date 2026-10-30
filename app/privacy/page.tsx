@@ -16,7 +16,7 @@ export default function PrivacyPage() {
   const tel = `tel:${clinic.phone}`;
   return (
     <>
-      <div className="mx-auto w-full max-w-3xl px-5 py-8 sm:py-12">
+      <div className="mx-auto w-full max-w-3xl px-5 pt-8 pb-24 sm:py-12">
         <h1 className="text-[1.5rem] font-bold leading-tight sm:text-4xl">Privacy notice</h1>
         <p className="mt-2 text-muted">Last updated {LAST_UPDATED}</p>
 

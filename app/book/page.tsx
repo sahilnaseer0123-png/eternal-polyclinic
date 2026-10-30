@@ -20,7 +20,7 @@ export default function BookPage() {
         <EmergencyNote />
       </div>
 
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 pb-16 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+      <div className="mx-auto grid max-w-6xl gap-10 px-5 pb-24 sm:pb-16 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <Suspense fallback={<BookingSkeleton />}>
           <BookingSection />
         </Suspense>

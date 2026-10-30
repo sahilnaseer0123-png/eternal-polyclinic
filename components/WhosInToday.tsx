@@ -147,24 +147,24 @@ export function WhosInToday() {
                 Full schedule
               </Link>
             </div>
-            <ul className="flex flex-col gap-2 text-base">
+            <ul className="flex flex-col gap-2.5 text-xs sm:text-sm">
               {week.map(({ key, label, doctor, s, isToday }) => (
-                <li key={key} className={`flex items-baseline gap-2.5 sm:gap-3 ${isToday ? "font-semibold" : ""}`}>
-                  <span className="w-[5.5rem] shrink-0 font-semibold text-glow sm:w-24">{label}</span>
+                <li key={key} className={`flex items-center gap-2 sm:gap-3 ${isToday ? "font-semibold" : ""}`}>
+                  <span className="w-20 shrink-0 font-bold text-glow sm:w-24 text-xs sm:text-sm">{label}</span>
                   <span className="min-w-0 flex-1 truncate text-slate-200">
                     {doctor.name ?? doctor.speciality}
                     {s.recurrence === "first-of-month" && (
-                      <span className="ml-1.5 text-xs font-normal text-glow">
+                      <span className="ml-1.5 text-[11px] font-medium text-glow">
                         (1st of mo)
                       </span>
                     )}
                     {s.recurrence === "alternate" && (
-                      <span className="ml-1.5 text-xs font-normal text-glow">
+                      <span className="ml-1.5 text-[11px] font-medium text-glow">
                         (Alt week)
                       </span>
                     )}
                   </span>
-                  <span className="whitespace-nowrap text-sm text-slate-400">
+                  <span className="whitespace-nowrap tabular-nums text-xs font-medium text-slate-400 sm:text-sm">
                     {formatTimeShort(s.start)}–{formatTimeShort(s.end)}
                   </span>
                 </li>

@@ -39,7 +39,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
   const schema = [doctorSchema(doctor), doctorBreadcrumbs(doctor)].filter(Boolean);
 
   return (
-    <div className="mx-auto max-w-6xl px-5 pb-12 pt-5 sm:pb-16 sm:pt-8">
+    <div className="mx-auto max-w-6xl px-5 pb-24 pt-5 sm:pb-16 sm:pt-8">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(schema) }} />
       <Link href="/doctors" className="inline-flex min-h-11 items-center gap-1 font-semibold text-brand hover:underline">
         <ChevronRightIcon className="size-4 rotate-180" /> All doctors
@@ -156,7 +156,10 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
                 <PhoneIcon className="size-4" /> Call to Book
               </a>
             )}
-            <ShareButton title={`${title(doctor)} at ${clinic.name}`} />
+            <ShareButton
+              title={`${title(doctor)} at ${clinic.name}`}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-white/10 text-white hover:bg-white/20 border border-white/15 px-5 font-bold transition-colors"
+            />
           </div>
         </section>
       </div>

@@ -102,17 +102,17 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-3 pt-2 sm:grid-cols-4 sm:gap-4">
               <Link
                 href="/doctors"
-                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-4 transition-all duration-200 sm:p-5"
+                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-3.5 transition-all duration-200 sm:p-5"
               >
                 <div className="flex items-center justify-between">
-                  <span className="flex size-12 items-center justify-center rounded-2xl bg-brand-tint text-brand transition-colors group-hover:bg-brand group-hover:text-white">
-                    <UserIcon className="size-6" />
+                  <span className="flex size-11 items-center justify-center rounded-2xl bg-brand-tint text-brand transition-colors group-hover:bg-brand group-hover:text-white sm:size-12">
+                    <UserIcon className="size-5 sm:size-6" />
                   </span>
-                  <span className="rounded-full bg-brand-tint px-2.5 py-0.5 text-xs font-bold text-brand">
+                  <span className="rounded-full bg-brand-tint px-2 py-0.5 text-[11px] font-bold text-brand sm:px-2.5 sm:text-xs">
                     12+ Doctors
                   </span>
                 </div>
-                <div className="mt-3.5">
+                <div className="mt-3">
                   <h3 className="font-bold text-ink group-hover:text-brand sm:text-lg">
                     Doctor OPD
                   </h3>
@@ -124,17 +124,17 @@ export default function Home() {
 
               <Link
                 href="/services#ultrasound"
-                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-4 transition-all duration-200 sm:p-5"
+                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-3.5 transition-all duration-200 sm:p-5"
               >
                 <div className="flex items-center justify-between">
-                  <span className="flex size-12 items-center justify-center rounded-2xl bg-sky-50 text-sky-700 transition-colors group-hover:bg-sky-700 group-hover:text-white">
-                    <ServiceIcon id="ultrasound" className="size-6" />
+                  <span className="flex size-11 items-center justify-center rounded-2xl bg-sky-50 text-sky-700 transition-colors group-hover:bg-sky-700 group-hover:text-white sm:size-12">
+                    <ServiceIcon id="ultrasound" className="size-5 sm:size-6" />
                   </span>
-                  <span className="rounded-full bg-sky-100/70 px-2.5 py-0.5 text-xs font-bold text-sky-800">
+                  <span className="rounded-full bg-sky-100/70 px-2 py-0.5 text-[11px] font-bold text-sky-800 sm:px-2.5 sm:text-xs">
                     4 Days/Wk
                   </span>
                 </div>
-                <div className="mt-3.5">
+                <div className="mt-3">
                   <h3 className="font-bold text-ink group-hover:text-sky-700 sm:text-lg">
                     Ultrasound &amp; Echo
                   </h3>
@@ -146,17 +146,17 @@ export default function Home() {
 
               <Link
                 href="/services#lab"
-                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-4 transition-all duration-200 sm:p-5"
+                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-3.5 transition-all duration-200 sm:p-5"
               >
                 <div className="flex items-center justify-between">
-                  <span className="flex size-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-700 transition-colors group-hover:bg-amber-700 group-hover:text-white">
-                    <ServiceIcon id="lab" className="size-6" />
+                  <span className="flex size-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-700 transition-colors group-hover:bg-amber-700 group-hover:text-white sm:size-12">
+                    <ServiceIcon id="lab" className="size-5 sm:size-6" />
                   </span>
-                  <span className="rounded-full bg-amber-100/70 px-2.5 py-0.5 text-xs font-bold text-amber-800">
+                  <span className="rounded-full bg-amber-100/70 px-2 py-0.5 text-[11px] font-bold text-amber-800 sm:px-2.5 sm:text-xs">
                     Fast Reports
                   </span>
                 </div>
-                <div className="mt-3.5">
+                <div className="mt-3">
                   <h3 className="font-bold text-ink group-hover:text-amber-700 sm:text-lg">
                     Diagnostic Lab
                   </h3>
@@ -168,17 +168,17 @@ export default function Home() {
 
               <Link
                 href="/services#pharmacy"
-                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-4 transition-all duration-200 sm:p-5"
+                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-3.5 transition-all duration-200 sm:p-5"
               >
                 <div className="flex items-center justify-between">
-                  <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 transition-colors group-hover:bg-emerald-700 group-hover:text-white">
-                    <ServiceIcon id="pharmacy" className="size-6" />
+                  <span className="flex size-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 transition-colors group-hover:bg-emerald-700 group-hover:text-white sm:size-12">
+                    <ServiceIcon id="pharmacy" className="size-5 sm:size-6" />
                   </span>
-                  <span className="rounded-full bg-emerald-100/70 px-2.5 py-0.5 text-xs font-bold text-emerald-800">
+                  <span className="rounded-full bg-emerald-100/70 px-2 py-0.5 text-[11px] font-bold text-emerald-800 sm:px-2.5 sm:text-xs">
                     In-house
                   </span>
                 </div>
-                <div className="mt-3.5">
+                <div className="mt-3">
                   <h3 className="font-bold text-ink group-hover:text-emerald-700 sm:text-lg">
                     Pharmacy
                   </h3>
@@ -198,44 +198,44 @@ export default function Home() {
 
       {/* Institutional Trust & Scale Stats */}
       <section className="reveal mx-auto max-w-6xl px-5 pt-8 sm:pt-12">
-        <div className="card grid grid-cols-2 gap-4 rounded-3xl border border-line/70 p-5 sm:grid-cols-4 sm:gap-6 sm:p-6">
-          <div className="flex items-center gap-3.5">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand-tint text-brand">
-              <ShieldCheckIcon className="size-6" />
+        <div className="card grid grid-cols-2 gap-3 rounded-3xl border border-line/70 p-4 sm:grid-cols-4 sm:gap-6 sm:p-6">
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand sm:size-12 sm:rounded-2xl">
+              <ShieldCheckIcon className="size-5 sm:size-6" />
             </div>
             <div>
-              <p className="text-xl font-extrabold text-ink sm:text-2xl">₹300</p>
-              <p className="text-xs text-muted sm:text-sm">Fixed OPD consultation fee</p>
+              <p className="text-lg font-extrabold text-ink sm:text-2xl">₹300</p>
+              <p className="text-[11px] leading-tight text-muted sm:text-sm">Fixed OPD consultation fee</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand-tint text-brand">
-              <HospitalIcon className="size-6" />
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand sm:size-12 sm:rounded-2xl">
+              <HospitalIcon className="size-5 sm:size-6" />
             </div>
             <div>
-              <p className="text-xl font-extrabold text-ink sm:text-2xl">SKIMS &amp; GMC</p>
-              <p className="text-xs text-muted sm:text-sm">Experienced visiting doctors</p>
+              <p className="text-lg font-extrabold text-ink sm:text-2xl">SKIMS &amp; GMC</p>
+              <p className="text-[11px] leading-tight text-muted sm:text-sm">Experienced visiting doctors</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand-tint text-brand">
-              <ClockIcon className="size-6" />
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand sm:size-12 sm:rounded-2xl">
+              <ClockIcon className="size-5 sm:size-6" />
             </div>
             <div>
-              <p className="text-xl font-extrabold text-ink sm:text-2xl">Zero Wait</p>
-              <p className="text-xs text-muted sm:text-sm">Time-slotted appointments</p>
+              <p className="text-lg font-extrabold text-ink sm:text-2xl">Zero Wait</p>
+              <p className="text-[11px] leading-tight text-muted sm:text-sm">Time-slotted appointments</p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand-tint text-brand">
-              <MapPinIcon className="size-6" />
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand sm:size-12 sm:rounded-2xl">
+              <MapPinIcon className="size-5 sm:size-6" />
             </div>
             <div>
-              <p className="text-xl font-extrabold text-ink sm:text-2xl">Opp. SDH</p>
-              <p className="text-xs text-muted sm:text-sm">Lone Complex, Sopore</p>
+              <p className="text-lg font-extrabold text-ink sm:text-2xl">Opp. SDH</p>
+              <p className="text-[11px] leading-tight text-muted sm:text-sm">Lone Complex, Sopore</p>
             </div>
           </div>
         </div>

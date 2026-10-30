@@ -82,19 +82,19 @@ export function ScheduleView({ today }: { today?: Weekday }) {
                 {isToday && <span className="block text-xs font-semibold text-brand">Today</span>}
               </span>
               {sittings.length > 0 ? (
-                <ul className="flex flex-col">
-                  {sittings.map(({ doctor, s }) => (
-                    <li key={doctor.id}>
-                      <span className="font-semibold">{doctor.name ?? doctor.speciality}</span>{" "}
-                      <span className="whitespace-nowrap text-muted">
+                <ul className="flex flex-1 flex-col divide-y divide-line/60">
+                  {sittings.map(({ doctor, s }, idx) => (
+                    <li key={doctor.id} className={`flex flex-col py-1 ${idx === 0 ? "pt-0" : ""}`}>
+                      <span className="font-semibold text-ink leading-snug">{doctor.name ?? doctor.speciality}</span>
+                      <span className="text-xs text-muted tabular-nums">
                         {formatTimeShort(s.start)}–{formatTimeShort(s.end)}
-                        {s.recurrence === "first-of-month" ? " (1st of mo)" : s.recurrence === "alternate" ? " (Alt week)" : ""}
+                        {s.recurrence === "first-of-month" ? " (1st of month)" : s.recurrence === "alternate" ? " (Alternate week)" : ""}
                       </span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <span className="text-muted">—<span className="sr-only">No visiting specialist</span></span>
+                <span className="self-center text-muted">—<span className="sr-only">No visiting specialist</span></span>
               )}
             </li>
           );

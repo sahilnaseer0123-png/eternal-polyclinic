@@ -13,7 +13,7 @@ export default function ServicesPage() {
   return (
     <>
       <PageIntro title="Tests and services">No need to go elsewhere for scans, reports or medicines.</PageIntro>
-      <section aria-label="Services" className="mx-auto max-w-6xl px-5 pb-16">
+      <section aria-label="Services" className="mx-auto max-w-6xl px-5 pb-24 sm:pb-16">
         <ul className="reveal grid gap-3 sm:grid-cols-2 sm:gap-5">
           {services.map((service) => (
             <li

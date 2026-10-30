@@ -23,7 +23,7 @@ export default function ContactPage() {
       </div>
       <section
         aria-label="Address and contact"
-        className="mx-auto max-w-6xl px-5 pb-16"
+        className="mx-auto max-w-6xl px-5 pb-24 sm:pb-16"
       >
         <div className="grid gap-8 card rounded-3xl p-6 sm:p-10 md:grid-cols-2 border border-line/70">
           <div className="flex flex-col gap-5">
