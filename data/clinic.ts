@@ -190,7 +190,7 @@ export const doctors: Doctor[] = [
   },
   {
     id: "basharat",
-    name: "Dr. Mir Basharat Ahmad Kanth",
+    name: "Dr. Basharat Ahmad Kanth",
     speciality: "Neurosurgeon",
     category: "brain",
     categoryLabel: "Brain, spine & nerves",

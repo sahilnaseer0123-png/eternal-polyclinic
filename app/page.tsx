@@ -10,43 +10,18 @@ import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { DoctorMark } from "@/components/DoctorMark";
 import { NextAvailable } from "@/components/NextAvailable";
 import { FeatherPattern } from "@/components/FeatherPattern";
-import { WhatsAppPreview } from "@/components/WhatsAppPreview";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import {
-  CalendarIcon,
-  ChatIcon,
   ChevronRightIcon,
   MapPinIcon,
   SearchIcon,
   ServiceIcon,
-  UserIcon,
 } from "@/components/Icons";
 
 // Every page names its own address for search engines (alternates.canonical); this is "/".
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const hours = `${formatTime(clinic.hours.open)} – ${formatTime(clinic.hours.close)}`;
-
-// Two common reasons per doctor (from clinic.ts), for the "What brings you in?" row.
-const REASONS = doctors.flatMap((d) => d.concerns.slice(0, 2));
-
-const STEPS = [
-  {
-    Icon: UserIcon,
-    title: "Choose your doctor",
-    text: "By speciality or by name.",
-  },
-  {
-    Icon: CalendarIcon,
-    title: "Pick a day and time",
-    text: "Only the days your doctor sits.",
-  },
-  {
-    Icon: ChatIcon,
-    title: "Send it on WhatsApp",
-    text: "Reception calls you to confirm.",
-  },
-];
 
 export default function Home() {
   return (
@@ -56,8 +31,8 @@ export default function Home() {
       {/* Hero + Today, over a faint feather pattern from the logo */}
       <div className="relative overflow-hidden">
         <FeatherPattern className="-right-24 -top-6 w-[22rem] opacity-[0.09] sm:w-[30rem] lg:-left-40 lg:right-auto lg:-top-16 lg:w-[46rem] lg:opacity-[0.07]" />
-        <section className="relative mx-auto grid max-w-6xl gap-6 px-5 pt-6 sm:pt-12 lg:grid-cols-[1.15fr_1fr] lg:gap-8 lg:pt-14">
-          <div className="rise flex min-w-0 flex-col justify-center gap-4 sm:gap-5">
+        <section className="relative mx-auto grid max-w-6xl gap-6 px-5 pt-4 sm:pt-6 lg:grid-cols-[1.15fr_1fr] lg:gap-8 lg:pt-8">
+          <div className="rise flex min-w-0 flex-col gap-4 sm:gap-5">
             <p className="text-sm font-semibold text-brand sm:text-base">
               Open {hours}
               <span className="hidden sm:inline"> · {clinic.address}</span>
@@ -126,36 +101,6 @@ export default function Home() {
         </section>
       </div>
 
-      {/* What brings you in? Common problems, each opening the doctors that help with it. */}
-      <section
-        aria-labelledby="reasons"
-        className="reveal mx-auto max-w-6xl pt-9 sm:pt-14"
-      >
-        <div className="px-5">
-          <h2
-            id="reasons"
-            className="text-xl font-extrabold tracking-tight sm:text-3xl"
-          >
-            What brings you in?
-          </h2>
-          <p className="mt-1 text-muted">
-            Tap a problem to see who can help. Not sure? Call reception.
-          </p>
-        </div>
-        <ul className="mt-3 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:flex-wrap">
-          {REASONS.map((r) => (
-            <li key={r} className="shrink-0">
-              <Link
-                href={`/doctors?q=${encodeURIComponent(r.toLowerCase())}`}
-                className="card inline-flex min-h-11 items-center rounded-full px-4 font-semibold hover:text-brand"
-              >
-                {r}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-
       {/* Specialists */}
       <section
         aria-labelledby="specialists"
@@ -218,55 +163,8 @@ export default function Home() {
         </ul>
       </section>
 
-      {/* Book in 3 steps: a full-width teal band */}
-      <section
-        aria-labelledby="how"
-        className="mt-10 bg-brand text-white sm:mt-14"
-      >
-        <div className="reveal mx-auto grid max-w-6xl gap-8 px-5 py-10 sm:py-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,24rem)] lg:items-center lg:gap-16">
-          <div>
-            <h2
-              id="how"
-              className="text-2xl font-extrabold tracking-tight sm:text-4xl"
-            >
-              Book in 3 steps
-            </h2>
-            <p className="mt-2 text-teal-50 sm:text-lg">
-              No account and no app. Under a minute, from any phone.
-            </p>
-            <ol className="mt-5 grid gap-2 sm:mt-6 sm:gap-3">
-              {STEPS.map(({ Icon, title, text }, i) => (
-                <li
-                  key={title}
-                  className="flex items-center gap-4 rounded-3xl bg-brand-dark p-3 sm:p-4"
-                >
-                  <span className="relative flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white text-brand">
-                    <Icon className="size-6" />
-                    <span className="absolute -right-1.5 -top-1.5 flex size-6 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">
-                      {i + 1}
-                    </span>
-                  </span>
-                  <span className="flex flex-col">
-                    <span className="font-bold">{title}</span>
-                    <span className="text-teal-50">{text}</span>
-                  </span>
-                </li>
-              ))}
-            </ol>
-            <Link
-              href="/book"
-              className="mt-6 inline-flex min-h-12 items-center rounded-2xl bg-white px-6 font-bold text-ink hover:bg-teal-50"
-            >
-              Book a doctor
-            </Link>
-          </div>
-          {/* What the request looks like when it reaches the clinic */}
-          <WhatsAppPreview className="mx-auto hidden w-full max-w-sm sm:block lg:rotate-2" />
-        </div>
-      </section>
-
       {/* Tests and medicines + visit, on a soft tinted band */}
-      <section className="bg-brand-tint">
+      <section className="mt-10 bg-brand-tint sm:mt-14">
         <div className="reveal mx-auto grid max-w-6xl gap-6 px-5 py-10 sm:py-14 lg:grid-cols-[2fr_1fr] lg:items-end">
           <div className="min-w-0">
             <h2 className="text-xl font-extrabold tracking-tight sm:text-3xl">
