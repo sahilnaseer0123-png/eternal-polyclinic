@@ -58,6 +58,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
   const [time, setTime] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
   const [errors, setErrors] = useState<BookingErrors>({});
   const [confirmedSlip, setConfirmedSlip] = useState<Appointment | null>(null);
   const [showRecent, setShowRecent] = useState<boolean>(true);
@@ -88,7 +89,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
     setNowAt(current.getTime());
 
     // Basic and schema validation
-    const result = validateBooking({ doctorId, date, time, name, phone }, doctors, current);
+    const result = validateBooking({ doctorId, date, time, name, phone, address }, doctors, current);
     if (!result.ok) {
       setErrors(result.errors);
       formRef.current?.querySelector<HTMLElement>("[role=alert]")?.scrollIntoView({ block: "center" });
@@ -112,6 +113,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
       time,
       patientName: result.data.name,
       patientPhone: result.data.phone,
+      patientAddress: address.trim() || undefined,
       type: "online",
       status: "confirmed",
       createdAt: current.getTime(),
@@ -129,6 +131,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
     setTime("");
     setName("");
     setPhone("");
+    setAddress("");
     setErrors({});
     setConfirmedSlip(null);
   }
@@ -183,8 +186,11 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
             </div>
 
             <div className="flex flex-col border-t border-slate-200/60 pt-3 sm:border-t-0 sm:pt-0">
-              <span className="text-xs font-semibold uppercase text-slate-500">Patient Name</span>
+              <span className="text-xs font-semibold uppercase text-slate-500">Patient Details</span>
               <span className="text-base font-bold text-ink">{confirmedSlip.patientName}</span>
+              {confirmedSlip.patientAddress && (
+                <span className="text-xs font-bold text-brand">📍 {confirmedSlip.patientAddress}</span>
+              )}
               <span className="text-sm text-slate-600">Mobile: +91 {confirmedSlip.patientPhone}</span>
             </div>
 
@@ -426,6 +432,22 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
             />
           </div>
           <FieldError id="err-phone" message={errors.phone} />
+        </div>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-baseline justify-between">
+            <label htmlFor="bk-address" className="font-semibold">
+              Village / Town / Area
+            </label>
+            <span className="text-xs text-muted">Helps reception identify you</span>
+          </div>
+          <input
+            id="bk-address"
+            type="text"
+            placeholder="e.g. Tarzoo, Dangerpora, Sangrama, Sopore"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            className="min-h-12 rounded-xl border border-line/90 bg-white px-4 text-base sm:text-lg sm:min-h-13 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all"
+          />
         </div>
       </fieldset>
 

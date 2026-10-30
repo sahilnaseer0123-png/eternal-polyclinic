@@ -1,9 +1,8 @@
 "use client";
 
-// Tablet & Reception Management Portal for Eternal Polyclinic, Sopore.
+// Ultra-Modern Tablet & Reception Management Portal for Eternal Polyclinic, Sopore.
 // Real-time OPD registration, walk-in entry, double-booking prevention,
-// doctor live delay radar, and schedule adjustments.
-// Designed specifically for reception desk tablets and clinic staff.
+// doctor live delay radar, and village/town patient disambiguation.
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -36,7 +35,6 @@ import {
 import {
   PhoneIcon,
   SearchIcon,
-  ShieldCheckIcon,
   StethoscopeIcon,
   WhatsAppIcon,
 } from "@/components/Icons";
@@ -78,6 +76,7 @@ export default function AdminPage() {
   const [walkInDocId, setWalkInDocId] = useState<string>("");
   const [walkInTime, setWalkInTime] = useState<string>("");
   const [walkInName, setWalkInName] = useState<string>("");
+  const [walkInAddress, setWalkInAddress] = useState<string>("");
   const [walkInPhone, setWalkInPhone] = useState<string>("");
   const [walkInError, setWalkInError] = useState<string>("");
   const [walkInSuccessSlip, setWalkInSuccessSlip] = useState<Appointment | null>(null);
@@ -97,15 +96,30 @@ export default function AdminPage() {
   const [newDocStart, setNewDocStart] = useState<string>("10:00");
   const [newDocEnd, setNewDocEnd] = useState<string>("14:00");
 
-  function handleLogin(e?: React.FormEvent) {
-    if (e) e.preventDefault();
-    const storedPin = localStorage.getItem("ep_admin_pin") || DEFAULT_PIN;
-    if (pinInput === storedPin || pinInput === DEFAULT_PIN) {
+  function handlePinDigit(digit: string) {
+    if (pinInput.length < 4) {
+      const nextPin = pinInput + digit;
+      setPinInput(nextPin);
+      if (nextPin.length === 4) {
+        verifyPin(nextPin);
+      }
+    }
+  }
+
+  function handlePinBackspace() {
+    setPinInput((prev) => prev.slice(0, -1));
+    setPinError("");
+  }
+
+  function verifyPin(pin: string) {
+    const storedPin = typeof window !== "undefined" ? localStorage.getItem("ep_admin_pin") || DEFAULT_PIN : DEFAULT_PIN;
+    if (pin === storedPin || pin === DEFAULT_PIN) {
       sessionStorage.setItem("ep_reception_auth", "true");
       setIsAuthenticated(true);
       setPinError("");
     } else {
-      setPinError("Incorrect PIN. Default PIN is 1234.");
+      setPinError("Incorrect PIN. Please try again.");
+      setTimeout(() => setPinInput(""), 600);
     }
   }
 
@@ -155,7 +169,7 @@ export default function AdminPage() {
     const doc = allDoctors.find((d) => d.id === walkInDocId);
     if (!doc) return;
 
-    // Generate walk in token
+    // Generate walk-in token
     const forSitting = appointments.filter((a) => a.date === selectedDate && a.doctorId === walkInDocId);
     const nextNum = forSitting.length + 1;
     const docCode = walkInDocId.slice(0, 2).toUpperCase();
@@ -171,6 +185,7 @@ export default function AdminPage() {
       time: walkInTime,
       patientName: walkInName.trim(),
       patientPhone: cleanPhone,
+      patientAddress: walkInAddress.trim() || undefined,
       type: "walk_in",
       status: "arrived",
       createdAt: Date.now(),
@@ -179,6 +194,7 @@ export default function AdminPage() {
     saveAppointment(walkInApt);
     setWalkInSuccessSlip(walkInApt);
     setWalkInName("");
+    setWalkInAddress("");
     setWalkInPhone("");
     setWalkInTime("");
     setShowWalkInModal(false);
@@ -199,7 +215,7 @@ export default function AdminPage() {
   function copyBroadcast(text: string) {
     if (!navigator.clipboard) return;
     navigator.clipboard.writeText(text);
-    setBroadcastToast("Broadcast copied to clipboard! Paste directly into WhatsApp groups.");
+    setBroadcastToast("Broadcast copied to clipboard! Ready to paste in WhatsApp.");
     setTimeout(() => setBroadcastToast(""), 4000);
   }
 
@@ -234,83 +250,131 @@ export default function AdminPage() {
   }
 
   // ---------------------------------------------------------------------------
-  // PIN Login Gate Screen
+  // ULTRA-MODERN KIOSK PIN GATE SCREEN
   // ---------------------------------------------------------------------------
   if (!isAuthenticated) {
     return (
-      <div className="flex min-h-[75vh] flex-col items-center justify-center px-4 py-12">
-        <div className="card w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-xl border border-line flex flex-col gap-6 text-center">
-          <div className="mx-auto flex size-16 items-center justify-center rounded-2xl bg-brand-tint text-brand">
-            <ShieldCheckIcon className="size-8 text-brand" />
-          </div>
-          <div>
-            <h1 className="text-2xl font-black text-ink">Reception Desk Portal</h1>
-            <p className="text-sm text-muted mt-1">Eternal Polyclinic, Sopore · Staff & Tablet Access</p>
-          </div>
-
-          <form onSubmit={handleLogin} className="flex flex-col gap-4 text-left">
-            <div>
-              <label htmlFor="pin-input" className="block text-sm font-bold text-slate-700 mb-1">
-                Enter Reception 4-digit PIN
-              </label>
-              <input
-                id="pin-input"
-                type="password"
-                maxLength={6}
-                inputMode="numeric"
-                autoFocus
-                placeholder="Default: 1234"
-                value={pinInput}
-                onChange={(e) => setPinInput(e.target.value)}
-                className="w-full text-center tracking-widest text-2xl font-mono min-h-13 rounded-xl border border-line px-4 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 bg-slate-50"
-              />
+      <div className="flex min-h-[85vh] flex-col items-center justify-center px-4 py-8 bg-gradient-to-br from-slate-950 via-ink to-slate-900 text-white">
+        <div className="w-full max-w-sm rounded-3xl p-6 sm:p-8 bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl flex flex-col items-center text-center gap-6 animate-fade-in">
+          {/* Clinic Emblem */}
+          <div className="relative">
+            <div className="size-20 rounded-3xl bg-gradient-to-tr from-brand to-teal-400 p-0.5 shadow-lg shadow-teal-500/20">
+              <div className="size-full rounded-[22px] bg-slate-950 flex items-center justify-center">
+                <StethoscopeIcon className="size-10 text-glow" />
+              </div>
             </div>
+            <span className="absolute -bottom-1 -right-1 flex size-5">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex size-5 rounded-full bg-emerald-500 border-2 border-slate-950"></span>
+            </span>
+          </div>
 
-            {pinError && <p className="text-sm font-semibold text-emergency text-center">{pinError}</p>}
+          <div>
+            <h1 className="text-2xl font-black tracking-tight text-white font-display">Eternal Polyclinic</h1>
+            <p className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Reception Tablet Portal · Sopore</p>
+          </div>
+
+          {/* PIN Indicators */}
+          <div className="flex flex-col items-center gap-2">
+            <div className="flex gap-4 my-2">
+              {[0, 1, 2, 3].map((idx) => {
+                const filled = pinInput.length > idx;
+                return (
+                  <div
+                    key={idx}
+                    className={`size-4 rounded-full transition-all duration-200 ${
+                      filled
+                        ? "bg-glow scale-125 shadow-md shadow-teal-400/50"
+                        : "bg-white/20 border border-white/30"
+                    }`}
+                  />
+                );
+              })}
+            </div>
+            {pinError ? (
+              <p className="text-xs font-semibold text-rose-400 animate-shake">{pinError}</p>
+            ) : (
+              <p className="text-[11px] text-slate-400">Enter 4-digit Reception PIN (Default: 1234)</p>
+            )}
+          </div>
+
+          {/* Keypad */}
+          <div className="grid grid-cols-3 gap-3 w-full max-w-xs">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+              <button
+                key={num}
+                type="button"
+                onClick={() => handlePinDigit(String(num))}
+                className="size-16 rounded-2xl bg-white/10 hover:bg-white/20 active:bg-brand text-2xl font-bold font-mono text-white transition-all duration-100 flex items-center justify-center shadow-xs mx-auto active:scale-95"
+              >
+                {num}
+              </button>
+            ))}
 
             <button
-              type="submit"
-              className="w-full min-h-13 rounded-2xl bg-brand text-white font-bold text-lg hover:bg-brand-dark shadow-md transition-all mt-2"
+              type="button"
+              onClick={() => setPinInput("")}
+              className="size-16 rounded-2xl bg-white/5 hover:bg-white/10 text-xs font-bold text-slate-400 transition-all flex items-center justify-center mx-auto"
             >
-              Sign In to Reception Desk
+              Clear
             </button>
-          </form>
 
-          <p className="text-xs text-muted">
-            For reception tablet or clinic management use only. Default PIN is <span className="font-mono font-bold">1234</span>.
-          </p>
+            <button
+              type="button"
+              onClick={() => handlePinDigit("0")}
+              className="size-16 rounded-2xl bg-white/10 hover:bg-white/20 active:bg-brand text-2xl font-bold font-mono text-white transition-all flex items-center justify-center mx-auto active:scale-95"
+            >
+              0
+            </button>
+
+            <button
+              type="button"
+              onClick={handlePinBackspace}
+              className="size-16 rounded-2xl bg-white/5 hover:bg-white/10 text-base font-bold text-slate-300 transition-all flex items-center justify-center mx-auto"
+            >
+              ⌫
+            </button>
+          </div>
+
+          <div className="text-[11px] text-slate-500 border-t border-white/10 pt-3 w-full">
+            Reception Desk Tablet System · Opposite SDH Hospital
+          </div>
         </div>
       </div>
     );
   }
 
   // ---------------------------------------------------------------------------
-  // Main Tablet Reception Workspace
+  // MAIN TABLET WORKSPACE & DASHBOARD
   // ---------------------------------------------------------------------------
   return (
-    <div className="min-w-0 w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 flex flex-col gap-6">
+    <div className="min-w-0 w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 flex flex-col gap-6 font-sans">
       {/* Printable OPD Register Sheet (Visible only when printing) */}
       <div className="hidden print:block print-only">
         <div className="border-b-2 border-black pb-4 mb-4">
-          <h1 className="text-2xl font-bold text-black uppercase">{clinic.name} — OPD Patient Register</h1>
-          <p className="text-sm text-gray-700">{clinic.address} · Helpline: 97977 96909</p>
-          <div className="mt-2 flex justify-between text-sm font-bold">
+          <div className="flex justify-between items-baseline">
+            <h1 className="text-2xl font-black text-black uppercase">{clinic.name} — OPD Register</h1>
+            <span className="text-sm font-bold">Reception Helpline: 97977 96909</span>
+          </div>
+          <p className="text-xs text-gray-700">{clinic.address}</p>
+          <div className="mt-3 flex justify-between text-xs font-bold border-t border-gray-300 pt-2">
             <span>Date: {dateLabel(selectedDate)}</span>
             <span>Doctor: {doctorFilter === "all" ? "All Specialists" : allDoctors.find((d) => d.id === doctorFilter)?.name}</span>
             <span>Total Patients: {filteredAppointments.length}</span>
           </div>
         </div>
 
-        <table className="w-full text-left border-collapse border border-gray-400 text-sm">
+        <table className="w-full text-left border-collapse border border-gray-400 text-xs">
           <thead>
-            <tr className="bg-gray-100 border-b border-gray-400">
+            <tr className="bg-gray-100 border-b border-gray-400 font-bold">
               <th className="border border-gray-400 p-2">Token #</th>
               <th className="border border-gray-400 p-2">Time</th>
               <th className="border border-gray-400 p-2">Patient Name</th>
+              <th className="border border-gray-400 p-2">Village / Address</th>
               <th className="border border-gray-400 p-2">Mobile</th>
               <th className="border border-gray-400 p-2">Type</th>
               <th className="border border-gray-400 p-2">Status</th>
-              <th className="border border-gray-400 p-2 w-48">Doctor&apos;s Notes / Rx</th>
+              <th className="border border-gray-400 p-2 w-44">Consultation Notes / Rx</th>
             </tr>
           </thead>
           <tbody>
@@ -318,7 +382,8 @@ export default function AdminPage() {
               <tr key={apt.token} className="border-b border-gray-300">
                 <td className="border border-gray-400 p-2 font-mono font-bold">{apt.token}</td>
                 <td className="border border-gray-400 p-2 font-bold">{formatTime(apt.time)}</td>
-                <td className="border border-gray-400 p-2 font-semibold">{apt.patientName}</td>
+                <td className="border border-gray-400 p-2 font-bold text-black">{apt.patientName}</td>
+                <td className="border border-gray-400 p-2 font-semibold text-gray-800">{apt.patientAddress || "—"}</td>
                 <td className="border border-gray-400 p-2 font-mono">{apt.patientPhone}</td>
                 <td className="border border-gray-400 p-2 capitalize">{apt.type}</td>
                 <td className="border border-gray-400 p-2 capitalize font-semibold">{apt.status}</td>
@@ -331,52 +396,53 @@ export default function AdminPage() {
 
       {/* Screen View (hidden on print) */}
       <div className="no-print flex flex-col gap-6">
-        {/* Top Header Bar with Live Clock and Action */}
-        <header className="flex flex-wrap items-center justify-between gap-4 card rounded-2xl p-4 sm:px-6 border border-line/90 shadow-sm bg-white">
-          <div className="flex items-center gap-3">
-            <div className="size-11 rounded-xl bg-brand/10 text-brand flex items-center justify-center font-bold">
-              <StethoscopeIcon className="size-6 text-brand" />
+        {/* Top Header Bar */}
+        <header className="rounded-3xl p-4 sm:p-5 bg-gradient-to-r from-slate-900 via-ink to-slate-950 text-white shadow-xl border border-white/10 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="size-12 rounded-2xl bg-teal-500/20 text-glow flex items-center justify-center font-bold border border-teal-500/30 shadow-inner">
+              <StethoscopeIcon className="size-6 text-glow" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-xl font-extrabold tracking-tight text-ink sm:text-2xl">
+                <h1 className="text-xl font-black tracking-tight sm:text-2xl font-display text-white">
                   Reception Tablet Suite
                 </h1>
-                <span className="hidden sm:inline-flex rounded-full bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 font-bold">
-                  ● Live Sync
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-[11px] px-2.5 py-0.5 font-bold">
+                  <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Live Sync
                 </span>
               </div>
-              <p className="text-xs text-muted">
-                {clinic.name} · {clinic.address}
+              <p className="text-xs text-slate-300 mt-0.5">
+                {clinic.name} · Opposite SDH Hospital, Sopore
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Live Clock */}
-            <div className="hidden sm:flex flex-col text-right font-mono">
-              <span className="text-xs text-muted uppercase font-sans font-semibold">Clinic Time</span>
-              <span className="text-base font-bold text-ink">{fromMinutes(clock.minutes)} IST</span>
+            {/* Live Clock Badge */}
+            <div className="hidden sm:flex flex-col text-right px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 font-mono">
+              <span className="text-[10px] text-slate-400 uppercase font-sans font-bold">Clinic Time</span>
+              <span className="text-sm font-bold text-glow">{fromMinutes(clock.minutes)} IST</span>
             </div>
 
-            {/* Quick 1-Tap Walk-In Button */}
+            {/* Quick Walk-in Button */}
             <button
               type="button"
               onClick={() => {
                 setShowWalkInModal(true);
                 setWalkInDocId(doctorFilter !== "all" ? doctorFilter : allDoctors[0]?.id || "");
               }}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2 text-sm sm:text-base font-bold text-white hover:bg-emerald-700 shadow-md transition-all active:scale-95"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-sm sm:text-base font-black text-white hover:brightness-110 shadow-lg shadow-emerald-600/30 transition-all active:scale-95"
             >
-              ➕ Add Walk-In
+              <span>➕ Add Walk-In</span>
             </button>
 
-            {/* Logout */}
+            {/* Logout Lock */}
             <button
               type="button"
               onClick={handleLogout}
               title="Lock Tablet"
-              className="min-h-12 rounded-xl border border-line px-3 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100"
+              className="min-h-12 px-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-xs font-bold text-slate-300 transition-all border border-white/10"
             >
               🔒 Lock
             </button>
@@ -385,21 +451,23 @@ export default function AdminPage() {
 
         {/* Broadcast Toast Notification */}
         {broadcastToast && (
-          <div className="rounded-xl bg-emerald-500 text-white font-bold text-sm px-4 py-3 shadow-md flex items-center justify-between animate-fade-in">
-            <span>{broadcastToast}</span>
-            <button type="button" onClick={() => setBroadcastToast("")} className="text-white hover:underline">
-              ✕
+          <div className="rounded-2xl bg-emerald-600 text-white font-bold text-sm px-4 py-3 shadow-lg flex items-center justify-between animate-fade-in border border-emerald-400/40">
+            <span className="flex items-center gap-2">
+              <span>✅</span> {broadcastToast}
+            </span>
+            <button type="button" onClick={() => setBroadcastToast("")} className="text-white hover:underline text-xs">
+              Dismiss
             </button>
           </div>
         )}
 
-        {/* Tab Navigation Navigation Bar */}
-        <nav className="flex gap-2 border-b border-line pb-2 overflow-x-auto text-sm sm:text-base font-bold">
+        {/* Tab Navigation Segmented Bar */}
+        <nav className="flex gap-2 p-1.5 rounded-2xl bg-slate-100 border border-line overflow-x-auto text-sm font-bold">
           <button
             type="button"
             onClick={() => setActiveTab("opd")}
-            className={`min-h-12 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shrink-0 ${
-              activeTab === "opd" ? "bg-ink text-white shadow-sm" : "bg-white text-slate-700 hover:bg-slate-100"
+            className={`min-h-11 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shrink-0 ${
+              activeTab === "opd" ? "bg-ink text-white shadow-md shadow-ink/20" : "text-slate-600 hover:text-ink hover:bg-white/60"
             }`}
           >
             📋 OPD Patient Register
@@ -413,8 +481,8 @@ export default function AdminPage() {
           <button
             type="button"
             onClick={() => setActiveTab("radar")}
-            className={`min-h-12 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shrink-0 ${
-              activeTab === "radar" ? "bg-ink text-white shadow-sm" : "bg-white text-slate-700 hover:bg-slate-100"
+            className={`min-h-11 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shrink-0 ${
+              activeTab === "radar" ? "bg-ink text-white shadow-md shadow-ink/20" : "text-slate-600 hover:text-ink hover:bg-white/60"
             }`}
           >
             🛰️ Doctor Delay Radar
@@ -423,8 +491,8 @@ export default function AdminPage() {
           <button
             type="button"
             onClick={() => setActiveTab("doctors")}
-            className={`min-h-12 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shrink-0 ${
-              activeTab === "doctors" ? "bg-ink text-white shadow-sm" : "bg-white text-slate-700 hover:bg-slate-100"
+            className={`min-h-11 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shrink-0 ${
+              activeTab === "doctors" ? "bg-ink text-white shadow-md shadow-ink/20" : "text-slate-600 hover:text-ink hover:bg-white/60"
             }`}
           >
             🩺 Doctor Timings & Leaves
@@ -433,8 +501,8 @@ export default function AdminPage() {
           <button
             type="button"
             onClick={() => setActiveTab("search")}
-            className={`min-h-12 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shrink-0 ${
-              activeTab === "search" ? "bg-ink text-white shadow-sm" : "bg-white text-slate-700 hover:bg-slate-100"
+            className={`min-h-11 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shrink-0 ${
+              activeTab === "search" ? "bg-ink text-white shadow-md shadow-ink/20" : "text-slate-600 hover:text-ink hover:bg-white/60"
             }`}
           >
             🔍 Patient Search
@@ -445,20 +513,20 @@ export default function AdminPage() {
         {/* TAB 1: OPD PATIENT REGISTER                                          */}
         {/* ===================================================================== */}
         {activeTab === "opd" && (
-          <div className="flex flex-col gap-6">
-            {/* Filters & Date Bar */}
-            <div className="card rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 border border-line">
+          <div className="flex flex-col gap-6 animate-fade-in">
+            {/* Filter Controls Bar */}
+            <div className="card rounded-3xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 border border-line shadow-xs">
               <div className="flex flex-wrap items-center gap-3">
                 <div className="flex flex-col">
-                  <label htmlFor="date-select" className="text-xs font-bold uppercase text-slate-500 mb-1">
-                    Select Date
+                  <label htmlFor="date-select" className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                    OPD Date
                   </label>
                   <input
                     id="date-select"
                     type="date"
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
-                    className="min-h-11 rounded-xl border border-line px-3 py-1 text-sm sm:text-base font-semibold bg-slate-50"
+                    className="min-h-11 rounded-xl border border-line px-3 py-1 text-sm font-bold bg-slate-50 focus:border-brand outline-none"
                   />
                 </div>
 
@@ -466,23 +534,23 @@ export default function AdminPage() {
                   <button
                     type="button"
                     onClick={() => setSelectedDate(todayKey)}
-                    className={`min-h-10 px-3 rounded-lg text-xs font-bold ${
-                      selectedDate === todayKey ? "bg-brand text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    className={`min-h-10 px-3.5 rounded-xl text-xs font-bold transition-all ${
+                      selectedDate === todayKey ? "bg-brand text-white shadow-sm" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                     }`}
                   >
                     Today
                   </button>
                 </div>
 
-                <div className="flex flex-col min-w-44">
-                  <label htmlFor="doc-select" className="text-xs font-bold uppercase text-slate-500 mb-1">
-                    Doctor Filter
+                <div className="flex flex-col min-w-48">
+                  <label htmlFor="doc-select" className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                    Filter by Doctor
                   </label>
                   <select
                     id="doc-select"
                     value={doctorFilter}
                     onChange={(e) => setDoctorFilter(e.target.value)}
-                    className="min-h-11 rounded-xl border border-line px-3 py-1 text-sm sm:text-base font-semibold bg-slate-50"
+                    className="min-h-11 rounded-xl border border-line px-3 py-1 text-sm font-bold bg-slate-50 focus:border-brand outline-none"
                   >
                     <option value="all">All Specialists ({allDoctors.length})</option>
                     {allDoctors.map((d) => (
@@ -498,133 +566,164 @@ export default function AdminPage() {
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-line bg-white px-4 py-2 text-sm font-bold text-slate-800 hover:bg-slate-100 shadow-sm"
+                  className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-line bg-white px-4 py-2 text-xs sm:text-sm font-bold text-slate-800 hover:bg-slate-50 shadow-xs"
                 >
                   🖨️ Print OPD Sheet
                 </button>
               </div>
             </div>
 
-            {/* Stat Counters */}
+            {/* KPI Metric Cards */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-              <div className="card rounded-2xl p-4 border border-line/80 bg-white shadow-xs">
-                <span className="text-xs font-bold uppercase text-slate-500">Total Booked</span>
-                <p className="text-2xl font-black text-ink mt-1">{filteredAppointments.length}</p>
-                <span className="text-xs text-muted">
-                  {filteredAppointments.filter((a) => a.type === "online").length} Online ·{" "}
-                  {filteredAppointments.filter((a) => a.type === "walk_in").length} Walk-in
-                  {countCancelled > 0 ? ` · ${countCancelled} Cancelled` : ""}
+              <div className="card rounded-3xl p-4 sm:p-5 border border-line/90 bg-white shadow-xs">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Booked</span>
+                <p className="text-3xl font-black text-ink mt-1 font-display">{filteredAppointments.length}</p>
+                <div className="text-xs text-muted mt-1 flex flex-wrap gap-1">
+                  <span className="font-semibold text-slate-700">{filteredAppointments.filter((a) => a.type === "online").length} Online</span>
+                  <span>·</span>
+                  <span className="font-semibold text-teal-700">{filteredAppointments.filter((a) => a.type === "walk_in").length} Walk-in</span>
+                  {countCancelled > 0 && <span>· {countCancelled} Cancelled</span>}
+                </div>
+              </div>
+
+              <div className="card rounded-3xl p-4 sm:p-5 border border-amber-200 bg-amber-50/40 shadow-xs">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-amber-800 flex items-center gap-1.5">
+                  <span className="size-2 rounded-full bg-amber-400 animate-pulse" />
+                  Waiting in Lounge
                 </span>
+                <p className="text-3xl font-black text-amber-900 mt-1 font-display">{countWaiting}</p>
+                <span className="text-xs text-amber-700">Ready for consultation</span>
               </div>
 
-              <div className="card rounded-2xl p-4 border border-amber-200 bg-amber-50/50 shadow-xs">
-                <span className="text-xs font-bold uppercase text-amber-800">Waiting in Clinic</span>
-                <p className="text-2xl font-black text-amber-900 mt-1">{countWaiting}</p>
-                <span className="text-xs text-amber-700">Ready for doctor</span>
+              <div className="card rounded-3xl p-4 sm:p-5 border border-purple-200 bg-purple-50/40 shadow-xs">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-purple-800 flex items-center gap-1.5">
+                  <span className="size-2 rounded-full bg-purple-500" />
+                  In Cabin
+                </span>
+                <p className="text-3xl font-black text-purple-900 mt-1 font-display">{countInConsult}</p>
+                <span className="text-xs text-purple-700">With the doctor now</span>
               </div>
 
-              <div className="card rounded-2xl p-4 border border-blue-200 bg-blue-50/50 shadow-xs">
-                <span className="text-xs font-bold uppercase text-blue-800">In Consultation</span>
-                <p className="text-2xl font-black text-blue-900 mt-1">{countInConsult}</p>
-                <span className="text-xs text-blue-700">Inside cabin</span>
-              </div>
-
-              <div className="card rounded-2xl p-4 border border-emerald-200 bg-emerald-50/50 shadow-xs">
-                <span className="text-xs font-bold uppercase text-emerald-800">Completed</span>
-                <p className="text-2xl font-black text-emerald-900 mt-1">{countCompleted}</p>
-                <span className="text-xs text-emerald-700">Finished visit</span>
+              <div className="card rounded-3xl p-4 sm:p-5 border border-emerald-200 bg-emerald-50/40 shadow-xs">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-800 flex items-center gap-1.5">
+                  <span className="size-2 rounded-full bg-emerald-500" />
+                  Completed
+                </span>
+                <p className="text-3xl font-black text-emerald-900 mt-1 font-display">{countCompleted}</p>
+                <span className="text-xs text-emerald-700">Consultation finished</span>
               </div>
             </div>
 
-            {/* Patient Queue List */}
+            {/* Patient Queue Cards */}
             {filteredAppointments.length === 0 ? (
-              <div className="card rounded-3xl p-12 text-center border border-dashed border-slate-300">
-                <p className="text-lg font-bold text-slate-700">No appointments scheduled for this date & doctor.</p>
-                <p className="text-sm text-muted mt-1">Tap &quot;➕ Add Walk-In&quot; to register a patient arriving at reception.</p>
+              <div className="card rounded-3xl p-12 text-center border-2 border-dashed border-slate-200 bg-slate-50/50">
+                <div className="size-16 rounded-3xl bg-slate-200/60 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                  <StethoscopeIcon className="size-8" />
+                </div>
+                <p className="text-lg font-bold text-slate-700 font-display">No patients scheduled yet for this date.</p>
+                <p className="text-xs text-muted mt-1 max-w-md mx-auto">
+                  When patients book online or you register walk-ins via the <strong>&quot;➕ Add Walk-In&quot;</strong> button, they will appear in this live queue.
+                </p>
               </div>
             ) : (
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-3.5">
                 {filteredAppointments.map((apt) => {
                   const statusColors: Record<AppointmentStatus, string> = {
-                    confirmed: "bg-amber-100 text-amber-800 border-amber-300",
-                    arrived: "bg-blue-100 text-blue-800 border-blue-300",
-                    in_consultation: "bg-purple-100 text-purple-800 border-purple-300",
-                    completed: "bg-emerald-100 text-emerald-800 border-emerald-300",
-                    cancelled: "bg-rose-100 text-rose-800 border-rose-300",
+                    confirmed: "bg-amber-100 text-amber-900 border-amber-300",
+                    arrived: "bg-sky-100 text-sky-900 border-sky-300",
+                    in_consultation: "bg-purple-100 text-purple-900 border-purple-300",
+                    completed: "bg-emerald-100 text-emerald-900 border-emerald-300",
+                    cancelled: "bg-rose-100 text-rose-900 border-rose-300",
                   };
 
-                  const callMsg = `Hello ${apt.patientName}, your token #${apt.token} for ${apt.doctorName} at Eternal Polyclinic is next. Please report to the consultation room.`;
+                  const callMsg = `Hello ${apt.patientName}, your token #${apt.token} for ${apt.doctorName} at Eternal Polyclinic, Sopore is now being called. Please proceed to Consultation Cabin.`;
                   const callWaUrl = `https://wa.me/91${apt.patientPhone}?text=${encodeURIComponent(callMsg)}`;
 
                   return (
                     <div
                       key={apt.token}
-                      className={`card rounded-2xl p-4 sm:p-5 border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
+                      className={`card rounded-3xl p-4 sm:p-5 border transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-4 ${
                         apt.status === "in_consultation"
-                          ? "border-purple-400 bg-purple-50/20 ring-2 ring-purple-300"
-                          : "border-line bg-white"
+                          ? "border-purple-400/80 bg-purple-50/30 ring-2 ring-purple-300/60 shadow-md"
+                          : "border-line bg-white hover:border-slate-300 shadow-xs"
                       }`}
                     >
-                      {/* Left: Token, Time, Details */}
-                      <div className="flex items-start gap-4">
-                        <div className="flex flex-col items-center justify-center rounded-xl bg-slate-900 text-glow px-3 py-2 font-mono font-bold shrink-0 min-w-28 text-center shadow-xs">
-                          <span className="text-xs uppercase text-slate-400">Token</span>
-                          <span className="text-base sm:text-lg font-black tracking-wider">{apt.token}</span>
+                      {/* Left Block: Token Stub, Name, Address & Info */}
+                      <div className="flex items-start gap-3 sm:gap-4 min-w-0">
+                        {/* Token Badge Stub */}
+                        <div className="flex flex-col items-center justify-center rounded-2xl bg-slate-950 text-glow px-3 py-2 font-mono font-bold shrink-0 min-w-28 text-center shadow-xs border border-slate-800">
+                          <span className="text-[10px] uppercase tracking-wider text-slate-400">Token</span>
+                          <span className="text-base sm:text-lg font-black tracking-wider text-glow">{apt.token}</span>
                           <span className="text-[11px] text-slate-300 mt-0.5">{formatTime(apt.time)}</span>
                         </div>
 
+                        {/* Patient Identity Block with prominent Village/Town Address */}
                         <div className="flex flex-col min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-lg font-black text-ink">{apt.patientName}</span>
+                            <span className="text-lg font-black text-ink font-display">{apt.patientName}</span>
+
+                            {/* Prominent Village / Town Address to avoid same-name confusion */}
+                            {apt.patientAddress ? (
+                              <span className="inline-flex items-center gap-1 rounded-lg bg-teal-50 border border-teal-200 text-teal-800 px-2.5 py-0.5 text-xs font-bold">
+                                <span>📍</span> {apt.patientAddress}
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 text-slate-500 px-2 py-0.5 text-xs italic">
+                                Area not added
+                              </span>
+                            )}
+
+                            {/* Type Badge */}
                             <span
-                              className={`rounded-md px-2 py-0.5 text-xs font-bold uppercase border ${
+                              className={`rounded-md px-2 py-0.5 text-[10px] font-bold uppercase border ${
                                 apt.type === "walk_in"
                                   ? "bg-teal-50 text-teal-800 border-teal-200"
-                                  : "bg-slate-100 text-slate-700 border-slate-200"
+                                  : "bg-indigo-50 text-indigo-700 border-indigo-200"
                               }`}
                             >
-                              {apt.type === "walk_in" ? "Walk-in" : "Online"}
+                              {apt.type === "walk_in" ? "Walk-In" : "Online"}
                             </span>
                           </div>
 
-                          <div className="text-xs text-muted mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
-                            <span>🩺 {apt.doctorName}</span>
+                          <div className="text-xs text-muted mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
+                            <span className="font-semibold text-slate-700">🩺 {apt.doctorName} ({apt.speciality})</span>
                             <span>·</span>
-                            <span>📱 +91 {apt.patientPhone}</span>
+                            <span className="font-mono text-slate-600">📱 +91 {apt.patientPhone}</span>
                           </div>
                         </div>
                       </div>
 
-                      {/* Right: Status Flow & Actions */}
-                      <div className="flex flex-wrap items-center gap-2.5 sm:self-center">
-                        {/* Status Selector */}
+                      {/* Right Block: Live Workflow Controls */}
+                      <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-line/60 lg:border-t-0 lg:pt-0">
+                        {/* Status Dropdown */}
                         <select
                           value={apt.status}
                           onChange={(e) => updateAppointmentStatus(apt.token, e.target.value as AppointmentStatus)}
-                          className={`min-h-11 rounded-xl px-3 py-1.5 text-xs sm:text-sm font-bold border ${statusColors[apt.status]}`}
+                          className={`min-h-11 rounded-xl px-3 py-1.5 text-xs font-bold border outline-none cursor-pointer ${statusColors[apt.status]}`}
                         >
                           <option value="confirmed">⏳ Confirmed (Waiting)</option>
-                          <option value="arrived">🚶 In Waiting Room</option>
-                          <option value="in_consultation">🩺 With Doctor</option>
+                          <option value="arrived">🚶 Arrived in Clinic</option>
+                          <option value="in_consultation">🩺 With Doctor (Cabin)</option>
                           <option value="completed">✅ Consultation Done</option>
                           <option value="cancelled">❌ Cancelled / No Show</option>
                         </select>
 
-                        {/* Quick WhatsApp Alert to Patient */}
+                        {/* WhatsApp Patient Call-In Alert */}
                         <a
                           href={callWaUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          title="Message Patient"
-                          className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#20ba59]"
+                          title="Message Patient on WhatsApp"
+                          className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#20ba59] shadow-xs transition-all active:scale-95"
                         >
-                          <WhatsAppIcon className="size-4" /> Alert Patient
+                          <WhatsAppIcon className="size-4" />
+                          <span>Call In</span>
                         </a>
 
-                        {/* Call Patient */}
+                        {/* Phone Call */}
                         <a
                           href={`tel:+91${apt.patientPhone}`}
-                          title="Call Patient"
+                          title="Call Mobile Number"
                           className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-100"
                         >
                           <PhoneIcon className="size-4" />
@@ -638,8 +737,8 @@ export default function AdminPage() {
                               deleteAppointment(apt.token);
                             }
                           }}
-                          title="Delete Token"
-                          className="min-h-11 rounded-xl px-2 py-1.5 text-xs text-slate-400 hover:text-emergency"
+                          title="Remove Token"
+                          className="min-h-11 rounded-xl px-2.5 py-1.5 text-xs text-slate-400 hover:text-emergency hover:bg-rose-50 transition-colors"
                         >
                           ✕
                         </button>
@@ -656,12 +755,12 @@ export default function AdminPage() {
         {/* TAB 2: LIVE DOCTOR DELAY RADAR                                       */}
         {/* ===================================================================== */}
         {activeTab === "radar" && (
-          <div className="flex flex-col gap-6">
-            <div className="card rounded-2xl p-5 border border-line bg-gradient-to-r from-teal-900 to-ink text-white">
-              <h2 className="text-xl font-black text-glow">Live OPD Delay & Arrival Radar</h2>
-              <p className="text-sm text-slate-300 mt-1 max-w-3xl">
-                When a visiting specialist from Srinagar is stuck on the highway, delayed in surgery, or arrives at the clinic,
-                update their status here. The website will immediately update its delay badge, and you can copy a 1-tap WhatsApp broadcast.
+          <div className="flex flex-col gap-6 animate-fade-in">
+            <div className="rounded-3xl p-6 bg-gradient-to-r from-teal-950 via-ink to-slate-950 text-white shadow-xl border border-teal-500/20">
+              <h2 className="text-xl font-black text-glow font-display">Live OPD Delay & Arrival Radar</h2>
+              <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
+                When a visiting specialist from Srinagar is travelling, delayed in surgery, or arrives at the clinic,
+                update their status here. The website homepage immediately displays a live alert badge, and you can copy a 1-tap WhatsApp broadcast.
               </p>
             </div>
 
@@ -671,125 +770,130 @@ export default function AdminPage() {
                 const broadcastMsg = doctorDelayBroadcastText(doc.name ?? doc.speciality, live, dateLabel(selectedDate));
 
                 return (
-                  <div key={doc.id} className="card rounded-3xl p-5 sm:p-6 border border-line flex flex-col gap-4 bg-white shadow-xs">
-                    <div className="flex items-start justify-between gap-3 border-b border-line pb-3">
-                      <div>
-                        <h3 className="text-lg font-bold text-ink">{doc.name ?? doc.speciality}</h3>
-                        <p className="text-xs text-brand font-semibold">{doc.speciality} · {doc.degree}</p>
-                      </div>
-
-                      {/* Current Status Pill */}
-                      <span
-                        className={`rounded-xl px-3 py-1 text-xs font-bold uppercase ${
-                          live.state === "in_clinic"
-                            ? "bg-emerald-100 text-emerald-800"
-                            : live.state === "delayed"
-                            ? "bg-amber-100 text-amber-800"
-                            : live.state === "cancelled"
-                            ? "bg-rose-100 text-rose-800"
-                            : "bg-slate-100 text-slate-700"
-                        }`}
-                      >
-                        {live.state === "in_clinic"
-                          ? "● In Clinic"
-                          : live.state === "delayed"
-                          ? `⚠️ Delayed (~${live.delayMinutes ?? 30}m)`
-                          : live.state === "cancelled"
-                          ? "🔴 Cancelled Today"
-                          : "Scheduled (On Time)"}
-                      </span>
-                    </div>
-
-                    {/* Status Action Buttons */}
-                    <div className="flex flex-col gap-2">
-                      <label className="text-xs font-bold uppercase text-slate-500">Update Doctor OPD State</label>
-                      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                        <button
-                          type="button"
-                          onClick={() => updateDoctorRadar(doc.id, "scheduled")}
-                          className={`min-h-11 rounded-xl text-xs font-bold border transition-all ${
-                            live.state === "scheduled" ? "bg-slate-800 text-white" : "border-line bg-white hover:bg-slate-50"
-                          }`}
-                        >
-                          Scheduled
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => updateDoctorRadar(doc.id, "in_clinic")}
-                          className={`min-h-11 rounded-xl text-xs font-bold border transition-all ${
-                            live.state === "in_clinic" ? "bg-emerald-600 text-white" : "border-line bg-white hover:bg-emerald-50 text-emerald-800"
-                          }`}
-                        >
-                          🟢 In Clinic
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => updateDoctorRadar(doc.id, "delayed", live.delayMinutes || 30)}
-                          className={`min-h-11 rounded-xl text-xs font-bold border transition-all ${
-                            live.state === "delayed" ? "bg-amber-500 text-white" : "border-line bg-white hover:bg-amber-50 text-amber-800"
-                          }`}
-                        >
-                          🟡 Delayed
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => updateDoctorRadar(doc.id, "cancelled")}
-                          className={`min-h-11 rounded-xl text-xs font-bold border transition-all ${
-                            live.state === "cancelled" ? "bg-rose-600 text-white" : "border-line bg-white hover:bg-rose-50 text-rose-800"
-                          }`}
-                        >
-                          🔴 Cancelled
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* If delayed: select minutes and note */}
-                    {live.state === "delayed" && (
-                      <div className="flex flex-col gap-2.5 rounded-2xl bg-amber-50/70 p-4 border border-amber-200">
-                        <div className="flex items-center justify-between">
-                          <label htmlFor={`delay-select-${doc.id}`} className="text-xs font-bold text-amber-900">Estimated Delay Duration</label>
-                          <select
-                            id={`delay-select-${doc.id}`}
-                            value={live.delayMinutes ?? 30}
-                            onChange={(e) => updateDoctorRadar(doc.id, "delayed", Number(e.target.value))}
-                            className="rounded-lg border border-amber-300 bg-white px-2 py-1 text-xs font-bold"
-                          >
-                            <option value={15}>15 Minutes</option>
-                            <option value={30}>30 Minutes</option>
-                            <option value={45}>45 Minutes</option>
-                            <option value={60}>1 Hour</option>
-                            <option value={90}>1.5 Hours</option>
-                            <option value={120}>2 Hours</option>
-                          </select>
+                  <div key={doc.id} className="card rounded-3xl p-5 sm:p-6 border border-line flex flex-col justify-between gap-4 bg-white shadow-xs">
+                    <div>
+                      <div className="flex items-start justify-between gap-3 border-b border-line pb-3">
+                        <div>
+                          <h3 className="text-lg font-black text-ink font-display">{doc.name ?? doc.speciality}</h3>
+                          <p className="text-xs text-brand font-bold">{doc.speciality} · {doc.degree}</p>
                         </div>
 
-                        <input
-                          type="text"
-                          placeholder="Reason (e.g. Highway traffic / SKIMS Emergency)"
-                          value={live.note ?? ""}
-                          onChange={(e) => updateDoctorRadar(doc.id, "delayed", live.delayMinutes, e.target.value)}
-                          className="min-h-10 rounded-xl border border-amber-300 bg-white px-3 text-xs sm:text-sm"
-                        />
+                        {/* Status Badge */}
+                        <span
+                          className={`rounded-xl px-3 py-1 text-xs font-bold uppercase tracking-wider ${
+                            live.state === "in_clinic"
+                              ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                              : live.state === "delayed"
+                              ? "bg-amber-100 text-amber-800 border border-amber-300"
+                              : live.state === "cancelled"
+                              ? "bg-rose-100 text-rose-800 border border-rose-300"
+                              : "bg-slate-100 text-slate-700 border border-slate-200"
+                          }`}
+                        >
+                          {live.state === "in_clinic"
+                            ? "● In Clinic"
+                            : live.state === "delayed"
+                            ? `⚠️ Delayed (~${live.delayMinutes ?? 30}m)`
+                            : live.state === "cancelled"
+                            ? "🔴 Cancelled Today"
+                            : "Scheduled"}
+                        </span>
                       </div>
-                    )}
+
+                      {/* State Switcher */}
+                      <div className="flex flex-col gap-2 mt-4">
+                        <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Live Doctor Status</label>
+                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                          <button
+                            type="button"
+                            onClick={() => updateDoctorRadar(doc.id, "scheduled")}
+                            className={`min-h-11 rounded-xl text-xs font-bold border transition-all ${
+                              live.state === "scheduled" ? "bg-slate-900 text-white shadow-sm" : "border-line bg-white hover:bg-slate-50 text-slate-700"
+                            }`}
+                          >
+                            Scheduled
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => updateDoctorRadar(doc.id, "in_clinic")}
+                            className={`min-h-11 rounded-xl text-xs font-bold border transition-all ${
+                              live.state === "in_clinic" ? "bg-emerald-600 text-white shadow-sm" : "border-line bg-white hover:bg-emerald-50 text-emerald-800"
+                            }`}
+                          >
+                            🟢 In Clinic
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => updateDoctorRadar(doc.id, "delayed", live.delayMinutes || 30)}
+                            className={`min-h-11 rounded-xl text-xs font-bold border transition-all ${
+                              live.state === "delayed" ? "bg-amber-500 text-white shadow-sm" : "border-line bg-white hover:bg-amber-50 text-amber-800"
+                            }`}
+                          >
+                            🟡 Delayed
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => updateDoctorRadar(doc.id, "cancelled")}
+                            className={`min-h-11 rounded-xl text-xs font-bold border transition-all ${
+                              live.state === "cancelled" ? "bg-rose-600 text-white shadow-sm" : "border-line bg-white hover:bg-rose-50 text-rose-800"
+                            }`}
+                          >
+                            🔴 Cancelled
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Delay Configuration */}
+                      {live.state === "delayed" && (
+                        <div className="flex flex-col gap-2.5 rounded-2xl bg-amber-50/80 p-4 border border-amber-200 mt-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-amber-900">Estimated Delay:</span>
+                            <div className="flex gap-1">
+                              {[15, 30, 45, 60, 90].map((min) => (
+                                <button
+                                  key={min}
+                                  type="button"
+                                  onClick={() => updateDoctorRadar(doc.id, "delayed", min)}
+                                  className={`px-2 py-1 rounded-lg text-xs font-bold transition-all ${
+                                    (live.delayMinutes ?? 30) === min
+                                      ? "bg-amber-600 text-white"
+                                      : "bg-white text-amber-800 border border-amber-300 hover:bg-amber-100"
+                                  }`}
+                                >
+                                  {min}m
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          <input
+                            type="text"
+                            placeholder="Reason (e.g. Traffic near Sangrama / SKIMS surgery)"
+                            value={live.note ?? ""}
+                            onChange={(e) => updateDoctorRadar(doc.id, "delayed", live.delayMinutes, e.target.value)}
+                            className="min-h-10 rounded-xl border border-amber-300 bg-white px-3 text-xs"
+                          />
+                        </div>
+                      )}
+                    </div>
 
                     {/* Broadcast WhatsApp Preview & Copy */}
                     {broadcastMsg && (
-                      <div className="flex flex-col gap-2 mt-auto border-t border-line/80 pt-3">
+                      <div className="flex flex-col gap-2 border-t border-line/80 pt-3 mt-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-slate-500">WhatsApp Broadcast Notice:</span>
+                          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">WhatsApp Broadcast Notice:</span>
                           <button
                             type="button"
                             onClick={() => copyBroadcast(broadcastMsg)}
                             className="inline-flex items-center gap-1 text-xs font-bold text-brand hover:underline"
                           >
-                            📋 Copy Broadcast
+                            📋 Copy Message
                           </button>
                         </div>
-                        <pre className="whitespace-pre-wrap rounded-xl bg-slate-50 p-3 text-[11px] sm:text-xs text-slate-700 border border-slate-200 font-sans">
+                        <pre className="whitespace-pre-wrap rounded-xl bg-slate-50 p-3 text-[11px] text-slate-700 border border-slate-200 font-sans leading-relaxed">
                           {broadcastMsg}
                         </pre>
                       </div>
@@ -805,19 +909,19 @@ export default function AdminPage() {
         {/* TAB 3: DOCTOR TIMINGS & LEAVE MANAGER                                 */}
         {/* ===================================================================== */}
         {activeTab === "doctors" && (
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-wrap items-center justify-between gap-4 card rounded-2xl p-4 sm:p-5 border border-line">
+          <div className="flex flex-col gap-6 animate-fade-in">
+            <div className="flex flex-wrap items-center justify-between gap-4 card rounded-3xl p-5 border border-line shadow-xs">
               <div>
-                <h2 className="text-xl font-bold text-ink">OPD Days & Timings Management</h2>
+                <h2 className="text-xl font-bold text-ink font-display">OPD Days & Timings Management</h2>
                 <p className="text-xs text-muted mt-0.5">
-                  Update doctor sitting days, mark doctors on leave, or register a new visiting doctor.
+                  Update doctor sitting days, mark doctors on leave, or register a new visiting specialist.
                 </p>
               </div>
 
               <button
                 type="button"
                 onClick={() => setShowNewDocModal(true)}
-                className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-brand px-4 text-sm font-bold text-white hover:bg-brand-dark"
+                className="inline-flex min-h-11 items-center gap-2 rounded-2xl bg-brand px-5 text-sm font-bold text-white hover:bg-brand-dark shadow-md shadow-brand/20 transition-all"
               >
                 ➕ Register New Specialist
               </button>
@@ -828,20 +932,20 @@ export default function AdminPage() {
                 const isOnLeave = doc.availability?.toLowerCase().includes("leave");
 
                 return (
-                  <div key={doc.id} className="card rounded-2xl p-5 border border-line flex flex-col justify-between gap-4">
+                  <div key={doc.id} className="card rounded-3xl p-5 border border-line flex flex-col justify-between gap-4 shadow-xs">
                     <div>
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <h3 className="text-lg font-bold text-ink">{doc.name ?? doc.speciality}</h3>
-                          <p className="text-xs text-brand font-semibold">{doc.speciality} · {doc.degree}</p>
+                          <h3 className="text-lg font-black text-ink font-display">{doc.name ?? doc.speciality}</h3>
+                          <p className="text-xs text-brand font-bold">{doc.speciality} · {doc.degree}</p>
                         </div>
 
                         {isOnLeave ? (
-                          <span className="rounded-md bg-rose-100 text-rose-800 text-xs px-2 py-0.5 font-bold">
+                          <span className="rounded-lg bg-rose-100 text-rose-800 text-xs px-2.5 py-0.5 font-bold border border-rose-200">
                             On Leave
                           </span>
                         ) : (
-                          <span className="rounded-md bg-emerald-100 text-emerald-800 text-xs px-2 py-0.5 font-bold">
+                          <span className="rounded-lg bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 font-bold border border-emerald-200">
                             Active OPD
                           </span>
                         )}
@@ -849,12 +953,12 @@ export default function AdminPage() {
 
                       {/* OPD Sessions */}
                       <div className="mt-3 flex flex-col gap-1.5 text-xs text-slate-700">
-                        <span className="font-semibold text-slate-500 uppercase text-[10px]">Sitting Days:</span>
+                        <span className="font-bold text-slate-500 uppercase text-[10px] tracking-wider">Sitting Schedule:</span>
                         {doc.opd.length > 0 ? (
                           doc.opd.map((s, idx) => (
-                            <div key={idx} className="flex justify-between items-center rounded-lg bg-slate-50 px-2.5 py-1">
-                              <span className="font-bold">{DAY_NAMES[s.day]}</span>
-                              <span>{formatTime(s.start)} – {formatTime(s.end)}</span>
+                            <div key={idx} className="flex justify-between items-center rounded-xl bg-slate-50 px-3 py-1.5 border border-slate-100">
+                              <span className="font-bold text-slate-800">{DAY_NAMES[s.day]}</span>
+                              <span className="font-semibold text-slate-600">{formatTime(s.start)} – {formatTime(s.end)}</span>
                             </div>
                           ))
                         ) : (
@@ -871,10 +975,10 @@ export default function AdminPage() {
                           const newLeave = !isOnLeave;
                           setDoctorOverride(doc.id, { onLeave: newLeave });
                         }}
-                        className={`min-h-10 px-3 rounded-lg text-xs font-bold transition-all ${
+                        className={`min-h-10 px-3.5 rounded-xl text-xs font-bold transition-all ${
                           isOnLeave
                             ? "bg-emerald-600 text-white hover:bg-emerald-700"
-                            : "bg-rose-100 text-rose-800 hover:bg-rose-200"
+                            : "bg-rose-50 text-rose-800 border border-rose-200 hover:bg-rose-100"
                         }`}
                       >
                         {isOnLeave ? "Mark Available (End Leave)" : "Mark On Leave"}
@@ -883,9 +987,9 @@ export default function AdminPage() {
                       <Link
                         href={`/book?doctor=${doc.id}`}
                         target="_blank"
-                        className="text-xs text-brand font-semibold hover:underline"
+                        className="text-xs text-brand font-bold hover:underline"
                       >
-                        Preview Booking Form →
+                        Preview Form →
                       </Link>
                     </div>
                   </div>
@@ -896,21 +1000,23 @@ export default function AdminPage() {
         )}
 
         {/* ===================================================================== */}
-        {/* TAB 4: PATIENT SEARCH                                                */}
+        {/* TAB 4: PATIENT SEARCH WITH VILLAGE/ADDRESS MATCHING                   */}
         {/* ===================================================================== */}
         {activeTab === "search" && (
-          <div className="flex flex-col gap-6">
-            <div className="card rounded-2xl p-5 border border-line flex flex-col gap-4">
-              <label htmlFor="search-input" className="text-lg font-bold text-ink">Find Patient Appointment</label>
-              <div className="flex items-center gap-2 rounded-xl border border-line px-3 bg-slate-50 focus-within:border-brand">
+          <div className="flex flex-col gap-6 animate-fade-in">
+            <div className="card rounded-3xl p-5 border border-line shadow-xs flex flex-col gap-3">
+              <label htmlFor="search-input" className="text-lg font-bold text-ink font-display">
+                Find Patient Record by Name, Village/Area, Phone, or Token
+              </label>
+              <div className="flex items-center gap-3 rounded-2xl border border-line px-4 bg-slate-50 focus-within:border-brand focus-within:bg-white transition-all">
                 <SearchIcon className="size-5 text-slate-400" />
                 <input
                   id="search-input"
                   type="text"
-                  placeholder="Search by Patient Name, 10-digit Mobile, or Token # (e.g. EP-AK...)"
+                  placeholder="e.g. Ghulam Mohammad, Tarzoo, Dangerpora, 97977... or EP-AK..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full min-h-12 bg-transparent text-base outline-none font-medium"
+                  className="w-full min-h-13 bg-transparent text-base outline-none font-medium"
                 />
               </div>
             </div>
@@ -922,29 +1028,37 @@ export default function AdminPage() {
                     const q = searchQuery.toLowerCase();
                     return (
                       a.patientName.toLowerCase().includes(q) ||
+                      (a.patientAddress && a.patientAddress.toLowerCase().includes(q)) ||
                       a.patientPhone.includes(q) ||
                       a.token.toLowerCase().includes(q)
                     );
                   })
                   .map((a) => (
-                    <div key={a.token} className="card rounded-2xl p-4 border border-line flex items-center justify-between">
+                    <div key={a.token} className="card rounded-3xl p-4 sm:p-5 border border-line flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold text-ink">{a.token}</span>
-                          <span className="font-bold text-ink">{a.patientName}</span>
-                          <span className="text-xs text-muted">(+91 {a.patientPhone})</span>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-mono font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-md text-xs">{a.token}</span>
+                          <span className="font-black text-ink text-base">{a.patientName}</span>
+                          {a.patientAddress && (
+                            <span className="inline-flex items-center gap-1 rounded-md bg-teal-50 border border-teal-200 text-teal-800 px-2 py-0.5 text-xs font-bold">
+                              📍 {a.patientAddress}
+                            </span>
+                          )}
+                          <span className="text-xs text-muted font-mono">(+91 {a.patientPhone})</span>
                         </div>
-                        <p className="text-xs text-muted mt-0.5">
-                          {a.doctorName} · {dateLabel(a.date)} at {formatTime(a.time)} · Status: <strong>{a.status}</strong>
+                        <p className="text-xs text-muted mt-1">
+                          {a.doctorName} ({a.speciality}) · {dateLabel(a.date)} at {formatTime(a.time)} · Status: <strong>{a.status}</strong>
                         </p>
                       </div>
 
-                      <a
-                        href={`tel:+91${a.patientPhone}`}
-                        className="min-h-10 px-3 rounded-lg bg-brand text-white text-xs font-bold inline-flex items-center gap-1"
-                      >
-                        <PhoneIcon className="size-3.5" /> Call
-                      </a>
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={`tel:+91${a.patientPhone}`}
+                          className="min-h-10 px-3.5 rounded-xl bg-brand text-white text-xs font-bold inline-flex items-center gap-1.5"
+                        >
+                          <PhoneIcon className="size-3.5" /> Call
+                        </a>
+                      </div>
                     </div>
                   ))}
               </div>
@@ -954,15 +1068,15 @@ export default function AdminPage() {
       </div>
 
       {/* ======================================================================= */}
-      {/* 1-TAP WALK-IN PATIENT ENTRY MODAL                                      */}
+      {/* 1-TAP WALK-IN PATIENT ENTRY MODAL (WITH VILLAGE / ADDRESS FIELD)        */}
       {/* ======================================================================= */}
       {showWalkInModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs">
-          <div className="card w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border border-line flex flex-col gap-5 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm animate-fade-in">
+          <div className="card w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border border-white/20 flex flex-col gap-5 max-h-[90vh] overflow-y-auto bg-white">
             <div className="flex items-start justify-between border-b border-line pb-3">
               <div>
-                <h3 className="text-xl font-black text-ink">Register Walk-in Patient</h3>
-                <p className="text-xs text-muted">Instantly locks the slot and generates an official token.</p>
+                <h3 className="text-xl font-black text-ink font-display">Register Walk-in Patient</h3>
+                <p className="text-xs text-muted">Locks the slot instantly to prevent double-booking.</p>
               </div>
               <button
                 type="button"
@@ -982,7 +1096,7 @@ export default function AdminPage() {
             <div className="flex flex-col gap-4">
               {/* Doctor */}
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="walkin-doc" className="text-xs font-bold uppercase text-slate-500">Consultant Specialist</label>
+                <label htmlFor="walkin-doc" className="text-xs font-bold uppercase tracking-wider text-slate-500">Consultant Specialist</label>
                 <select
                   id="walkin-doc"
                   value={walkInDocId}
@@ -990,7 +1104,7 @@ export default function AdminPage() {
                     setWalkInDocId(e.target.value);
                     setWalkInTime("");
                   }}
-                  className="min-h-12 rounded-xl border border-line px-3 text-base font-semibold bg-slate-50"
+                  className="min-h-12 rounded-xl border border-line px-3 text-sm sm:text-base font-bold bg-slate-50"
                 >
                   <option value="">Select Doctor</option>
                   {allDoctors.map((d) => (
@@ -1004,8 +1118,8 @@ export default function AdminPage() {
               {/* Time Slots */}
               {walkInDocId && (
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold uppercase text-slate-500">
-                    Select Available Slot on {dateLabel(selectedDate)}
+                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Select Available Slot ({dateLabel(selectedDate)})
                   </label>
                   {(() => {
                     const doc = allDoctors.find((d) => d.id === walkInDocId);
@@ -1014,7 +1128,7 @@ export default function AdminPage() {
                     const taken = getBookedSlots(doc.id, selectedDate);
 
                     return (
-                      <div className="grid grid-cols-3 gap-2 max-h-44 overflow-y-auto p-1">
+                      <div className="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto p-1 border border-line rounded-xl bg-slate-50">
                         {slots.map((s) => {
                           const isOccupied = taken.includes(s);
                           return (
@@ -1025,7 +1139,7 @@ export default function AdminPage() {
                               onClick={() => setWalkInTime(s)}
                               className={`min-h-10 rounded-lg text-xs font-bold border transition-all ${
                                 isOccupied
-                                  ? "bg-slate-100 text-slate-300 border-slate-200 cursor-not-allowed line-through"
+                                  ? "bg-slate-200 text-slate-400 border-slate-200 cursor-not-allowed line-through"
                                   : walkInTime === s
                                   ? "bg-brand text-white border-brand shadow-xs"
                                   : "bg-white text-slate-800 border-line hover:border-slate-400"
@@ -1043,22 +1157,40 @@ export default function AdminPage() {
 
               {/* Patient Name */}
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="walkin-name" className="text-xs font-bold uppercase text-slate-500">Patient Full Name</label>
+                <label htmlFor="walkin-name" className="text-xs font-bold uppercase tracking-wider text-slate-500">Patient Full Name</label>
                 <input
                   id="walkin-name"
                   type="text"
-                  placeholder="e.g. Ghulam Nabi"
+                  placeholder="e.g. Ghulam Mohammad"
                   value={walkInName}
                   onChange={(e) => setWalkInName(e.target.value)}
-                  className="min-h-12 rounded-xl border border-line px-4 text-base font-medium"
+                  className="min-h-12 rounded-xl border border-line px-4 text-base font-semibold"
+                />
+              </div>
+
+              {/* Patient Village / Address (Crucial for disambiguating identical names) */}
+              <div className="flex flex-col gap-1.5">
+                <div className="flex justify-between items-baseline">
+                  <label htmlFor="walkin-address" className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Village / Town / Address
+                  </label>
+                  <span className="text-[11px] text-brand font-bold">Prevents same-name confusion</span>
+                </div>
+                <input
+                  id="walkin-address"
+                  type="text"
+                  placeholder="e.g. Tarzoo, Dangerpora, Sangrama, Sopore"
+                  value={walkInAddress}
+                  onChange={(e) => setWalkInAddress(e.target.value)}
+                  className="min-h-12 rounded-xl border border-line px-4 text-base font-semibold focus:border-brand"
                 />
               </div>
 
               {/* Patient Phone */}
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="walkin-phone" className="text-xs font-bold uppercase text-slate-500">Mobile Number (10 Digits)</label>
+                <label htmlFor="walkin-phone" className="text-xs font-bold uppercase tracking-wider text-slate-500">Mobile Number (10 Digits)</label>
                 <div className="flex rounded-xl border border-line overflow-hidden">
-                  <span className="bg-slate-100 px-3 py-3 text-sm font-semibold text-slate-600 border-r border-line">+91</span>
+                  <span className="bg-slate-100 px-3.5 py-3 text-sm font-bold text-slate-600 border-r border-line">+91</span>
                   <input
                     id="walkin-phone"
                     type="tel"
@@ -1066,7 +1198,7 @@ export default function AdminPage() {
                     placeholder="10-digit number"
                     value={walkInPhone}
                     onChange={(e) => setWalkInPhone(e.target.value)}
-                    className="flex-1 px-4 min-h-12 text-base font-medium outline-none"
+                    className="flex-1 px-4 min-h-12 text-base font-semibold outline-none"
                   />
                 </div>
               </div>
@@ -1076,16 +1208,16 @@ export default function AdminPage() {
               <button
                 type="button"
                 onClick={() => setShowWalkInModal(false)}
-                className="flex-1 min-h-12 rounded-xl border border-line text-slate-700 font-bold hover:bg-slate-100"
+                className="flex-1 min-h-12 rounded-2xl border border-line text-slate-700 font-bold hover:bg-slate-100"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleAddWalkIn}
-                className="flex-1 min-h-12 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 shadow-md"
+                className="flex-1 min-h-12 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black hover:brightness-110 shadow-lg shadow-emerald-600/20"
               >
-                Confirm Walk-in Token
+                Issue Token Slip
               </button>
             </div>
           </div>
@@ -1096,35 +1228,38 @@ export default function AdminPage() {
       {/* WALK-IN SUCCESS TOKEN SLIP POPUP                                       */}
       {/* ======================================================================= */}
       {walkInSuccessSlip && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm animate-fade-in">
           <div className="card w-full max-w-md rounded-3xl p-6 shadow-2xl border-2 border-emerald-500 flex flex-col gap-4 text-center bg-white">
             <span className="text-4xl">🎟️</span>
             <div>
-              <span className="text-xs font-bold uppercase text-emerald-700">Walk-in Token Issued</span>
-              <h3 className="text-3xl font-black font-mono tracking-wider text-ink mt-1">
+              <span className="text-xs font-bold uppercase text-emerald-700">Official Token Slip Issued</span>
+              <h3 className="text-3xl font-black font-mono tracking-wider text-ink mt-1 font-display">
                 {walkInSuccessSlip.token}
               </h3>
             </div>
 
-            <div className="rounded-2xl bg-slate-50 p-4 text-left text-sm space-y-1.5 border border-line">
+            <div className="rounded-2xl bg-slate-50 p-4 text-left text-xs space-y-1.5 border border-line">
               <p><strong>Patient:</strong> {walkInSuccessSlip.patientName}</p>
+              {walkInSuccessSlip.patientAddress && (
+                <p className="text-teal-800 font-bold"><strong>Village / Area:</strong> 📍 {walkInSuccessSlip.patientAddress}</p>
+              )}
               <p><strong>Doctor:</strong> {walkInSuccessSlip.doctorName}</p>
-              <p><strong>Slot Time:</strong> {formatTime(walkInSuccessSlip.time)}</p>
+              <p><strong>Slot:</strong> {formatTime(walkInSuccessSlip.time)}</p>
               <p><strong>Date:</strong> {dateLabel(walkInSuccessSlip.date)}</p>
             </div>
 
-            <div className="flex gap-2">
+            <div className="flex gap-2.5">
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="flex-1 min-h-12 rounded-xl bg-ink text-white font-bold text-sm hover:bg-slate-800"
+                className="flex-1 min-h-12 rounded-2xl bg-ink text-white font-bold text-xs hover:bg-slate-800"
               >
                 🖨️ Print Slip
               </button>
               <button
                 type="button"
                 onClick={() => setWalkInSuccessSlip(null)}
-                className="flex-1 min-h-12 rounded-xl border border-line text-slate-800 font-bold text-sm hover:bg-slate-100"
+                className="flex-1 min-h-12 rounded-2xl border border-line text-slate-800 font-bold text-xs hover:bg-slate-100"
               >
                 Done
               </button>
@@ -1137,11 +1272,11 @@ export default function AdminPage() {
       {/* REGISTER NEW SPECIALIST MODAL                                          */}
       {/* ======================================================================= */}
       {showNewDocModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-xs">
-          <div className="card w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border border-line flex flex-col gap-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm animate-fade-in">
+          <div className="card w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border border-line flex flex-col gap-4 bg-white">
             <div className="flex items-start justify-between border-b border-line pb-3">
               <div>
-                <h3 className="text-xl font-bold text-ink">Add Visiting Specialist</h3>
+                <h3 className="text-xl font-bold text-ink font-display">Add Visiting Specialist</h3>
                 <p className="text-xs text-muted">Register doctor details and sitting schedule.</p>
               </div>
               <button
@@ -1235,14 +1370,14 @@ export default function AdminPage() {
               <button
                 type="button"
                 onClick={() => setShowNewDocModal(false)}
-                className="flex-1 min-h-11 rounded-xl border border-line text-slate-700 font-bold text-sm"
+                className="flex-1 min-h-11 rounded-2xl border border-line text-slate-700 font-bold text-sm"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleSaveNewDoctor}
-                className="flex-1 min-h-11 rounded-xl bg-brand text-white font-bold text-sm hover:bg-brand-dark"
+                className="flex-1 min-h-11 rounded-2xl bg-brand text-white font-bold text-sm hover:bg-brand-dark"
               >
                 Save Doctor
               </button>

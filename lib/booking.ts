@@ -12,6 +12,7 @@ export type BookingRequest = {
   time: string; // "HH:mm"
   name: string;
   phone: string; // 10 digits
+  address?: string; // Village, Town, or Area (e.g. "Tarzoo, Sopore")
 };
 
 /** "+91 98765-43210" / "098765 43210" / "919876543210" -> "9876543210" */
@@ -34,6 +35,7 @@ export function bookingSchema(doctors: Doctor[], now: Date) {
       date: z.string().min(1, "Choose a day."),
       time: z.string().min(1, "Choose a time."),
       name: z.string().trim().min(2, "Enter your name.").max(60, "Please shorten your name."),
+      address: z.string().trim().max(100, "Please keep village/town under 100 characters.").optional().default(""),
       phone: z
         .string()
         .transform(normalizePhone)
@@ -88,8 +90,11 @@ export function bookingMessage(request: BookingRequest, doctor: Doctor, clinicNa
     `Day: ${dateLabel(request.date)}`,
     `Time: ${formatTime(request.time)}`,
     `Name: ${request.name.trim()}`,
+    request.address ? `Area/Village: ${request.address.trim()}` : null,
     `Mobile: ${request.phone}`,
-  ].join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
 }
 
 export function whatsappLink(clinicWhatsapp: string, message: string): string {

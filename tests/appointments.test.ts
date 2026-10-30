@@ -17,7 +17,7 @@ test("token generator formats date and doctor prefix correctly", () => {
   assert.ok(walkInToken.endsWith("-W"), `Walk-in token was ${walkInToken}`);
 });
 
-test("confirmationTicketText includes critical details and helpline", () => {
+test("confirmationTicketText includes critical details, village address and helpline", () => {
   const apt: Appointment = {
     token: "EP-AK1031-01",
     doctorId: "akash",
@@ -27,6 +27,7 @@ test("confirmationTicketText includes critical details and helpline", () => {
     time: "15:30",
     patientName: "Tariq Ahmad",
     patientPhone: "9876543210",
+    patientAddress: "Tarzoo, Sopore",
     type: "online",
     status: "confirmed",
     createdAt: 1729000000000,
@@ -36,6 +37,7 @@ test("confirmationTicketText includes critical details and helpline", () => {
   assert.ok(text.includes("EP-AK1031-01"));
   assert.ok(text.includes("Dr. Akash Bashir"));
   assert.ok(text.includes("Tariq Ahmad"));
+  assert.ok(text.includes("Tarzoo, Sopore"));
   assert.ok(text.includes("97977 96909"));
   assert.ok(text.includes("Lone Complex"));
 });
@@ -67,3 +69,4 @@ test("doctorDelayBroadcastText formats cancellation notice correctly", () => {
   assert.ok(broadcast.includes("SKIMS"));
   assert.ok(broadcast.includes("97977 96909"));
 });
+

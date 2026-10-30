@@ -16,6 +16,7 @@ export type Appointment = {
   time: string; // "10:30"
   patientName: string;
   patientPhone: string;
+  patientAddress?: string; // Village, Town, or Area (e.g. "Tarzoo, Sopore")
   type: "online" | "walk_in";
   status: AppointmentStatus;
   createdAt: number;
@@ -285,6 +286,7 @@ export function confirmationTicketText(apt: Appointment): string {
     `──────────────────────────`,
     `🎟️ *Token No:* ${apt.token}`,
     `👤 *Patient:* ${apt.patientName}`,
+    apt.patientAddress ? `📍 *Area/Village:* ${apt.patientAddress}` : null,
     `📱 *Mobile:* ${apt.patientPhone}`,
     `🩺 *Consultant:* ${apt.doctorName}`,
     `🔬 *Speciality:* ${apt.speciality}`,
@@ -294,7 +296,9 @@ export function confirmationTicketText(apt: Appointment): string {
     `📍 *Location:* 1st Floor, Lone Complex, Opposite SDH Hospital, Sopore`,
     `ℹ️ *Note:* Please arrive 10-15 minutes before your slot time and present this token slip at reception. Consultation fee is payable directly at reception.`,
     `📞 *Reception Helpline:* 97977 96909`,
-  ].join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
 }
 
 /** Formats an announcement message when a doctor is delayed or cancelled */
