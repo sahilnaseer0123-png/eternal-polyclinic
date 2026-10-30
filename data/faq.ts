@@ -31,7 +31,7 @@ export const faqs: Faq[] = [
   },
   {
     question: "How much does a consultation cost?",
-    answer: `₹${clinic.consultationFee} per consultation, for every doctor.`,
+    answer: `Consultation fees depend on the specialist doctor. There is zero clinic registration charge. Call ${clinic.phoneDisplay} to check the fee for any doctor.`,
   },
   {
     question: "Can I get scans and tests done here?",

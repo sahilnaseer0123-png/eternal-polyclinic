@@ -12,9 +12,8 @@ test("short times drop :00 only", () => {
   assert.equal(formatTimeShort("16:20"), "4:20 pm");
 });
 
-test("FAQ uses the real fee and phone, with no placeholders", () => {
+test("FAQ answers common questions and uses real phone, with no placeholders", () => {
   const all = faqs.map((f) => f.question + " " + f.answer).join("\n");
-  assert.match(all, new RegExp(`₹${clinic.consultationFee}`));
   assert.match(all, new RegExp(clinic.phoneDisplay));
   assert.doesNotMatch(all, /\[[^\]]*\]|TODO|lorem/i);
 });

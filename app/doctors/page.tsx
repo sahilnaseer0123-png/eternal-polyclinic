@@ -9,14 +9,14 @@ import { PageIntro } from "@/components/SiteChrome";
 export const metadata: Metadata = {
   alternates: { canonical: "/doctors" },
   title: "Our doctors and OPD schedule",
-  description: `Specialists at ${clinic.name}, Sopore, the days they sit, and how to book. Consultation ₹${clinic.consultationFee}.`,
+  description: `Specialists at ${clinic.name}, Sopore, the days they sit, and how to book.`,
 };
 
 export default function DoctorsPage() {
   return (
     <>
       <PageIntro title="Our doctors">
-        Each specialist sits on fixed days every week. Consultation ₹{clinic.consultationFee} with any doctor.
+        Each specialist sits on fixed days every week with dedicated consultation slots.
       </PageIntro>
 
       <section aria-labelledby="all-doctors" className="mx-auto max-w-6xl px-5 pb-6">

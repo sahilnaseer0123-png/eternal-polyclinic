@@ -111,7 +111,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
             {dateLabel(date)}, {formatTime(time)}
           </dd>
           <dt className="text-muted">Fee</dt>
-          <dd className="font-semibold">₹{clinic.consultationFee} consultation</dd>
+          <dd className="font-semibold">Pay at clinic (Zero registration fee)</dd>
         </dl>
         <a
           href={sent.link}
@@ -291,7 +291,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
           <ChatIcon className="size-6" /> Send request on WhatsApp
         </button>
         <p className="text-sm text-muted">
-          Consultation ₹{clinic.consultationFee}. We only ask your name and number, never the reason for your visit.
+          Consultation fee is paid directly at the clinic. We only ask your name and number, never the reason for your visit.
           Reception calls you to confirm.
         </p>
       </div>

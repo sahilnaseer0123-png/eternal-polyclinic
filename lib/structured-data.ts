@@ -53,7 +53,7 @@ export function clinicSchema() {
       closes: clinic.hours.close,
     },
     currenciesAccepted: "INR",
-    priceRange: `₹${clinic.consultationFee} consultation`,
+    priceRange: "₹₹",
     medicalSpecialty: [...new Set(doctors.flatMap((d) => SPECIALTY[d.category]))],
     availableService: services
       .filter((s) => TESTS.has(s.id))

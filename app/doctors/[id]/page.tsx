@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: PageProps<"/doctors/[id]">): 
   return {
     alternates: { canonical: `/doctors/${doctor.id}` },
     title: doctor.name ? `${doctor.name}, ${doctor.speciality}` : doctor.speciality,
-    description: `${title(doctor)} at ${clinic.name}, Sopore. ${days ? `Sits on ${days}.` : "Days coming soon."} Consultation ₹${clinic.consultationFee}.`,
+    description: `${title(doctor)} at ${clinic.name}, Sopore. ${days ? `Sits on ${days}.` : "Days coming soon."}`,
   };
 }
 
@@ -61,7 +61,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
                 </span>
               )}
               <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
-                ₹{clinic.consultationFee} OPD Fee
+                Zero Reg. Fee
               </span>
             </div>
 
@@ -100,7 +100,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
                 </h2>
               </div>
               <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-semibold text-slate-200">
-                ₹{clinic.consultationFee} Fee
+                Doctor OPD
               </span>
             </div>
 

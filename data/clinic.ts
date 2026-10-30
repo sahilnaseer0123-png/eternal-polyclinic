@@ -69,7 +69,6 @@ export const clinic = {
   whatsapp: "919419055528",
   whatsappDisplay: "94190 55528",
   hours: { open: "07:00", close: "20:00" },
-  consultationFee: 300,
   timeZone: "Asia/Kolkata",
   /**
    * The clinic's exact spot: the Old Municipal Office building, Sopore (plus code 7FV4+G2G),

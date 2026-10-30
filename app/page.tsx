@@ -47,7 +47,7 @@ export default function Home() {
               </h1>
               <p className="max-w-2xl text-muted sm:text-lg">
                 Visiting specialists on fixed days, with scans, a lab and a
-                pharmacy under one roof. Consultation ₹{clinic.consultationFee}.
+                pharmacy under one roof.
               </p>
               {/* A real search box: typing here opens /doctors?q=... with the results. */}
               <Form
@@ -206,8 +206,8 @@ export default function Home() {
               <ShieldCheckIcon className="size-5 sm:size-6" />
             </div>
             <div>
-              <p className="text-lg font-extrabold text-ink sm:text-2xl">₹300</p>
-              <p className="text-[11px] leading-tight text-muted sm:text-sm">Fixed OPD consultation fee</p>
+              <p className="text-lg font-extrabold text-ink sm:text-2xl">Zero Reg.</p>
+              <p className="text-[11px] leading-tight text-muted sm:text-sm">No clinic registration fee</p>
             </div>
           </div>
 
