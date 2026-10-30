@@ -342,7 +342,7 @@ export default function Home() {
 
           <Link
             href="/contact"
-            className="card flex flex-col gap-4 rounded-3xl p-3 sm:p-4 lg:flex-row lg:items-center"
+            className="card card-hover flex flex-col gap-4 rounded-3xl border border-line/70 p-3 sm:p-4 lg:flex-row lg:items-center transition-all duration-200"
           >
             <ReceptionPhoto
               className="aspect-[3/2] rounded-2xl lg:w-[46%] lg:shrink-0"

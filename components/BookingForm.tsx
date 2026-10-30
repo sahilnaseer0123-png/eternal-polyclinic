@@ -23,10 +23,10 @@ import { ChatIcon, PhoneIcon } from "./Icons";
 const SHORT_DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const SHORT_MONTH = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-// Design C: chosen = solid ink pill, others = white with a thin line.
+// Modern chip: chosen = solid ink pill with shadow, others = card with border line.
 function chipClass(on: boolean) {
-  return `rounded-2xl border-2 text-base ${
-    on ? "border-ink bg-ink font-semibold text-white" : "border-line bg-white hover:border-ink"
+  return `rounded-2xl border text-base transition-all duration-150 ${
+    on ? "border-ink bg-ink font-bold text-white shadow-sm ring-2 ring-ink/20" : "border-line/80 bg-white hover:border-slate-400 text-slate-800"
   }`;
 }
 
@@ -244,6 +244,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
             id="bk-name"
             type="text"
             autoComplete="name"
+            placeholder="e.g. Farooq Ahmad"
             value={name}
             onChange={(e) => {
               setName(e.target.value);
@@ -251,7 +252,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
             }}
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? "err-name" : undefined}
-            className="min-h-12 rounded-xl border border-slate-400 bg-white px-4 text-lg sm:min-h-13"
+            className="min-h-12 rounded-xl border border-line/90 bg-white px-4 text-base sm:text-lg sm:min-h-13 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20 transition-all"
           />
           <FieldError id="err-name" message={errors.name} />
         </div>
@@ -259,13 +260,14 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
           <label htmlFor="bk-phone" className="font-semibold">
             Mobile number
           </label>
-          <div className="flex overflow-hidden rounded-xl border border-slate-400 bg-white focus-within:outline-3 focus-within:outline-ink">
-            <span className="flex items-center border-r border-slate-400 bg-ground px-4 text-lg text-muted">+91</span>
+          <div className="flex overflow-hidden rounded-xl border border-line/90 bg-white focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/20 transition-all">
+            <span className="flex items-center border-r border-line/90 bg-ground px-4 text-base sm:text-lg font-medium text-slate-600">+91</span>
             <input
               id="bk-phone"
               type="tel"
               inputMode="numeric"
               autoComplete="tel-national"
+              placeholder="10-digit mobile number"
               value={phone}
               onChange={(e) => {
                 setPhone(e.target.value);
@@ -273,7 +275,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
               }}
               aria-invalid={!!errors.phone}
               aria-describedby={errors.phone ? "err-phone" : undefined}
-              className="min-h-12 min-w-0 flex-1 px-4 text-lg outline-none sm:min-h-13"
+              className="min-h-12 min-w-0 flex-1 px-4 text-base sm:text-lg outline-none sm:min-h-13 bg-transparent"
             />
           </div>
           <FieldError id="err-phone" message={errors.phone} />
@@ -284,11 +286,11 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
         <button
           type="button"
           onClick={submit}
-          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-brand px-6 text-lg font-bold sm:min-h-14 text-white hover:bg-brand-dark"
+          className="inline-flex min-h-13 items-center justify-center gap-2.5 rounded-2xl bg-brand px-6 text-base font-bold sm:min-h-14 sm:text-lg text-white hover:bg-brand-dark shadow-md hover:shadow-lg transition-all"
         >
-          <ChatIcon /> Send request on WhatsApp
+          <ChatIcon className="size-5" /> Send request on WhatsApp
         </button>
-        <p className="text-base text-muted">
+        <p className="text-sm text-muted">
           Consultation ₹{clinic.consultationFee}. We only ask your name and number, never the reason for your visit.
           Reception calls you to confirm.
         </p>
