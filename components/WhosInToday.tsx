@@ -146,8 +146,8 @@ export function WhosInToday() {
           </div>
           <ul className="flex flex-col gap-1.5 text-base">
             {week.map(({ key, label, doctor, s, isToday }) => (
-              <li key={key} className={`flex items-baseline gap-2 sm:gap-3 ${isToday ? "font-semibold" : ""}`}>
-                <span className="w-16 shrink-0 font-semibold text-glow">{label}</span>
+              <li key={key} className={`flex items-baseline gap-2.5 sm:gap-3 ${isToday ? "font-semibold" : ""}`}>
+                <span className="w-[5.5rem] shrink-0 font-semibold text-glow sm:w-24">{label}</span>
                 <span className="min-w-0 flex-1 truncate text-slate-200">
                   {doctor.name ?? doctor.speciality}
                   {s.recurrence === "first-of-month" && (
