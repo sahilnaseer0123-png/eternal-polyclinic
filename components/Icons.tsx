@@ -167,6 +167,31 @@ export function ChevronRightIcon({ className = "size-5" }: IconProps) {
   );
 }
 
+export function CheckIcon({ className = "size-4" }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M20 6L9 17l-5-5" />
+    </svg>
+  );
+}
+
+export function ShieldCheckIcon({ className = "size-5" }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      <path d="M9 12l2 2 4-4" />
+    </svg>
+  );
+}
+
+export function HospitalIcon({ className = "size-5" }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M3 21h18M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16M9 9h6M12 6v6" />
+    </svg>
+  );
+}
+
 /** One icon per in-house service id in data/clinic.ts. */
 export function ServiceIcon({ id, className = "size-6" }: IconProps & { id: string }) {
   switch (id) {

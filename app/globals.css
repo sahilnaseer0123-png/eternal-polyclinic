@@ -28,6 +28,14 @@
   box-shadow: var(--shadow-card);
 }
 
+@utility card-hover {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px -4px rgb(15 23 42 / 0.09), 0 4px 8px -2px rgb(15 23 42 / 0.04);
+  }
+}
+
 /* Body text is 16px on phones (18px felt oversized there) and 18px from tablets up.
    Everything is in rem, so spacing and tap targets scale with it: min-h-11 is still 44px on phones. */
 html {

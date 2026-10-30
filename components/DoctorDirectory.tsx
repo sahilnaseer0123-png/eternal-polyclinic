@@ -10,7 +10,7 @@ import { categories, clinic, doctors, services, type DoctorCategory } from "@/da
 import { DAY_NAMES, formatTime } from "@/lib/schedule";
 import { DoctorMark } from "./DoctorMark";
 import { NextAvailable } from "./NextAvailable";
-import { CalendarIcon, ChevronRightIcon, SearchIcon, ServiceIcon } from "./Icons";
+import { CalendarIcon, CheckIcon, ChevronRightIcon, SearchIcon, ServiceIcon } from "./Icons";
 
 export type Filter = "all" | DoctorCategory;
 
@@ -118,14 +118,32 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
           {shown.map((doctor) => {
             const hasOpd = doctor.opd.length > 0;
             return (
-              <li key={doctor.id} id={`doctor-${doctor.id}`} className="card flex flex-col gap-3.5 rounded-3xl p-4 sm:p-5">
+              <li
+                key={doctor.id}
+                id={`doctor-${doctor.id}`}
+                className="card card-hover flex flex-col gap-3.5 rounded-3xl border border-line/60 p-4 transition-all duration-200 sm:p-5"
+              >
                 {/* Doctor Identity Header */}
                 <div className="flex items-start gap-3 sm:gap-4">
-                  <DoctorMark doctor={doctor} className="size-14 shrink-0 rounded-2xl bg-brand-tint text-2xl text-brand sm:size-16" />
+                  <div className="relative shrink-0">
+                    <DoctorMark
+                      doctor={doctor}
+                      className="size-14 rounded-2xl bg-brand-tint text-2xl text-brand sm:size-16"
+                    />
+                    <span
+                      title="Verified Specialist"
+                      className="absolute -bottom-1 -right-1 flex size-5 items-center justify-center rounded-full bg-emerald-600 text-white shadow-sm ring-2 ring-white"
+                    >
+                      <CheckIcon className="size-3" />
+                    </span>
+                  </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center justify-between gap-1.5">
                       <h3 className="text-lg font-bold leading-snug sm:text-xl">
-                        <Link href={`/doctors/${doctor.id}`} className="underline-offset-4 hover:text-brand hover:underline">
+                        <Link
+                          href={`/doctors/${doctor.id}`}
+                          className="underline-offset-4 hover:text-brand hover:underline"
+                        >
                           {doctor.name ?? doctor.speciality}
                         </Link>
                       </h3>
@@ -140,10 +158,14 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                     )}
                     <p className="text-xs text-muted">
                       {[
-                        doctor.degree && doctor.degree.toLowerCase() !== doctor.speciality.toLowerCase()
+                        doctor.degree &&
+                        doctor.degree.toLowerCase() !==
+                          doctor.speciality.toLowerCase()
                           ? doctor.degree
                           : null,
-                        doctor.experienceYears ? `${doctor.experienceYears} yrs experience` : null,
+                        doctor.experienceYears
+                          ? `${doctor.experienceYears} yrs experience`
+                          : null,
                       ]
                         .filter(Boolean)
                         .join(" · ")}
@@ -167,8 +189,13 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                                     ? `Alternate ${DAY_NAMES[s.day]}s`
                                     : DAY_NAMES[s.day];
                               return (
-                                <div key={idx} className="flex flex-wrap items-center justify-between gap-x-2 text-xs sm:text-sm">
-                                  <span className="font-semibold text-ink">{dayLabel}</span>
+                                <div
+                                  key={idx}
+                                  className="flex flex-wrap items-center justify-between gap-x-2 text-xs sm:text-sm"
+                                >
+                                  <span className="font-semibold text-ink">
+                                    {dayLabel}
+                                  </span>
                                   <span className="tabular-nums font-medium text-muted">
                                     {formatTime(s.start)} – {formatTime(s.end)}
                                   </span>
@@ -177,7 +204,13 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                             })}
                           </div>
                           <div className="flex items-center justify-between border-t border-line/70 pt-1.5 text-xs">
-                            <span className="font-medium text-muted">Next free slot</span>
+                            <span className="flex items-center gap-1.5 font-medium text-muted">
+                              <span className="relative flex size-2">
+                                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                                <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+                              </span>
+                              Next free slot
+                            </span>
                             <NextAvailable
                               doctorId={doctor.id}
                               fallback={"—"}
@@ -188,7 +221,8 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                         </>
                       ) : (
                         <p className="text-xs leading-relaxed text-slate-700 sm:text-sm">
-                          {doctor.availability ?? "Days coming soon. Please call to ask."}
+                          {doctor.availability ??
+                            "Days coming soon. Please call to ask."}
                         </p>
                       )}
                     </div>
@@ -204,7 +238,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                     {doctor.concerns.slice(0, 4).map((c) => (
                       <span
                         key={c}
-                        className="inline-flex items-center rounded-lg border border-line/70 bg-ground px-2.5 py-1 text-xs font-medium text-slate-700"
+                        className="inline-flex items-center rounded-lg border border-line/70 bg-ground px-2.5 py-1 text-xs font-medium text-slate-700 transition-colors hover:border-brand-line hover:bg-brand-tint hover:text-brand"
                       >
                         {c}
                       </span>
@@ -212,22 +246,30 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                   </div>
                 </div>
 
-                {/* Booking CTA */}
-                {hasOpd ? (
+                {/* Action Buttons: Primary Booking + Profile Link */}
+                <div className="mt-auto grid grid-cols-2 gap-2 pt-1 sm:gap-3">
                   <Link
-                    href={`/book?doctor=${doctor.id}`}
-                    className="mt-auto inline-flex min-h-12 items-center justify-center rounded-2xl bg-ink px-5 font-bold text-white hover:bg-slate-800"
+                    href={`/doctors/${doctor.id}`}
+                    className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-line bg-ground px-3 text-center text-sm font-semibold text-ink transition-colors hover:bg-slate-200"
                   >
-                    Book {doctor.name ?? "appointment"}
+                    View profile
                   </Link>
-                ) : (
-                  <a
-                    href={`tel:${clinic.phone}`}
-                    className="mt-auto inline-flex min-h-12 items-center justify-center rounded-2xl bg-brand-tint px-5 font-bold text-brand hover:bg-brand-line/40"
-                  >
-                    Call to book
-                  </a>
-                )}
+                  {hasOpd ? (
+                    <Link
+                      href={`/book?doctor=${doctor.id}`}
+                      className="inline-flex min-h-11 items-center justify-center rounded-2xl bg-brand px-3 text-center text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-dark hover:shadow"
+                    >
+                      Book OPD
+                    </Link>
+                  ) : (
+                    <a
+                      href={`tel:${clinic.phone}`}
+                      className="inline-flex min-h-11 items-center justify-center rounded-2xl bg-brand-tint px-3 text-center text-sm font-bold text-brand transition-colors hover:bg-brand-line/40"
+                    >
+                      Call to book
+                    </a>
+                  )}
+                </div>
               </li>
             );
           })}

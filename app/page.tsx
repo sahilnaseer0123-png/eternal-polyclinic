@@ -12,10 +12,15 @@ import { NextAvailable } from "@/components/NextAvailable";
 import { FeatherPattern } from "@/components/FeatherPattern";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import {
+  CheckIcon,
   ChevronRightIcon,
+  ClockIcon,
+  HospitalIcon,
   MapPinIcon,
   SearchIcon,
   ServiceIcon,
+  ShieldCheckIcon,
+  UserIcon,
 } from "@/components/Icons";
 
 // Every page names its own address for search engines (alternates.canonical); this is "/".
@@ -77,7 +82,7 @@ export default function Home() {
               <li className="shrink-0">
                 <Link
                   href="/doctors"
-                  className="inline-flex min-h-11 items-center rounded-full bg-ink px-4 font-semibold text-white"
+                  className="inline-flex min-h-11 items-center rounded-full bg-ink px-4 font-semibold text-white transition-colors hover:bg-slate-800"
                 >
                   All doctors
                 </Link>
@@ -86,13 +91,104 @@ export default function Home() {
                 <li key={c.id} className="shrink-0">
                   <Link
                     href={`/doctors?type=${c.id}`}
-                    className="card inline-flex min-h-11 items-center rounded-full px-4 font-semibold hover:text-brand"
+                    className="card inline-flex min-h-11 items-center rounded-full px-4 font-semibold transition-colors hover:text-brand"
                   >
                     {c.label}
                   </Link>
                 </li>
               ))}
             </ul>
+
+            {/* Quick Action Hub: 4 Apollo-style high-intent cards */}
+            <div className="grid grid-cols-2 gap-3 pt-2 sm:grid-cols-4 sm:gap-4">
+              <Link
+                href="/doctors"
+                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-4 transition-all duration-200 sm:p-5"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="flex size-12 items-center justify-center rounded-2xl bg-brand-tint text-brand transition-colors group-hover:bg-brand group-hover:text-white">
+                    <UserIcon className="size-6" />
+                  </span>
+                  <span className="rounded-full bg-brand-tint px-2.5 py-0.5 text-xs font-bold text-brand">
+                    12+ Doctors
+                  </span>
+                </div>
+                <div className="mt-3.5">
+                  <h3 className="font-bold text-ink group-hover:text-brand sm:text-lg">
+                    Doctor OPD
+                  </h3>
+                  <p className="mt-0.5 text-xs text-muted sm:text-sm">
+                    Visiting specialists &amp; super-specialists
+                  </p>
+                </div>
+              </Link>
+
+              <Link
+                href="/services#ultrasound"
+                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-4 transition-all duration-200 sm:p-5"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="flex size-12 items-center justify-center rounded-2xl bg-sky-50 text-sky-700 transition-colors group-hover:bg-sky-700 group-hover:text-white">
+                    <ServiceIcon id="ultrasound" className="size-6" />
+                  </span>
+                  <span className="rounded-full bg-sky-100/70 px-2.5 py-0.5 text-xs font-bold text-sky-800">
+                    4 Days/Wk
+                  </span>
+                </div>
+                <div className="mt-3.5">
+                  <h3 className="font-bold text-ink group-hover:text-sky-700 sm:text-lg">
+                    Ultrasound &amp; Echo
+                  </h3>
+                  <p className="mt-0.5 text-xs text-muted sm:text-sm">
+                    Abdomen, pelvic &amp; heart scans
+                  </p>
+                </div>
+              </Link>
+
+              <Link
+                href="/services#lab"
+                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-4 transition-all duration-200 sm:p-5"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="flex size-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-700 transition-colors group-hover:bg-amber-700 group-hover:text-white">
+                    <ServiceIcon id="lab" className="size-6" />
+                  </span>
+                  <span className="rounded-full bg-amber-100/70 px-2.5 py-0.5 text-xs font-bold text-amber-800">
+                    Fast Reports
+                  </span>
+                </div>
+                <div className="mt-3.5">
+                  <h3 className="font-bold text-ink group-hover:text-amber-700 sm:text-lg">
+                    Diagnostic Lab
+                  </h3>
+                  <p className="mt-0.5 text-xs text-muted sm:text-sm">
+                    Blood tests &amp; clinical pathology
+                  </p>
+                </div>
+              </Link>
+
+              <Link
+                href="/services#pharmacy"
+                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-4 transition-all duration-200 sm:p-5"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="flex size-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 transition-colors group-hover:bg-emerald-700 group-hover:text-white">
+                    <ServiceIcon id="pharmacy" className="size-6" />
+                  </span>
+                  <span className="rounded-full bg-emerald-100/70 px-2.5 py-0.5 text-xs font-bold text-emerald-800">
+                    In-house
+                  </span>
+                </div>
+                <div className="mt-3.5">
+                  <h3 className="font-bold text-ink group-hover:text-emerald-700 sm:text-lg">
+                    Pharmacy
+                  </h3>
+                  <p className="mt-0.5 text-xs text-muted sm:text-sm">
+                    Prescribed medicines under one roof
+                  </p>
+                </div>
+              </Link>
+            </div>
           </div>
 
           <section aria-labelledby="today" className="rise rise-3 min-w-0">
@@ -100,6 +196,51 @@ export default function Home() {
           </section>
         </section>
       </div>
+
+      {/* Institutional Trust & Scale Stats */}
+      <section className="reveal mx-auto max-w-6xl px-5 pt-8 sm:pt-12">
+        <div className="card grid grid-cols-2 gap-4 rounded-3xl border border-line/70 p-5 sm:grid-cols-4 sm:gap-6 sm:p-6">
+          <div className="flex items-center gap-3.5">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand-tint text-brand">
+              <ShieldCheckIcon className="size-6" />
+            </div>
+            <div>
+              <p className="text-xl font-extrabold text-ink sm:text-2xl">₹300</p>
+              <p className="text-xs text-muted sm:text-sm">Fixed OPD consultation fee</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3.5">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand-tint text-brand">
+              <HospitalIcon className="size-6" />
+            </div>
+            <div>
+              <p className="text-xl font-extrabold text-ink sm:text-2xl">SKIMS &amp; GMC</p>
+              <p className="text-xs text-muted sm:text-sm">Experienced visiting doctors</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3.5">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand-tint text-brand">
+              <ClockIcon className="size-6" />
+            </div>
+            <div>
+              <p className="text-xl font-extrabold text-ink sm:text-2xl">Zero Wait</p>
+              <p className="text-xs text-muted sm:text-sm">Time-slotted appointments</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3.5">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand-tint text-brand">
+              <MapPinIcon className="size-6" />
+            </div>
+            <div>
+              <p className="text-xl font-extrabold text-ink sm:text-2xl">Opp. SDH</p>
+              <p className="text-xs text-muted sm:text-sm">Lone Complex, Sopore</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Specialists */}
       <section
@@ -115,7 +256,7 @@ export default function Home() {
           </h2>
           <Link
             href="/doctors"
-            className="inline-flex min-h-11 items-center font-semibold text-brand"
+            className="inline-flex min-h-11 items-center font-semibold text-brand transition-colors hover:underline"
           >
             See all
           </Link>
@@ -131,31 +272,43 @@ export default function Home() {
               >
                 <Link
                   href={`/doctors/${doctor.id}`}
-                  className="card flex h-full flex-col gap-3 rounded-3xl p-3 sm:p-4"
+                  className="card card-hover flex h-full flex-col justify-between rounded-3xl border border-line/60 p-3.5 transition-all duration-200 sm:p-4"
                 >
-                  <DoctorMark
-                    doctor={doctor}
-                    className="h-28 w-full rounded-2xl bg-brand-tint text-4xl text-brand sm:h-36 sm:text-5xl"
-                  />
-                  <span className="flex flex-col px-1 pb-1 leading-snug">
-                    <span className="font-bold sm:text-lg">
-                      {doctor.name ?? doctor.speciality}
-                    </span>
-                    <span className="text-sm text-muted sm:text-base">
-                      {doctor.name ? doctor.speciality : "Name to be confirmed"}
-                    </span>
-                    <span className="pt-1.5 text-sm font-semibold text-brand">
-                      {days ?? "Days coming soon"}
-                    </span>
-                    {days && (
+                  <div>
+                    <div className="relative">
+                      <DoctorMark
+                        doctor={doctor}
+                        className="h-28 w-full rounded-2xl bg-brand-tint text-4xl text-brand sm:h-36 sm:text-5xl"
+                      />
+                      <span
+                        title="Verified Consultant"
+                        className="absolute bottom-2 right-2 flex size-6 items-center justify-center rounded-full bg-emerald-600 text-white shadow-sm ring-2 ring-white"
+                      >
+                        <CheckIcon className="size-3.5" />
+                      </span>
+                    </div>
+                    <div className="mt-3 flex flex-col px-1 leading-snug">
+                      <span className="font-bold text-ink sm:text-lg">
+                        {doctor.name ?? doctor.speciality}
+                      </span>
+                      <span className="mt-0.5 text-xs text-muted sm:text-sm">
+                        {doctor.name ? doctor.speciality : "Name to be confirmed"}
+                      </span>
+                      <span className="mt-2 inline-block self-start rounded-full bg-brand-tint px-2.5 py-0.5 text-xs font-semibold text-brand">
+                        {days ?? "Days coming soon"}
+                      </span>
+                    </div>
+                  </div>
+                  {days && (
+                    <div className="mt-3 border-t border-line/70 px-1 pt-2">
                       <NextAvailable
                         doctorId={doctor.id}
                         fallback={"\u00a0"}
                         short
-                        className="truncate text-sm font-semibold text-ink"
+                        className="truncate text-xs font-bold text-brand"
                       />
-                    )}
-                  </span>
+                    </div>
+                  )}
                 </Link>
               </li>
             );

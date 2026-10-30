@@ -44,25 +44,33 @@ export function SiteHeader() {
           ))}
           <a
             href={`tel:${clinic.phone}`}
-            className="ml-2 inline-flex min-h-11 items-center gap-2 rounded-full bg-brand-tint px-4 text-brand hover:bg-brand-line/40"
+            className="ml-2 inline-flex min-h-11 items-center gap-2 rounded-full border border-brand-line/50 bg-brand-tint px-4 text-sm font-semibold text-brand transition-colors hover:bg-brand-line/40"
           >
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+            </span>
             <PhoneIcon className="size-4" />
             {clinic.phoneDisplay}
           </a>
           <Link
             href="/book"
             aria-current={current("/book")}
-            className="ml-1 inline-flex min-h-11 items-center rounded-full bg-ink px-5 text-white hover:bg-slate-800"
+            className="ml-1.5 inline-flex min-h-11 items-center rounded-full bg-brand px-5 font-bold text-white shadow-sm transition-all hover:bg-brand-dark hover:shadow"
           >
-            Book
+            Book Appointment
           </Link>
         </nav>
 
         <a
           href={`tel:${clinic.phone}`}
           aria-label={`Call the clinic, ${clinic.phoneDisplay}`}
-          className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-brand-tint text-brand lg:hidden"
+          className="relative inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-brand-line/50 bg-brand-tint text-brand lg:hidden"
         >
+          <span className="absolute right-2 top-2 flex size-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+          </span>
           <PhoneIcon />
         </a>
       </div>
