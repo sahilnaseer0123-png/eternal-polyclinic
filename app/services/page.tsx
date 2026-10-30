@@ -46,7 +46,7 @@ export default function ServicesPage() {
         <p className="mt-6 text-base text-muted">
           For timings and test prices,{" "}
           <a href={`tel:${clinic.phone}`} className="font-semibold text-brand underline">
-            call {clinic.phoneDisplay}
+            call <span className="whitespace-nowrap">{clinic.phoneDisplay}</span>
           </a>
           .
         </p>

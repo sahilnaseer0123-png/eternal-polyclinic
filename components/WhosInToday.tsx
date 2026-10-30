@@ -32,9 +32,9 @@ const STATUS_TEXT = {
 // The card fills in on the visitor's device. On PC it displays horizontally in two columns
 // (Today's doctors on the left, This week's schedule on the right).
 const shell =
-  "flex flex-col gap-5 rounded-3xl bg-ink p-5 text-white sm:p-7";
+  "w-full max-w-full min-w-0 overflow-hidden flex flex-col gap-5 rounded-3xl bg-ink p-4 text-white sm:p-7";
 const whiteButton =
-  "inline-flex min-h-12 w-full items-center justify-center rounded-2xl bg-white px-4 text-center text-sm sm:text-base font-bold text-ink hover:bg-slate-100 transition-colors shadow-sm";
+  "inline-flex min-h-12 w-full max-w-full items-center justify-center rounded-2xl bg-white px-4 py-2.5 text-center text-sm font-bold leading-snug text-ink transition-colors hover:bg-slate-100 shadow-sm sm:text-base";
 
 export function WhosInToday() {
   const minute = useClinicMinute();
@@ -67,35 +67,37 @@ export function WhosInToday() {
         </p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2 lg:gap-8 lg:divide-x lg:divide-slate-700/80">
+      <div className="grid gap-6 lg:grid-cols-2 lg:gap-8 lg:divide-x lg:divide-slate-700/80 min-w-0 max-w-full">
         {/* Left: Active doctor(s) or next upcoming doctor */}
-        <div className="flex flex-col justify-between gap-4">
+        <div className="flex flex-col justify-between gap-4 min-w-0 max-w-full">
           {today.length > 0 ? (
-            <ul className="flex flex-col gap-4">
+            <ul className="flex flex-col gap-4 min-w-0 max-w-full">
               {today.map(({ doctor, session }) => {
                 const status = sessionStatus(session, now);
                 // Late in the sitting every slot may have passed; then the button books their next day instead.
                 const slotsLeftToday = timeSlots(doctor, clock.dateKey, now).length > 0;
                 return (
-                  <li key={doctor.id} className="flex flex-col gap-3 sm:gap-4">
-                    <div className="flex items-center gap-4">
-                      <DoctorMark doctor={doctor} className="size-14 rounded-2xl bg-white/10 text-2xl sm:size-16" />
-                      <div className="min-w-0">
-                        <p className="text-xl font-bold tracking-tight text-slate-50 sm:text-2xl">{doctor.name ?? doctor.speciality}</p>
-                        <p className="text-slate-400">
-                          {doctor.speciality} · {formatTime(session.start)} – {formatTime(session.end)}
+                  <li key={doctor.id} className="flex flex-col gap-3 sm:gap-4 min-w-0 max-w-full">
+                    <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                      <DoctorMark doctor={doctor} className="size-13 shrink-0 rounded-2xl bg-white/10 text-xl sm:size-16 sm:text-2xl" />
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-lg font-bold tracking-tight text-slate-50 sm:text-2xl">{doctor.name ?? doctor.speciality}</p>
+                        <div className="text-sm text-slate-400">
+                          <p className="truncate">
+                            {doctor.speciality} · {formatTime(session.start)} – {formatTime(session.end)}
+                          </p>
                           {session.recurrence === "first-of-month" && (
-                            <span className="ml-2 inline-block rounded-md bg-white/15 px-2 py-0.5 text-xs font-semibold text-glow">
+                            <span className="mt-1 inline-block rounded-md bg-white/15 px-2 py-0.5 text-xs font-semibold text-glow">
                               1st of mo
                             </span>
                           )}
                           {session.recurrence === "alternate" && (
-                            <span className="ml-2 inline-block rounded-md bg-white/15 px-2 py-0.5 text-xs font-semibold text-glow">
+                            <span className="mt-1 inline-block rounded-md bg-white/15 px-2 py-0.5 text-xs font-semibold text-glow">
                               Alternate Fridays (Call to confirm)
                             </span>
                           )}
-                        </p>
-                        <p className={`font-semibold ${status === "in" ? "text-glow" : "text-slate-400"}`}>
+                        </div>
+                        <p className={`mt-0.5 font-semibold ${status === "in" ? "text-glow" : "text-slate-400"}`}>
                           {STATUS_TEXT[status](session.start)}
                         </p>
                       </div>
@@ -149,22 +151,22 @@ export function WhosInToday() {
             </div>
             <ul className="flex flex-col gap-2.5 text-xs sm:text-sm">
               {week.map(({ key, label, doctor, s, isToday }) => (
-                <li key={key} className={`flex items-center gap-2 sm:gap-3 ${isToday ? "font-semibold" : ""}`}>
-                  <span className="w-20 shrink-0 font-bold text-glow sm:w-24 text-xs sm:text-sm">{label}</span>
+                <li key={key} className={`flex items-center gap-2 sm:gap-3 min-w-0 ${isToday ? "font-semibold" : ""}`}>
+                  <span className="w-16 shrink-0 font-bold text-glow text-xs sm:w-24 sm:text-sm">{label}</span>
                   <span className="min-w-0 flex-1 truncate text-slate-200">
                     {doctor.name ?? doctor.speciality}
                     {s.recurrence === "first-of-month" && (
-                      <span className="ml-1.5 text-[11px] font-medium text-glow">
+                      <span className="ml-1 text-[11px] font-medium text-glow">
                         (1st of mo)
                       </span>
                     )}
                     {s.recurrence === "alternate" && (
-                      <span className="ml-1.5 text-[11px] font-medium text-glow">
-                        (Alt week)
+                      <span className="ml-1 text-[11px] font-medium text-glow">
+                        (Alt)
                       </span>
                     )}
                   </span>
-                  <span className="whitespace-nowrap tabular-nums text-xs font-medium text-slate-400 sm:text-sm">
+                  <span className="shrink-0 whitespace-nowrap tabular-nums text-xs font-medium text-slate-400 sm:text-sm">
                     {formatTimeShort(s.start)}–{formatTimeShort(s.end)}
                   </span>
                 </li>
@@ -184,11 +186,11 @@ export function WhosInTodaySkeleton() {
         <h2 className="text-sm font-bold uppercase tracking-wider text-glow">Who&apos;s in today</h2>
         <div className="h-4 w-36 animate-pulse rounded-md bg-white/15" />
       </div>
-      <div className="grid gap-6 lg:grid-cols-2 lg:gap-8 lg:divide-x lg:divide-slate-700/80">
+      <div className="grid gap-6 lg:grid-cols-2 lg:gap-8 lg:divide-x lg:divide-slate-700/80 min-w-0 max-w-full">
         {/* Left column matching active doctor card */}
-        <div className="flex flex-col justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="size-14 shrink-0 animate-pulse rounded-2xl bg-white/10 sm:size-16" />
+        <div className="flex flex-col justify-between gap-4 min-w-0 max-w-full">
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+            <div className="size-13 shrink-0 animate-pulse rounded-2xl bg-white/10 sm:size-16" />
             <div className="min-w-0 flex-1 space-y-2">
               <div className="h-5 w-3/4 animate-pulse rounded-md bg-white/15" />
               <div className="h-4 w-1/2 animate-pulse rounded-md bg-white/10" />

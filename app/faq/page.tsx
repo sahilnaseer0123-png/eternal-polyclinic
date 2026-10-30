@@ -20,7 +20,7 @@ export default function FaqPage() {
         <p className="mt-6 text-muted">
           Something else?{" "}
           <a href={`tel:${clinic.phone}`} className="font-semibold text-brand underline">
-            Call {clinic.phoneDisplay}
+            Call <span className="whitespace-nowrap">{clinic.phoneDisplay}</span>
           </a>
           .
         </p>

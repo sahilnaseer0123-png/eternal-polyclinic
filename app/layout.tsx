@@ -35,7 +35,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     // data-scroll-behavior: globals.css scrolls smoothly for in-page links; this tells Next.js 16 to switch that off
     // while it jumps to the top of a new page. Without it, new pages landed ~100px down, title under the header.
     <html lang="en" className="h-full antialiased" data-scroll-behavior="smooth" suppressHydrationWarning>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col w-full max-w-full overflow-x-hidden">
         {/* Marks the page ready for scroll fade-ins before anything paints (see globals.css). */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('reveal-ready')" }} />
         <a
@@ -45,7 +45,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <SiteHeader />
-        <main id="main" className="flex-1 pb-20 lg:pb-0">
+        <main id="main" className="flex-1 w-full max-w-full min-w-0 pb-20 lg:pb-0 overflow-x-hidden">
           {children}
         </main>
         <SiteFooter />

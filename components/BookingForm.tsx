@@ -125,7 +125,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
           href={`tel:${clinic.phone}`}
           className="inline-flex min-h-12 items-center justify-center gap-2 card rounded-2xl px-6 font-semibold hover:text-brand"
         >
-          <PhoneIcon /> Or call {clinic.phoneDisplay}
+          <PhoneIcon /> Or call <span className="whitespace-nowrap">{clinic.phoneDisplay}</span>
         </a>
         <button type="button" onClick={reset} className="min-h-11 text-base font-semibold text-brand underline">
           Book another appointment
@@ -199,7 +199,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
             <p className="rounded-2xl bg-ground p-4">
               {doctor.speciality} timings aren&apos;t online yet.{" "}
               <a href={`tel:${clinic.phone}`} className="font-semibold text-brand underline">
-                Call {clinic.phoneDisplay}
+                Call <span className="whitespace-nowrap">{clinic.phoneDisplay}</span>
               </a>{" "}
               to book.
             </p>

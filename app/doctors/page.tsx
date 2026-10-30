@@ -29,7 +29,7 @@ export default function DoctorsPage() {
         <p className="mt-5 text-muted sm:mt-6">
           More specialists visit every week. Not sure who to see?{" "}
           <a href={`tel:${clinic.phone}`} className="font-semibold text-brand underline">
-            Call {clinic.phoneDisplay}
+            Call <span className="whitespace-nowrap">{clinic.phoneDisplay}</span>
           </a>{" "}
           and reception will guide you.
         </p>

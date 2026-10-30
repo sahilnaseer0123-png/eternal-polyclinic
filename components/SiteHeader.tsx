@@ -29,13 +29,13 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 text-base font-semibold lg:flex">
+        <nav aria-label="Main" className="hidden items-center gap-1 text-sm font-semibold xl:gap-1.5 xl:text-base lg:flex">
           {NAV.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               aria-current={current(item.href)}
-              className={`inline-flex min-h-11 items-center rounded-full px-4 ${
+              className={`inline-flex min-h-11 items-center rounded-full px-3 xl:px-4 ${
                 pathname === item.href ? "bg-brand-tint text-brand" : "hover:bg-ground"
               }`}
             >
@@ -44,19 +44,19 @@ export function SiteHeader() {
           ))}
           <a
             href={`tel:${clinic.phone}`}
-            className="ml-2 inline-flex min-h-11 items-center gap-2 rounded-full border border-brand-line/50 bg-brand-tint px-4 text-sm font-semibold text-brand transition-colors hover:bg-brand-line/40"
+            className="ml-2 inline-flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-brand-line/50 bg-brand-tint px-4 text-sm font-semibold text-brand transition-colors hover:bg-brand-line/40"
           >
-            <span className="relative flex size-2">
+            <span className="relative flex size-2 shrink-0">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
             </span>
-            <PhoneIcon className="size-4" />
-            {clinic.phoneDisplay}
+            <PhoneIcon className="size-4 shrink-0" />
+            <span className="whitespace-nowrap">{clinic.phoneDisplay}</span>
           </a>
           <Link
             href="/book"
             aria-current={current("/book")}
-            className="ml-1.5 inline-flex min-h-11 items-center rounded-full bg-brand px-5 font-bold text-white shadow-sm transition-all hover:bg-brand-dark hover:shadow"
+            className="ml-1.5 inline-flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-full bg-brand px-5 font-bold text-white shadow-sm transition-all hover:bg-brand-dark hover:shadow"
           >
             Book Appointment
           </Link>

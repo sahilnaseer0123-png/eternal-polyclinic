@@ -24,7 +24,7 @@ export default function NotFound() {
         </Link>
       </div>
       <a href={`tel:${clinic.phone}`} className="inline-flex min-h-11 items-center gap-2 font-semibold text-brand">
-        <PhoneIcon /> Or call {clinic.phoneDisplay}
+        <PhoneIcon /> Or call <span className="whitespace-nowrap">{clinic.phoneDisplay}</span>
       </a>
     </div>
   );

@@ -66,7 +66,7 @@ export default function ContactPage() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-glow opacity-75"></span>
                   <span className="relative inline-flex size-2.5 rounded-full bg-glow"></span>
                 </span>
-                <PhoneIcon className="size-5" /> Call Helpline: {clinic.phoneDisplay}
+                <PhoneIcon className="size-5 shrink-0" /> Call Helpline: <span className="whitespace-nowrap">{clinic.phoneDisplay}</span>
               </a>
               <a
                 href={`https://wa.me/${clinic.whatsapp}`}

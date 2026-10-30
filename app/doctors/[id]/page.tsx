@@ -205,7 +205,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
         <p className="mt-4 text-sm text-muted">
           Not sure this is the right doctor?{" "}
           <a href={`tel:${clinic.phone}`} className="font-semibold text-brand underline">
-            Call {clinic.phoneDisplay}
+            Call <span className="whitespace-nowrap">{clinic.phoneDisplay}</span>
           </a>{" "}
           and reception will guide you.
         </p>

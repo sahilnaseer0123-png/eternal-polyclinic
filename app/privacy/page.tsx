@@ -33,11 +33,11 @@ export default function PrivacyPage() {
             <h2>Who we are</h2>
             <p>
               {clinic.name}, {clinic.address}. For any question about your details, call{" "}
-              <a href={tel} className="font-semibold text-brand underline">
+              <a href={tel} className="font-semibold text-brand underline whitespace-nowrap">
                 {clinic.phoneDisplay}
               </a>{" "}
               or WhatsApp{" "}
-              <a href={`https://wa.me/${clinic.whatsapp}`} className="font-semibold text-brand underline">
+              <a href={`https://wa.me/${clinic.whatsapp}`} className="font-semibold text-brand underline whitespace-nowrap">
                 {clinic.whatsappDisplay}
               </a>
               .
@@ -98,11 +98,11 @@ export default function PrivacyPage() {
             <p>
               You can ask us what details we have from you, ask us to correct them, or ask us to delete your messages.
               Call{" "}
-              <a href={tel} className="font-semibold text-brand underline">
+              <a href={tel} className="font-semibold text-brand underline whitespace-nowrap">
                 {clinic.phoneDisplay}
               </a>{" "}
               or WhatsApp{" "}
-              <a href={`https://wa.me/${clinic.whatsapp}`} className="font-semibold text-brand underline">
+              <a href={`https://wa.me/${clinic.whatsapp}`} className="font-semibold text-brand underline whitespace-nowrap">
                 {clinic.whatsappDisplay}
               </a>
               . If you would rather not use WhatsApp, you can book by calling us instead.

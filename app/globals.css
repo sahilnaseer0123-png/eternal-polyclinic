@@ -45,13 +45,15 @@ html {
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
   text-rendering: optimizeLegibility;
-  overflow-x: clip;
-  max-width: 100%;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
 
 body {
-  overflow-x: clip;
-  max-width: 100%;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
 
 /* Touch responsiveness: eliminate 300ms mobile tap delay */

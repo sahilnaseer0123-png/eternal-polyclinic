@@ -270,7 +270,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
         <p className="card rounded-3xl p-5">
           No doctor matches that.{" "}
           <a href={`tel:${clinic.phone}`} className="font-semibold text-brand underline">
-            Call {clinic.phoneDisplay}
+            Call <span className="whitespace-nowrap">{clinic.phoneDisplay}</span>
           </a>{" "}
           and reception will guide you.
         </p>
