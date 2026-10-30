@@ -7,7 +7,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { categories, clinic, doctors, services, type DoctorCategory } from "@/data/clinic";
-import { formatProseItem, opdSummary } from "@/lib/schedule";
+import { DAY_NAMES, formatTime } from "@/lib/schedule";
 import { DoctorMark } from "./DoctorMark";
 import { NextAvailable } from "./NextAvailable";
 import { CalendarIcon, ChevronRightIcon, SearchIcon, ServiceIcon } from "./Icons";
@@ -114,43 +114,106 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
       </p>
 
       {shown.length > 0 ? (
-        <ul className="grid gap-3 sm:gap-4 md:grid-cols-2">
+        <ul className="grid gap-3.5 sm:gap-4 md:grid-cols-2">
           {shown.map((doctor) => {
-            const opd = opdSummary(doctor);
+            const hasOpd = doctor.opd.length > 0;
             return (
-              <li key={doctor.id} id={`doctor-${doctor.id}`} className="card flex flex-col gap-3 rounded-3xl p-4 sm:p-5">
-                <div className="flex items-center gap-3 sm:gap-4">
-                  <DoctorMark doctor={doctor} className="size-14 rounded-2xl bg-brand-tint text-2xl text-brand sm:size-16" />
-                  <div className="min-w-0">
-                    <h3 className="text-lg font-bold leading-snug sm:text-xl">
-                      <Link href={`/doctors/${doctor.id}`} className="underline-offset-4 hover:text-brand hover:underline">
-                        {doctor.name ?? doctor.speciality}
-                      </Link>
-                    </h3>
-                    <p className="text-muted">
-                      {doctor.name ? `${doctor.speciality}` : ""}
-                      {doctor.degree && doctor.degree.toLowerCase() !== doctor.speciality.toLowerCase()
-                        ? ` · ${doctor.degree}`
-                        : ""}
-                      {doctor.experienceYears ? ` · ${doctor.experienceYears} yrs` : ""}
+              <li key={doctor.id} id={`doctor-${doctor.id}`} className="card flex flex-col gap-3.5 rounded-3xl p-4 sm:p-5">
+                {/* Doctor Identity Header */}
+                <div className="flex items-start gap-3 sm:gap-4">
+                  <DoctorMark doctor={doctor} className="size-14 shrink-0 rounded-2xl bg-brand-tint text-2xl text-brand sm:size-16" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center justify-between gap-1.5">
+                      <h3 className="text-lg font-bold leading-snug sm:text-xl">
+                        <Link href={`/doctors/${doctor.id}`} className="underline-offset-4 hover:text-brand hover:underline">
+                          {doctor.name ?? doctor.speciality}
+                        </Link>
+                      </h3>
+                      <span className="inline-block rounded-full bg-brand-tint px-2.5 py-0.5 text-xs font-semibold text-brand">
+                        {doctor.categoryLabel}
+                      </span>
+                    </div>
+                    {doctor.name && (
+                      <p className="mt-0.5 text-sm font-semibold text-slate-800">
+                        {doctor.speciality}
+                      </p>
+                    )}
+                    <p className="text-xs text-muted">
+                      {[
+                        doctor.degree && doctor.degree.toLowerCase() !== doctor.speciality.toLowerCase()
+                          ? doctor.degree
+                          : null,
+                        doctor.experienceYears ? `${doctor.experienceYears} yrs experience` : null,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}
                     </p>
-                    <p className="text-sm font-semibold text-brand">{doctor.categoryLabel}</p>
                   </div>
                 </div>
-                <p className="flex items-start gap-2 rounded-2xl bg-ground px-3 py-2.5">
-                  <CalendarIcon className="mt-0.5 size-5 shrink-0 text-brand" />
-                  <span className="flex flex-col">
-                    <span>{opd ?? doctor.availability ?? "Days coming soon. Please call to ask."}</span>
-                    {opd && (
-                      <NextAvailable doctorId={doctor.id} fallback={"\u00a0"} prefix="Next free slot: " className="font-semibold text-brand" />
-                    )}
-                  </span>
-                </p>
-                <p className="text-muted">
-                  <span className="font-semibold text-ink">Helps with:</span>{" "}
-                  {doctor.concerns.slice(0, 4).map(formatProseItem).join(", ")}
-                </p>
-                {opd ? (
+
+                {/* Structured Timings & Availability */}
+                <div className="rounded-2xl border border-line/60 bg-ground/80 p-3 sm:p-3.5">
+                  <div className="flex items-start gap-2.5">
+                    <CalendarIcon className="mt-0.5 size-4.5 shrink-0 text-brand" />
+                    <div className="min-w-0 flex-1 space-y-1.5">
+                      {hasOpd ? (
+                        <>
+                          <div className="space-y-1">
+                            {doctor.opd.map((s, idx) => {
+                              const dayLabel =
+                                s.recurrence === "first-of-month"
+                                  ? `1st ${DAY_NAMES[s.day]} of every month`
+                                  : s.recurrence === "alternate"
+                                    ? `Alternate ${DAY_NAMES[s.day]}s`
+                                    : DAY_NAMES[s.day];
+                              return (
+                                <div key={idx} className="flex flex-wrap items-center justify-between gap-x-2 text-xs sm:text-sm">
+                                  <span className="font-semibold text-ink">{dayLabel}</span>
+                                  <span className="tabular-nums font-medium text-muted">
+                                    {formatTime(s.start)} – {formatTime(s.end)}
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                          <div className="flex items-center justify-between border-t border-line/70 pt-1.5 text-xs">
+                            <span className="font-medium text-muted">Next free slot</span>
+                            <NextAvailable
+                              doctorId={doctor.id}
+                              fallback={"—"}
+                              prefix=""
+                              className="font-bold text-brand"
+                            />
+                          </div>
+                        </>
+                      ) : (
+                        <p className="text-xs leading-relaxed text-slate-700 sm:text-sm">
+                          {doctor.availability ?? "Days coming soon. Please call to ask."}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Conditions / Helps With Chips */}
+                <div className="space-y-1.5">
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted">
+                    Helps with
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {doctor.concerns.slice(0, 4).map((c) => (
+                      <span
+                        key={c}
+                        className="inline-flex items-center rounded-lg border border-line/70 bg-ground px-2.5 py-1 text-xs font-medium text-slate-700"
+                      >
+                        {c}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Booking CTA */}
+                {hasOpd ? (
                   <Link
                     href={`/book?doctor=${doctor.id}`}
                     className="mt-auto inline-flex min-h-12 items-center justify-center rounded-2xl bg-ink px-5 font-bold text-white hover:bg-slate-800"
