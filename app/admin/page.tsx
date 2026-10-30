@@ -96,6 +96,18 @@ export default function AdminPage() {
   const [newDocStart, setNewDocStart] = useState<string>("10:00");
   const [newDocEnd, setNewDocEnd] = useState<string>("14:00");
 
+  function verifyPin(pin: string) {
+    const storedPin = typeof window !== "undefined" ? localStorage.getItem("ep_admin_pin") || DEFAULT_PIN : DEFAULT_PIN;
+    if (pin === storedPin || pin === DEFAULT_PIN) {
+      sessionStorage.setItem("ep_reception_auth", "true");
+      setIsAuthenticated(true);
+      setPinError("");
+    } else {
+      setPinError("Incorrect PIN. Please try again.");
+      setTimeout(() => setPinInput(""), 600);
+    }
+  }
+
   function handlePinDigit(digit: string) {
     if (pinInput.length < 4) {
       const nextPin = pinInput + digit;
@@ -111,17 +123,53 @@ export default function AdminPage() {
     setPinError("");
   }
 
-  function verifyPin(pin: string) {
-    const storedPin = typeof window !== "undefined" ? localStorage.getItem("ep_admin_pin") || DEFAULT_PIN : DEFAULT_PIN;
-    if (pin === storedPin || pin === DEFAULT_PIN) {
-      sessionStorage.setItem("ep_reception_auth", "true");
-      setIsAuthenticated(true);
-      setPinError("");
-    } else {
-      setPinError("Incorrect PIN. Please try again.");
-      setTimeout(() => setPinInput(""), 600);
+  // Keyboard typing support for physical keyboards & laptop keypads
+  useEffect(() => {
+    if (isAuthenticated) return;
+
+    function handleKeyDown(e: KeyboardEvent) {
+      // Don't intercept if focus is inside another form input
+      if (
+        e.target instanceof HTMLInputElement &&
+        e.target.id !== "kiosk-pin-hidden-input"
+      ) {
+        return;
+      }
+      if (e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      if (/^[0-9]$/.test(e.key)) {
+        e.preventDefault();
+        setPinInput((prev) => {
+          if (prev.length < 4) {
+            const next = prev + e.key;
+            if (next.length === 4) {
+              verifyPin(next);
+            }
+            return next;
+          }
+          return prev;
+        });
+      } else if (e.key === "Backspace") {
+        e.preventDefault();
+        setPinInput((prev) => prev.slice(0, -1));
+        setPinError("");
+      } else if (e.key === "Escape" || e.key === "Delete") {
+        e.preventDefault();
+        setPinInput("");
+        setPinError("");
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        if (pinInput.length === 4) {
+          verifyPin(pinInput);
+        }
+      }
     }
-  }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isAuthenticated, pinInput]);
 
   function handleLogout() {
     sessionStorage.removeItem("ep_reception_auth");
@@ -274,9 +322,26 @@ export default function AdminPage() {
             <p className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Reception Tablet Portal · Sopore</p>
           </div>
 
-          {/* PIN Indicators */}
-          <div className="flex flex-col items-center gap-2">
-            <div className="flex gap-4 my-2">
+          {/* PIN Indicators & Keyboard Capture */}
+          <div className="flex flex-col items-center gap-2 relative w-full">
+            <input
+              id="kiosk-pin-hidden-input"
+              type="password"
+              inputMode="numeric"
+              maxLength={4}
+              autoFocus
+              value={pinInput}
+              onChange={(e) => {
+                const val = e.target.value.replace(/\D/g, "").slice(0, 4);
+                setPinInput(val);
+                if (val.length === 4) {
+                  verifyPin(val);
+                }
+              }}
+              className="absolute inset-0 opacity-0 cursor-text w-full h-full"
+              aria-label="Enter 4-digit PIN with your keyboard"
+            />
+            <div className="flex gap-4 my-2 pointer-events-none">
               {[0, 1, 2, 3].map((idx) => {
                 const filled = pinInput.length > idx;
                 return (
@@ -294,7 +359,9 @@ export default function AdminPage() {
             {pinError ? (
               <p className="text-xs font-semibold text-rose-400 animate-shake">{pinError}</p>
             ) : (
-              <p className="text-[11px] text-slate-400">Enter 4-digit Reception PIN (Default: 1234)</p>
+              <p className="text-[11px] text-slate-300">
+                Type <span className="font-bold font-mono text-glow">1234</span> on keyboard or tap number pad
+              </p>
             )}
           </div>
 
