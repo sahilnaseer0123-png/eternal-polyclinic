@@ -34,7 +34,7 @@ const STATUS_TEXT = {
 const shell =
   "w-full max-w-full min-w-0 overflow-hidden flex flex-col gap-5 rounded-3xl bg-ink p-4 text-white sm:p-7";
 const whiteButton =
-  "inline-flex min-h-12 w-full max-w-full items-center justify-center rounded-2xl bg-white px-4 py-2.5 text-center text-sm font-bold leading-snug text-ink transition-colors hover:bg-slate-100 shadow-sm sm:text-base";
+  "flex min-h-12 w-full max-w-full items-center justify-center rounded-2xl bg-white px-3 py-2 text-center text-sm font-bold leading-snug text-ink transition-colors hover:bg-slate-100 shadow-sm sm:px-4 sm:py-2.5 sm:text-base";
 
 export function WhosInToday() {
   const minute = useClinicMinute();
@@ -67,22 +67,22 @@ export function WhosInToday() {
         </p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2 lg:gap-8 lg:divide-x lg:divide-slate-700/80 min-w-0 max-w-full">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8 lg:divide-x lg:divide-slate-700/80 min-w-0 max-w-full w-full">
         {/* Left: Active doctor(s) or next upcoming doctor */}
-        <div className="flex flex-col justify-between gap-4 min-w-0 max-w-full">
+        <div className="flex flex-col justify-between gap-4 min-w-0 max-w-full w-full">
           {today.length > 0 ? (
-            <ul className="flex flex-col gap-4 min-w-0 max-w-full">
+            <ul className="flex flex-col gap-4 min-w-0 max-w-full w-full">
               {today.map(({ doctor, session }) => {
                 const status = sessionStatus(session, now);
                 // Late in the sitting every slot may have passed; then the button books their next day instead.
                 const slotsLeftToday = timeSlots(doctor, clock.dateKey, now).length > 0;
                 return (
-                  <li key={doctor.id} className="flex flex-col gap-3 sm:gap-4 min-w-0 max-w-full">
-                    <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-                      <DoctorMark doctor={doctor} className="size-13 shrink-0 rounded-2xl bg-white/10 text-xl sm:size-16 sm:text-2xl" />
+                  <li key={doctor.id} className="flex flex-col gap-3 sm:gap-4 min-w-0 max-w-full w-full">
+                    <div className="flex items-center gap-3 sm:gap-4 min-w-0 w-full">
+                      <DoctorMark doctor={doctor} className="size-12 shrink-0 rounded-2xl bg-white/10 text-lg sm:size-16 sm:text-2xl" />
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-lg font-bold tracking-tight text-slate-50 sm:text-2xl">{doctor.name ?? doctor.speciality}</p>
-                        <div className="text-sm text-slate-400">
+                        <p className="truncate text-base font-bold tracking-tight text-slate-50 sm:text-2xl">{doctor.name ?? doctor.speciality}</p>
+                        <div className="text-xs text-slate-400 sm:text-sm">
                           <p className="truncate">
                             {doctor.speciality} · {formatTime(session.start)} – {formatTime(session.end)}
                           </p>
@@ -142,31 +142,33 @@ export function WhosInToday() {
 
         {/* Right: This week's schedule */}
         {week.length > 0 && (
-          <div className="flex flex-col gap-2 border-t border-slate-700/80 pt-4 lg:border-t-0 lg:pl-8 lg:pt-0">
-            <div className="mb-1 flex items-baseline justify-between">
+          <div className="flex flex-col gap-2 border-t border-slate-700/80 pt-4 lg:border-t-0 lg:pl-8 lg:pt-0 min-w-0 max-w-full w-full">
+            <div className="mb-1 flex items-baseline justify-between gap-2 min-w-0 w-full">
               <h3 className="text-sm font-semibold text-slate-400">This week</h3>
-              <Link href="/doctors#schedule" className="inline-flex min-h-11 items-center text-sm font-semibold text-white underline">
+              <Link href="/doctors#schedule" className="inline-flex min-h-11 shrink-0 items-center text-sm font-semibold text-white underline">
                 Full schedule
               </Link>
             </div>
-            <ul className="flex flex-col gap-2.5 text-xs sm:text-sm">
+            <ul className="flex flex-col gap-2.5 text-xs sm:text-sm min-w-0 max-w-full w-full">
               {week.map(({ key, label, doctor, s, isToday }) => (
-                <li key={key} className={`flex items-center gap-2 sm:gap-3 min-w-0 ${isToday ? "font-semibold" : ""}`}>
-                  <span className="w-16 shrink-0 font-bold text-glow text-xs sm:w-24 sm:text-sm">{label}</span>
-                  <span className="min-w-0 flex-1 truncate text-slate-200">
-                    {doctor.name ?? doctor.speciality}
-                    {s.recurrence === "first-of-month" && (
-                      <span className="ml-1 text-[11px] font-medium text-glow">
-                        (1st of mo)
-                      </span>
-                    )}
-                    {s.recurrence === "alternate" && (
-                      <span className="ml-1 text-[11px] font-medium text-glow">
-                        (Alt)
-                      </span>
-                    )}
-                  </span>
-                  <span className="shrink-0 whitespace-nowrap tabular-nums text-xs font-medium text-slate-400 sm:text-sm">
+                <li key={key} className={`flex items-center justify-between gap-2 min-w-0 w-full ${isToday ? "font-semibold" : ""}`}>
+                  <div className="flex items-center gap-2 min-w-0 flex-1">
+                    <span className="w-14 shrink-0 font-bold text-glow text-xs sm:w-20 sm:text-sm">{label}</span>
+                    <span className="min-w-0 flex-1 truncate text-slate-200">
+                      {doctor.name ?? doctor.speciality}
+                      {s.recurrence === "first-of-month" && (
+                        <span className="ml-1 text-[11px] font-medium text-glow">
+                          (1st/mo)
+                        </span>
+                      )}
+                      {s.recurrence === "alternate" && (
+                        <span className="ml-1 text-[11px] font-medium text-glow">
+                          (Alt)
+                        </span>
+                      )}
+                    </span>
+                  </div>
+                  <span className="shrink-0 text-right whitespace-nowrap tabular-nums text-xs font-medium text-slate-400 sm:text-sm">
                     {formatTimeShort(s.start)}–{formatTimeShort(s.end)}
                   </span>
                 </li>
@@ -186,11 +188,11 @@ export function WhosInTodaySkeleton() {
         <h2 className="text-sm font-bold uppercase tracking-wider text-glow">Who&apos;s in today</h2>
         <div className="h-4 w-36 animate-pulse rounded-md bg-white/15" />
       </div>
-      <div className="grid gap-6 lg:grid-cols-2 lg:gap-8 lg:divide-x lg:divide-slate-700/80 min-w-0 max-w-full">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8 lg:divide-x lg:divide-slate-700/80 min-w-0 max-w-full w-full">
         {/* Left column matching active doctor card */}
-        <div className="flex flex-col justify-between gap-4 min-w-0 max-w-full">
-          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-            <div className="size-13 shrink-0 animate-pulse rounded-2xl bg-white/10 sm:size-16" />
+        <div className="flex flex-col justify-between gap-4 min-w-0 max-w-full w-full">
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0 w-full">
+            <div className="size-12 shrink-0 animate-pulse rounded-2xl bg-white/10 sm:size-16" />
             <div className="min-w-0 flex-1 space-y-2">
               <div className="h-5 w-3/4 animate-pulse rounded-md bg-white/15" />
               <div className="h-4 w-1/2 animate-pulse rounded-md bg-white/10" />
@@ -199,16 +201,18 @@ export function WhosInTodaySkeleton() {
           <div className="h-12 w-full animate-pulse rounded-2xl bg-white/20" />
         </div>
         {/* Right column matching 7-day schedule */}
-        <div className="flex flex-col gap-2.5 border-t border-slate-700/80 pt-4 lg:border-t-0 lg:pl-8 lg:pt-0">
-          <div className="mb-1 flex items-baseline justify-between">
+        <div className="flex flex-col gap-2.5 border-t border-slate-700/80 pt-4 lg:border-t-0 lg:pl-8 lg:pt-0 min-w-0 max-w-full w-full">
+          <div className="mb-1 flex items-baseline justify-between gap-2 min-w-0 w-full">
             <div className="h-4 w-16 animate-pulse rounded-md bg-white/15" />
             <div className="h-4 w-20 animate-pulse rounded-md bg-white/10" />
           </div>
-          <div className="space-y-2.5">
+          <div className="space-y-2.5 min-w-0 max-w-full w-full">
             {[1, 2, 3, 4, 5].map((n) => (
-              <div key={n} className="flex items-center gap-3">
-                <div className="h-4 w-16 shrink-0 animate-pulse rounded-md bg-white/10" />
-                <div className="h-4 flex-1 animate-pulse rounded-md bg-white/15" />
+              <div key={n} className="flex items-center justify-between gap-2 min-w-0 w-full">
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <div className="h-4 w-14 shrink-0 animate-pulse rounded-md bg-white/10 sm:w-20" />
+                  <div className="h-4 flex-1 animate-pulse rounded-md bg-white/15" />
+                </div>
                 <div className="h-4 w-20 shrink-0 animate-pulse rounded-md bg-white/10" />
               </div>
             ))}

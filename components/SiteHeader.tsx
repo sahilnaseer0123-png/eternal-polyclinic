@@ -16,7 +16,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-30 [view-transition-name:site-header] border-b border-line bg-white/95 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-2 sm:py-3">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 sm:px-5 sm:py-3">
         <Link href="/" className="flex min-h-11 items-center gap-3 text-ink">
           <Logo className="size-10 shrink-0 sm:size-12" />
           <span className="leading-tight">
