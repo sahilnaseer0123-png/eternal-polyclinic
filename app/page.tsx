@@ -12,7 +12,6 @@ import { NextAvailable } from "@/components/NextAvailable";
 import { FeatherPattern } from "@/components/FeatherPattern";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import {
-  CheckIcon,
   ChevronRightIcon,
   ClockIcon,
   HospitalIcon,
@@ -275,18 +274,10 @@ export default function Home() {
                   className="card card-hover flex h-full flex-col justify-between rounded-3xl border border-line/60 p-3.5 transition-all duration-200 sm:p-4"
                 >
                   <div>
-                    <div className="relative">
-                      <DoctorMark
-                        doctor={doctor}
-                        className="h-28 w-full rounded-2xl bg-brand-tint text-4xl text-brand sm:h-36 sm:text-5xl"
-                      />
-                      <span
-                        title="Verified Consultant"
-                        className="absolute bottom-2 right-2 flex size-6 items-center justify-center rounded-full bg-emerald-600 text-white shadow-sm ring-2 ring-white"
-                      >
-                        <CheckIcon className="size-3.5" />
-                      </span>
-                    </div>
+                    <DoctorMark
+                      doctor={doctor}
+                      className="h-28 w-full rounded-2xl bg-brand-tint text-4xl text-brand sm:h-36 sm:text-5xl"
+                    />
                     <div className="mt-3 flex flex-col px-1 leading-snug">
                       <span className="font-bold text-ink sm:text-lg">
                         {doctor.name ?? doctor.speciality}

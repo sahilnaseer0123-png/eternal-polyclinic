@@ -10,7 +10,7 @@ import { categories, clinic, doctors, services, type DoctorCategory } from "@/da
 import { DAY_NAMES, formatTime } from "@/lib/schedule";
 import { DoctorMark } from "./DoctorMark";
 import { NextAvailable } from "./NextAvailable";
-import { CalendarIcon, CheckIcon, ChevronRightIcon, SearchIcon, ServiceIcon } from "./Icons";
+import { CalendarIcon, ChevronRightIcon, SearchIcon, ServiceIcon } from "./Icons";
 
 export type Filter = "all" | DoctorCategory;
 
@@ -125,18 +125,10 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
               >
                 {/* Doctor Identity Header */}
                 <div className="flex items-start gap-3 sm:gap-4">
-                  <div className="relative shrink-0">
-                    <DoctorMark
-                      doctor={doctor}
-                      className="size-14 rounded-2xl bg-brand-tint text-2xl text-brand sm:size-16"
-                    />
-                    <span
-                      title="Verified Specialist"
-                      className="absolute -bottom-1 -right-1 flex size-5 items-center justify-center rounded-full bg-emerald-600 text-white shadow-sm ring-2 ring-white"
-                    >
-                      <CheckIcon className="size-3" />
-                    </span>
-                  </div>
+                  <DoctorMark
+                    doctor={doctor}
+                    className="size-14 shrink-0 rounded-2xl bg-brand-tint text-2xl text-brand sm:size-16"
+                  />
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center justify-between gap-1.5">
                       <h3 className="text-lg font-bold leading-snug sm:text-xl">

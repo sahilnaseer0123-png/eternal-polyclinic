@@ -48,12 +48,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
       <div className="mt-3 grid gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-8">
         {/* Who */}
         <section className="rise card flex flex-col gap-5 rounded-3xl p-5 sm:flex-row sm:items-start sm:p-8 border border-line/70">
-          <div className="relative shrink-0">
-            <DoctorMark doctor={doctor} className="size-24 rounded-3xl bg-brand-tint text-5xl text-brand sm:size-28 sm:text-6xl lg:size-24 lg:text-5xl xl:size-28 xl:text-6xl shadow-inner" />
-            <span className="absolute -bottom-1 -right-1 inline-flex items-center gap-1 rounded-full bg-emerald-600 px-2 py-0.5 text-xs font-bold text-white shadow ring-2 ring-white">
-              <CheckIcon className="size-3" /> Verified
-            </span>
-          </div>
+          <DoctorMark doctor={doctor} className="size-24 shrink-0 rounded-3xl bg-brand-tint text-5xl text-brand sm:size-28 sm:text-6xl lg:size-24 lg:text-5xl xl:size-28 xl:text-6xl shadow-inner" />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1 rounded-full bg-brand-tint px-2.5 py-0.5 text-xs font-bold text-brand">
