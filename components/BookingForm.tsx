@@ -93,8 +93,8 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
   if (sent && doctor) {
     return (
       <div className="flex flex-col gap-5 card rounded-3xl p-6 sm:p-8" aria-live="polite">
-        <div className="flex size-14 items-center justify-center rounded-full bg-brand-tint text-brand" aria-hidden="true">
-          <ChatIcon className="size-7" />
+        <div className="flex size-14 items-center justify-center rounded-full bg-[#25D366]/15 text-[#25D366]" aria-hidden="true">
+          <ChatIcon className="size-8" />
         </div>
         <h3 className="text-xl font-extrabold tracking-tight sm:text-2xl">One last step: press Send in WhatsApp</h3>
         <p>
@@ -117,9 +117,9 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
           href={sent.link}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl bg-brand px-6 text-lg font-semibold text-white hover:bg-brand-dark"
+          className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-6 text-lg font-bold text-white hover:bg-[#20ba59] shadow-md transition-all"
         >
-          <ChatIcon /> WhatsApp didn&apos;t open? Tap here
+          <ChatIcon className="size-5" /> Open WhatsApp to Send
         </a>
         <a
           href={`tel:${clinic.phone}`}
@@ -286,9 +286,9 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
         <button
           type="button"
           onClick={submit}
-          className="inline-flex min-h-13 items-center justify-center gap-2.5 rounded-2xl bg-brand px-6 text-base font-bold sm:min-h-14 sm:text-lg text-white hover:bg-brand-dark shadow-md hover:shadow-lg transition-all"
+          className="inline-flex min-h-13 items-center justify-center gap-2.5 rounded-2xl bg-[#25D366] px-6 text-base font-bold sm:min-h-14 sm:text-lg text-white hover:bg-[#20ba59] shadow-md hover:shadow-lg transition-all"
         >
-          <ChatIcon className="size-5" /> Send request on WhatsApp
+          <ChatIcon className="size-6" /> Send request on WhatsApp
         </button>
         <p className="text-sm text-muted">
           Consultation ₹{clinic.consultationFee}. We only ask your name and number, never the reason for your visit.

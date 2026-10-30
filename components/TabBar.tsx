@@ -59,9 +59,9 @@ export function TabBar() {
             <div className="mt-2 grid grid-cols-2 gap-2 border-t border-line pt-2">
               <a
                 href={`https://wa.me/${clinic.whatsapp}`}
-                className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-ground font-semibold"
+                className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-emerald-50 text-emerald-900 border border-emerald-200/70 font-bold hover:bg-emerald-100/80 transition-colors"
               >
-                <ChatIcon /> WhatsApp
+                <ChatIcon className="size-5 text-[#25D366]" /> WhatsApp
               </a>
               <a
                 href={`tel:${clinic.phone}`}

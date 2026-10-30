@@ -70,9 +70,11 @@ export default function ContactPage() {
               </a>
               <a
                 href={`https://wa.me/${clinic.whatsapp}`}
-                className="inline-flex min-h-13 items-center justify-center gap-2 card card-hover rounded-2xl px-6 text-base font-bold text-slate-800 border border-line/70 hover:text-brand"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-13 items-center justify-center gap-2 card card-hover rounded-2xl px-6 text-base font-bold text-slate-800 border border-line/70 hover:text-[#25D366] hover:border-[#25D366]/50 transition-colors"
               >
-                <ChatIcon className="size-5 text-emerald-600" /> WhatsApp Direct: {clinic.whatsappDisplay}
+                <ChatIcon className="size-5.5 text-[#25D366]" /> WhatsApp Direct: {clinic.whatsappDisplay}
               </a>
               <a
                 href={clinic.mapUrl}
