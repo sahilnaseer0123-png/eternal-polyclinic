@@ -59,13 +59,20 @@ test("doctorDelayBroadcastText formats delayed announcement correctly", () => {
   assert.ok(broadcast.includes("97977 96909"));
 });
 
-test("exportToCsv and formatDailyOwnerSummary generate expected formats", () => {
+test("exportToCsv and formatDailyOwnerSummary generate expected formats for single and multiple doctors", () => {
   const csv = exportToCsv();
   assert.ok(csv.includes("Token No"));
   assert.ok(csv.includes("Village / Town"));
 
-  const summary = formatDailyOwnerSummary("2026-10-31");
-  assert.ok(summary.includes("ETERNAL POLYCLINIC — DAILY OPD REPORT"));
-  assert.ok(summary.includes("Lone Complex"));
+  // Default / All doctors consolidated report
+  const summaryAll = formatDailyOwnerSummary("2026-10-31", "all");
+  assert.ok(summaryAll.includes("ETERNAL POLYCLINIC — ALL DOCTORS OPD REPORT"));
+  assert.ok(summaryAll.includes("Lone Complex, Opposite SDH, Sopore"));
+  assert.ok(summaryAll.includes("Registration Channel"));
+
+  // Doctor-specific report
+  const summaryDoctor = formatDailyOwnerSummary("2026-10-31", "akash");
+  assert.ok(summaryDoctor.includes("ETERNAL POLYCLINIC — OPD REPORT"));
+  assert.ok(summaryDoctor.includes("97977 96909"));
 });
 

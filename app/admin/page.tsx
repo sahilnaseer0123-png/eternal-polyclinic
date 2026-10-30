@@ -468,7 +468,8 @@ export default function AdminPage() {
   // ---------------------------------------------------------------------------
   // MAIN TABLET WORKSPACE & DASHBOARD
   // ---------------------------------------------------------------------------
-  const ownerReportText = formatDailyOwnerSummary(selectedDate);
+  const currentDoctorObj = doctorFilter === "all" ? null : allDoctors.find((d) => d.id === doctorFilter);
+  const ownerReportText = formatDailyOwnerSummary(selectedDate, doctorFilter);
   const ownerWaUrl = `https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(ownerReportText)}`;
 
   return (
@@ -729,11 +730,19 @@ export default function AdminPage() {
                   href={ownerWaUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  title="Send Daily Summary to Clinic Owner on WhatsApp"
+                  title={
+                    doctorFilter === "all"
+                      ? "Send All Doctors Daily Summary to Clinic Owner on WhatsApp"
+                      : `Send ${currentDoctorObj?.name || "Doctor"} Daily Summary to Clinic Owner on WhatsApp`
+                  }
                   className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-[#25D366] px-3.5 py-2 text-xs font-bold text-white hover:bg-[#20ba59] shadow-xs"
                 >
                   <WhatsAppIcon className="size-4" />
-                  <span>Report to Owner</span>
+                  <span>
+                    {doctorFilter === "all"
+                      ? "Report All Doctors to Owner"
+                      : `Report ${currentDoctorObj?.name?.replace(/^Dr\.\s*/, "") || "Doctor"} to Owner`}
+                  </span>
                 </a>
 
                 <button
@@ -1196,7 +1205,11 @@ export default function AdminPage() {
                 className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-6 text-sm font-black text-white hover:bg-[#20ba59] shadow-lg shadow-emerald-500/30 transition-all shrink-0 active:scale-95"
               >
                 <WhatsAppIcon className="size-5" />
-                <span>Send Day&apos;s Report to Owner</span>
+                <span>
+                  {doctorFilter === "all"
+                    ? "Send All Doctors Report to Owner"
+                    : `Send ${currentDoctorObj?.name || "Doctor"} Report to Owner`}
+                </span>
               </a>
             </div>
 

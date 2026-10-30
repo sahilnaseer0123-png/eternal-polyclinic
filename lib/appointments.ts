@@ -571,45 +571,79 @@ export function restoreFromJsonBackup(jsonString: string): { success: boolean; m
   }
 }
 
-/** Formats a clean end-of-day summary message to send to clinic owner via WhatsApp */
-export function formatDailyOwnerSummary(selectedDate: string): string {
-  const all = getAllAppointments().filter((a) => a.date === selectedDate);
-  const completed = all.filter((a) => a.status === "completed").length;
-  const waiting = all.filter((a) => a.status === "confirmed" || a.status === "arrived").length;
-  const inConsult = all.filter((a) => a.status === "in_consultation").length;
-  const cancelled = all.filter((a) => a.status === "cancelled").length;
-  const walkIns = all.filter((a) => a.type === "walk_in").length;
-  const online = all.filter((a) => a.type === "online").length;
+/** Formats a clean end-of-day summary message to send to clinic owner via WhatsApp.
+ * Supports:
+ * - All doctors consolidated in one report (default)
+ * - Or filtered to a single doctor when a specific doctor is selected in the admin view
+ */
+export function formatDailyOwnerSummary(selectedDate: string, doctorIdFilter: string = "all"): string {
+  const allDateApts = getAllAppointments().filter((a) => a.date === selectedDate);
+  const filtered = doctorIdFilter === "all"
+    ? allDateApts
+    : allDateApts.filter((a) => a.doctorId === doctorIdFilter);
 
-  // Breakdown by doctor
-  const docMap: Record<string, number> = {};
-  all.forEach((a) => {
-    docMap[a.doctorName] = (docMap[a.doctorName] || 0) + 1;
+  const completed = filtered.filter((a) => a.status === "completed").length;
+  const waiting = filtered.filter((a) => a.status === "confirmed" || a.status === "arrived").length;
+  const inConsult = filtered.filter((a) => a.status === "in_consultation").length;
+  const cancelled = filtered.filter((a) => a.status === "cancelled").length;
+  const walkIns = filtered.filter((a) => a.type === "walk_in").length;
+  const online = filtered.filter((a) => a.type === "online").length;
+
+  // Breakdown by each doctor who sat today
+  type DocStat = { name: string; speciality: string; total: number; done: number; waiting: number; cancelled: number };
+  const doctorStatsMap: Record<string, DocStat> = {};
+
+  filtered.forEach((a) => {
+    if (!doctorStatsMap[a.doctorId]) {
+      doctorStatsMap[a.doctorId] = {
+        name: a.doctorName,
+        speciality: a.speciality,
+        total: 0,
+        done: 0,
+        waiting: 0,
+        cancelled: 0,
+      };
+    }
+    const stat = doctorStatsMap[a.doctorId];
+    stat.total += 1;
+    if (a.status === "completed") stat.done += 1;
+    else if (a.status === "confirmed" || a.status === "arrived" || a.status === "in_consultation") stat.waiting += 1;
+    else if (a.status === "cancelled") stat.cancelled += 1;
   });
 
-  const docBreakdown = Object.entries(docMap)
-    .map(([docName, count]) => `• ${docName}: ${count} patient${count > 1 ? "s" : ""}`)
-    .join("\n");
+  const docEntries = Object.values(doctorStatsMap);
+
+  const doctorSections = docEntries.map((d, index) => {
+    return [
+      `🩺 *${index + 1}. ${d.name}* (${d.speciality})`,
+      `   • Total Booked: *${d.total}* (✅ Done: ${d.done}${d.waiting > 0 ? `, ⏳ Waiting: ${d.waiting}` : ""}${d.cancelled > 0 ? `, ❌ Cancelled: ${d.cancelled}` : ""})`,
+    ].join("\n");
+  }).join("\n\n");
+
+  const reportHeaderTitle = doctorIdFilter === "all"
+    ? `📊 *ETERNAL POLYCLINIC — ALL DOCTORS OPD REPORT*`
+    : `📊 *ETERNAL POLYCLINIC — OPD REPORT (${filtered[0]?.doctorName || "Doctor"})*`;
 
   return [
-    `📊 *ETERNAL POLYCLINIC — DAILY OPD REPORT*`,
+    reportHeaderTitle,
     `──────────────────────────`,
     `📅 *Date:* ${dateLabel(selectedDate)} (${selectedDate})`,
-    `📍 *Clinic:* Lone Complex, Opposite SDH, Sopore`,
+    `📍 *Location:* Lone Complex, Opposite SDH, Sopore`,
     ``,
-    `👥 *Total Patients Registered:* ${all.length}`,
-    `✅ *Consultations Completed:* ${completed}`,
-    waiting > 0 ? `⏳ *Still in Lounge / Waiting:* ${waiting}` : null,
-    inConsult > 0 ? `🩺 *In Consultation:* ${inConsult}` : null,
-    cancelled > 0 ? `❌ *Cancelled / No Show:* ${cancelled}` : null,
+    `👥 *Clinic Total Patients:* ${filtered.length}`,
+    `✅ *Total Consultations Done:* ${completed}`,
+    waiting > 0 ? `⏳ *Total In Lounge / Waiting:* ${waiting}` : null,
+    inConsult > 0 ? `🚪 *Currently In Cabin:* ${inConsult}` : null,
+    cancelled > 0 ? `❌ *Total Cancelled / No-Show:* ${cancelled}` : null,
     ``,
-    `📈 *Breakdown by Registration:*`,
+    `📈 *Registration Channel:*`,
     `• Walk-Ins (Reception Desk): ${walkIns}`,
-    `• Online Self-Service: ${online}`,
+    `• Online Patient Self-Service: ${online}`,
     ``,
-    docBreakdown ? `🩺 *Patients Seen per Specialist:*\n${docBreakdown}\n` : null,
+    docEntries.length > 0 ? `📋 *Doctor-by-Doctor Breakdown (${docEntries.length} Doctor${docEntries.length > 1 ? "s" : ""}):*\n\n${doctorSections}\n` : `ℹ️ No appointments recorded for this filter.`,
     `──────────────────────────`,
-    `Generated by Reception Tablet Suite · ${new Date().toLocaleTimeString("en-IN", { timeZone: "Asia/Kolkata" })} IST`,
+    `📱 *Helpline:* 97977 96909`,
+    `Generated by Reception Tablet Suite · ${new Date().toLocaleTimeString("en-IN", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit" })} IST`,
   ]
     .filter(Boolean)
     .join("\n");
