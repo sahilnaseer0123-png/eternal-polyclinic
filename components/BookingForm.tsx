@@ -1,13 +1,13 @@
 "use client";
 
-// Booking form: doctor → OPD day → time → name and phone → WhatsApp.
-// `nowMs` comes from the server at request time, so the server and browser draw the same dates.
-// The request is re-checked against the real clock when the patient presses the button.
-// Deep link: /book?doctor=akash opens the form with Dr. Akash already chosen.
+// Self-Service Booking Form with Instant Digital Appointment Slip & Live Slot Protection.
+// Patients book directly, receive an official on-screen voucher with a unique Token No.,
+// and can print or save their receipt to their phone.
+// Prevents double-booking by synchronizing with reception tablet records.
 
 import { useRef, useState } from "react";
 import { clinic, doctors } from "@/data/clinic";
-import { bookingMessage, validateBooking, whatsappLink, type BookingErrors } from "@/lib/booking";
+import { validateBooking, type BookingErrors } from "@/lib/booking";
 import {
   addDays,
   clinicClock,
@@ -18,13 +18,24 @@ import {
   timeSlots,
   weekdayOf,
 } from "@/lib/schedule";
-import { ChatIcon, PhoneIcon } from "./Icons";
+import {
+  confirmationTicketText,
+  generateToken,
+  isSlotBooked,
+  saveAppointment,
+  useAppointments,
+  useLastReceipt,
+  type Appointment,
+} from "@/lib/appointments";
+import { CheckIcon, ClockIcon, PhoneIcon, ShieldCheckIcon, WhatsAppIcon } from "./Icons";
 
 const SHORT_DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const SHORT_MONTH = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-// Modern chip: chosen = solid ink pill with shadow, others = card with border line.
-function chipClass(on: boolean) {
+function chipClass(on: boolean, disabled: boolean = false) {
+  if (disabled) {
+    return "rounded-2xl border border-dashed border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed opacity-60";
+  }
   return `rounded-2xl border text-base transition-all duration-150 ${
     on ? "border-ink bg-ink font-bold text-white shadow-sm ring-2 ring-ink/20" : "border-line/80 bg-white hover:border-slate-400 text-slate-800"
   }`;
@@ -40,8 +51,6 @@ function FieldError({ id, message }: { id: string; message?: string }) {
 }
 
 export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; initialDoctorId?: string }) {
-  // Starts at the server's time; refreshed on every submit, so a page left open for a while
-  // stops offering times that have already passed.
   const [nowAt, setNowAt] = useState(nowMs);
   const now = new Date(nowAt);
   const [doctorId, setDoctorId] = useState(initialDoctorId);
@@ -50,12 +59,22 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [errors, setErrors] = useState<BookingErrors>({});
-  const [sent, setSent] = useState<{ link: string; phone: string } | null>(null);
+  const [confirmedSlip, setConfirmedSlip] = useState<Appointment | null>(null);
+  const [showRecent, setShowRecent] = useState<boolean>(true);
   const formRef = useRef<HTMLDivElement>(null);
+
+  const recentReceipt = useLastReceipt();
+  const appointments = useAppointments();
 
   const doctor = doctors.find((d) => d.id === doctorId);
   const dates = doctor ? nextOpdDates(doctor, now, 4) : [];
   const slots = doctor && date ? timeSlots(doctor, date, now) : [];
+
+  const bookedSlots = doctorId && date
+    ? appointments
+        .filter((a) => a.doctorId === doctorId && a.date === date && a.status !== "cancelled")
+        .map((a) => a.time)
+    : [];
 
   function chooseDoctor(id: string) {
     setDoctorId(id);
@@ -64,20 +83,44 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
     setErrors((e) => ({ ...e, doctorId: undefined, date: undefined, time: undefined }));
   }
 
-
   function submit() {
     const current = new Date();
     setNowAt(current.getTime());
+
+    // Basic and schema validation
     const result = validateBooking({ doctorId, date, time, name, phone }, doctors, current);
     if (!result.ok) {
       setErrors(result.errors);
       formRef.current?.querySelector<HTMLElement>("[role=alert]")?.scrollIntoView({ block: "center" });
       return;
     }
-    const link = whatsappLink(clinic.whatsapp, bookingMessage(result.data, doctor!, clinic.name));
+
+    // Double-booking collision check
+    if (isSlotBooked(doctorId, date, time)) {
+      setErrors({ time: "This slot was just booked by another patient. Please choose an alternative time." });
+      return;
+    }
+
+    // Generate unique official token and save
+    const token = generateToken(date, doctorId, false);
+    const appointment: Appointment = {
+      token,
+      doctorId,
+      doctorName: doctor!.name ?? doctor!.speciality,
+      speciality: doctor!.speciality,
+      date,
+      time,
+      patientName: result.data.name,
+      patientPhone: result.data.phone,
+      type: "online",
+      status: "confirmed",
+      createdAt: current.getTime(),
+    };
+
+    saveAppointment(appointment);
+    setConfirmedSlip(appointment);
+    setShowRecent(false);
     setErrors({});
-    setSent({ link, phone: result.data.phone });
-    window.open(link, "_blank", "noopener");
   }
 
   function reset() {
@@ -87,55 +130,148 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
     setName("");
     setPhone("");
     setErrors({});
-    setSent(null);
+    setConfirmedSlip(null);
   }
 
-  if (sent && doctor) {
+  // ---------------------------------------------------------------------------
+  // Digital Appointment Slip / Confirmation Receipt View
+  // ---------------------------------------------------------------------------
+  if (confirmedSlip) {
+    const ticketText = confirmationTicketText(confirmedSlip);
+    const waShareUrl = `https://wa.me/?text=${encodeURIComponent(ticketText)}`;
+
     return (
-      <div className="flex flex-col gap-5 card rounded-3xl p-6 sm:p-8" aria-live="polite">
-        <div className="flex size-14 items-center justify-center rounded-full bg-[#25D366]/15 text-[#25D366]" aria-hidden="true">
-          <ChatIcon className="size-8" />
+      <div className="flex flex-col gap-6" aria-live="polite">
+        {/* Printable Voucher Card */}
+        <div className="appointment-slip card rounded-3xl p-6 sm:p-8 border-2 border-brand/20 bg-gradient-to-b from-brand-tint/30 via-white to-white shadow-xl">
+          {/* Header */}
+          <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 pb-5">
+            <div>
+              <div className="flex items-center gap-2 text-brand font-bold text-sm uppercase tracking-wider mb-1">
+                <ShieldCheckIcon className="size-5 text-brand" />
+                <span>Confirmed OPD Appointment</span>
+              </div>
+              <h2 className="text-2xl font-black tracking-tight text-ink sm:text-3xl">
+                {clinic.name}
+              </h2>
+              <p className="text-sm text-muted mt-0.5">{clinic.address}</p>
+            </div>
+            <div className="flex flex-col items-end">
+              <span className="text-xs uppercase font-bold text-slate-500">Token Number</span>
+              <span className="rounded-xl bg-ink px-4 py-1.5 text-xl font-extrabold tracking-wider text-glow sm:text-2xl font-mono shadow-sm">
+                {confirmedSlip.token}
+              </span>
+            </div>
+          </div>
+
+          {/* Key Appointment Details */}
+          <div className="my-6 grid grid-cols-1 gap-4 rounded-2xl bg-slate-50/90 border border-slate-200/80 p-5 sm:grid-cols-2">
+            <div className="flex flex-col">
+              <span className="text-xs font-semibold uppercase text-slate-500">Consultant Specialist</span>
+              <span className="text-lg font-bold text-ink">{confirmedSlip.doctorName}</span>
+              <span className="text-sm text-brand font-medium">{confirmedSlip.speciality}</span>
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-xs font-semibold uppercase text-slate-500">Appointment Schedule</span>
+              <span className="text-lg font-bold text-ink">
+                {dateLabel(confirmedSlip.date)}
+              </span>
+              <span className="text-sm font-semibold text-slate-700 flex items-center gap-1.5 mt-0.5">
+                <ClockIcon className="size-4 text-brand" /> Slot: {formatTime(confirmedSlip.time)} (Report 10m early)
+              </span>
+            </div>
+
+            <div className="flex flex-col border-t border-slate-200/60 pt-3 sm:border-t-0 sm:pt-0">
+              <span className="text-xs font-semibold uppercase text-slate-500">Patient Name</span>
+              <span className="text-base font-bold text-ink">{confirmedSlip.patientName}</span>
+              <span className="text-sm text-slate-600">Mobile: +91 {confirmedSlip.patientPhone}</span>
+            </div>
+
+            <div className="flex flex-col border-t border-slate-200/60 pt-3 sm:border-t-0 sm:pt-0">
+              <span className="text-xs font-semibold uppercase text-slate-500">Payment & Registration</span>
+              <span className="text-base font-bold text-ink">Pay at Reception Desk</span>
+              <span className="text-sm text-slate-600">Zero registration fee · Doctor consultation fee on arrival</span>
+            </div>
+          </div>
+
+          {/* Important Patient Instructions */}
+          <div className="flex flex-col gap-2 rounded-xl bg-amber-50/80 border border-amber-200/70 p-4 text-sm text-amber-900 mb-6">
+            <p className="font-bold flex items-center gap-1.5">
+              <span>📌 Patient Instructions:</span>
+            </p>
+            <ul className="list-disc pl-5 space-y-1 text-xs sm:text-sm text-amber-800">
+              <li>Please present this digital slip or mention your <strong>Token #{confirmedSlip.token}</strong> at reception.</li>
+              <li>Arrive <strong>10 to 15 minutes before {formatTime(confirmedSlip.time)}</strong> so reception can verify your token.</li>
+              <li>If you have previous medical records or prescriptions, please bring them along.</li>
+            </ul>
+          </div>
+
+          {/* Action Bar (hidden when printing) */}
+          <div className="no-print flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-t border-slate-200 pt-5">
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl bg-ink px-6 text-base font-bold text-white hover:bg-slate-800 shadow-md transition-all sm:min-h-14"
+            >
+              🖨️ Print / Save PDF Slip
+            </button>
+
+            <a
+              href={waShareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-6 text-base font-bold text-white hover:bg-[#20ba59] shadow-md transition-all sm:min-h-14"
+            >
+              <WhatsAppIcon className="size-5" /> Save to My WhatsApp
+            </a>
+
+            <a
+              href={`tel:${clinic.phone}`}
+              className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl border border-line bg-white px-5 text-base font-semibold text-slate-800 hover:border-slate-400"
+            >
+              <PhoneIcon className="size-4" /> Helpline: {clinic.phoneDisplay}
+            </a>
+          </div>
         </div>
-        <h3 className="text-xl font-extrabold tracking-tight sm:text-2xl">One last step: press Send in WhatsApp</h3>
-        <p>
-          WhatsApp should have opened with your request to {clinic.name} ({clinic.whatsappDisplay}). Press{" "}
-          <strong>Send</strong> there. Reception
-          will call you on <strong>{sent.phone}</strong> to confirm. Your slot isn&apos;t
-          confirmed until they do.
-        </p>
-        <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 rounded-2xl bg-ground p-5 text-base">
-          <dt className="text-muted">Doctor</dt>
-          <dd className="font-semibold">{doctor.name ?? doctor.speciality}</dd>
-          <dt className="text-muted">When</dt>
-          <dd className="font-semibold">
-            {dateLabel(date)}, {formatTime(time)}
-          </dd>
-          <dt className="text-muted">Fee</dt>
-          <dd className="font-semibold">Pay at clinic (Zero registration fee)</dd>
-        </dl>
-        <a
-          href={sent.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-6 text-lg font-bold text-white hover:bg-[#20ba59] shadow-md transition-all"
-        >
-          <ChatIcon className="size-5" /> Open WhatsApp to Send
-        </a>
-        <a
-          href={`tel:${clinic.phone}`}
-          className="inline-flex min-h-12 items-center justify-center gap-2 card rounded-2xl px-6 font-semibold hover:text-brand"
-        >
-          <PhoneIcon /> Or call <span className="whitespace-nowrap">{clinic.phoneDisplay}</span>
-        </a>
-        <button type="button" onClick={reset} className="min-h-11 text-base font-semibold text-brand underline">
-          Book another appointment
-        </button>
+
+        <div className="no-print flex justify-center">
+          <button
+            type="button"
+            onClick={reset}
+            className="min-h-11 text-base font-semibold text-brand hover:underline"
+          >
+            ← Book another appointment
+          </button>
+        </div>
       </div>
     );
   }
 
+  // ---------------------------------------------------------------------------
+  // Self-Service Booking Input Form
+  // ---------------------------------------------------------------------------
   return (
     <div ref={formRef} className="min-w-0 flex flex-col gap-6 card rounded-3xl p-4 sm:gap-7 sm:p-8">
+      {/* Returning Patient Notification */}
+      {showRecent && recentReceipt && (
+        <div className="flex items-center justify-between gap-3 rounded-2xl bg-brand-tint border border-brand/20 p-4 text-sm text-slate-800">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <CheckIcon className="size-5 text-brand shrink-0" />
+            <span className="truncate">
+              You have a confirmed slot for <strong>{recentReceipt.doctorName}</strong> on {recentReceipt.date} ({recentReceipt.token}).
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setConfirmedSlip(recentReceipt)}
+            className="shrink-0 font-bold text-brand hover:underline"
+          >
+            View Slip
+          </button>
+        </div>
+      )}
+
       {/* 1. Doctor */}
       <fieldset className="min-w-0 flex flex-col gap-3">
         <legend className="mb-2 text-lg font-bold sm:mb-3">1. Doctor</legend>
@@ -158,7 +294,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
         <FieldError id="err-doctor" message={errors.doctorId} />
       </fieldset>
 
-      {/* 2. Day (until a doctor is chosen, a muted note keeps the numbering 1-2-3-4 visible) */}
+      {/* 2. Day */}
       {!doctor && <StepHint title="2. Day and 3. Time" hint="Choose a doctor first. Their days and times appear here." />}
       {doctor && (
         <fieldset className="min-w-0 flex flex-col gap-3">
@@ -212,22 +348,33 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
       {doctor && dates.length > 0 && !date && <StepHint title="3. Time" hint="Pick a day first." />}
       {doctor && date && (
         <fieldset className="min-w-0 flex flex-col gap-3">
-          <legend className="mb-2 text-lg font-bold sm:mb-3">3. Time</legend>
+          <div className="flex items-baseline justify-between">
+            <legend className="mb-2 text-lg font-bold sm:mb-3">3. Time Slot</legend>
+            <span className="text-xs text-muted">
+              {bookedSlots.length > 0 ? `${bookedSlots.length} slot(s) already booked` : "All slots open"}
+            </span>
+          </div>
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-            {slots.map((s) => (
-              <button
-                key={s}
-                type="button"
-                aria-pressed={s === time}
-                onClick={() => {
-                  setTime(s);
-                  setErrors((e) => ({ ...e, time: undefined }));
-                }}
-                className={`${chipClass(s === time)} min-h-12`}
-              >
-                {formatTime(s)}
-              </button>
-            ))}
+            {slots.map((s) => {
+              const isTaken = bookedSlots.includes(s);
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  disabled={isTaken}
+                  aria-pressed={s === time}
+                  onClick={() => {
+                    if (isTaken) return;
+                    setTime(s);
+                    setErrors((e) => ({ ...e, time: undefined }));
+                  }}
+                  className={`${chipClass(s === time, isTaken)} min-h-12 flex flex-col items-center justify-center py-1`}
+                >
+                  <span className={isTaken ? "line-through text-xs sm:text-sm" : ""}>{formatTime(s)}</span>
+                  {isTaken && <span className="text-[10px] uppercase font-bold text-slate-400">Booked</span>}
+                </button>
+              );
+            })}
           </div>
           <FieldError id="err-time" message={errors.time} />
         </fieldset>
@@ -235,10 +382,10 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
 
       {/* 4. Details */}
       <fieldset className="min-w-0 flex flex-col gap-4">
-        <legend className="mb-2 text-lg font-bold sm:mb-3">4. Your details</legend>
+        <legend className="mb-2 text-lg font-bold sm:mb-3">4. Patient details</legend>
         <div className="flex flex-col gap-2">
           <label htmlFor="bk-name" className="font-semibold">
-            Name
+            Patient Name
           </label>
           <input
             id="bk-name"
@@ -286,20 +433,19 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
         <button
           type="button"
           onClick={submit}
-          className="inline-flex min-h-13 items-center justify-center gap-2.5 rounded-2xl bg-[#25D366] px-6 text-base font-bold sm:min-h-14 sm:text-lg text-white hover:bg-[#20ba59] shadow-md hover:shadow-lg transition-all"
+          className="inline-flex min-h-13 items-center justify-center gap-2.5 rounded-2xl bg-brand px-6 text-base font-bold sm:min-h-14 sm:text-lg text-white hover:bg-brand-dark shadow-md hover:shadow-lg transition-all"
         >
-          <ChatIcon className="size-6" /> Send request on WhatsApp
+          <CheckIcon className="size-5" /> Confirm & Get Appointment Slip
         </button>
         <p className="text-sm text-muted">
-          Consultation fee is paid directly at the clinic. We only ask your name and number, never the reason for your visit.
-          Reception calls you to confirm.
+          Your official appointment voucher with token number is generated immediately on screen.
+          Consultation fee is paid directly at reception desk upon arrival. No registration charges.
         </p>
       </div>
     </div>
   );
 }
 
-/** A step that isn't available yet: same heading style as a fieldset legend, muted. */
 function StepHint({ title, hint }: { title: string; hint: string }) {
   return (
     <div className="flex flex-col gap-1">

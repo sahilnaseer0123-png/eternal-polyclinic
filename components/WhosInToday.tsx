@@ -20,6 +20,7 @@ import {
   timeSlots,
   weekdayOf,
 } from "@/lib/schedule";
+import { useDoctorStatuses } from "@/lib/appointments";
 import { DoctorMark } from "./DoctorMark";
 import { useClinicMinute } from "./useClinicMinute";
 
@@ -38,6 +39,8 @@ const whiteButton =
 
 export function WhosInToday() {
   const minute = useClinicMinute();
+  const doctorStatuses = useDoctorStatuses();
+
   if (minute === null) return <WhosInTodaySkeleton />;
   const now = new Date(minute);
   const clock = clinicClock(now);
@@ -74,6 +77,7 @@ export function WhosInToday() {
             <ul className="flex flex-col gap-4 min-w-0 max-w-full w-full">
               {today.map(({ doctor, session }) => {
                 const status = sessionStatus(session, now);
+                const live = doctorStatuses[doctor.id];
                 // Late in the sitting every slot may have passed; then the button books their next day instead.
                 const slotsLeftToday = timeSlots(doctor, clock.dateKey, now).length > 0;
                 return (
@@ -97,9 +101,26 @@ export function WhosInToday() {
                             </span>
                           )}
                         </div>
-                        <p className={`mt-0.5 font-semibold ${status === "in" ? "text-glow" : "text-slate-400"}`}>
-                          {STATUS_TEXT[status](session.start)}
-                        </p>
+                        {live?.state === "delayed" ? (
+                          <p className="mt-0.5 font-bold text-amber-300 text-xs sm:text-sm flex items-center gap-1.5">
+                            <span className="size-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
+                            <span>Running ~{live.delayMinutes ?? 30}m late{live.note ? ` (${live.note})` : ""}</span>
+                          </p>
+                        ) : live?.state === "in_clinic" ? (
+                          <p className="mt-0.5 font-bold text-glow text-xs sm:text-sm flex items-center gap-1.5">
+                            <span className="size-2 rounded-full bg-glow animate-pulse shrink-0" />
+                            <span>In clinic now · Consultations active</span>
+                          </p>
+                        ) : live?.state === "cancelled" ? (
+                          <p className="mt-0.5 font-bold text-rose-300 text-xs sm:text-sm flex items-center gap-1.5">
+                            <span className="size-2 rounded-full bg-rose-400 shrink-0" />
+                            <span>OPD cancelled today{live.note ? ` (${live.note})` : ""}</span>
+                          </p>
+                        ) : (
+                          <p className={`mt-0.5 font-semibold ${status === "in" ? "text-glow" : "text-slate-400"}`}>
+                            {STATUS_TEXT[status](session.start)}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <Link href={`/book?doctor=${doctor.id}`} className={whiteButton}>
