@@ -2,9 +2,10 @@
 
 // Ultra-Modern Tablet & Reception Management Portal for Eternal Polyclinic, Sopore.
 // Real-time OPD registration, walk-in entry, double-booking prevention,
-// doctor live delay radar, and village/town patient disambiguation.
+// doctor live delay radar, village/town disambiguation,
+// cross-device cloud sync, end-of-day Excel/JSON backup, and 1-tap WhatsApp report to owner.
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { clinic, type Weekday } from "@/data/clinic";
 import {
@@ -18,8 +19,14 @@ import {
 import {
   deleteAppointment,
   doctorDelayBroadcastText,
+  downloadCsv,
+  downloadFullJsonBackup,
+  formatDailyOwnerSummary,
   getBookedSlots,
   getDoctorLiveStatus,
+  getLastSyncTime,
+  pushToCloud,
+  restoreFromJsonBackup,
   saveAppointment,
   saveCustomDoctor,
   setDoctorLiveStatus,
@@ -50,7 +57,7 @@ export default function AdminPage() {
   const [pinError, setPinError] = useState<string>("");
 
   // Navigation tabs
-  const [activeTab, setActiveTab] = useState<"opd" | "radar" | "doctors" | "search">("opd");
+  const [activeTab, setActiveTab] = useState<"opd" | "radar" | "doctors" | "backups" | "search">("opd");
 
   // Clock
   const [now, setNow] = useState<Date>(new Date());
@@ -86,6 +93,26 @@ export default function AdminPage() {
 
   // Search query
   const [searchQuery, setSearchQuery] = useState<string>("");
+
+  // Restore file input ref
+  const restoreFileInputRef = useRef<HTMLInputElement>(null);
+
+  // Cloud sync state
+  const [isSyncing, setIsSyncing] = useState<boolean>(false);
+  const lastSyncTime = getLastSyncTime();
+  const lastSyncDisplay = lastSyncTime
+    ? new Date(lastSyncTime).toLocaleTimeString("en-IN", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit" })
+    : "Just now";
+
+  async function handleManualSync() {
+    setIsSyncing(true);
+    await pushToCloud();
+    setTimeout(() => {
+      setIsSyncing(false);
+      setBroadcastToast("Cloud sync complete! All connected tablets & devices are up to date.");
+      setTimeout(() => setBroadcastToast(""), 4000);
+    }, 500);
+  }
 
   // New Doctor Modal
   const [showNewDocModal, setShowNewDocModal] = useState<boolean>(false);
@@ -128,7 +155,6 @@ export default function AdminPage() {
     if (isAuthenticated) return;
 
     function handleKeyDown(e: KeyboardEvent) {
-      // Don't intercept if focus is inside another form input
       if (
         e.target instanceof HTMLInputElement &&
         e.target.id !== "kiosk-pin-hidden-input"
@@ -267,6 +293,26 @@ export default function AdminPage() {
     setTimeout(() => setBroadcastToast(""), 4000);
   }
 
+  // Restore JSON File
+  function handleFileRestore(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      if (content) {
+        const res = restoreFromJsonBackup(content);
+        if (res.success) {
+          setBroadcastToast(`Restore successful: ${res.count} records restored!`);
+        } else {
+          alert(`Restore failed: ${res.message}`);
+        }
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  }
+
   // Handle adding new custom doctor
   function handleSaveNewDoctor() {
     if (!newDocName.trim() || !newDocSpec.trim()) return;
@@ -296,6 +342,14 @@ export default function AdminPage() {
     setNewDocName("");
     setNewDocSpec("");
   }
+
+  // Group appointments by date for historical day-by-day backups
+  const dateGroups: Record<string, Appointment[]> = {};
+  appointments.forEach((apt) => {
+    if (!dateGroups[apt.date]) dateGroups[apt.date] = [];
+    dateGroups[apt.date].push(apt);
+  });
+  const allRecordedDates = Object.keys(dateGroups).sort((a, b) => b.localeCompare(a));
 
   // ---------------------------------------------------------------------------
   // ULTRA-MODERN KIOSK PIN GATE SCREEN
@@ -414,8 +468,20 @@ export default function AdminPage() {
   // ---------------------------------------------------------------------------
   // MAIN TABLET WORKSPACE & DASHBOARD
   // ---------------------------------------------------------------------------
+  const ownerReportText = formatDailyOwnerSummary(selectedDate);
+  const ownerWaUrl = `https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(ownerReportText)}`;
+
   return (
     <div className="min-w-0 w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 flex flex-col gap-6 font-sans">
+      {/* Hidden file input for JSON restore */}
+      <input
+        ref={restoreFileInputRef}
+        type="file"
+        accept=".json,application/json"
+        onChange={handleFileRestore}
+        className="hidden"
+      />
+
       {/* Printable OPD Register Sheet (Visible only when printing) */}
       <div className="hidden print:block print-only">
         <div className="border-b-2 border-black pb-4 mb-4">
@@ -474,10 +540,16 @@ export default function AdminPage() {
                 <h1 className="text-xl font-black tracking-tight sm:text-2xl font-display text-white">
                   Reception Tablet Suite
                 </h1>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-[11px] px-2.5 py-0.5 font-bold">
-                  <span className="size-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  Live Sync
-                </span>
+                {/* Cross-Device Sync Badge */}
+                <button
+                  type="button"
+                  onClick={handleManualSync}
+                  title="Click to manually sync cross-device"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-[11px] px-2.5 py-0.5 font-bold hover:bg-emerald-500/30 transition-all"
+                >
+                  <span className={`size-1.5 rounded-full bg-emerald-400 ${isSyncing ? "animate-spin" : "animate-pulse"}`} />
+                  <span>{isSyncing ? "Syncing..." : `Cloud Sync: ${lastSyncDisplay}`}</span>
+                </button>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">
                 {clinic.name} · Opposite SDH Hospital, Sopore
@@ -567,6 +639,19 @@ export default function AdminPage() {
 
           <button
             type="button"
+            onClick={() => setActiveTab("backups")}
+            className={`min-h-11 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shrink-0 ${
+              activeTab === "backups" ? "bg-ink text-white shadow-md shadow-ink/20" : "text-slate-600 hover:text-ink hover:bg-white/60"
+            }`}
+          >
+            💾 Daily Backups & Reports
+            <span className="rounded-full bg-teal-100 text-teal-800 text-[10px] px-2 py-0.5 font-bold">
+              New
+            </span>
+          </button>
+
+          <button
+            type="button"
             onClick={() => setActiveTab("search")}
             className={`min-h-11 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shrink-0 ${
               activeTab === "search" ? "bg-ink text-white shadow-md shadow-ink/20" : "text-slate-600 hover:text-ink hover:bg-white/60"
@@ -629,13 +714,34 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 self-end">
+              {/* Action Buttons: Excel Export, Print, and Owner Summary */}
+              <div className="flex flex-wrap items-center gap-2 self-end">
+                <button
+                  type="button"
+                  onClick={() => downloadCsv(selectedDate)}
+                  title="Download Excel spreadsheet of this day"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3.5 py-2 text-xs font-bold text-emerald-800 hover:bg-emerald-100 shadow-xs"
+                >
+                  📊 Export to Excel
+                </button>
+
+                <a
+                  href={ownerWaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Send Daily Summary to Clinic Owner on WhatsApp"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-[#25D366] px-3.5 py-2 text-xs font-bold text-white hover:bg-[#20ba59] shadow-xs"
+                >
+                  <WhatsAppIcon className="size-4" />
+                  <span>Report to Owner</span>
+                </a>
+
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-line bg-white px-4 py-2 text-xs sm:text-sm font-bold text-slate-800 hover:bg-slate-50 shadow-xs"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-line bg-white px-3.5 py-2 text-xs font-bold text-slate-800 hover:bg-slate-50 shadow-xs"
                 >
-                  🖨️ Print OPD Sheet
+                  🖨️ Print Sheet
                 </button>
               </div>
             </div>
@@ -1067,7 +1173,149 @@ export default function AdminPage() {
         )}
 
         {/* ===================================================================== */}
-        {/* TAB 4: PATIENT SEARCH WITH VILLAGE/ADDRESS MATCHING                   */}
+        {/* TAB 4: DAILY BACKUPS, CLOUD SYNC & OWNER REPORTING                    */}
+        {/* ===================================================================== */}
+        {activeTab === "backups" && (
+          <div className="flex flex-col gap-6 animate-fade-in">
+            {/* Owner Daily Report Card */}
+            <div className="card rounded-3xl p-6 border-2 border-emerald-500/30 bg-gradient-to-r from-emerald-950 via-slate-900 to-ink text-white shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+              <div className="space-y-1">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-300">
+                  <WhatsAppIcon className="size-3.5" /> 1-Tap WhatsApp to Owner
+                </span>
+                <h3 className="text-xl font-black font-display text-white">Daily OPD Summary for Clinic Owner</h3>
+                <p className="text-xs text-slate-300 max-w-xl">
+                  Send today&apos;s total patient counts, completed visits, and doctor breakdowns directly to the owner&apos;s WhatsApp with one tap at closing time.
+                </p>
+              </div>
+
+              <a
+                href={ownerWaUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-6 text-sm font-black text-white hover:bg-[#20ba59] shadow-lg shadow-emerald-500/30 transition-all shrink-0 active:scale-95"
+              >
+                <WhatsAppIcon className="size-5" />
+                <span>Send Day&apos;s Report to Owner</span>
+              </a>
+            </div>
+
+            {/* Quick Actions Grid: Excel & JSON */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Full JSON Backup */}
+              <div className="card rounded-3xl p-5 border border-line shadow-xs flex flex-col justify-between gap-4 bg-white">
+                <div>
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-2xl">💾</span>
+                    <h4 className="text-base font-black text-ink font-display">Full Clinic JSON Database Backup</h4>
+                  </div>
+                  <p className="text-xs text-muted mt-2 leading-relaxed">
+                    Downloads an encrypted complete backup file of all appointments, walk-ins, doctor schedule overrides, and custom specialists.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-2 pt-2 border-t border-line">
+                  <button
+                    type="button"
+                    onClick={downloadFullJsonBackup}
+                    className="flex-1 min-h-11 rounded-xl bg-ink text-white text-xs font-bold hover:bg-slate-800 transition-all shadow-xs"
+                  >
+                    📥 Download Backup File (.json)
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => restoreFileInputRef.current?.click()}
+                    className="min-h-11 px-4 rounded-xl border border-line bg-slate-50 text-slate-700 text-xs font-bold hover:bg-slate-100 transition-all"
+                  >
+                    🔄 Restore Backup
+                  </button>
+                </div>
+              </div>
+
+              {/* Cross-Device Cloud Sync */}
+              <div className="card rounded-3xl p-5 border border-line shadow-xs flex flex-col justify-between gap-4 bg-white">
+                <div>
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-2xl">🛰️</span>
+                    <h4 className="text-base font-black text-ink font-display">Cross-Device Live Sync Status</h4>
+                  </div>
+                  <p className="text-xs text-muted mt-2 leading-relaxed">
+                    Synchronizes real-time appointments across all clinic tablets, receptionist phones, and patient booking channels.
+                  </p>
+                  <p className="text-xs font-bold text-brand mt-1">
+                    Last Synced: {lastSyncDisplay}
+                  </p>
+                </div>
+
+                <div className="pt-2 border-t border-line">
+                  <button
+                    type="button"
+                    onClick={handleManualSync}
+                    className="w-full min-h-11 rounded-xl bg-teal-600 text-white text-xs font-bold hover:bg-teal-700 transition-all shadow-xs"
+                  >
+                    🔄 Force Cloud Sync Now
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Daily Archive Table */}
+            <div className="card rounded-3xl p-5 border border-line shadow-xs flex flex-col gap-4 bg-white">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
+                <div>
+                  <h4 className="text-base font-black text-ink font-display">Historical OPD Records by Date</h4>
+                  <p className="text-xs text-muted">Download past days into individual Excel / CSV sheets.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => downloadCsv()}
+                  className="inline-flex items-center gap-1 text-xs font-bold text-brand hover:underline"
+                >
+                  📥 Export Complete All-Time CSV
+                </button>
+              </div>
+
+              {allRecordedDates.length === 0 ? (
+                <p className="text-xs text-muted py-4 text-center">No past records stored yet.</p>
+              ) : (
+                <div className="flex flex-col divide-y divide-line">
+                  {allRecordedDates.map((dateKey) => {
+                    const dayApts = dateGroups[dateKey] || [];
+                    const completed = dayApts.filter((a) => a.status === "completed").length;
+
+                    return (
+                      <div key={dateKey} className="py-3 flex flex-wrap items-center justify-between gap-3">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm text-ink">{dateLabel(dateKey)}</span>
+                            <span className="text-xs text-muted font-mono">({dateKey})</span>
+                          </div>
+                          <p className="text-xs text-muted mt-0.5">
+                            {dayApts.length} patient{dayApts.length > 1 ? "s" : ""} · {completed} completed
+                          </p>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => downloadCsv(dateKey)}
+                            className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-800 hover:bg-emerald-100"
+                          >
+                            📊 Download Excel (.csv)
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ===================================================================== */}
+        {/* TAB 5: PATIENT SEARCH WITH VILLAGE/ADDRESS MATCHING                   */}
         {/* ===================================================================== */}
         {activeTab === "search" && (
           <div className="flex flex-col gap-6 animate-fade-in">

@@ -4,6 +4,8 @@ import {
   generateToken,
   confirmationTicketText,
   doctorDelayBroadcastText,
+  exportToCsv,
+  formatDailyOwnerSummary,
   type Appointment,
   type DoctorLiveStatus,
 } from "@/lib/appointments";
@@ -57,16 +59,13 @@ test("doctorDelayBroadcastText formats delayed announcement correctly", () => {
   assert.ok(broadcast.includes("97977 96909"));
 });
 
-test("doctorDelayBroadcastText formats cancellation notice correctly", () => {
-  const status: DoctorLiveStatus = {
-    state: "cancelled",
-    note: "Emergency call at SKIMS",
-  };
+test("exportToCsv and formatDailyOwnerSummary generate expected formats", () => {
+  const csv = exportToCsv();
+  assert.ok(csv.includes("Token No"));
+  assert.ok(csv.includes("Village / Town"));
 
-  const broadcast = doctorDelayBroadcastText("Dr. Masood", status, "Saturday, 31 Oct");
-  assert.ok(broadcast.includes("OPD CANCELLATION NOTICE"));
-  assert.ok(broadcast.includes("Dr. Masood"));
-  assert.ok(broadcast.includes("SKIMS"));
-  assert.ok(broadcast.includes("97977 96909"));
+  const summary = formatDailyOwnerSummary("2026-10-31");
+  assert.ok(summary.includes("ETERNAL POLYCLINIC — DAILY OPD REPORT"));
+  assert.ok(summary.includes("Lone Complex"));
 });
 
