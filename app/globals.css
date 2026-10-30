@@ -43,6 +43,20 @@ html {
   /* Section links shouldn't land under the sticky header. */
   scroll-padding-top: 5.5rem;
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+/* Touch responsiveness: eliminate 300ms mobile tap delay */
+:where(a, button, input, select, textarea) {
+  touch-action: manipulation;
 }
 
 @media (min-width: 640px) {

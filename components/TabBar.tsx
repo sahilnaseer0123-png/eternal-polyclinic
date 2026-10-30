@@ -5,7 +5,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { clinic } from "@/data/clinic";
 import { CalendarIcon, ChatIcon, ChevronRightIcon, CloseIcon, HomeIcon, MenuIcon, PhoneIcon, UserIcon } from "./Icons";
 import { NAV } from "./nav";
@@ -23,6 +23,18 @@ export function TabBar() {
   const tabClass = (on: boolean) =>
     `flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${on ? "text-brand" : "text-muted"}`;
 
+  // Prevent background scroll bleed when mobile drawer is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   return (
     <div className="lg:hidden" onKeyDown={(e) => e.key === "Escape" && setOpen(false)}>
       {open && (
@@ -32,12 +44,14 @@ export function TabBar() {
             aria-label="Close menu"
             tabIndex={-1}
             onClick={() => setOpen(false)}
-            className="fade-in fixed inset-0 z-40 bg-ink/30"
+            className="fade-in fixed inset-0 z-40 bg-ink/40 backdrop-blur-xs"
           />
           <nav
             id="more-menu"
-            aria-label="More"
-            className="sheet-in fixed inset-x-3 bottom-[4.75rem] z-50 rounded-3xl bg-white p-2 shadow-xl"
+            role="dialog"
+            aria-modal="true"
+            aria-label="More navigation"
+            className="sheet-in fixed inset-x-3 bottom-[4.75rem] z-50 rounded-3xl bg-white p-2.5 shadow-2xl border border-line/60"
           >
             <ul>
               {[...NAV.filter((n) => n.href !== "/doctors"), { href: "/privacy", label: "Privacy notice" }].map((item) => (

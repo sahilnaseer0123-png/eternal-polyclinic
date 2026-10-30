@@ -34,7 +34,7 @@ const STATUS_TEXT = {
 const shell =
   "flex flex-col gap-5 rounded-3xl bg-ink p-5 text-white sm:p-7";
 const whiteButton =
-  "inline-flex min-h-12 items-center justify-center rounded-2xl bg-white px-5 font-bold text-ink hover:bg-slate-100";
+  "inline-flex min-h-12 w-full items-center justify-center rounded-2xl bg-white px-4 text-center text-sm sm:text-base font-bold text-ink hover:bg-slate-100 transition-colors shadow-sm";
 
 export function WhosInToday() {
   const minute = useClinicMinute();
@@ -180,12 +180,38 @@ export function WhosInToday() {
 export function WhosInTodaySkeleton() {
   return (
     <div className={shell} aria-busy="true">
-      <div className="flex items-baseline justify-between border-b border-slate-700/80 pb-3">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-slate-700/80 pb-3">
         <h2 className="text-sm font-bold uppercase tracking-wider text-glow">Who&apos;s in today</h2>
+        <div className="h-4 w-36 animate-pulse rounded-md bg-white/15" />
       </div>
       <div className="grid gap-6 lg:grid-cols-2 lg:gap-8 lg:divide-x lg:divide-slate-700/80">
-        <div className="h-36 animate-pulse rounded-2xl bg-white/10" />
-        <div className="h-44 animate-pulse rounded-2xl bg-white/10 lg:pl-8" />
+        {/* Left column matching active doctor card */}
+        <div className="flex flex-col justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="size-14 shrink-0 animate-pulse rounded-2xl bg-white/10 sm:size-16" />
+            <div className="min-w-0 flex-1 space-y-2">
+              <div className="h-5 w-3/4 animate-pulse rounded-md bg-white/15" />
+              <div className="h-4 w-1/2 animate-pulse rounded-md bg-white/10" />
+            </div>
+          </div>
+          <div className="h-12 w-full animate-pulse rounded-2xl bg-white/20" />
+        </div>
+        {/* Right column matching 7-day schedule */}
+        <div className="flex flex-col gap-2.5 border-t border-slate-700/80 pt-4 lg:border-t-0 lg:pl-8 lg:pt-0">
+          <div className="mb-1 flex items-baseline justify-between">
+            <div className="h-4 w-16 animate-pulse rounded-md bg-white/15" />
+            <div className="h-4 w-20 animate-pulse rounded-md bg-white/10" />
+          </div>
+          <div className="space-y-2.5">
+            {[1, 2, 3, 4, 5].map((n) => (
+              <div key={n} className="flex items-center gap-3">
+                <div className="h-4 w-16 shrink-0 animate-pulse rounded-md bg-white/10" />
+                <div className="h-4 flex-1 animate-pulse rounded-md bg-white/15" />
+                <div className="h-4 w-20 shrink-0 animate-pulse rounded-md bg-white/10" />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

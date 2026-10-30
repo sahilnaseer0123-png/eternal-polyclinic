@@ -47,8 +47,8 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
 
       <div className="mt-3 grid gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-8">
         {/* Who */}
-        <section className="rise card flex flex-col gap-5 rounded-3xl p-5 sm:flex-row sm:items-start sm:p-8 border border-line/70">
-          <DoctorMark doctor={doctor} className="size-24 shrink-0 rounded-3xl bg-brand-tint text-5xl text-brand sm:size-28 sm:text-6xl lg:size-24 lg:text-5xl xl:size-28 xl:text-6xl shadow-inner" />
+        <section className="rise card flex flex-col gap-4 rounded-3xl p-4 sm:flex-row sm:items-start sm:gap-6 sm:p-8 border border-line/70">
+          <DoctorMark doctor={doctor} className="size-20 shrink-0 rounded-2xl bg-brand-tint text-4xl text-brand sm:size-28 sm:rounded-3xl sm:text-6xl lg:size-24 lg:text-5xl xl:size-28 xl:text-6xl shadow-inner" />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1 rounded-full bg-brand-tint px-2.5 py-0.5 text-xs font-bold text-brand">
@@ -87,7 +87,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
         </section>
 
         {/* When, and how to book */}
-        <section aria-labelledby="when" className="rise rise-2 flex flex-col justify-between gap-5 rounded-3xl bg-ink p-6 text-white sm:p-7 shadow-lg border border-slate-800">
+        <section aria-labelledby="when" className="rise rise-2 flex flex-col justify-between gap-5 rounded-3xl bg-ink p-4 text-white sm:p-7 shadow-lg border border-slate-800">
           <div>
             <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-3">
               <div className="flex items-center gap-2">
