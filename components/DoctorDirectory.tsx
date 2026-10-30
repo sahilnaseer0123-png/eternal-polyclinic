@@ -90,7 +90,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
         </div>
       </div>
 
-      <div role="group" aria-label="Filter doctors by speciality" className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:flex-wrap">
+      <div role="group" aria-label="Filter doctors by speciality" className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:flex-wrap w-[calc(100%+2.5rem)] max-w-none">
         {options.map((o) => {
           const on = filter === o.id;
           return (

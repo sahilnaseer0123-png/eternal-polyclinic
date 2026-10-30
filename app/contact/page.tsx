@@ -74,7 +74,8 @@ export default function ContactPage() {
                 rel="noopener noreferrer"
                 className="inline-flex min-h-13 items-center justify-center gap-2 card card-hover rounded-2xl px-6 text-base font-bold text-slate-800 border border-line/70 hover:text-[#25D366] hover:border-[#25D366]/50 transition-colors"
               >
-                <ChatIcon className="size-5.5 text-[#25D366]" /> WhatsApp Direct: {clinic.whatsappDisplay}
+                <ChatIcon className="size-5 text-[#25D366] shrink-0" /> WhatsApp Direct:{" "}
+                <span className="whitespace-nowrap">{clinic.whatsappDisplay}</span>
               </a>
               <a
                 href={clinic.mapUrl}

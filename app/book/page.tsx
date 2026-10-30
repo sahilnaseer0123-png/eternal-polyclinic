@@ -32,7 +32,7 @@ export default function BookPage() {
             <li>Pick one of their OPD days and a time.</li>
             <li>Add your name and mobile number.</li>
             <li>
-              Press Send in WhatsApp ({clinic.whatsappDisplay}). Reception calls you to confirm.
+              Press Send in WhatsApp (<span className="whitespace-nowrap">{clinic.whatsappDisplay}</span>). Reception calls you to confirm.
             </li>
           </ol>
           <div className="card rounded-3xl p-5">
