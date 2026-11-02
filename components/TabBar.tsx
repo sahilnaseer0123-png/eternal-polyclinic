@@ -21,7 +21,7 @@ export function TabBar() {
   const [open, setOpen] = useState(false);
   const moreActive = NAV.some((n) => n.href === pathname && n.href !== "/doctors") || pathname === "/privacy";
   const tabClass = (on: boolean) =>
-    `flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${on ? "text-brand" : "text-muted"}`;
+    `flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${on ? "text-mint" : "text-night-muted"}`;
 
   // Prevent background scroll bleed when mobile drawer is open
   useEffect(() => {
@@ -51,16 +51,16 @@ export function TabBar() {
             role="dialog"
             aria-modal="true"
             aria-label="More navigation"
-            className="sheet-in fixed inset-x-3 bottom-[4.75rem] z-50 rounded-2xl bg-white p-3 shadow-2xl border border-line"
+            className="sheet-in fixed inset-x-3 bottom-[4.75rem] z-50 rounded-2xl bg-white p-3 shadow-elevated border border-line"
           >
             <ul className="space-y-1">
-              {[...NAV.filter((n) => n.href !== "/doctors"), { href: "/privacy", label: "Privacy notice" }, { href: "/admin", label: "Reception Portal" }].map((item) => (
+              {[...NAV.filter((n) => n.href !== "/doctors"), { href: "/privacy", label: "Privacy notice" }].map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
                     onClick={() => setOpen(false)}
                     aria-current={pathname === item.href ? "page" : undefined}
-                    className={`flex min-h-11 items-center justify-between rounded-xl px-3.5 text-xs sm:text-sm font-semibold transition-colors ${
+                    className={`flex min-h-11 items-center justify-between rounded-xl px-3.5 text-sm font-semibold transition-colors ${
                       pathname === item.href ? "bg-brand-tint text-brand" : "text-charcoal hover:bg-ground hover:text-ink"
                     }`}
                   >
@@ -73,13 +73,13 @@ export function TabBar() {
             <div className="mt-3 grid grid-cols-2 gap-2 border-t border-line pt-3">
               <a
                 href={`https://wa.me/${clinic.whatsapp}`}
-                className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-50 text-emerald-900 border border-emerald-200/70 text-xs font-bold hover:bg-emerald-100 transition-colors"
+                className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-sand text-ink border border-line text-sm font-bold hover:bg-stone transition-colors"
               >
                 <ChatIcon className="size-4 text-[#25D366]" /> WhatsApp
               </a>
               <a
                 href={`tel:${clinic.phone}`}
-                className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand text-xs font-bold text-white hover:bg-brand-dark transition-colors shadow-subtle"
+                className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand text-sm font-bold text-white hover:bg-brand-dark"
               >
                 <PhoneIcon className="size-3.5" /> Call
               </a>
@@ -90,7 +90,7 @@ export function TabBar() {
 
       <nav
         aria-label="Quick links"
-        className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-4 [view-transition-name:tab-bar] border-t border-line bg-white px-2 pb-[max(0.25rem,env(safe-area-inset-bottom))] pt-1"
+        className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-4 [view-transition-name:tab-bar] border-t border-night-line bg-night px-2 pb-[max(0.25rem,env(safe-area-inset-bottom))] pt-1"
       >
         {TABS.map(({ href, label, Icon }) => {
           const on = pathname === href;

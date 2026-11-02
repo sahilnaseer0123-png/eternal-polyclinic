@@ -1,288 +1,212 @@
-// Home (design C): "Which doctor do you need?", the dark Today card, specialists, tests, and how to find us.
+// Home (design v3, "day-first"): night hero, "Who sits on <day>" picker, by-appointment doctors,
+// three booking steps, tests and medicines, and how to find us. All facts come from data/clinic.ts.
 
 import type { Metadata } from "next";
-import Form from "next/form";
 import Link from "next/link";
-import { categories, clinic, doctors, services } from "@/data/clinic";
-import { formatTime, opdShort } from "@/lib/schedule";
-import { WhosInToday } from "@/components/WhosInToday";
+import { clinic, doctors, services } from "@/data/clinic";
+import { formatTime } from "@/lib/schedule";
+import { DayPicker } from "@/components/DayPicker";
 import { LegacyBookingLink } from "@/components/LegacyBookingLink";
-import { DoctorMark } from "@/components/DoctorMark";
-import { NextAvailable } from "@/components/NextAvailable";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
-import { PatientReviews } from "@/components/PatientReviews";
-import {
-  ChevronRightIcon,
-  MapPinIcon,
-  PhoneIcon,
-  SearchIcon,
-  ServiceIcon,
-} from "@/components/Icons";
+import { WhatsAppPreview } from "@/components/WhatsAppPreview";
+import { EmergencyNote } from "@/components/EmergencyNote";
+import { MapPinIcon, PhoneIcon, ServiceIcon } from "@/components/Icons";
 
 // Every page names its own address for search engines (alternates.canonical); this is "/".
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const hours = `${formatTime(clinic.hours.open)} – ${formatTime(clinic.hours.close)}`;
+const byAppointment = doctors.filter((d) => d.opd.length === 0);
+
+const facts = [
+  "No registration charge",
+  "No account needed",
+  "Reception confirms by phone",
+  `Open every day, ${hours}`,
+];
+
+const steps = [
+  { n: "1", title: "Pick a day", text: "See which specialists sit on the day that suits you." },
+  { n: "2", title: "Choose a time", text: "Pick a doctor, a date and a time. We ask for your name and number only." },
+  { n: "3", title: "Send on WhatsApp", text: "Your request opens in WhatsApp. Reception calls you to confirm." },
+];
 
 export default function Home() {
   return (
     <>
       <LegacyBookingLink />
 
-      {/* Hero + Consultation Directory: Modern Architectural Healthcare Layout */}
-      <div className="relative w-full max-w-full overflow-hidden bg-ground border-b border-line">
-        <section className="relative mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-14 lg:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-            {/* Left: Refined Clinic Value Proposition */}
-            <div className="lg:col-span-7 flex flex-col gap-6">
-              <div className="flex items-center gap-3">
-                <span className="inline-flex items-center gap-2 rounded-lg bg-white border border-brand-line px-3 py-1 text-xs font-semibold text-brand uppercase tracking-wider shadow-subtle">
-                  <span className="size-1.5 rounded-full bg-brand" />
-                  Opposite SDH Hospital · Sopore
-                </span>
-                <span className="text-xs text-muted font-medium hidden sm:inline">
-                  Open {hours}
-                </span>
-              </div>
+      {/* Hero */}
+      <section className="bg-night text-ground">
+        <div className="mx-auto max-w-6xl px-5 pb-12 pt-10 sm:px-6 sm:pb-20 sm:pt-20">
+          <p className="rise eyebrow text-mint">{clinic.name} · Opposite SDH Hospital, Sopore</p>
+          <h1 className="rise rise-2 mt-5 max-w-4xl text-[3.25rem] font-light leading-[0.95] tracking-[-0.04em] sm:text-[5.5rem] lg:text-[7rem]">
+            Find the day <em className="text-mint">your doctor</em> is in.
+          </h1>
+          <p className="rise rise-3 mt-6 max-w-xl text-base leading-relaxed text-night-muted sm:text-xl">
+            {doctors.length} visiting specialists, one clinic in Sopore. Pick a day to see who sits, then book on WhatsApp.
+          </p>
+          <div className="rise rise-3 mt-8 flex flex-wrap gap-3">
+            <a
+              href="#days"
+              className="inline-flex min-h-12 items-center justify-center rounded-xl bg-mint px-6 text-base font-bold text-night hover:bg-white"
+            >
+              See who&rsquo;s in
+            </a>
+            <a
+              href={`tel:${clinic.phone}`}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-night-line px-6 text-base font-bold text-ground hover:border-mint"
+            >
+              <PhoneIcon className="size-4" />
+              Call {clinic.phoneDisplay}
+            </a>
+          </div>
+          <ul className="mt-10 grid grid-cols-2 gap-x-6 gap-y-3 border-t border-night-line pt-6 text-sm font-semibold text-night-muted sm:mt-14 sm:grid-cols-4 sm:text-base">
+            {facts.map((f) => (
+              <li key={f} className="flex items-start gap-2">
+                <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-mint" />
+                {f}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
-              <h1 className="text-3xl font-extrabold tracking-tight text-ink sm:text-5xl lg:text-5xl leading-[1.15] font-display">
-                Specialist Medical Consultations &amp; Advanced Diagnostics
-              </h1>
+      <DayPicker />
 
-              <p className="text-base sm:text-lg text-muted leading-relaxed max-w-xl font-normal">
-                Serving the families of Sopore, Baramulla, and North Kashmir. Comprehensive specialist clinics with certified radiologists, cardiologists, and in-house diagnostic imaging under one roof.
+      {/* Doctors without fixed OPD days */}
+      {byAppointment.length > 0 && (
+        <section aria-labelledby="by-appointment" className="bg-ground">
+          <div className="mx-auto max-w-6xl px-5 pb-12 sm:px-6 sm:pb-20">
+            <div className="rounded-3xl bg-sand p-6 sm:p-10">
+              <p className="eyebrow text-brand">By appointment</p>
+              <h2 id="by-appointment" className="mt-3 text-3xl font-light leading-none tracking-[-0.04em] sm:text-5xl">
+                Any day, <em className="text-brand">by appointment</em>
+              </h2>
+              <p className="mt-3 max-w-xl text-base text-muted">
+                These specialists don&rsquo;t sit on fixed days. Call reception to fix a time.
               </p>
-
-              {/* Minimalist Search & Doctor Filter */}
-              <div className="flex flex-col gap-3 pt-1">
-                <Form
-                  action="/doctors"
-                  role="search"
-                  className="flex items-center rounded-xl bg-white border border-line p-1.5 pl-4 shadow-subtle focus-within:border-brand focus-within:ring-1 focus-within:ring-brand transition-all"
-                >
-                  <SearchIcon className="size-4 shrink-0 text-brand" />
-                  <label htmlFor="home-find" className="sr-only">
-                    Find a specialist doctor or diagnostic service
-                  </label>
-                  <input
-                    id="home-find"
-                    name="q"
-                    type="search"
-                    placeholder="Search specialist, symptom, or service (e.g. Heart, Echo, USG)..."
-                    autoComplete="off"
-                    className="min-h-11 min-w-0 flex-1 bg-transparent text-sm text-ink outline-none placeholder:text-muted"
-                  />
-                  <button
-                    type="submit"
-                    className="min-h-10 shrink-0 rounded-lg bg-ink px-5 text-sm font-semibold text-white hover:bg-brand transition-colors"
-                  >
-                    Find Doctor
-                  </button>
-                </Form>
-
-                <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                  <span className="text-xs font-semibold text-muted mr-1">Specialties:</span>
-                  <Link
-                    href="/doctors"
-                    className="inline-flex items-center rounded-md bg-ink px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-brand"
-                  >
-                    All 12 Doctors
-                  </Link>
-                  {categories.slice(0, 6).map((c) => (
-                    <Link
-                      key={c.id}
-                      href={`/doctors?type=${c.id}`}
-                      className="inline-flex items-center rounded-md bg-white border border-line px-2.5 py-1 text-xs font-medium text-charcoal hover:border-brand-line hover:text-brand transition-colors shadow-subtle"
+              <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+                {byAppointment.map((d) => (
+                  <li key={d.id} className="rounded-2xl bg-white p-5">
+                    <h3 className="font-display text-xl font-medium tracking-tight sm:text-2xl">
+                      <Link href={`/doctors/${d.id}`} className="hover:text-brand">
+                        {d.name ?? d.speciality}
+                      </Link>
+                    </h3>
+                    <p className="font-semibold text-brand">{d.speciality}</p>
+                    <p className="text-sm text-muted">{d.credentials ?? d.degree}</p>
+                    <a
+                      href={`tel:${clinic.phone}`}
+                      className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl border-[1.5px] border-ink px-4 text-base font-bold hover:bg-ink hover:text-white"
                     >
-                      {c.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              {/* Direct Booking & Phone Action */}
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                <Link
-                  href="/book"
-                  className="inline-flex min-h-11 items-center justify-center rounded-lg bg-brand px-6 text-sm font-semibold text-white shadow-subtle hover:bg-brand-dark transition-all"
-                >
-                  Book OPD Appointment →
-                </Link>
-                <a
-                  href={`tel:${clinic.phone}`}
-                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-line bg-white px-5 text-sm font-semibold text-ink hover:bg-brand-tint hover:border-brand-line hover:text-brand transition-all shadow-subtle"
-                >
-                  <PhoneIcon className="size-4 text-brand" />
-                  <span>Call {clinic.phoneDisplay}</span>
-                </a>
-              </div>
-            </div>
-
-            {/* Right: Live OPD Consultation Timetable Widget */}
-            <div className="lg:col-span-5 w-full">
-              <section aria-labelledby="today" className="w-full">
-                <WhosInToday />
-              </section>
+                      <PhoneIcon className="size-4" />
+                      Call {clinic.phoneDisplay}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </section>
-      </div>
+      )}
 
-      {/* Structured Institutional Highlights (Clean Editorial Row) */}
-      <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10 border-b border-line bg-white">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+      {/* Three steps */}
+      <section aria-labelledby="steps" className="bg-brand text-white">
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-6 sm:py-20 lg:grid-cols-[1.2fr_1fr] lg:items-center">
           <div>
-            <span className="block text-2xl font-bold tracking-tight text-ink font-display">12 Specialists</span>
-            <span className="block text-xs text-muted mt-1 leading-relaxed">Visiting physicians from leading GMC &amp; SKIMS institutions</span>
-          </div>
-          <div>
-            <span className="block text-2xl font-bold tracking-tight text-ink font-display">In-House USG</span>
-            <span className="block text-xs text-muted mt-1 leading-relaxed">Ultrasound &amp; Echo diagnostics available on fixed days</span>
-          </div>
-          <div>
-            <span className="block text-2xl font-bold tracking-tight text-ink font-display">Opposite SDH</span>
-            <span className="block text-xs text-muted mt-1 leading-relaxed">1st Floor, Lone Complex, Old Municipal Office building</span>
-          </div>
-          <div>
-            <span className="block text-2xl font-bold tracking-tight text-ink font-display">₹0 Registration</span>
-            <span className="block text-xs text-muted mt-1 leading-relaxed">Transparent consultation fees with no extra clinic registration</span>
-          </div>
-        </div>
-      </section>
-
-      {/* Specialists */}
-      <section
-        aria-labelledby="specialists"
-        className="reveal mx-auto max-w-6xl px-4 pt-12 sm:px-6 sm:pt-16"
-      >
-        <div className="flex items-center justify-between pb-4">
-          <div>
-            <span className="text-xs font-semibold text-brand uppercase tracking-wider">Clinical Faculty</span>
-            <h2
-              id="specialists"
-              className="text-2xl font-bold tracking-tight text-ink font-display sm:text-3xl"
-            >
-              Consulting Specialists
+            <p className="eyebrow text-[#BDF1E8]">How booking works</p>
+            <h2 id="steps" className="mt-3 text-[2.125rem] font-light leading-none tracking-[-0.04em] sm:text-6xl">
+              Three steps. <em>No account.</em>
             </h2>
-          </div>
-          <Link
-            href="/doctors"
-            className="inline-flex min-h-10 items-center rounded-lg border border-line bg-white px-3.5 text-xs font-semibold text-ink transition-colors hover:border-brand-line hover:text-brand shadow-subtle"
-          >
-            All 12 Doctors →
-          </Link>
-        </div>
-        {/* Responsive grid of doctor profiles */}
-        <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {doctors.map((doctor) => {
-            const days = opdShort(doctor);
-            return (
-              <li
-                key={doctor.id}
-                className="w-full"
-              >
-                <Link
-                  href={`/doctors/${doctor.id}`}
-                  className="card card-hover flex h-full flex-col justify-between rounded-xl border border-line p-4 transition-all duration-200 bg-white"
-                >
-                  <div>
-                    <div className="flex items-start gap-3">
-                      <DoctorMark
-                        doctor={doctor}
-                        className="size-14 shrink-0 rounded-xl"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <span className="inline-block rounded-md bg-brand-tint border border-brand-line/60 px-2 py-0.5 text-[10px] font-semibold text-brand">
-                          {doctor.categoryLabel}
-                        </span>
-                        <h3 className="mt-1 font-bold text-ink text-sm sm:text-base truncate font-display">
-                          {doctor.name ?? doctor.speciality}
-                        </h3>
-                        <p className="text-xs text-muted truncate">
-                          {doctor.name ? doctor.speciality : "Specialist Consultant"}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="mt-3 flex flex-wrap gap-1.5">
-                      <span className="inline-block rounded-md bg-ground border border-line px-2 py-0.5 text-[11px] font-medium text-charcoal">
-                        {days ?? "Days coming soon"}
-                      </span>
-                      {doctor.experienceYears && (
-                        <span className="inline-block rounded-md bg-ground border border-line px-2 py-0.5 text-[11px] font-medium text-muted">
-                          {doctor.experienceYears}y exp
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="mt-4 border-t border-line/60 pt-2.5 flex items-center justify-between">
-                    <NextAvailable
-                      doctorId={doctor.id}
-                      fallback={"Check Schedule"}
-                      short
-                      className="truncate text-xs font-semibold text-brand"
-                    />
-                    <span className="text-xs font-bold text-ink">
-                      View Profile →
-                    </span>
-                  </div>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
-
-      {/* Patient Trust & Google Reviews Section */}
-      <PatientReviews />
-
-      {/* Tests and medicines + visit, on a soft tinted band */}
-      <section className="mt-10 bg-brand-tint sm:mt-14">
-        <div className="reveal mx-auto grid max-w-6xl gap-6 px-5 py-10 sm:py-14 lg:grid-cols-[2fr_1fr] lg:items-end">
-          <div className="min-w-0">
-            <h2 className="text-xl font-extrabold tracking-tight sm:text-3xl">
-              Tests and medicines
-            </h2>
-            <ul className="mt-4 grid grid-cols-4 gap-2 sm:gap-4">
-              {services.map((s) => (
-                <li key={s.id}>
-                  <Link
-                    href={`/services#${s.id}`}
-                    className="flex h-full flex-col items-center gap-2 text-center text-sm font-semibold sm:card sm:items-start sm:rounded-3xl sm:p-5 sm:text-left sm:text-base"
-                  >
-                    <span className="card flex size-16 items-center justify-center rounded-2xl text-brand sm:size-12 sm:bg-brand-tint sm:shadow-none">
-                      <ServiceIcon id={s.id} />
-                    </span>
-                    {s.short}
-                  </Link>
+            <ol className="mt-8 flex flex-col gap-5">
+              {steps.map((s) => (
+                <li key={s.n} className="flex gap-4">
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/15 font-display text-xl font-medium">
+                    {s.n}
+                  </span>
+                  <span>
+                    <span className="block text-lg font-bold">{s.title}</span>
+                    <span className="block text-base text-[#D4F5EF]">{s.text}</span>
+                  </span>
                 </li>
               ))}
-            </ul>
+            </ol>
+            <Link
+              href="/book"
+              className="mt-8 inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-6 text-base font-bold text-brand hover:bg-sand"
+            >
+              Book a visit
+            </Link>
           </div>
+          <WhatsAppPreview className="mx-auto w-full max-w-sm" />
+        </div>
+      </section>
 
-          <Link
-            href="/contact"
-            className="card card-hover flex flex-col gap-4 rounded-3xl border border-line/70 p-3 sm:p-4 lg:flex-row lg:items-center transition-all duration-200"
-          >
-            <ReceptionPhoto
-              className="aspect-[3/2] rounded-2xl lg:w-[46%] lg:shrink-0"
-              sizes="(min-width: 1024px) 180px, 100vw"
-            />
-            <span className="flex min-w-0 flex-1 items-center gap-4 px-1 pb-1 lg:px-0 lg:pb-0">
-              <span className="flex size-12 shrink-0 lg:hidden items-center justify-center rounded-2xl bg-brand-tint text-brand">
-                <MapPinIcon className="size-6" />
+      {/* Tests and medicines */}
+      <section aria-labelledby="services" className="bg-ground">
+        <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-20">
+          <p className="eyebrow text-brand">In the clinic</p>
+          <h2 id="services" className="mt-3 text-[2.125rem] font-light leading-none tracking-[-0.04em] sm:text-6xl">
+            Tests and <em className="text-brand">medicines</em>
+          </h2>
+          <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {services.map((s) => (
+              <li key={s.id}>
+                <Link
+                  href={`/services#${s.id}`}
+                  className="card card-hover flex h-full items-start gap-4 rounded-2xl p-5"
+                >
+                  <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand">
+                    <ServiceIcon id={s.id} />
+                  </span>
+                  <span>
+                    <span className="block text-lg font-bold">{s.short}</span>
+                    <span className="block text-sm text-muted">{s.description}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Visit */}
+      <section aria-labelledby="visit" className="bg-sand">
+        <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:px-6 sm:py-20 lg:grid-cols-2 lg:items-center">
+          <div>
+            <p className="eyebrow text-brand">Visit us</p>
+            <h2 id="visit" className="mt-3 text-[2.125rem] font-light leading-none tracking-[-0.04em] sm:text-6xl">
+              Opposite <em className="text-brand">SDH Hospital</em>
+            </h2>
+            <p className="mt-4 flex items-start gap-2 text-lg font-semibold">
+              <MapPinIcon className="mt-1 size-5 shrink-0 text-brand" />
+              <span>
+                {clinic.address}
+                <span className="block text-base font-normal text-muted">{clinic.location.name} building</span>
               </span>
-              <span className="flex min-w-0 flex-1 flex-col leading-snug">
-                <span className="font-bold">
-                  {clinic.address.replace(/, Sopore$/, "")}
-                </span>
-                <span className="text-sm text-muted sm:text-base">
-                  {clinic.location.name} building, Sopore · Map and directions
-                </span>
-              </span>
-              <ChevronRightIcon className="size-5 shrink-0 text-slate-400" />
-            </span>
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                href={clinic.mapUrl}
+                className="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark"
+              >
+                Get directions
+              </a>
+              <a
+                href={`tel:${clinic.phone}`}
+                className="inline-flex min-h-12 items-center justify-center rounded-xl border-[1.5px] border-ink px-6 text-base font-bold hover:bg-ink hover:text-white"
+              >
+                Call {clinic.phoneDisplay}
+              </a>
+            </div>
+            <p className="mt-6 text-base text-charcoal">
+              <span className="font-bold">Please bring</span> old prescriptions, any test reports, and a list of the medicines you take now.
+            </p>
+            <EmergencyNote className="mt-4" />
+          </div>
+          <Link href="/contact" aria-label="Map and directions" className="block overflow-hidden rounded-3xl">
+            <ReceptionPhoto className="aspect-[3/2]" sizes="(min-width: 1024px) 560px, 100vw" />
           </Link>
         </div>
       </section>

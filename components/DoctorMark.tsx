@@ -1,5 +1,5 @@
 // Modern Architectural / Clinical Doctor Identity Mark
-// Deep medical teal (#1D5D62) & refined crisp container with hairline structural border.
+// Mist tile with deep teal initial (design v3).
 
 import type { Doctor } from "@/data/clinic";
 import { CategoryIcon } from "./Icons";
@@ -16,12 +16,12 @@ export function DoctorMark({
   return (
     <span
       aria-hidden="true"
-      className={`relative flex shrink-0 items-center justify-center font-bold bg-[#EDF5F5] text-[#1D5D62] border border-[#BFD7D7] select-none overflow-hidden shadow-subtle ${className}`}
+      className={`relative flex shrink-0 items-center justify-center font-bold bg-brand-tint text-brand select-none overflow-hidden ${className}`}
     >
       <span className="relative z-10 flex flex-col items-center justify-center leading-none">
-        <span className="font-display font-bold tracking-tight">{initial}</span>
+        <span className="font-display font-medium tracking-tight">{initial}</span>
         <span className="mt-0.5 opacity-70">
-          <CategoryIcon category={doctor.category} className="size-3 text-[#1D5D62]" />
+          <CategoryIcon category={doctor.category} className="size-3 text-brand" />
         </span>
       </span>
     </span>

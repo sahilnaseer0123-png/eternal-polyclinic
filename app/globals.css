@@ -1,46 +1,60 @@
 @import "tailwindcss";
-@import "@fontsource-variable/inter";
-@import "@fontsource-variable/manrope";
+@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource-variable/fraunces/opsz.css";
+@import "@fontsource-variable/fraunces/opsz-italic.css";
 
-/* Swiss Minimalist / Modern International Healthcare Design System */
+/* Design v3 "day-first" (Nov 2026): cream ground, night-teal hero, Fraunces headings, Plus Jakarta Sans body.
+   One brand colour (deep teal); night and mint are its dark-surface companions. */
 @theme {
-  --font-sans: "Inter Variable", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Manrope Variable", "Inter Variable", system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
 
-  /* Restrained, Sophisticated Color Hierarchy */
-  --color-brand: #1D5D62;          /* Deep medical teal - calm, authoritative */
-  --color-brand-dark: #144448;     /* Dark teal for active & hover states */
-  --color-brand-tint: #EDF5F5;     /* Whisper teal wash for subtle badges & backgrounds */
-  --color-brand-line: #BFD7D7;     /* Clean structural hairline border */
+  --color-brand: #0A5A54;          /* deep teal: buttons, links, selected states */
+  --color-brand-dark: #08443F;     /* hover */
+  --color-brand-tint: #E3EEEB;     /* mist: doctor marks, tiles, soft fills */
+  --color-brand-line: #C5DAD5;
 
-  --color-ground: #F9FAFA;         /* Warm off-white / surgical calm canvas */
-  --color-stone: #E8ECEC;          /* Secondary divider & container border */
-  --color-ink: #0F1D2B;            /* Midnight Navy - high contrast, trustworthy */
-  --color-charcoal: #2A363F;       /* Secondary neutral text */
-  --color-muted: #5E6D76;          /* Editorial caption & metadata */
-  --color-line: #E2E7E7;           /* Crisp hairline borders */
-  --color-emergency: #B91C1C;      /* Urgent clinical alert */
-  --color-glow: #1D5D62;
+  --color-night: #0B1917;          /* hero and footer */
+  --color-night-line: #2E4742;
+  --color-night-muted: #A9B8B3;
+  --color-mint: #9BE3D6;           /* teal text on night */
+  --color-glow: #9BE3D6;
 
-  --shadow-subtle: 0 1px 2px 0 rgba(15, 29, 43, 0.04);
-  --shadow-card: 0 1px 3px 0 rgba(15, 29, 43, 0.04), 0 4px 12px -2px rgba(15, 29, 43, 0.03);
-  --shadow-elevated: 0 4px 6px -1px rgba(15, 29, 43, 0.05), 0 10px 24px -4px rgba(15, 29, 43, 0.06);
+  --color-ground: #FAF8F4;         /* cream page ground */
+  --color-sand: #F3EBDD;           /* reassurance bands */
+  --color-stone: #EFEAE0;
+  --color-ink: #14201E;
+  --color-charcoal: #2B3836;
+  --color-muted: #566360;          /* 6.4:1 on cream */
+  --color-line: #E4DED2;
+  --color-line-strong: #D9D2C4;
+  --color-emergency: #B91C1C;
+
+  --shadow-subtle: none;
+  --shadow-card: none;
+  --shadow-elevated: 0 10px 28px -12px rgba(20, 32, 30, 0.22);
 }
 
-/* Modern Architectural Surfaces */
+/* Cards: white, 1px border, no shadow. Pair with rounded-2xl / rounded-3xl. */
 @utility card {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   border: 1px solid var(--color-line);
-  box-shadow: var(--shadow-card);
 }
 
 @utility card-hover {
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  transition: border-color 0.2s ease, transform 0.2s ease;
   &:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-elevated);
-    border-color: var(--color-brand-line);
+    border-color: var(--color-line-strong);
   }
+}
+
+/* Small uppercase label above headings and groups. */
+@utility eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
 /* Body text is 16px on phones (18px felt oversized there) and 18px from tablets up.
@@ -109,10 +123,8 @@ body {
 /* Card links lift a little under the mouse (desktop only; phones have no hover). */
 @media (hover: hover) {
   a.card:hover {
-    transform: translateY(-3px);
-    box-shadow:
-      0 12px 28px rgb(15 23 42 / 0.1),
-      0 2px 6px rgb(15 23 42 / 0.06);
+    transform: translateY(-2px);
+    border-color: var(--color-line-strong);
   }
 }
 
@@ -197,7 +209,12 @@ body {
   h2,
   h3 {
     font-family: var(--font-display);
+    font-optical-sizing: auto;
     letter-spacing: -0.02em;
+  }
+  h1 em,
+  h2 em {
+    font-style: italic;
   }
 }
 
