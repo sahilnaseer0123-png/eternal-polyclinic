@@ -84,9 +84,14 @@ export function SiteFooter() {
           </a>
           .
         </p>
-        <Link href="/privacy" className="inline-flex min-h-10 items-center hover:text-white">
-          Privacy notice
-        </Link>
+        <div className="flex items-center gap-5">
+          <Link href="/admin" className="inline-flex min-h-10 items-center hover:text-white">
+            Staff
+          </Link>
+          <Link href="/privacy" className="inline-flex min-h-10 items-center hover:text-white">
+            Privacy notice
+          </Link>
+        </div>
       </div>
     </footer>
   );

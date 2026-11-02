@@ -42,6 +42,13 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
+          <Link
+            href="/admin"
+            aria-current={pathname === "/admin" ? "page" : undefined}
+            className="inline-flex min-h-11 items-center rounded-xl px-3 text-xs font-bold uppercase tracking-wider text-night-muted hover:text-mint"
+          >
+            Staff
+          </Link>
           <a
             href={`tel:${clinic.phone}`}
             className="ml-2 inline-flex min-h-11 items-center gap-2 rounded-xl border-[1.5px] border-night-line px-4 hover:border-mint"
