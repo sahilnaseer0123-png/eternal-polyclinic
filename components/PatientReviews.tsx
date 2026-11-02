@@ -29,34 +29,34 @@ const REVIEWS = [
 export function PatientReviews() {
   return (
     <section aria-labelledby="patient-reviews" className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-      <div className="border border-[#E2E4DC] rounded-2xl bg-white p-6 sm:p-10 shadow-xs">
+      <div className="card rounded-2xl bg-white p-6 sm:p-10 border border-line shadow-card">
         {/* Header & Overall Rating */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-[#E2E4DC] pb-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-line pb-8">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <GoogleIcon className="size-5" />
-              <span className="text-xs font-semibold text-[#647077] uppercase tracking-wider">
+              <GoogleIcon className="size-4" />
+              <span className="text-xs font-semibold text-brand uppercase tracking-wider">
                 Google Maps Verified Reviews
               </span>
             </div>
-            <h2 id="patient-reviews" className="text-2xl sm:text-3xl font-bold tracking-tight text-[#142B3B] font-display">
+            <h2 id="patient-reviews" className="text-2xl sm:text-3xl font-bold tracking-tight text-ink font-display">
               Patient Trust &amp; Reviews
             </h2>
-            <p className="text-xs sm:text-sm text-[#647077] mt-1 max-w-lg">
+            <p className="text-xs sm:text-sm text-muted mt-1 max-w-lg leading-relaxed">
               Read verified feedback from patients across Sopore, Baramulla, and North Kashmir who consult with our visiting specialists.
             </p>
           </div>
 
           <div className="flex flex-col sm:items-end gap-2 shrink-0">
             <div className="flex items-center gap-2">
-              <span className="text-3xl font-bold text-[#142B3B] font-display">5.0</span>
-              <div className="flex text-amber-400">
+              <span className="text-3xl font-bold text-ink font-display">5.0</span>
+              <div className="flex text-amber-500">
                 {[...Array(5)].map((_, i) => (
-                  <StarIcon key={i} className="size-5 fill-current" />
+                  <StarIcon key={i} className="size-4.5 fill-current" />
                 ))}
               </div>
             </div>
-            <span className="text-xs text-[#858D91]">
+            <span className="text-xs text-muted">
               Based on patient feedback &amp; Google reviews
             </span>
             <div className="flex items-center gap-2 mt-1">
@@ -64,16 +64,16 @@ export function PatientReviews() {
                 href={clinic.mapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#397C78] hover:underline"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand hover:underline"
               >
                 View on Google Maps ↗
               </a>
-              <span className="text-[#E2E4DC]">·</span>
+              <span className="text-stone">·</span>
               <a
                 href={clinic.mapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-lg bg-[#397C78] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#2A5D5A] transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-dark transition-colors shadow-subtle"
               >
                 ★ Write a Review
               </a>
@@ -82,32 +82,32 @@ export function PatientReviews() {
         </div>
 
         {/* Reviews Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-8">
           {REVIEWS.map((rev, idx) => (
             <div
               key={idx}
-              className="rounded-xl border border-[#E2E4DC] bg-[#F7F7F3] p-5 flex flex-col justify-between gap-4"
+              className="rounded-xl border border-line bg-ground p-5 flex flex-col justify-between gap-4 transition-all hover:border-brand-line hover:shadow-subtle"
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <div className="flex text-amber-400">
+                  <div className="flex text-amber-500">
                     {[...Array(rev.rating)].map((_, i) => (
                       <StarIcon key={i} className="size-3.5 fill-current" />
                     ))}
                   </div>
-                  <span className="text-[11px] text-[#858D91]">{rev.date}</span>
+                  <span className="text-[11px] text-muted">{rev.date}</span>
                 </div>
-                <p className="text-xs sm:text-sm text-[#252C30] leading-relaxed">
+                <p className="text-xs sm:text-sm text-charcoal leading-relaxed font-normal">
                   &ldquo;{rev.text}&rdquo;
                 </p>
               </div>
 
-              <div className="border-t border-[#E2E4DC] pt-3 flex items-center justify-between text-xs">
+              <div className="border-t border-line/60 pt-3 flex items-center justify-between text-xs">
                 <div>
-                  <span className="font-bold text-[#142B3B] block">{rev.name}</span>
-                  <span className="text-[11px] text-[#647077]">{rev.location}</span>
+                  <span className="font-bold text-ink block">{rev.name}</span>
+                  <span className="text-[11px] text-muted">{rev.location}</span>
                 </div>
-                <span className="inline-flex items-center gap-1 rounded-md bg-white border border-[#C4DBD8] px-2 py-0.5 text-[10px] font-semibold text-[#397C78]">
+                <span className="inline-flex items-center gap-1 rounded-md bg-white border border-brand-line px-2 py-0.5 text-[10px] font-semibold text-brand">
                   Verified Patient
                 </span>
               </div>

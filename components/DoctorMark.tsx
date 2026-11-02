@@ -1,5 +1,5 @@
-// Architectural / Swiss Minimalist Doctor Mark
-// Muted medical teal (#397C78) & warm off-white badge with subtle hairline border.
+// Modern Architectural / Clinical Doctor Identity Mark
+// Deep medical teal (#1D5D62) & refined crisp container with hairline structural border.
 
 import type { Doctor } from "@/data/clinic";
 import { CategoryIcon } from "./Icons";
@@ -16,12 +16,12 @@ export function DoctorMark({
   return (
     <span
       aria-hidden="true"
-      className={`relative flex shrink-0 items-center justify-center font-bold bg-[#F2F7F6] text-[#397C78] border border-[#C4DBD8] select-none overflow-hidden ${className}`}
+      className={`relative flex shrink-0 items-center justify-center font-bold bg-[#EDF5F5] text-[#1D5D62] border border-[#BFD7D7] select-none overflow-hidden shadow-subtle ${className}`}
     >
       <span className="relative z-10 flex flex-col items-center justify-center leading-none">
         <span className="font-display font-bold tracking-tight">{initial}</span>
-        <span className="mt-0.5 opacity-60">
-          <CategoryIcon category={doctor.category} className="size-3 text-[#397C78]" />
+        <span className="mt-0.5 opacity-70">
+          <CategoryIcon category={doctor.category} className="size-3 text-[#1D5D62]" />
         </span>
       </span>
     </span>
