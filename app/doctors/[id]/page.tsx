@@ -45,27 +45,27 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
         <ChevronRightIcon className="size-4 rotate-180" /> All doctors
       </Link>
 
-      <div className="mt-3 grid gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-8">
+      <div className="mt-3 grid items-start gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-8">
         {/* Who */}
-        <section className="rise card flex flex-col gap-4 rounded-2xl p-5 sm:flex-row sm:items-start sm:gap-6 sm:p-8 border border-line bg-white shadow-card">
-          <DoctorMark doctor={doctor} className="size-20 shrink-0 rounded-xl bg-brand-tint text-4xl text-brand sm:size-28 sm:rounded-2xl sm:text-5xl lg:size-24 lg:text-4xl shadow-subtle" />
+        <section className="rise card flex flex-col gap-4 rounded-3xl p-5 sm:flex-row sm:items-start sm:gap-6 sm:p-8">
+          <DoctorMark doctor={doctor} className="size-20 shrink-0 rounded-full text-4xl sm:size-28 sm:text-5xl lg:size-24 lg:text-4xl" />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-md bg-brand-tint border border-brand-line/60 px-2.5 py-0.5 text-xs font-semibold text-brand">
+              <span className="inline-flex items-center gap-1 rounded-full bg-brand-tint px-3 py-1 text-xs font-semibold text-brand">
                 <CategoryIcon category={doctor.category} className="size-3.5" />
                 {doctor.categoryLabel}
               </span>
               {doctor.experienceYears && (
-                <span className="inline-flex items-center rounded-md bg-ground border border-line px-2.5 py-0.5 text-xs font-medium text-charcoal">
+                <span className="inline-flex items-center rounded-full bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
                   {doctor.experienceYears}+ Yrs Exp.
                 </span>
               )}
-              <span className="inline-flex items-center rounded-md bg-emerald-50 border border-emerald-200/60 px-2.5 py-0.5 text-xs font-medium text-emerald-800">
-                Zero Reg. Fee
+              <span className="inline-flex items-center rounded-full bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
+                No registration fee
               </span>
             </div>
 
-            <h1 className="mt-2 text-2xl font-bold tracking-tight [overflow-wrap:anywhere] sm:text-4xl lg:text-3xl text-ink font-display">
+            <h1 className="mt-3 text-[2rem] font-light leading-none tracking-[-0.04em] [overflow-wrap:anywhere] sm:text-5xl text-ink font-display">
               {title(doctor)}
             </h1>
             <p className="mt-1 text-base font-semibold text-brand">
@@ -87,78 +87,79 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
         </section>
 
         {/* When, and how to book */}
-        <section aria-labelledby="when" className="rise rise-2 flex flex-col justify-between gap-5 rounded-3xl bg-ink p-4 text-white sm:p-7 shadow-lg border border-slate-800">
+        <section aria-labelledby="when" className="rise rise-2 card flex flex-col justify-between gap-5 rounded-3xl p-5 sm:p-7">
           <div>
-            <div className="flex items-center justify-between gap-2 border-b border-slate-800 pb-3">
-              <div className="flex items-center gap-2">
-                <span className="relative flex size-2.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-glow opacity-75"></span>
-                  <span className="relative inline-flex size-2.5 rounded-full bg-glow"></span>
-                </span>
-                <h2 id="when" className="text-xs font-bold uppercase tracking-wider text-glow">
-                  OPD Schedule &amp; Timings
-                </h2>
-              </div>
-              <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-semibold text-slate-200">
-                Doctor OPD
-              </span>
-            </div>
+            <h2 id="when" className="eyebrow text-muted">
+              Sits at the clinic
+            </h2>
 
             {doctor.opd.length > 0 ? (
-              <ul className="mt-3 flex flex-col divide-y divide-slate-800/80">
+              <ul className="mt-3 flex flex-col divide-y divide-line">
                 {doctor.opd.map((s) => (
-                  <li key={`${s.day}-${s.start}`} className="flex items-center justify-between gap-4 py-2.5 text-sm">
-                    <span className="flex items-center gap-2 font-semibold text-slate-100">
-                      <CalendarIcon className="size-4 text-glow shrink-0" />
+                  <li key={`${s.day}-${s.start}`} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3">
+                    <span className="flex items-center gap-2 font-display text-xl font-medium tracking-tight">
+                      <CalendarIcon className="size-4 shrink-0 text-brand" />
                       {s.recurrence === "first-of-month"
                         ? `1st ${DAY_NAMES[s.day]} of month`
                         : s.recurrence === "alternate"
-                          ? `Alt ${DAY_NAMES[s.day]}s (Call to confirm)`
-                          : DAY_NAMES[s.day]}
+                          ? `Alternate ${DAY_NAMES[s.day]}s`
+                          : `${DAY_NAMES[s.day]}s`}
                     </span>
-                    <span className="font-mono text-xs font-medium text-slate-300 bg-white/5 px-2.5 py-1 rounded-lg">
+                    <span className="text-base font-semibold text-charcoal">
                       {formatTime(s.start)} – {formatTime(s.end)}
                     </span>
+                    {s.recurrence === "alternate" && (
+                      <span className="w-full text-sm text-muted">Call reception to confirm which Friday.</span>
+                    )}
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="mt-4 text-sm text-slate-300 leading-relaxed">
+              <p className="mt-4 text-base text-charcoal leading-relaxed">
                 {doctor.availability ?? "Days coming soon. Please call reception and we will arrange your slot."}
               </p>
             )}
 
             {doctor.opd.length > 0 && (
-              <div className="mt-4 rounded-xl bg-white/5 p-3 text-xs font-semibold text-glow flex items-center gap-2 border border-white/10">
-                <span className="size-2 rounded-full bg-glow"></span>
-                <NextAvailable doctorId={doctor.id} fallback={"Checking next slot..."} prefix="Next free slot: " />
+              <div className="mt-3 border-t border-line pt-4">
+                <p className="eyebrow flex items-center gap-2 text-muted">
+                  <span className="size-2 rounded-full bg-brand" />
+                  Next free slot
+                </p>
+                <p className="mt-1.5 text-lg font-semibold">
+                  <NextAvailable doctorId={doctor.id} fallback={"Checking next slot..."} />
+                </p>
               </div>
             )}
-            
-            <p className="mt-3 text-xs text-slate-400">
-              {clinic.address} · Zero registration fee
-            </p>
+
+            <p className="mt-3 text-sm text-muted">{clinic.address}</p>
           </div>
 
-          <div className="grid gap-2.5 pt-2 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+          <div className="grid gap-2.5 pt-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
             {doctor.opd.length > 0 ? (
               <Link
                 href={`/book?doctor=${doctor.id}`}
-                className="inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-5 font-bold text-ink hover:bg-slate-100 transition-colors shadow-sm"
+                className="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand px-5 text-base font-bold text-white hover:bg-brand-dark"
               >
-                Book Appointment
+                Book this doctor
               </Link>
             ) : (
               <a
                 href={`tel:${clinic.phone}`}
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-white px-5 font-bold text-ink hover:bg-slate-100 transition-colors shadow-sm"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand px-5 text-base font-bold text-white hover:bg-brand-dark"
               >
-                <PhoneIcon className="size-4" /> Call to Book
+                <PhoneIcon className="size-4" /> Call to book
               </a>
             )}
+            <a
+              href={`tel:${clinic.phone}`}
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-5 text-base font-bold hover:bg-ink hover:text-white"
+            >
+              <PhoneIcon className="size-4" /> Call {clinic.phoneDisplay}
+            </a>
             <ShareButton
               title={`${title(doctor)} at ${clinic.name}`}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-white/10 text-white hover:bg-white/20 border border-white/15 px-5 font-bold transition-colors"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-line-strong px-5 text-base font-bold hover:border-brand sm:col-span-2 lg:col-span-1 xl:col-span-2"
             />
           </div>
         </section>
@@ -170,14 +171,13 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
       {doctor.facilities && doctor.facilities.length > 0 && (
         <section aria-labelledby="facilities" className="reveal mt-8 sm:mt-12">
           <div className="flex items-center gap-2">
-            <span className="size-2 rounded-full bg-brand"></span>
-            <h2 id="facilities" className="text-xl font-extrabold sm:text-2xl text-ink">
+                        <h2 id="facilities" className="font-display text-2xl font-medium tracking-tight sm:text-3xl text-ink">
               Specialized Facilities &amp; In-Clinic Procedures
             </h2>
           </div>
           <ul className="mt-4 flex flex-wrap gap-2.5">
             {doctor.facilities.map((f) => (
-              <li key={f} className="card card-hover flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-slate-800 border border-line/70">
+              <li key={f} className="card card-hover flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-charcoal">
                 <CheckIcon className="size-4 text-brand shrink-0" />
                 <span>{f}</span>
               </li>
@@ -189,15 +189,14 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
       {/* Common reasons to visit */}
       <section aria-labelledby="reasons" className="reveal mt-8 sm:mt-12">
         <div className="flex items-center gap-2">
-          <span className="size-2 rounded-full bg-brand"></span>
-          <h2 id="reasons" className="text-xl font-extrabold sm:text-2xl text-ink">
+                    <h2 id="reasons" className="font-display text-2xl font-medium tracking-tight sm:text-3xl text-ink">
             When to consult {doctor.name ? doctor.name : `a ${doctor.speciality.toLowerCase()}`}
           </h2>
         </div>
         <p className="mt-1 text-sm text-muted">Common symptoms, evaluations, and clinical conditions treated</p>
         <ul className="mt-4 flex flex-wrap gap-2">
           {doctor.concerns.map((c) => (
-            <li key={c} className="card card-hover rounded-full px-4 py-2 text-sm font-medium text-slate-700 border border-line/70 bg-white">
+            <li key={c} className="card card-hover rounded-full px-4 py-2 text-sm font-medium text-charcoal">
               {c}
             </li>
           ))}
@@ -214,24 +213,23 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
       {/* Other doctors */}
       <section aria-labelledby="others" className="reveal mt-8 sm:mt-12">
         <div className="flex items-center gap-2">
-          <span className="size-2 rounded-full bg-brand"></span>
-          <h2 id="others" className="text-xl font-extrabold sm:text-2xl text-ink">
+                    <h2 id="others" className="font-display text-2xl font-medium tracking-tight sm:text-3xl text-ink">
             Other Visiting Specialists
           </h2>
         </div>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           {others.map((d) => (
             <li key={d.id}>
-              <Link href={`/doctors/${d.id}`} className="card card-hover flex items-center gap-3.5 rounded-2xl p-4 border border-line/70 group">
-                <DoctorMark doctor={d} className="size-12 rounded-xl bg-brand-tint text-xl text-brand group-hover:scale-105 transition-transform" />
+              <Link href={`/doctors/${d.id}`} className="card card-hover flex items-center gap-3.5 rounded-2xl p-4 group">
+                <DoctorMark doctor={d} className="size-12 rounded-full text-xl" />
                 <span className="flex min-w-0 flex-1 flex-col leading-snug">
-                  <span className="font-bold text-slate-900 group-hover:text-brand transition-colors truncate">{title(d)}</span>
+                  <span className="font-display text-lg font-medium text-ink group-hover:text-brand transition-colors truncate">{title(d)}</span>
                   <span className="text-xs text-muted truncate">{d.name ? d.speciality : "Specialist Consultant"}</span>
                   {d.experienceYears && (
-                    <span className="text-[11px] text-slate-500 font-medium">{d.experienceYears} yrs experience</span>
+                    <span className="text-[11px] text-muted font-medium">{d.experienceYears} yrs experience</span>
                   )}
                 </span>
-                <ChevronRightIcon className="size-5 shrink-0 text-slate-400 group-hover:text-brand group-hover:translate-x-0.5 transition-all" />
+                <ChevronRightIcon className="size-5 shrink-0 text-muted group-hover:text-brand group-hover:translate-x-0.5 transition-all" />
               </Link>
             </li>
           ))}

@@ -33,10 +33,13 @@ export function DayPicker() {
   const minute = useClinicMinute();
   const [picked, setPicked] = useState<Weekday | null>(null);
   const today: Weekday | null = minute === null ? null : clinicClock(new Date(minute)).weekday;
-  const selected: Weekday = picked ?? today ?? 0;
+  // Open on today; if no specialist sits today, open on the next day that has one.
+  const firstBusyFrom = (from: Weekday): Weekday =>
+    DAY_ORDER.map((_, i) => ((from + i) % 7) as Weekday).find((d) => sittingsOn(d).length > 0) ?? from;
+  const selected: Weekday = picked ?? (today === null ? 0 : firstBusyFrom(today));
   const list = sittingsOn(selected);
   const dayName = DAY_NAMES[selected];
-  const nextDay = DAY_ORDER.map((_, i) => ((selected + i + 1) % 7) as Weekday).find((d) => sittingsOn(d).length > 0);
+  const nextDay = sittingsOn(selected).length === 0 ? firstBusyFrom(((selected + 1) % 7) as Weekday) : undefined;
 
   return (
     <section id="days" aria-labelledby="days-title" className="bg-ground scroll-mt-20">

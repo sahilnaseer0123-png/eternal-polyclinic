@@ -121,7 +121,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
               <li
                 key={doctor.id}
                 id={`doctor-${doctor.id}`}
-                className="bg-white flex flex-col justify-between rounded-xl border border-[#E2E4DC] p-5 hover:border-[#C4DBD8] hover:shadow-xs transition-all duration-200"
+                className="bg-white flex flex-col justify-between rounded-2xl border border-line p-5 hover:border-brand-line  transition-all duration-200"
               >
                 <div>
                   {/* Doctor Identity Header */}
@@ -132,24 +132,24 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                     />
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="inline-block rounded-md bg-[#F2F7F6] border border-[#C4DBD8] px-2 py-0.5 text-xs font-semibold text-[#397C78]">
+                        <span className="inline-block rounded-full bg-brand-tint border border-brand-line px-2 py-0.5 text-sm font-semibold text-brand">
                           {doctor.categoryLabel}
                         </span>
                       </div>
-                      <h3 className="text-base sm:text-lg font-bold tracking-tight text-[#142B3B] mt-1 leading-snug font-display">
+                      <h3 className="text-lg sm:text-xl font-medium tracking-tight text-ink mt-1 leading-snug font-display">
                         <Link
                           href={`/doctors/${doctor.id}`}
-                          className="hover:text-[#397C78] transition-colors"
+                          className="hover:text-brand transition-colors"
                         >
                           {doctor.name ?? doctor.speciality}
                         </Link>
                       </h3>
                       {doctor.name && (
-                        <p className="text-xs sm:text-sm font-semibold text-[#252C30]">
+                        <p className="text-sm sm:text-sm font-semibold text-ink">
                           {doctor.speciality}
                         </p>
                       )}
-                      <p className="text-xs text-[#647077] mt-0.5">
+                      <p className="text-sm text-muted mt-0.5">
                         {[
                           doctor.degree &&
                           doctor.degree.toLowerCase() !==
@@ -167,7 +167,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                   </div>
 
                   {/* Structured Timings & Availability */}
-                  <div className="mt-4 rounded-lg border border-[#E2E4DC] bg-[#F7F7F3] p-3 text-xs">
+                  <div className="mt-4 rounded-xl border border-line bg-ground p-3 text-sm">
                     {hasOpd ? (
                       <div className="space-y-1.5">
                         {doctor.opd.map((s, idx) => {
@@ -180,29 +180,29 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                           return (
                             <div
                               key={idx}
-                              className="flex items-center justify-between text-[#252C30]"
+                              className="flex items-center justify-between text-ink"
                             >
-                              <span className="font-semibold text-[#142B3B]">
+                              <span className="font-semibold text-ink">
                                 {dayLabel}
                               </span>
-                              <span className="tabular-nums text-[#647077]">
+                              <span className="tabular-nums text-muted">
                                 {formatTime(s.start)} – {formatTime(s.end)}
                               </span>
                             </div>
                           );
                         })}
-                        <div className="flex items-center justify-between border-t border-[#E2E4DC] pt-1.5 text-xs">
-                          <span className="text-[#647077]">Next available slot</span>
+                        <div className="flex items-center justify-between border-t border-line pt-1.5 text-sm">
+                          <span className="text-muted">Next available slot</span>
                           <NextAvailable
                             doctorId={doctor.id}
                             fallback={"—"}
                             prefix=""
-                            className="font-bold text-[#397C78]"
+                            className="font-bold text-brand"
                           />
                         </div>
                       </div>
                     ) : (
-                      <p className="text-[#647077]">
+                      <p className="text-muted">
                         {doctor.availability ??
                           "Consultation by appointment. Call to confirm."}
                       </p>
@@ -211,14 +211,14 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
 
                   {/* Conditions / Helps With */}
                   <div className="mt-3.5 space-y-1.5">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#858D91]">
+                    <span className="text-xs font-bold uppercase tracking-wider text-muted">
                       Primary Conditions:
                     </span>
                     <div className="flex flex-wrap gap-1">
                       {doctor.concerns.slice(0, 3).map((c) => (
                         <span
                           key={c}
-                          className="inline-flex items-center rounded-md border border-[#E2E4DC] bg-white px-2 py-0.5 text-xs text-[#252C30]"
+                          className="inline-flex items-center rounded-full border border-line bg-white px-2 py-0.5 text-sm text-ink"
                         >
                           {c}
                         </span>
@@ -228,24 +228,24 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                 </div>
 
                 {/* Refined Action Buttons */}
-                <div className="mt-5 grid grid-cols-2 gap-2 pt-2 border-t border-[#E2E4DC]/80">
+                <div className="mt-5 grid grid-cols-2 gap-2 pt-2 border-t border-line/80">
                   <Link
                     href={`/doctors/${doctor.id}`}
-                    className="inline-flex min-h-10 items-center justify-center rounded-lg border border-[#E2E4DC] bg-white px-3 text-center text-xs font-semibold text-[#142B3B] hover:bg-[#F7F7F3] transition-colors"
+                    className="inline-flex min-h-10 items-center justify-center rounded-xl border border-line bg-white px-3 text-center text-sm font-semibold text-ink hover:bg-ground transition-colors"
                   >
                     View Details
                   </Link>
                   {hasOpd ? (
                     <Link
                       href={`/book?doctor=${doctor.id}`}
-                      className="inline-flex min-h-10 items-center justify-center rounded-lg bg-[#397C78] px-3 text-center text-xs font-semibold text-white hover:bg-[#2A5D5A] transition-colors shadow-2xs"
+                      className="inline-flex min-h-10 items-center justify-center rounded-xl bg-brand px-3 text-center text-sm font-semibold text-white hover:bg-brand-dark transition-colors "
                     >
                       Book OPD →
                     </Link>
                   ) : (
                     <a
                       href={`tel:${clinic.phone}`}
-                      className="inline-flex min-h-10 items-center justify-center rounded-lg bg-[#142B3B] px-3 text-center text-xs font-semibold text-white hover:bg-[#252C30] transition-colors"
+                      className="inline-flex min-h-10 items-center justify-center rounded-xl bg-ink px-3 text-center text-sm font-semibold text-white hover:bg-ink transition-colors"
                     >
                       Call Helpline
                     </a>

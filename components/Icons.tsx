@@ -306,12 +306,30 @@ export function ServiceIcon({ id, className = "size-6" }: IconProps & { id: stri
           <path d="M22.5 5a6 6 0 0 1 0 10" strokeWidth={1.5} />
         </svg>
       );
+    case "pediatric-echo":
+      // Small heart with a spark: child's heart scan
+      return (
+        <svg {...base} className={className}>
+          <path d="M17.5 13l-5.5 5.5L6.5 13a3.6 3.6 0 1 1 5.5-4.6A3.6 3.6 0 1 1 17.5 13" />
+          <path d="M3 21h4M5 19v4M19 3v4M17 5h4" strokeWidth={1.75} />
+        </svg>
+      );
+    case "adult-echo":
     case "echo":
       // Real echocardiography heart with dynamic ECG rhythm wave
       return (
         <svg {...base} className={className}>
           <path d="M19.5 12.572l-7.5 7.428l-7.5-7.428a5 5 0 1 1 7.5-6.566 5 5 0 1 1 7.5 6.572" />
           <path d="M3 12.5h3.5l1.5-3 2 5.5 2-4 1.5 1.5H21" strokeWidth={2} />
+        </svg>
+      );
+    case "uroflowmetry":
+      // Flow curve over a baseline: urine flow study
+      return (
+        <svg {...base} className={className}>
+          <path d="M3 20h18M3 20V4" />
+          <path d="M5 18c2-1 3-9 6-9s3 7 5 8 3 1 4 1" />
+          <path d="M11 9V6M9.5 7.5L11 6l1.5 1.5" strokeWidth={1.5} />
         </svg>
       );
     case "lab":

@@ -19,18 +19,18 @@ export default function ServicesPage() {
             <li
               key={service.id}
               id={service.id}
-              className="card card-hover scroll-mt-24 flex flex-col justify-between gap-3 rounded-2xl border border-line bg-white p-6 shadow-card transition-all duration-200"
+              className="card card-hover scroll-mt-24 flex flex-col justify-between gap-3 rounded-2xl p-6"
             >
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="flex size-12 items-center justify-center rounded-xl bg-brand-tint border border-brand-line/60 text-brand shadow-subtle">
+                  <span className="flex size-12 items-center justify-center rounded-xl bg-brand-tint text-brand">
                     <ServiceIcon id={service.id} className="size-6" />
                   </span>
-                  <span className="rounded-md bg-ground border border-line px-2.5 py-1 text-xs font-semibold text-charcoal">
+                  <span className="rounded-full bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
                     {service.short}
                   </span>
                 </div>
-                <h2 className="mt-3 text-xl font-bold tracking-tight text-ink font-display sm:text-2xl">
+                <h2 className="mt-3 text-xl font-medium tracking-tight text-ink font-display sm:text-2xl">
                   {service.name}
                 </h2>
                 <p className="mt-1 text-sm text-muted leading-relaxed">{service.description}</p>

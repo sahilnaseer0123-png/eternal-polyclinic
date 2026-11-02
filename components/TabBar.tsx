@@ -21,7 +21,7 @@ export function TabBar() {
   const [open, setOpen] = useState(false);
   const moreActive = NAV.some((n) => n.href === pathname && n.href !== "/doctors") || pathname === "/privacy";
   const tabClass = (on: boolean) =>
-    `flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${on ? "text-mint" : "text-night-muted"}`;
+    `flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${on ? "text-brand" : "text-muted"}`;
 
   // Prevent background scroll bleed when mobile drawer is open
   useEffect(() => {
@@ -90,7 +90,7 @@ export function TabBar() {
 
       <nav
         aria-label="Quick links"
-        className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-4 [view-transition-name:tab-bar] border-t border-night-line bg-night px-2 pb-[max(0.25rem,env(safe-area-inset-bottom))] pt-1"
+        className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-4 [view-transition-name:tab-bar] border-t border-line bg-white px-2 pb-[max(0.25rem,env(safe-area-inset-bottom))] pt-1"
       >
         {TABS.map(({ href, label, Icon }) => {
           const on = pathname === href;

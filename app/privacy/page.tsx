@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: `How ${clinic.name} handles the details you share when you book an appointment.`,
 };
 
-const LAST_UPDATED = "23 October 2026";
+const LAST_UPDATED = "2 November 2026";
 
 export default function PrivacyPage() {
   const tel = `tel:${clinic.phone}`;
@@ -26,7 +26,7 @@ export default function PrivacyPage() {
               <h2>In short</h2>
               <p>
                 To book, you share your name, mobile number, the doctor, and the day and time you want. You send this to
-                us yourself on WhatsApp or generate a token slip on screen. We use it only to arrange your appointment. We never ask why you are visiting.
+                us yourself on WhatsApp. We use it only to arrange your appointment. We never ask why you are visiting.
               </p>
             </section>
 
