@@ -9,7 +9,6 @@ import { WhosInToday } from "@/components/WhosInToday";
 import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { DoctorMark } from "@/components/DoctorMark";
 import { NextAvailable } from "@/components/NextAvailable";
-import { FeatherPattern } from "@/components/FeatherPattern";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import {
   ChevronRightIcon,
@@ -32,66 +31,72 @@ export default function Home() {
     <>
       <LegacyBookingLink />
 
-      {/* Hero + Today, over a faint feather pattern from the logo */}
-      <div className="relative w-full max-w-full overflow-hidden">
-        <FeatherPattern className="-right-24 -top-6 w-[22rem] opacity-[0.09] sm:w-[30rem] lg:-left-40 lg:right-auto lg:-top-16 lg:w-[46rem] lg:opacity-[0.07]" />
+      {/* Hero + Today, over a clean subtle medical ground */}
+      <div className="relative w-full max-w-full overflow-hidden bg-ground/40 pb-8 sm:pb-12 border-b border-line/60">
         <section className="relative mx-auto w-full max-w-6xl px-4 pt-6 sm:px-5 sm:pt-8 lg:pt-10">
-          <div className="flex flex-col gap-7 sm:gap-8 lg:gap-10 w-full min-w-0 max-w-full">
-            <div className="rise flex min-w-0 w-full max-w-full flex-col gap-4 sm:gap-5">
-              <p className="text-sm font-semibold text-brand sm:text-base">
-                Open {hours}
-                <span className="hidden sm:inline"> · {clinic.address}</span>
-              </p>
-              <h1 className="text-[1.75rem] font-extrabold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
-                Which doctor do you need?
+          <div className="flex flex-col gap-6 sm:gap-8 lg:gap-10 w-full min-w-0 max-w-full">
+            <div className="rise flex min-w-0 w-full max-w-full flex-col gap-3.5 sm:gap-4">
+              {/* MedScan-Style Clean Trust Badge */}
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-tint border border-brand-line/60 px-3 py-1 text-xs font-bold text-brand">
+                  <span className="size-1.5 rounded-full bg-brand" />
+                  Opposite SDH Hospital, Sopore
+                </span>
+                <span className="text-xs font-semibold text-muted">
+                  Open {hours} · 1st Floor, Lone Complex
+                </span>
+              </div>
+
+              <h1 className="text-2xl font-extrabold leading-[1.12] tracking-tight text-ink sm:text-5xl lg:text-6xl font-display">
+                Specialist Consultations &amp; Diagnostic Care
               </h1>
-              <p className="max-w-2xl text-muted sm:text-lg">
-                Visiting specialists on fixed days, with scans, a lab and a
-                pharmacy under one roof.
+              <p className="max-w-2xl text-sm sm:text-lg text-muted leading-relaxed">
+                12+ visiting specialists across Cardiology, Neurology, Orthopaedics, and Paediatrics — paired with in-house Ultrasound, Echo, Lab tests, and Pharmacy.
               </p>
-              {/* A real search box: typing here opens /doctors?q=... with the results. */}
+
+              {/* Clean Medical Search Box */}
               <Form
                 action="/doctors"
                 role="search"
-                className="card flex max-w-2xl items-center gap-2 rounded-2xl pl-4 pr-1.5 focus-within:outline-3 focus-within:outline-ink sm:pl-5"
+                className="flex max-w-2xl items-center gap-2 rounded-2xl bg-white border border-line p-1.5 pl-4 shadow-sm focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/10 transition-all sm:pl-5"
               >
                 <SearchIcon className="size-5 shrink-0 text-brand" />
                 <label htmlFor="home-find" className="sr-only">
-                  Find a doctor or service
+                  Find a doctor or test
                 </label>
-                {/* text-lg keeps it 16px on phones, so iPhones don't zoom in */}
                 <input
                   id="home-find"
                   name="q"
                   type="search"
-                  placeholder="Doctor or test"
+                  placeholder="Search doctor, speciality, or test (e.g. Echo, USG)..."
                   autoComplete="off"
-                  className="min-h-13 min-w-0 flex-1 bg-transparent text-lg outline-none placeholder:text-muted sm:min-h-15"
+                  className="min-h-12 min-w-0 flex-1 bg-transparent text-sm sm:text-base text-ink outline-none placeholder:text-slate-400"
                 />
                 <button
                   type="submit"
-                  className="min-h-11 shrink-0 rounded-xl bg-ink px-5 font-semibold text-white hover:bg-slate-800"
+                  className="min-h-11 shrink-0 rounded-xl bg-brand px-5 font-bold text-white hover:bg-brand-dark transition-colors shadow-2xs"
                 >
                   Find
                 </button>
               </Form>
+
               <ul
                 aria-label="Browse by speciality"
-                className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:-mx-5 sm:px-5 sm:flex-wrap w-[calc(100%+2rem)] sm:w-[calc(100%+2.5rem)] max-w-none"
+                className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:-mx-5 sm:px-5 sm:flex-wrap w-[calc(100%+2rem)] sm:w-[calc(100%+2.5rem)] max-w-none pt-1"
               >
                 <li className="shrink-0">
                   <Link
                     href="/doctors"
-                    className="inline-flex min-h-11 items-center rounded-full bg-ink px-4 font-semibold text-white transition-colors hover:bg-slate-800"
+                    className="inline-flex min-h-10 items-center rounded-full bg-ink px-4 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-slate-800"
                   >
-                    All doctors
+                    All Doctors (12)
                   </Link>
                 </li>
                 {categories.map((c) => (
                   <li key={c.id} className="shrink-0">
                     <Link
                       href={`/doctors?type=${c.id}`}
-                      className="card inline-flex min-h-11 items-center rounded-full px-4 font-semibold transition-colors hover:text-brand"
+                      className="inline-flex min-h-10 items-center rounded-full bg-white border border-line px-3.5 text-xs sm:text-sm font-semibold text-slate-700 transition-colors hover:border-brand hover:text-brand shadow-2xs"
                     >
                       {c.label}
                     </Link>
