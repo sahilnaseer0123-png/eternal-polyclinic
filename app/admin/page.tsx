@@ -26,6 +26,7 @@ import {
   getDoctorLiveStatus,
   getLastSyncTime,
   pushToCloud,
+  removeCustomDoctor,
   restoreFromJsonBackup,
   saveAppointment,
   saveCustomDoctor,
@@ -1001,29 +1002,48 @@ export default function AdminPage() {
                       </div>
                     </div>
 
-                    {/* Toggle Leave */}
-                    <div className="border-t border-line pt-3 flex justify-between items-center">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const newLeave = !isOnLeave;
-                          setDoctorOverride(doc.id, { onLeave: newLeave });
-                        }}
-                        className={`min-h-10 px-3.5 rounded-xl text-xs font-bold transition-all ${
-                          isOnLeave
-                            ? "bg-emerald-600 text-white hover:bg-emerald-700"
-                            : "bg-rose-50 text-rose-800 border border-rose-200 hover:bg-rose-100"
-                        }`}
-                      >
-                        {isOnLeave ? "Mark Available (End Leave)" : "Mark On Leave"}
-                      </button>
+                    {/* Actions: Toggle Leave + Delete / Preview */}
+                    <div className="border-t border-line pt-3 flex flex-wrap justify-between items-center gap-2">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newLeave = !isOnLeave;
+                            setDoctorOverride(doc.id, { onLeave: newLeave });
+                          }}
+                          className={`min-h-9 px-3 rounded-lg text-xs font-semibold transition-all ${
+                            isOnLeave
+                              ? "bg-emerald-700 text-white hover:bg-emerald-800"
+                              : "bg-[#F7F7F3] text-[#A62828] border border-[#E2E4DC] hover:bg-rose-50"
+                          }`}
+                        >
+                          {isOnLeave ? "End Leave (Active)" : "Mark On Leave"}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (window.confirm(`Are you sure you want to deactivate/remove ${doc.name ?? doc.speciality} from the active clinic roster?`)) {
+                              removeCustomDoctor(doc.id);
+                              // Also mark on leave as a soft deactivation for default doctors
+                              setDoctorOverride(doc.id, { onLeave: true });
+                              setBroadcastToast(`Dr. ${doc.name ?? doc.speciality} removed/deactivated.`);
+                              setTimeout(() => setBroadcastToast(""), 3500);
+                            }
+                          }}
+                          className="min-h-9 px-2.5 rounded-lg text-xs font-semibold text-[#858D91] hover:text-[#A62828] hover:bg-rose-50 transition-colors"
+                          title="Remove doctor from active roster"
+                        >
+                          Remove
+                        </button>
+                      </div>
 
                       <Link
                         href={`/book?doctor=${doc.id}`}
                         target="_blank"
-                        className="text-xs text-brand font-bold hover:underline"
+                        className="text-xs text-[#397C78] font-semibold hover:underline"
                       >
-                        Preview Form →
+                        Preview Booking →
                       </Link>
                     </div>
                   </div>
