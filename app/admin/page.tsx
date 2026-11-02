@@ -352,113 +352,147 @@ export default function AdminPage() {
   const allRecordedDates = Object.keys(dateGroups).sort((a, b) => b.localeCompare(a));
 
   // ---------------------------------------------------------------------------
-  // ULTRA-MODERN KIOSK PIN GATE SCREEN
+  // PROFESSIONAL HEALTHCARE RECEPTION ACCESS SCREEN
   // ---------------------------------------------------------------------------
   if (!isAuthenticated) {
     return (
-      <div className="flex min-h-[85vh] flex-col items-center justify-center px-4 py-8 bg-gradient-to-br from-slate-950 via-ink to-slate-900 text-white">
-        <div className="w-full max-w-sm rounded-3xl p-6 sm:p-8 bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl flex flex-col items-center text-center gap-6 animate-fade-in">
-          {/* Clinic Emblem */}
-          <div className="relative">
-            <div className="size-20 rounded-3xl bg-gradient-to-tr from-brand to-teal-400 p-0.5 shadow-lg shadow-teal-500/20">
-              <div className="size-full rounded-[22px] bg-slate-950 flex items-center justify-center">
-                <StethoscopeIcon className="size-10 text-glow" />
-              </div>
-            </div>
-            <span className="absolute -bottom-1 -right-1 flex size-5">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex size-5 rounded-full bg-emerald-500 border-2 border-slate-950"></span>
-            </span>
-          </div>
-
-          <div>
-            <h1 className="text-2xl font-black tracking-tight text-white font-display">Eternal Polyclinic</h1>
-            <p className="text-xs text-slate-400 mt-1 uppercase tracking-wider font-semibold">Reception Tablet Portal · Sopore</p>
-          </div>
-
-          {/* PIN Indicators & Keyboard Capture */}
-          <div className="flex flex-col items-center gap-2 relative w-full">
-            <input
-              id="kiosk-pin-hidden-input"
-              type="password"
-              inputMode="numeric"
-              maxLength={4}
-              autoFocus
-              value={pinInput}
-              onChange={(e) => {
-                const val = e.target.value.replace(/\D/g, "").slice(0, 4);
-                setPinInput(val);
-                if (val.length === 4) {
-                  verifyPin(val);
-                }
-              }}
-              className="absolute inset-0 opacity-0 cursor-text w-full h-full"
-              aria-label="Enter 4-digit PIN with your keyboard"
-            />
-            <div className="flex gap-4 my-2 pointer-events-none">
-              {[0, 1, 2, 3].map((idx) => {
-                const filled = pinInput.length > idx;
-                return (
-                  <div
-                    key={idx}
-                    className={`size-4 rounded-full transition-all duration-200 ${
-                      filled
-                        ? "bg-glow scale-125 shadow-md shadow-teal-400/50"
-                        : "bg-white/20 border border-white/30"
-                    }`}
-                  />
-                );
-              })}
-            </div>
-            {pinError ? (
-              <p className="text-xs font-semibold text-rose-400 animate-shake">{pinError}</p>
-            ) : (
-              <p className="text-[11px] text-slate-300">
-                Type <span className="font-bold font-mono text-glow">1234</span> on keyboard or tap number pad
+      <div className="flex min-h-[85vh] items-center justify-center px-4 py-12 bg-ground text-ink">
+        <div className="w-full max-w-md rounded-3xl bg-white p-7 sm:p-9 shadow-xl border border-line flex flex-col gap-6 animate-fade-in">
+          {/* Header */}
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-tint px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand">
+                <span className="size-1.5 rounded-full bg-brand animate-pulse" />
+                Staff Console
+              </span>
+              <h1 className="mt-3 text-2xl font-extrabold tracking-tight text-ink font-display">
+                Reception Access
+              </h1>
+              <p className="mt-1 text-sm text-muted">
+                Eternal Polyclinic · Sopore, Kashmir
               </p>
-            )}
+            </div>
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand text-white shadow-md shadow-brand/20">
+              <StethoscopeIcon className="size-6 text-white" />
+            </div>
           </div>
 
-          {/* Keypad */}
-          <div className="grid grid-cols-3 gap-3 w-full max-w-xs">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-              <button
-                key={num}
-                type="button"
-                onClick={() => handlePinDigit(String(num))}
-                className="size-16 rounded-2xl bg-white/10 hover:bg-white/20 active:bg-brand text-2xl font-bold font-mono text-white transition-all duration-100 flex items-center justify-center shadow-xs mx-auto active:scale-95"
+          <p className="text-xs text-muted leading-relaxed border-t border-line pt-4">
+            Enter the 4-digit reception PIN to manage the live OPD queue, register walk-ins, update doctor delays, and review patient visits.
+          </p>
+
+          {/* Form */}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (pinInput.length === 4) {
+                verifyPin(pinInput);
+              }
+            }}
+            className="flex flex-col gap-5"
+          >
+            <div>
+              <label
+                htmlFor="kiosk-pin-hidden-input"
+                className="block text-xs font-bold uppercase tracking-wider text-muted mb-2"
               >
-                {num}
+                Reception Desk PIN
+              </label>
+
+              <div className="relative">
+                <input
+                  id="kiosk-pin-hidden-input"
+                  type="password"
+                  inputMode="numeric"
+                  maxLength={4}
+                  autoFocus
+                  placeholder="••••"
+                  value={pinInput}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, "").slice(0, 4);
+                    setPinInput(val);
+                    setPinError("");
+                    if (val.length === 4) {
+                      verifyPin(val);
+                    }
+                  }}
+                  className="w-full rounded-2xl border-2 border-line bg-ground px-4 py-3.5 text-center font-mono text-2xl font-bold tracking-[0.5em] text-ink outline-none transition-all focus:border-brand focus:bg-white"
+                />
+              </div>
+
+              {pinError ? (
+                <p className="mt-2 text-xs font-semibold text-rose-600 animate-shake">
+                  {pinError}
+                </p>
+              ) : (
+                <p className="mt-2 text-[11px] text-muted">
+                  Default clinic PIN: <span className="font-bold text-ink font-mono">1234</span>
+                </p>
+              )}
+            </div>
+
+            {/* Quick Touch Numpad for Tablets & Mobile */}
+            <div className="grid grid-cols-3 gap-2 pt-1">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                <button
+                  key={num}
+                  type="button"
+                  onClick={() => handlePinDigit(String(num))}
+                  className="h-12 rounded-xl bg-ground hover:bg-slate-200 active:bg-brand active:text-white font-mono text-lg font-bold text-ink transition-colors flex items-center justify-center shadow-2xs"
+                >
+                  {num}
+                </button>
+              ))}
+
+              <button
+                type="button"
+                onClick={() => {
+                  setPinInput("");
+                  setPinError("");
+                }}
+                className="h-12 rounded-xl bg-ground hover:bg-slate-200 text-xs font-bold uppercase tracking-wider text-muted transition-colors flex items-center justify-center"
+              >
+                Clear
               </button>
-            ))}
+
+              <button
+                type="button"
+                onClick={() => handlePinDigit("0")}
+                className="h-12 rounded-xl bg-ground hover:bg-slate-200 active:bg-brand active:text-white font-mono text-lg font-bold text-ink transition-colors flex items-center justify-center shadow-2xs"
+              >
+                0
+              </button>
+
+              <button
+                type="button"
+                onClick={handlePinBackspace}
+                className="h-12 rounded-xl bg-ground hover:bg-slate-200 text-base font-bold text-ink transition-colors flex items-center justify-center"
+                aria-label="Backspace"
+              >
+                ⌫
+              </button>
+            </div>
 
             <button
-              type="button"
-              onClick={() => setPinInput("")}
-              className="size-16 rounded-2xl bg-white/5 hover:bg-white/10 text-xs font-bold text-slate-400 transition-all flex items-center justify-center mx-auto"
+              type="submit"
+              disabled={pinInput.length !== 4}
+              className={`w-full rounded-2xl py-3.5 text-sm font-bold text-white shadow-md transition-all ${
+                pinInput.length === 4
+                  ? "bg-brand hover:bg-brand-dark cursor-pointer shadow-brand/20 active:scale-[0.99]"
+                  : "bg-slate-300 cursor-not-allowed shadow-none"
+              }`}
             >
-              Clear
+              Sign In to Reception Desk
             </button>
+          </form>
 
-            <button
-              type="button"
-              onClick={() => handlePinDigit("0")}
-              className="size-16 rounded-2xl bg-white/10 hover:bg-white/20 active:bg-brand text-2xl font-bold font-mono text-white transition-all flex items-center justify-center mx-auto active:scale-95"
+          <div className="border-t border-line pt-4 text-center">
+            <Link
+              href="/"
+              className="text-xs font-semibold text-muted hover:text-brand transition-colors underline"
             >
-              0
-            </button>
-
-            <button
-              type="button"
-              onClick={handlePinBackspace}
-              className="size-16 rounded-2xl bg-white/5 hover:bg-white/10 text-base font-bold text-slate-300 transition-all flex items-center justify-center mx-auto"
-            >
-              ⌫
-            </button>
-          </div>
-
-          <div className="text-[11px] text-slate-500 border-t border-white/10 pt-3 w-full">
-            Reception Desk Tablet System · Opposite SDH Hospital
+              ← Back to Patient Website
+            </Link>
           </div>
         </div>
       </div>
