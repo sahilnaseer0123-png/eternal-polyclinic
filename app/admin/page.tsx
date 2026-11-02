@@ -135,68 +135,6 @@ export default function AdminPage() {
     }
   }
 
-  function handlePinDigit(digit: string) {
-    if (pinInput.length < 4) {
-      const nextPin = pinInput + digit;
-      setPinInput(nextPin);
-      if (nextPin.length === 4) {
-        verifyPin(nextPin);
-      }
-    }
-  }
-
-  function handlePinBackspace() {
-    setPinInput((prev) => prev.slice(0, -1));
-    setPinError("");
-  }
-
-  // Keyboard typing support for physical keyboards & laptop keypads
-  useEffect(() => {
-    if (isAuthenticated) return;
-
-    function handleKeyDown(e: KeyboardEvent) {
-      if (
-        e.target instanceof HTMLInputElement &&
-        e.target.id !== "kiosk-pin-hidden-input"
-      ) {
-        return;
-      }
-      if (e.target instanceof HTMLTextAreaElement) {
-        return;
-      }
-
-      if (/^[0-9]$/.test(e.key)) {
-        e.preventDefault();
-        setPinInput((prev) => {
-          if (prev.length < 4) {
-            const next = prev + e.key;
-            if (next.length === 4) {
-              verifyPin(next);
-            }
-            return next;
-          }
-          return prev;
-        });
-      } else if (e.key === "Backspace") {
-        e.preventDefault();
-        setPinInput((prev) => prev.slice(0, -1));
-        setPinError("");
-      } else if (e.key === "Escape" || e.key === "Delete") {
-        e.preventDefault();
-        setPinInput("");
-        setPinError("");
-      } else if (e.key === "Enter") {
-        e.preventDefault();
-        if (pinInput.length === 4) {
-          verifyPin(pinInput);
-        }
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isAuthenticated, pinInput]);
-
   function handleLogout() {
     sessionStorage.removeItem("ep_reception_auth");
     setIsAuthenticated(false);
