@@ -1,37 +1,42 @@
 @import "tailwindcss";
-@import "@fontsource-variable/plus-jakarta-sans";
-@import "@fontsource-variable/bricolage-grotesque";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/manrope";
 
-/* Design tokens from the spec. Use these names in classes: bg-brand, text-ink, bg-ground ... */
+/* Swiss Minimalist / Premium Healthcare Design System */
 @theme {
-  --font-sans: "Plus Jakarta Sans Variable", system-ui, sans-serif;
-  /* Premium medical typography: Clean, authoritative Plus Jakarta Sans for headings & body */
-  --font-display: "Plus Jakarta Sans Variable", system-ui, sans-serif;
+  --font-sans: "Inter Variable", system-ui, -apple-system, sans-serif;
+  --font-display: "Manrope Variable", "Inter Variable", system-ui, sans-serif;
 
-  --color-brand: #0f766e;
-  --color-brand-dark: #115e59;
-  --color-brand-tint: #f0fdfa;
-  --color-brand-line: #99f6e4;
-  --color-ground: #f8fafc;
-  --color-ink: #0f172a;
-  --color-muted: #475569;
-  --color-line: #e2e8f0;
-  --color-emergency: #b91c1c;
-  --color-glow: #14b8a6;
-  --shadow-card: 0 1px 3px rgb(15 23 42 / 0.05), 0 1px 2px rgb(15 23 42 / 0.03);
+  /* Restrained, Sophisticated Color Hierarchy */
+  --color-brand: #397C78;          /* Muted medical teal */
+  --color-brand-dark: #2A5D5A;     /* Deep medical teal */
+  --color-brand-tint: #F2F7F6;     /* Subtle teal tint wash */
+  --color-brand-line: #C4DBD8;     /* Refined structural teal border */
+
+  --color-ground: #F7F7F3;         /* Warm Swiss off-white background */
+  --color-stone: #E9E9E3;          /* Soft stone border & divider */
+  --color-ink: #142B3B;            /* Deep midnight navy (primary text & contrast) */
+  --color-charcoal: #252C30;       /* Secondary neutral text */
+  --color-muted: #647077;          /* Refined editorial caption & metadata */
+  --color-line: #E2E4DC;           /* Hairline structural borders */
+  --color-emergency: #A62828;      /* Urgent clinical alert */
+  --color-glow: #397C78;
+
+  --shadow-card: 0 1px 2px rgba(20, 43, 59, 0.04), 0 2px 8px -2px rgba(20, 43, 59, 0.03);
 }
 
-/* Design C card surface: white with a soft shadow, no border. Pair it with a rounded-* class. */
+/* Restrained Architectural Surface */
 @utility card {
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   box-shadow: var(--shadow-card);
 }
 
 @utility card-hover {
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px -4px rgb(15 23 42 / 0.09), 0 4px 8px -2px rgb(15 23 42 / 0.04);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px -2px rgba(20, 43, 59, 0.06);
+    border-color: #C4DBD8;
   }
 }
 

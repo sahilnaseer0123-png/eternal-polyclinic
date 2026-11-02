@@ -15,28 +15,31 @@ export function SiteHeader() {
   const current = (href: string) => (pathname === href ? "page" : undefined);
 
   return (
-    <header className="sticky top-0 z-30 [view-transition-name:site-header] border-b border-line bg-white/95 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-2 sm:px-5 sm:py-3">
-        <Link href="/" className="flex min-h-11 items-center gap-3 text-ink">
-          <Logo className="size-10 shrink-0 sm:size-12" />
+    <header className="sticky top-0 z-30 [view-transition-name:site-header] border-b border-line/80 bg-white/95 backdrop-blur-md">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+        <Link href="/" className="flex items-center gap-3 text-ink group">
+          <Logo className="size-9 shrink-0 text-brand" />
           <span className="leading-tight">
-            <span className="block font-extrabold tracking-tight">{clinic.name}</span>
-            {/* Phones: just the town, so the header stays one line. Wider screens: the full address. */}
-            <span className="block text-sm text-muted">
-              <span className="sm:hidden">{clinic.address.split(", ").pop()}</span>
-              <span className="hidden sm:inline">{clinic.address}</span>
+            <span className="block font-bold tracking-tight text-ink font-display text-base sm:text-lg group-hover:text-brand transition-colors">
+              {clinic.name}
+            </span>
+            <span className="block text-xs text-muted font-medium">
+              <span className="sm:hidden">Sopore, Kashmir</span>
+              <span className="hidden sm:inline">Opposite SDH Hospital, Sopore</span>
             </span>
           </span>
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 text-sm font-semibold xl:gap-1.5 xl:text-base lg:flex">
+        <nav aria-label="Main" className="hidden items-center gap-1.5 text-sm font-medium lg:flex">
           {NAV.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               aria-current={current(item.href)}
-              className={`inline-flex min-h-11 items-center rounded-full px-3 xl:px-4 ${
-                pathname === item.href ? "bg-brand-tint text-brand" : "hover:bg-ground"
+              className={`inline-flex min-h-10 items-center rounded-lg px-3.5 transition-colors ${
+                pathname === item.href
+                  ? "bg-brand-tint text-brand font-semibold"
+                  : "text-charcoal hover:text-ink hover:bg-ground"
               }`}
             >
               {item.label}
@@ -45,7 +48,7 @@ export function SiteHeader() {
           <Link
             href="/admin"
             aria-current={current("/admin")}
-            className={`inline-flex min-h-11 items-center rounded-full px-3 text-xs font-semibold uppercase tracking-wider text-muted transition-colors hover:text-ink ${
+            className={`inline-flex min-h-10 items-center rounded-lg px-3 text-xs font-semibold uppercase tracking-wider text-muted transition-colors hover:text-ink ${
               pathname === "/admin" ? "bg-ground text-ink" : ""
             }`}
           >
@@ -53,19 +56,15 @@ export function SiteHeader() {
           </Link>
           <a
             href={`tel:${clinic.phone}`}
-            className="ml-2 inline-flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border border-brand-line/50 bg-brand-tint px-4 text-sm font-semibold text-brand transition-colors hover:bg-brand-line/40"
+            className="ml-2 inline-flex min-h-10 shrink-0 items-center gap-2 rounded-lg border border-line bg-white px-3.5 text-sm font-semibold text-ink transition-colors hover:border-brand-line hover:bg-brand-tint"
           >
-            <span className="relative flex size-2 shrink-0">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
-            </span>
-            <PhoneIcon className="size-4 shrink-0" />
-            <span className="whitespace-nowrap">{clinic.phoneDisplay}</span>
+            <PhoneIcon className="size-3.5 shrink-0 text-brand" />
+            <span>{clinic.phoneDisplay}</span>
           </a>
           <Link
             href="/book"
             aria-current={current("/book")}
-            className="ml-1.5 inline-flex min-h-11 shrink-0 items-center whitespace-nowrap rounded-full bg-brand px-5 font-bold text-white shadow-sm transition-all hover:bg-brand-dark hover:shadow"
+            className="ml-1 inline-flex min-h-10 shrink-0 items-center rounded-lg bg-brand px-4 text-sm font-semibold text-white shadow-2xs transition-all hover:bg-brand-dark"
           >
             Book Appointment
           </Link>
@@ -74,13 +73,9 @@ export function SiteHeader() {
         <a
           href={`tel:${clinic.phone}`}
           aria-label={`Call the clinic, ${clinic.phoneDisplay}`}
-          className="relative inline-flex size-11 shrink-0 items-center justify-center rounded-full border border-brand-line/50 bg-brand-tint text-brand lg:hidden"
+          className="inline-flex size-10 shrink-0 items-center justify-center rounded-lg border border-line bg-white text-ink lg:hidden shadow-2xs"
         >
-          <span className="absolute right-2 top-2 flex size-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
-          </span>
-          <PhoneIcon />
+          <PhoneIcon className="size-4 text-brand" />
         </a>
       </div>
     </header>

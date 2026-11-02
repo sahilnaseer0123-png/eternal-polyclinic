@@ -12,13 +12,10 @@ import { NextAvailable } from "@/components/NextAvailable";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import {
   ChevronRightIcon,
-  ClockIcon,
-  HospitalIcon,
   MapPinIcon,
+  PhoneIcon,
   SearchIcon,
   ServiceIcon,
-  ShieldCheckIcon,
-  UserIcon,
 } from "@/components/Icons";
 
 // Every page names its own address for search engines (alternates.canonical); this is "/".
@@ -31,219 +28,123 @@ export default function Home() {
     <>
       <LegacyBookingLink />
 
-      {/* Hero + Today, over a clean subtle medical ground */}
-      <div className="relative w-full max-w-full overflow-hidden bg-ground/40 pb-8 sm:pb-12 border-b border-line/60">
-        <section className="relative mx-auto w-full max-w-6xl px-4 pt-6 sm:px-5 sm:pt-8 lg:pt-10">
-          <div className="flex flex-col gap-6 sm:gap-8 lg:gap-10 w-full min-w-0 max-w-full">
-            <div className="rise flex min-w-0 w-full max-w-full flex-col gap-3.5 sm:gap-4">
-              {/* MedScan-Style Clean Trust Badge */}
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-tint border border-brand-line/60 px-3 py-1 text-xs font-bold text-brand">
-                  <span className="size-1.5 rounded-full bg-brand" />
-                  Opposite SDH Hospital, Sopore
+      {/* Hero + Consultation Directory: Swiss Minimalist & Editorial Layout */}
+      <div className="relative w-full max-w-full overflow-hidden bg-[#F7F7F3] border-b border-[#E2E4DC]">
+        <section className="relative mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-14 lg:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+            {/* Left: Refined Clinic Value Proposition */}
+            <div className="lg:col-span-7 flex flex-col gap-6">
+              <div className="flex items-center gap-3">
+                <span className="inline-flex items-center gap-2 rounded-md bg-white border border-[#C4DBD8] px-3 py-1 text-xs font-semibold text-[#397C78] uppercase tracking-wider">
+                  <span className="size-1.5 rounded-full bg-[#397C78]" />
+                  Opposite SDH Hospital · Sopore
                 </span>
-                <span className="text-xs font-semibold text-muted">
-                  Open {hours} · 1st Floor, Lone Complex
+                <span className="text-xs text-[#647077] font-medium hidden sm:inline">
+                  Open {hours}
                 </span>
               </div>
 
-              <h1 className="text-2xl font-extrabold leading-[1.12] tracking-tight text-ink sm:text-5xl lg:text-6xl font-display">
-                Specialist Consultations &amp; Diagnostic Care
+              <h1 className="text-3xl font-bold tracking-tight text-[#142B3B] sm:text-5xl lg:text-5xl leading-[1.15] font-display">
+                Specialist Medical Consultations &amp; Advanced Diagnostics
               </h1>
-              <p className="max-w-2xl text-sm sm:text-lg text-muted leading-relaxed">
-                12+ visiting specialists across Cardiology, Neurology, Orthopaedics, and Paediatrics — paired with in-house Ultrasound, Echo, Lab tests, and Pharmacy.
+
+              <p className="text-base sm:text-lg text-[#647077] leading-relaxed max-w-xl font-normal">
+                Serving the families of Sopore, Baramulla, and North Kashmir. Comprehensive specialist clinics with certified radiologists, cardiologists, and in-house diagnostic imaging under one roof.
               </p>
 
-              {/* Clean Medical Search Box */}
-              <Form
-                action="/doctors"
-                role="search"
-                className="flex max-w-2xl items-center gap-2 rounded-2xl bg-white border border-line p-1.5 pl-4 shadow-sm focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/10 transition-all sm:pl-5"
-              >
-                <SearchIcon className="size-5 shrink-0 text-brand" />
-                <label htmlFor="home-find" className="sr-only">
-                  Find a doctor or test
-                </label>
-                <input
-                  id="home-find"
-                  name="q"
-                  type="search"
-                  placeholder="Search doctor, speciality, or test (e.g. Echo, USG)..."
-                  autoComplete="off"
-                  className="min-h-12 min-w-0 flex-1 bg-transparent text-sm sm:text-base text-ink outline-none placeholder:text-slate-400"
-                />
-                <button
-                  type="submit"
-                  className="min-h-11 shrink-0 rounded-xl bg-brand px-5 font-bold text-white hover:bg-brand-dark transition-colors shadow-2xs"
+              {/* Minimalist Search & Doctor Filter */}
+              <div className="flex flex-col gap-3 pt-1">
+                <Form
+                  action="/doctors"
+                  role="search"
+                  className="flex items-center rounded-xl bg-white border border-[#E2E4DC] p-1.5 pl-4 shadow-2xs focus-within:border-[#397C78] focus-within:ring-1 focus-within:ring-[#397C78] transition-all"
                 >
-                  Find
-                </button>
-              </Form>
+                  <SearchIcon className="size-4 shrink-0 text-[#397C78]" />
+                  <label htmlFor="home-find" className="sr-only">
+                    Find a specialist doctor or diagnostic service
+                  </label>
+                  <input
+                    id="home-find"
+                    name="q"
+                    type="search"
+                    placeholder="Search specialist, symptom, or service (e.g. Heart, Echo, USG)..."
+                    autoComplete="off"
+                    className="min-h-11 min-w-0 flex-1 bg-transparent text-sm text-[#142B3B] outline-none placeholder:text-[#858D91]"
+                  />
+                  <button
+                    type="submit"
+                    className="min-h-10 shrink-0 rounded-lg bg-[#142B3B] px-5 text-sm font-semibold text-white hover:bg-[#252C30] transition-colors"
+                  >
+                    Find Doctor
+                  </button>
+                </Form>
 
-              <ul
-                aria-label="Browse by speciality"
-                className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:-mx-5 sm:px-5 sm:flex-wrap w-[calc(100%+2rem)] sm:w-[calc(100%+2.5rem)] max-w-none pt-1"
-              >
-                <li className="shrink-0">
+                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  <span className="text-xs font-semibold text-[#858D91] mr-1">Specialties:</span>
                   <Link
                     href="/doctors"
-                    className="inline-flex min-h-10 items-center rounded-full bg-ink px-4 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-slate-800"
+                    className="inline-flex items-center rounded-md bg-[#142B3B] px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-black"
                   >
-                    All Doctors (12)
+                    All 12 Doctors
                   </Link>
-                </li>
-                {categories.map((c) => (
-                  <li key={c.id} className="shrink-0">
+                  {categories.slice(0, 6).map((c) => (
                     <Link
+                      key={c.id}
                       href={`/doctors?type=${c.id}`}
-                      className="inline-flex min-h-10 items-center rounded-full bg-white border border-line px-3.5 text-xs sm:text-sm font-semibold text-slate-700 transition-colors hover:border-brand hover:text-brand shadow-2xs"
+                      className="inline-flex items-center rounded-md bg-white border border-[#E2E4DC] px-2.5 py-1 text-xs font-medium text-[#252C30] hover:border-[#397C78] hover:text-[#397C78] transition-colors"
                     >
                       {c.label}
                     </Link>
-                  </li>
-                ))}
-              </ul>
+                  ))}
+                </div>
+              </div>
 
-              {/* Quick Action Hub: 4 Apollo-style high-intent cards */}
-              <div className="grid grid-cols-2 gap-2.5 pt-2 sm:grid-cols-4 sm:gap-4 w-full min-w-0">
-              <Link
-                href="/doctors"
-                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-3.5 transition-all duration-200 sm:p-5"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="flex size-11 items-center justify-center rounded-2xl bg-brand-tint text-brand transition-colors group-hover:bg-brand group-hover:text-white sm:size-12">
-                    <UserIcon className="size-5 sm:size-6" />
-                  </span>
-                  <span className="rounded-full bg-brand-tint px-2 py-0.5 text-[11px] font-bold text-brand sm:px-2.5 sm:text-xs">
-                    12+ Doctors
-                  </span>
-                </div>
-                <div className="mt-3">
-                  <h3 className="font-bold text-ink group-hover:text-brand sm:text-lg">
-                    Doctor OPD
-                  </h3>
-                  <p className="mt-0.5 text-xs text-muted sm:text-sm">
-                    Visiting specialists &amp; super-specialists
-                  </p>
-                </div>
-              </Link>
-
-              <Link
-                href="/services#ultrasound"
-                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-3.5 transition-all duration-200 sm:p-5"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="flex size-11 items-center justify-center rounded-2xl bg-sky-50 text-sky-700 transition-colors group-hover:bg-sky-700 group-hover:text-white sm:size-12">
-                    <ServiceIcon id="ultrasound" className="size-5 sm:size-6" />
-                  </span>
-                  <span className="rounded-full bg-sky-100/70 px-2 py-0.5 text-[11px] font-bold text-sky-800 sm:px-2.5 sm:text-xs">
-                    4 Days/Wk
-                  </span>
-                </div>
-                <div className="mt-3">
-                  <h3 className="font-bold text-ink group-hover:text-sky-700 sm:text-lg">
-                    Ultrasound &amp; Echo
-                  </h3>
-                  <p className="mt-0.5 text-xs text-muted sm:text-sm">
-                    Abdomen, pelvic &amp; heart scans
-                  </p>
-                </div>
-              </Link>
-
-              <Link
-                href="/services#lab"
-                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-3.5 transition-all duration-200 sm:p-5"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="flex size-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-700 transition-colors group-hover:bg-amber-700 group-hover:text-white sm:size-12">
-                    <ServiceIcon id="lab" className="size-5 sm:size-6" />
-                  </span>
-                  <span className="rounded-full bg-amber-100/70 px-2 py-0.5 text-[11px] font-bold text-amber-800 sm:px-2.5 sm:text-xs">
-                    Fast Reports
-                  </span>
-                </div>
-                <div className="mt-3">
-                  <h3 className="font-bold text-ink group-hover:text-amber-700 sm:text-lg">
-                    Diagnostic Lab
-                  </h3>
-                  <p className="mt-0.5 text-xs text-muted sm:text-sm">
-                    Blood tests &amp; clinical pathology
-                  </p>
-                </div>
-              </Link>
-
-              <Link
-                href="/services#pharmacy"
-                className="group card card-hover flex flex-col justify-between rounded-3xl border border-line/60 p-3.5 transition-all duration-200 sm:p-5"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="flex size-11 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 transition-colors group-hover:bg-emerald-700 group-hover:text-white sm:size-12">
-                    <ServiceIcon id="pharmacy" className="size-5 sm:size-6" />
-                  </span>
-                  <span className="rounded-full bg-emerald-100/70 px-2 py-0.5 text-[11px] font-bold text-emerald-800 sm:px-2.5 sm:text-xs">
-                    In-house
-                  </span>
-                </div>
-                <div className="mt-3">
-                  <h3 className="font-bold text-ink group-hover:text-emerald-700 sm:text-lg">
-                    Pharmacy
-                  </h3>
-                  <p className="mt-0.5 text-xs text-muted sm:text-sm">
-                    Prescribed medicines under one roof
-                  </p>
-                </div>
-              </Link>
+              {/* Direct Booking & Phone Action */}
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <Link
+                  href="/book"
+                  className="inline-flex min-h-11 items-center justify-center rounded-lg bg-[#397C78] px-6 text-sm font-semibold text-white shadow-xs hover:bg-[#2A5D5A] transition-all"
+                >
+                  Book OPD Appointment →
+                </Link>
+                <a
+                  href={`tel:${clinic.phone}`}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[#E2E4DC] bg-white px-5 text-sm font-semibold text-[#142B3B] hover:bg-[#F2F7F6] transition-colors"
+                >
+                  <PhoneIcon className="size-4 text-[#397C78]" />
+                  <span>Call {clinic.phoneDisplay}</span>
+                </a>
+              </div>
             </div>
-          </div>
 
-            <section aria-labelledby="today" className="rise rise-3 w-full min-w-0 max-w-full">
-              <WhosInToday />
-            </section>
+            {/* Right: Live OPD Consultation Timetable Widget */}
+            <div className="lg:col-span-5 w-full">
+              <section aria-labelledby="today" className="w-full">
+                <WhosInToday />
+              </section>
+            </div>
           </div>
         </section>
       </div>
 
-      {/* Institutional Trust & Scale Stats */}
-      <section className="reveal mx-auto max-w-6xl px-5 pt-8 sm:pt-12">
-        <div className="card grid grid-cols-2 gap-3 rounded-3xl border border-line/70 p-4 sm:grid-cols-4 sm:gap-6 sm:p-6">
-          <div className="flex items-center gap-2.5 sm:gap-3.5">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand sm:size-12 sm:rounded-2xl">
-              <ShieldCheckIcon className="size-5 sm:size-6" />
-            </div>
-            <div>
-              <p className="text-lg font-extrabold text-ink sm:text-2xl">Zero Reg.</p>
-              <p className="text-[11px] leading-tight text-muted sm:text-sm">No clinic registration fee</p>
-            </div>
+      {/* Structured Institutional Highlights (Clean Editorial Row) */}
+      <section className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10 border-b border-[#E2E4DC]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+          <div>
+            <span className="block text-2xl font-bold tracking-tight text-[#142B3B] font-display">12 Specialists</span>
+            <span className="block text-xs text-[#647077] mt-1">Visiting physicians from leading GMC &amp; SKIMS institutions</span>
           </div>
-
-          <div className="flex items-center gap-2.5 sm:gap-3.5">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand sm:size-12 sm:rounded-2xl">
-              <HospitalIcon className="size-5 sm:size-6" />
-            </div>
-            <div>
-              <p className="text-lg font-extrabold text-ink sm:text-2xl">SKIMS &amp; GMC</p>
-              <p className="text-[11px] leading-tight text-muted sm:text-sm">Experienced visiting doctors</p>
-            </div>
+          <div>
+            <span className="block text-2xl font-bold tracking-tight text-[#142B3B] font-display">In-House USG</span>
+            <span className="block text-xs text-[#647077] mt-1">Ultrasound &amp; Echo diagnostics available on fixed days</span>
           </div>
-
-          <div className="flex items-center gap-2.5 sm:gap-3.5">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand sm:size-12 sm:rounded-2xl">
-              <ClockIcon className="size-5 sm:size-6" />
-            </div>
-            <div>
-              <p className="text-lg font-extrabold text-ink sm:text-2xl">Zero Wait</p>
-              <p className="text-[11px] leading-tight text-muted sm:text-sm">Time-slotted appointments</p>
-            </div>
+          <div>
+            <span className="block text-2xl font-bold tracking-tight text-[#142B3B] font-display">Opposite SDH</span>
+            <span className="block text-xs text-[#647077] mt-1">1st Floor, Lone Complex, Old Municipal Office building</span>
           </div>
-
-          <div className="flex items-center gap-2.5 sm:gap-3.5">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand sm:size-12 sm:rounded-2xl">
-              <MapPinIcon className="size-5 sm:size-6" />
-            </div>
-            <div>
-              <p className="text-lg font-extrabold text-ink sm:text-2xl">Opp. SDH</p>
-              <p className="text-[11px] leading-tight text-muted sm:text-sm">Lone Complex, Sopore</p>
-            </div>
+          <div>
+            <span className="block text-2xl font-bold tracking-tight text-[#142B3B] font-display">₹0 Registration</span>
+            <span className="block text-xs text-[#647077] mt-1">Transparent consultation fees with no extra clinic registration</span>
           </div>
         </div>
       </section>
