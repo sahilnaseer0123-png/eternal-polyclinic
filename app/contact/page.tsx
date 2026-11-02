@@ -8,8 +8,8 @@ import { ReceptionPhoto } from "@/components/ClinicPhoto";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
-  title: "Contact and directions",
-  description: `${clinic.name}, ${clinic.address}. Call ${clinic.phoneDisplay}, WhatsApp ${clinic.whatsappDisplay}.`,
+  title: "Location & Directions | Eternal Polyclinic Sopore",
+  description: `Find Eternal Polyclinic at 1st Floor, Lone Complex, Opposite SDH Hospital, Sopore. Call ${clinic.phoneDisplay} or WhatsApp ${clinic.whatsappDisplay}.`,
 };
 
 const hours = `${formatTime(clinic.hours.open)} – ${formatTime(clinic.hours.close)}`;
@@ -17,78 +17,115 @@ const hours = `${formatTime(clinic.hours.open)} – ${formatTime(clinic.hours.cl
 export default function ContactPage() {
   return (
     <>
-      <PageIntro title="Visit us" />
-      <div className="mx-auto max-w-6xl px-5 pb-5">
+      <PageIntro title="Visit &amp; Contact">
+        Located directly opposite the Sub-District Hospital (SDH) main gate in Sopore. Readily accessible from Baramulla, Bandipora, and Kupwara.
+      </PageIntro>
+
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 pb-6">
         <EmergencyNote />
       </div>
+
       <section
         aria-label="Address and contact"
-        className="mx-auto max-w-6xl px-5 pb-24 sm:pb-16"
+        className="mx-auto max-w-6xl px-4 sm:px-6 pb-24 sm:pb-16"
       >
-        <div className="grid gap-6 card rounded-3xl p-4 sm:p-10 md:grid-cols-2 border border-line/70">
-          <div className="flex flex-col gap-5">
+        <div className="grid gap-8 card rounded-2xl p-6 sm:p-9 md:grid-cols-2 border border-line shadow-card bg-white">
+          {/* Left Column: Details & Photo */}
+          <div className="flex flex-col gap-6">
             <figure>
               <ReceptionPhoto
-                className="aspect-[3/2] rounded-2xl shadow-sm border border-line/60"
+                className="aspect-[3/2] rounded-xl shadow-subtle border border-line object-cover"
                 eager
                 sizes="(min-width: 1152px) 500px, (min-width: 768px) 45vw, 100vw"
               />
-              <figcaption className="mt-2 text-sm text-muted">
-                Our reception &amp; triage desk inside the clinic.
+              <figcaption className="mt-2 text-xs text-muted">
+                Reception and patient triage lounge on the 1st Floor.
               </figcaption>
             </figure>
-            <div className="rounded-2xl bg-ground p-4 flex flex-col gap-3.5 border border-line/60">
+
+            {/* Address & Hours Cards */}
+            <div className="rounded-xl bg-ground p-4 sm:p-5 flex flex-col gap-4 border border-line">
               <div className="flex items-start gap-3">
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand">
-                  <MapPinIcon className="size-5" />
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand-tint border border-brand-line/60 text-brand mt-0.5">
+                  <MapPinIcon className="size-4.5" />
                 </span>
-                <div className="text-sm">
-                  <strong className="block font-bold text-ink">{clinic.name}</strong>
-                  <span className="text-slate-600">{clinic.address}</span>
+                <div className="text-xs sm:text-sm">
+                  <strong className="block font-bold text-ink font-display text-sm sm:text-base">
+                    {clinic.name}
+                  </strong>
+                  <span className="text-charcoal block mt-0.5 leading-relaxed">
+                    {clinic.address}
+                  </span>
+                  <span className="text-[11px] text-muted block mt-1">
+                    Landmark: Directly opposite SDH Hospital entrance, 1st Floor Lone Complex.
+                  </span>
                 </div>
               </div>
-              <div className="flex items-start gap-3">
-                <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand">
-                  <ClockIcon className="size-5" />
+
+              <div className="flex items-start gap-3 border-t border-line/60 pt-3.5">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand-tint border border-brand-line/60 text-brand mt-0.5">
+                  <ClockIcon className="size-4.5" />
                 </span>
-                <div className="text-sm">
-                  <strong className="block font-bold text-ink">Clinic Open Hours: {hours}</strong>
-                  <span className="text-slate-600">Specialists consult strictly according to their weekly OPD roster.</span>
+                <div className="text-xs sm:text-sm">
+                  <strong className="block font-bold text-ink">
+                    Clinic Hours: {hours} (Daily)
+                  </strong>
+                  <span className="text-charcoal block mt-0.5 leading-relaxed">
+                    Visiting specialists consult on fixed days according to their weekly OPD roster. Ultrasound &amp; lab services run during morning hours.
+                  </span>
                 </div>
               </div>
             </div>
-            <div className="flex flex-col gap-3">
+
+            {/* Direct Action Buttons */}
+            <div className="flex flex-col gap-2.5">
               <a
                 href={`tel:${clinic.phone}`}
-                className="inline-flex min-h-13 items-center justify-center gap-2.5 rounded-2xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark shadow-md transition-all"
+                className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-xl bg-brand px-6 text-xs sm:text-sm font-bold text-white hover:bg-brand-dark shadow-subtle hover:shadow-card transition-all"
               >
-                <span className="relative flex size-2.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-glow opacity-75"></span>
-                  <span className="relative inline-flex size-2.5 rounded-full bg-glow"></span>
-                </span>
-                <PhoneIcon className="size-5 shrink-0" /> Call Helpline: <span className="whitespace-nowrap">{clinic.phoneDisplay}</span>
+                <PhoneIcon className="size-4 shrink-0" />
+                <span>Call Reception Helpline: {clinic.phoneDisplay}</span>
               </a>
+
               <a
                 href={`https://wa.me/${clinic.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-13 items-center justify-center gap-2 card card-hover rounded-2xl px-6 text-base font-bold text-slate-800 border border-line/70 hover:text-[#25D366] hover:border-[#25D366]/50 transition-colors"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 text-xs sm:text-sm font-bold text-white hover:bg-[#20ba59] shadow-subtle transition-all"
               >
-                <ChatIcon className="size-5 text-[#25D366] shrink-0" /> WhatsApp Direct:{" "}
-                <span className="whitespace-nowrap">{clinic.whatsappDisplay}</span>
+                <ChatIcon className="size-4 shrink-0" />
+                <span>WhatsApp Desk: {clinic.whatsappDisplay}</span>
               </a>
+
               <a
                 href={clinic.mapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-13 items-center justify-center gap-2 card card-hover rounded-2xl px-6 text-base font-bold text-slate-800 border border-line/70 hover:text-brand"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-line bg-white px-6 text-xs sm:text-sm font-bold text-charcoal hover:border-brand-line hover:text-ink hover:bg-ground transition-all"
               >
-                <MapPinIcon className="size-5 text-brand" /> Get Directions on Google Maps
+                <MapPinIcon className="size-4 text-brand shrink-0" />
+                <span>Open in Google Maps App ↗</span>
               </a>
             </div>
           </div>
+
+          {/* Right Column: Interactive Map */}
           <div className="flex flex-col gap-3">
-            <div className="relative min-h-[22rem] flex-1 overflow-hidden rounded-2xl border border-line bg-ground md:min-h-[28rem] shadow-sm">
+            <div className="flex items-center justify-between pb-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-muted">
+                Interactive Clinic Location
+              </span>
+              <a
+                href={clinic.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-semibold text-brand hover:underline"
+              >
+                Full Screen Map ↗
+              </a>
+            </div>
+
+            <div className="relative min-h-[22rem] flex-1 overflow-hidden rounded-xl border border-line bg-ground md:min-h-[28rem] shadow-subtle">
               <iframe
                 src={clinic.mapEmbedUrl}
                 title={`Map: ${clinic.name}, ${clinic.location.name}, Sopore`}
@@ -100,8 +137,8 @@ export default function ContactPage() {
                 className="absolute inset-0 h-full w-full border-0"
               />
             </div>
-            <p className="text-xs text-muted">
-              Located at {clinic.location.name}, opposite Sub-District Hospital (SDH), Sopore.
+            <p className="text-[11px] text-muted leading-relaxed">
+              Coordinates: {clinic.location.lat}, {clinic.location.lng}. Street parking is accessible along the SDH Hospital road.
             </p>
           </div>
         </div>

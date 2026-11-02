@@ -51,37 +51,37 @@ export function TabBar() {
             role="dialog"
             aria-modal="true"
             aria-label="More navigation"
-            className="sheet-in fixed inset-x-3 bottom-[4.75rem] z-50 rounded-3xl bg-white p-2.5 shadow-2xl border border-line/60"
+            className="sheet-in fixed inset-x-3 bottom-[4.75rem] z-50 rounded-2xl bg-white p-3 shadow-2xl border border-line"
           >
-            <ul>
+            <ul className="space-y-1">
               {[...NAV.filter((n) => n.href !== "/doctors"), { href: "/privacy", label: "Privacy notice" }, { href: "/admin", label: "Reception Portal" }].map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
                     onClick={() => setOpen(false)}
                     aria-current={pathname === item.href ? "page" : undefined}
-                    className={`flex min-h-12 items-center justify-between rounded-2xl px-4 font-semibold ${
-                      pathname === item.href ? "bg-brand-tint text-brand" : "hover:bg-ground"
+                    className={`flex min-h-11 items-center justify-between rounded-xl px-3.5 text-xs sm:text-sm font-semibold transition-colors ${
+                      pathname === item.href ? "bg-brand-tint text-brand" : "text-charcoal hover:bg-ground hover:text-ink"
                     }`}
                   >
-                    {item.label}
-                    <ChevronRightIcon className="size-5 text-slate-400" />
+                    <span>{item.label}</span>
+                    <ChevronRightIcon className="size-4 text-muted" />
                   </Link>
                 </li>
               ))}
             </ul>
-            <div className="mt-2 grid grid-cols-2 gap-2 border-t border-line pt-2">
+            <div className="mt-3 grid grid-cols-2 gap-2 border-t border-line pt-3">
               <a
                 href={`https://wa.me/${clinic.whatsapp}`}
-                className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-emerald-50 text-emerald-900 border border-emerald-200/70 font-bold hover:bg-emerald-100/80 transition-colors"
+                className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-emerald-50 text-emerald-900 border border-emerald-200/70 text-xs font-bold hover:bg-emerald-100 transition-colors"
               >
-                <ChatIcon className="size-5 text-[#25D366]" /> WhatsApp
+                <ChatIcon className="size-4 text-[#25D366]" /> WhatsApp
               </a>
               <a
                 href={`tel:${clinic.phone}`}
-                className="flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-brand font-semibold text-white"
+                className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand text-xs font-bold text-white hover:bg-brand-dark transition-colors shadow-subtle"
               >
-                <PhoneIcon /> Call
+                <PhoneIcon className="size-3.5" /> Call
               </a>
             </div>
           </nav>

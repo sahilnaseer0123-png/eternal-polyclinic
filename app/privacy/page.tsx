@@ -16,18 +16,19 @@ export default function PrivacyPage() {
   const tel = `tel:${clinic.phone}`;
   return (
     <>
-      <div className="mx-auto w-full max-w-3xl px-5 pt-8 pb-24 sm:py-12">
-        <h1 className="text-[1.5rem] font-bold leading-tight sm:text-4xl">Privacy notice</h1>
-        <p className="mt-2 text-muted">Last updated {LAST_UPDATED}</p>
+      <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 pt-8 pb-24 sm:py-12">
+        <div className="card rounded-2xl border border-line bg-white p-6 sm:p-10 shadow-card">
+          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-ink font-display">Privacy Notice</h1>
+          <p className="mt-1 text-xs text-muted">Last updated {LAST_UPDATED} · Eternal Polyclinic Sopore</p>
 
-        <div className="mt-10 flex flex-col gap-10 [&_h2]:mb-3 [&_h2]:text-2xl [&_h2]:font-bold [&_li]:mt-1 [&_ul]:list-disc [&_ul]:pl-6">
-          <section>
-            <h2>In short</h2>
-            <p>
-              To book, you share your name, mobile number, the doctor, and the day and time you want. You send this to
-              us yourself on WhatsApp. We use it only to arrange your appointment. We never ask why you are visiting.
-            </p>
-          </section>
+          <div className="mt-8 flex flex-col gap-8 text-xs sm:text-sm text-charcoal leading-relaxed [&_h2]:mb-2.5 [&_h2]:text-base sm:[&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-ink [&_h2]:font-display [&_li]:mt-1 [&_ul]:list-disc [&_ul]:pl-5">
+            <section>
+              <h2>In short</h2>
+              <p>
+                To book, you share your name, mobile number, the doctor, and the day and time you want. You send this to
+                us yourself on WhatsApp or generate a token slip on screen. We use it only to arrange your appointment. We never ask why you are visiting.
+              </p>
+            </section>
 
           <section>
             <h2>Who we are</h2>
@@ -115,6 +116,7 @@ export default function PrivacyPage() {
           </section>
         </div>
       </div>
-    </>
-  );
+    </div>
+  </>
+);
 }

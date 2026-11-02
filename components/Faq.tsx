@@ -1,19 +1,29 @@
-// FAQ accordion built on native <details>/<summary>: works with keyboard and screen readers, no JavaScript needed.
+// FAQ accordion built on native <details>/<summary>: accessible, keyboard navigable, zero JS layout shift.
+// Styled according to Swiss Medical Editorial design tokens.
 
 import { faqs } from "@/data/faq";
 
 export function Faq() {
   return (
-    <div className="card divide-y divide-line/70 overflow-hidden rounded-3xl border border-line/70 shadow-sm">
+    <div className="card divide-y divide-line overflow-hidden rounded-2xl border border-line bg-white shadow-card">
       {faqs.map((faq, i) => (
-        <details key={faq.question} className="group px-5 sm:px-6 transition-colors open:bg-slate-50/50" open={i === 0}>
-          <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 text-base sm:text-lg font-bold text-ink hover:text-brand transition-colors [&::-webkit-details-marker]:hidden">
-            {faq.question}
-            <span aria-hidden="true" className="flex size-7 shrink-0 items-center justify-center rounded-full bg-ground text-xl font-medium text-slate-500 transition-transform group-open:rotate-45 group-open:bg-brand-tint group-open:text-brand">
+        <details
+          key={faq.question}
+          className="group px-5 sm:px-7 transition-colors open:bg-ground/40"
+          open={i === 0}
+        >
+          <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4.5 text-sm sm:text-base font-bold text-ink hover:text-brand transition-colors font-display [&::-webkit-details-marker]:hidden">
+            <span>{faq.question}</span>
+            <span
+              aria-hidden="true"
+              className="flex size-6.5 shrink-0 items-center justify-center rounded-full bg-ground border border-line text-sm font-bold text-muted transition-transform group-open:rotate-45 group-open:bg-brand-tint group-open:border-brand-line/80 group-open:text-brand"
+            >
               +
             </span>
           </summary>
-          <p className="pb-5 text-sm sm:text-base leading-relaxed text-slate-700">{faq.answer}</p>
+          <p className="pb-5 pt-1 text-xs sm:text-sm leading-relaxed text-charcoal pr-8">
+            {faq.answer}
+          </p>
         </details>
       ))}
     </div>

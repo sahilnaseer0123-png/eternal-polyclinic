@@ -173,3 +173,4 @@ export function formatReviewWhatsApp(review: PatientReview): string {
     .filter(Boolean)
     .join("\n");
 }
+

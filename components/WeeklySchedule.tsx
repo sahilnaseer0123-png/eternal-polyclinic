@@ -15,48 +15,48 @@ export function ScheduleView({ today }: { today?: Weekday }) {
   return (
     <div className="flex flex-col gap-4">
       {/* Wider screens: grid */}
-      <div className="card hidden overflow-x-auto rounded-3xl md:block">
-        <table className="w-full min-w-[46rem] table-fixed border-collapse text-base">
+      <div className="card hidden overflow-x-auto rounded-2xl border border-line bg-white shadow-card md:block">
+        <table className="w-full min-w-[46rem] table-fixed border-collapse text-xs sm:text-sm">
           <caption className="sr-only">Weekly OPD schedule by doctor and day</caption>
           <thead>
-            <tr className="bg-ground text-left">
-              <th scope="col" className="w-52 px-5 py-3 font-semibold">Doctor</th>
+            <tr className="bg-ground border-b border-line text-left">
+              <th scope="col" className="w-52 px-5 py-3.5 font-bold text-ink uppercase tracking-wider text-[11px]">Doctor</th>
               {WEEK.map((day) => (
                 <th
                   key={day}
                   scope="col"
-                  className={`px-3 py-3 font-semibold ${day === today ? "bg-brand-tint text-brand" : ""}`}
+                  className={`px-3 py-3.5 font-bold uppercase tracking-wider text-[11px] ${day === today ? "bg-brand-tint text-brand border-x border-brand-line/60" : "text-charcoal"}`}
                 >
                   {DAY_NAMES[day].slice(0, 3)}
-                  {day === today && <span className="block text-sm font-medium">Today</span>}
+                  {day === today && <span className="block text-[10px] font-extrabold text-brand mt-0.5">Today</span>}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
             {confirmed.map((doctor) => (
-              <tr key={doctor.id} className="border-t border-line">
-                <th scope="row" className="px-5 py-4 text-left font-normal">
-                  <span className="block font-semibold">{doctor.name ?? doctor.speciality}</span>
-                  <span className="block text-sm text-muted">{doctor.speciality}</span>
+              <tr key={doctor.id} className="border-t border-line/70 hover:bg-ground/30 transition-colors">
+                <th scope="row" className="px-5 py-3.5 text-left font-normal">
+                  <span className="block font-bold text-ink">{doctor.name ?? doctor.speciality}</span>
+                  <span className="block text-xs text-muted mt-0.5">{doctor.speciality}</span>
                 </th>
                 {WEEK.map((day) => {
                   const s = sessionOn(doctor, day);
                   return (
-                    <td key={day} className={`px-3 py-4 align-middle ${day === today ? "bg-brand-tint" : ""}`}>
+                    <td key={day} className={`px-3 py-3.5 align-middle ${day === today ? "bg-brand-tint/50 border-x border-brand-line/40" : ""}`}>
                       {s ? (
-                        <span className="font-semibold text-brand">
+                        <span className="font-semibold text-brand text-xs sm:text-sm tabular-nums">
                           {formatTimeShort(s.start)}–<wbr />
                           {formatTimeShort(s.end)}
                           {s.recurrence === "first-of-month" && (
-                            <span className="block text-xs font-normal text-muted">1st of mo</span>
+                            <span className="block text-[10px] font-semibold text-muted">1st of mo</span>
                           )}
                           {s.recurrence === "alternate" && (
-                            <span className="block text-xs font-normal text-muted">Alt week</span>
+                            <span className="block text-[10px] font-semibold text-muted">Alt week</span>
                           )}
                         </span>
                       ) : (
-                        <span className="text-slate-400" aria-label="Not sitting">—</span>
+                        <span className="text-stone select-none" aria-label="Not sitting">—</span>
                       )}
                     </td>
                   );
@@ -68,7 +68,7 @@ export function ScheduleView({ today }: { today?: Weekday }) {
       </div>
 
       {/* Phones: one compact row per day inside a single card */}
-      <ul className="card divide-y divide-line overflow-hidden rounded-3xl md:hidden">
+      <ul className="card divide-y divide-line overflow-hidden rounded-2xl border border-line bg-white shadow-card md:hidden">
         {WEEK.map((day) => {
           const sittings = confirmed.flatMap((d) => {
             const s = sessionOn(d, day);
