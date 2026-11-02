@@ -290,37 +290,25 @@ export default function AdminPage() {
   const allRecordedDates = Object.keys(dateGroups).sort((a, b) => b.localeCompare(a));
 
   // ---------------------------------------------------------------------------
-  // ELEGANT MINIMALIST ADMIN LOGIN VIEW (MATCHING TAMYIZ ARCHITECTURE)
+  // ELEGANT RECEPTION ACCESS SCREEN (SWISS MEDICAL MINIMALIST)
   // ---------------------------------------------------------------------------
   if (!isAuthenticated) {
     return (
-      <div className="min-h-[85vh] bg-[#F2F2EF] text-[#0B0B0B] flex flex-col justify-center px-4 py-16">
-        <div className="w-full max-w-[420px] mx-auto bg-white border border-[#0B0B0B]/10 rounded-[24px] p-8 sm:p-9 shadow-[0_20px_45px_-20px_rgba(0,0,0,0.15)]">
-          {/* Top Icon Badge */}
-          <div className="size-12 rounded-[14px] bg-[#0B0B0B] flex items-center justify-center mb-5 text-white">
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#FFFFFF"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect x="4" y="11" width="16" height="10" rx="2" />
-              <path d="M8 11V7a4 4 0 0 1 8 0v4" />
-            </svg>
+      <div className="min-h-[85vh] bg-[#F7F7F3] text-[#142B3B] flex flex-col justify-center px-4 py-16">
+        <div className="w-full max-w-[420px] mx-auto bg-white border border-[#E2E4DC] rounded-2xl p-8 sm:p-9 shadow-xs">
+          {/* Top Medical Stethoscope Badge */}
+          <div className="size-11 rounded-xl bg-[#F2F7F6] border border-[#C4DBD8] flex items-center justify-center mb-5 text-[#397C78]">
+            <StethoscopeIcon className="size-5 text-[#397C78]" />
           </div>
 
-          <p className="font-semibold text-xs tracking-[1.5px] uppercase text-[#5E5E59] mb-1.5 font-display">
-            Eternal Polyclinic™ Console
+          <p className="font-semibold text-xs tracking-wider uppercase text-[#858D91] mb-1.5 font-sans">
+            Eternal Polyclinic · Sopore
           </p>
-          <h1 className="font-bold text-[26px] leading-[1.2] tracking-tight text-[#0B0B0B] mb-2 font-display">
-            Administrator Access
+          <h1 className="font-bold text-2xl tracking-tight text-[#142B3B] mb-2 font-display">
+            Reception Desk Portal
           </h1>
-          <p className="text-[#5E5E59] text-sm mb-6 leading-relaxed">
-            Enter your administrative password or PIN to manage the clinic OPD register, patient queue, and operations.
+          <p className="text-[#647077] text-xs sm:text-sm mb-6 leading-relaxed">
+            Enter reception security PIN to access the live OPD queue, walk-in register, and delay radar.
           </p>
 
           <form
@@ -333,9 +321,9 @@ export default function AdminPage() {
           >
             <label
               htmlFor="clinic-admin-pass"
-              className="block font-semibold text-sm mb-2 text-[#0B0B0B]"
+              className="block font-semibold text-xs uppercase tracking-wider mb-2 text-[#252C30]"
             >
-              Master Password / PIN
+              Reception Desk PIN
             </label>
             <input
               id="clinic-admin-pass"
@@ -343,34 +331,34 @@ export default function AdminPage() {
               autoComplete="current-password"
               autoFocus
               required
-              placeholder="Enter password or 1234…"
+              placeholder="Enter PIN (e.g. 1234)…"
               value={pinInput}
               onChange={(e) => {
                 setPinInput(e.target.value);
                 setPinError("");
               }}
-              className="w-full text-[15px] p-3.5 border-[1.5px] border-[#0B0B0B]/20 rounded-xl bg-white text-[#0B0B0B] outline-none mb-3 transition-colors focus:border-[#0B0B0B]"
+              className="w-full text-sm p-3 border border-[#E2E4DC] rounded-xl bg-white text-[#142B3B] outline-none mb-3 transition-colors focus:border-[#397C78] focus:ring-1 focus:ring-[#397C78]"
             />
 
             {pinError && (
-              <div className="mb-3 text-sm font-semibold text-[#B3261E]">
+              <div className="mb-3 text-xs font-semibold text-[#A62828]">
                 {pinError}
               </div>
             )}
 
             <button
               type="submit"
-              className="w-full font-semibold text-[15px] rounded-full py-3.5 px-5 bg-[#0B0B0B] text-white hover:bg-black cursor-pointer transition-all active:scale-[0.99] shadow-sm mb-4"
+              className="w-full font-semibold text-sm rounded-xl py-3 px-5 bg-[#397C78] text-white hover:bg-[#2A5D5A] cursor-pointer transition-all active:scale-[0.99] shadow-2xs mb-4"
             >
-              Sign In to Dashboard
+              Access Reception Desk →
             </button>
           </form>
 
-          <div className="border-t border-[#0B0B0B]/10 pt-4 flex items-center justify-between text-xs text-[#5E5E59]">
-            <Link href="/" className="hover:text-[#0B0B0B] transition-colors underline">
-              ← Storefront
+          <div className="border-t border-[#E2E4DC] pt-4 flex items-center justify-between text-xs text-[#858D91]">
+            <Link href="/" className="hover:text-[#397C78] transition-colors underline">
+              ← Back to Website
             </Link>
-            <span>Default: 1234</span>
+            <span>Default PIN: 1234</span>
           </div>
         </div>
       </div>
@@ -385,7 +373,7 @@ export default function AdminPage() {
   const ownerWaUrl = `https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(ownerReportText)}`;
 
   return (
-    <div className="min-w-0 w-full max-w-7xl mx-auto px-3 sm:px-6 py-4 flex flex-col gap-6 font-sans">
+    <div className="min-w-0 w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6 font-sans bg-[#F7F7F3]">
       {/* Hidden file input for JSON restore */}
       <input
         ref={restoreFileInputRef}
@@ -395,86 +383,41 @@ export default function AdminPage() {
         className="hidden"
       />
 
-      {/* Printable OPD Register Sheet (Visible only when printing) */}
-      <div className="hidden print:block print-only">
-        <div className="border-b-2 border-black pb-4 mb-4">
-          <div className="flex justify-between items-baseline">
-            <h1 className="text-2xl font-black text-black uppercase">{clinic.name} — OPD Register</h1>
-            <span className="text-sm font-bold">Reception Helpline: 97977 96909</span>
-          </div>
-          <p className="text-xs text-gray-700">{clinic.address}</p>
-          <div className="mt-3 flex justify-between text-xs font-bold border-t border-gray-300 pt-2">
-            <span>Date: {dateLabel(selectedDate)}</span>
-            <span>Doctor: {doctorFilter === "all" ? "All Specialists" : allDoctors.find((d) => d.id === doctorFilter)?.name}</span>
-            <span>Total Patients: {filteredAppointments.length}</span>
-          </div>
-        </div>
-
-        <table className="w-full text-left border-collapse border border-gray-400 text-xs">
-          <thead>
-            <tr className="bg-gray-100 border-b border-gray-400 font-bold">
-              <th className="border border-gray-400 p-2">Token #</th>
-              <th className="border border-gray-400 p-2">Time</th>
-              <th className="border border-gray-400 p-2">Patient Name</th>
-              <th className="border border-gray-400 p-2">Village / Address</th>
-              <th className="border border-gray-400 p-2">Mobile</th>
-              <th className="border border-gray-400 p-2">Type</th>
-              <th className="border border-gray-400 p-2">Status</th>
-              <th className="border border-gray-400 p-2 w-44">Consultation Notes / Rx</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredAppointments.map((apt) => (
-              <tr key={apt.token} className="border-b border-gray-300">
-                <td className="border border-gray-400 p-2 font-mono font-bold">{apt.token}</td>
-                <td className="border border-gray-400 p-2 font-bold">{formatTime(apt.time)}</td>
-                <td className="border border-gray-400 p-2 font-bold text-black">{apt.patientName}</td>
-                <td className="border border-gray-400 p-2 font-semibold text-gray-800">{apt.patientAddress || "—"}</td>
-                <td className="border border-gray-400 p-2 font-mono">{apt.patientPhone}</td>
-                <td className="border border-gray-400 p-2 capitalize">{apt.type}</td>
-                <td className="border border-gray-400 p-2 capitalize font-semibold">{apt.status}</td>
-                <td className="border border-gray-400 p-2"></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
       {/* Screen View (hidden on print) */}
       <div className="no-print flex flex-col gap-6">
         {/* Top Header Bar */}
-        <header className="rounded-3xl p-4 sm:p-5 bg-gradient-to-r from-slate-900 via-ink to-slate-950 text-white shadow-xl border border-white/10 flex flex-wrap items-center justify-between gap-4">
+        <header className="rounded-2xl p-5 bg-white border border-[#E2E4DC] text-[#142B3B] shadow-2xs flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="size-12 rounded-2xl bg-teal-500/20 text-glow flex items-center justify-center font-bold border border-teal-500/30 shadow-inner">
-              <StethoscopeIcon className="size-6 text-glow" />
+            <div className="size-11 rounded-xl bg-[#F2F7F6] border border-[#C4DBD8] text-[#397C78] flex items-center justify-center font-bold">
+              <StethoscopeIcon className="size-5 text-[#397C78]" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-xl font-black tracking-tight sm:text-2xl font-display text-white">
-                  Reception Tablet Suite
+              <div className="flex items-center gap-2.5">
+                <h1 className="text-lg sm:text-xl font-bold tracking-tight text-[#142B3B] font-display">
+                  Reception Management Portal
                 </h1>
                 {/* Cross-Device Sync Badge */}
                 <button
                   type="button"
                   onClick={handleManualSync}
                   title="Click to manually sync cross-device"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-[11px] px-2.5 py-0.5 font-bold hover:bg-emerald-500/30 transition-all"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-[#F2F7F6] border border-[#C4DBD8] text-[#397C78] text-[11px] px-2.5 py-0.5 font-semibold hover:bg-slate-100 transition-all"
                 >
-                  <span className={`size-1.5 rounded-full bg-emerald-400 ${isSyncing ? "animate-spin" : "animate-pulse"}`} />
-                  <span>{isSyncing ? "Syncing..." : `Cloud Sync: ${lastSyncDisplay}`}</span>
+                  <span className={`size-1.5 rounded-full bg-[#397C78] ${isSyncing ? "animate-spin" : "animate-pulse"}`} />
+                  <span>{isSyncing ? "Syncing..." : `Sync: ${lastSyncDisplay}`}</span>
                 </button>
               </div>
-              <p className="text-xs text-slate-300 mt-0.5">
+              <p className="text-xs text-[#647077] mt-0.5">
                 {clinic.name} · Opposite SDH Hospital, Sopore
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             {/* Live Clock Badge */}
-            <div className="hidden sm:flex flex-col text-right px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 font-mono">
-              <span className="text-[10px] text-slate-400 uppercase font-sans font-bold">Clinic Time</span>
-              <span className="text-sm font-bold text-glow">{fromMinutes(clock.minutes)} IST</span>
+            <div className="hidden sm:flex flex-col text-right px-3 py-1.5 rounded-lg bg-[#F7F7F3] border border-[#E2E4DC] font-mono">
+              <span className="text-[10px] text-[#858D91] uppercase font-sans font-bold">Kashmir Time</span>
+              <span className="text-xs font-bold text-[#142B3B]">{fromMinutes(clock.minutes)} IST</span>
             </div>
 
             {/* Quick Walk-in Button */}
@@ -484,9 +427,9 @@ export default function AdminPage() {
                 setShowWalkInModal(true);
                 setWalkInDocId(doctorFilter !== "all" ? doctorFilter : allDoctors[0]?.id || "");
               }}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 px-5 py-2.5 text-sm sm:text-base font-black text-white hover:brightness-110 shadow-lg shadow-emerald-600/30 transition-all active:scale-95"
+              className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg bg-[#397C78] px-4 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-[#2A5D5A] shadow-2xs transition-all active:scale-95"
             >
-              <span>➕ Add Walk-In</span>
+              <span>+ Add Walk-In Patient</span>
             </button>
 
             {/* Logout Lock */}
@@ -494,18 +437,18 @@ export default function AdminPage() {
               type="button"
               onClick={handleLogout}
               title="Lock Tablet"
-              className="min-h-12 px-3.5 rounded-2xl bg-white/10 hover:bg-white/20 text-xs font-bold text-slate-300 transition-all border border-white/10"
+              className="min-h-10 px-3 rounded-lg bg-white hover:bg-[#F7F7F3] text-xs font-semibold text-[#647077] transition-all border border-[#E2E4DC]"
             >
-              🔒 Lock
+              Lock Console
             </button>
           </div>
         </header>
 
         {/* Broadcast Toast Notification */}
         {broadcastToast && (
-          <div className="rounded-2xl bg-emerald-600 text-white font-bold text-sm px-4 py-3 shadow-lg flex items-center justify-between animate-fade-in border border-emerald-400/40">
+          <div className="rounded-xl bg-[#397C78] text-white font-semibold text-xs sm:text-sm px-4 py-3 shadow-2xs flex items-center justify-between animate-fade-in border border-[#C4DBD8]">
             <span className="flex items-center gap-2">
-              <span>✅</span> {broadcastToast}
+              <span>✓</span> {broadcastToast}
             </span>
             <button type="button" onClick={() => setBroadcastToast("")} className="text-white hover:underline text-xs">
               Dismiss
@@ -514,17 +457,17 @@ export default function AdminPage() {
         )}
 
         {/* Tab Navigation Segmented Bar */}
-        <nav className="flex gap-2 p-1.5 rounded-2xl bg-slate-100 border border-line overflow-x-auto text-sm font-bold">
+        <nav className="flex gap-1.5 p-1 rounded-xl bg-[#E9E9E3] border border-[#E2E4DC] overflow-x-auto text-xs font-semibold">
           <button
             type="button"
             onClick={() => setActiveTab("opd")}
-            className={`min-h-11 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shrink-0 ${
-              activeTab === "opd" ? "bg-ink text-white shadow-md shadow-ink/20" : "text-slate-600 hover:text-ink hover:bg-white/60"
+            className={`min-h-9 px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
+              activeTab === "opd" ? "bg-white text-[#142B3B] shadow-2xs font-bold" : "text-[#647077] hover:text-[#142B3B]"
             }`}
           >
-            📋 OPD Patient Register
+            OPD Patient Queue
             {countWaiting > 0 && (
-              <span className="rounded-full bg-amber-400 text-ink text-xs px-2 py-0.5 font-black">
+              <span className="rounded-full bg-[#F2F7F6] border border-[#C4DBD8] text-[#397C78] text-[10px] px-1.5 py-0.2 font-bold">
                 {countWaiting}
               </span>
             )}
@@ -533,44 +476,41 @@ export default function AdminPage() {
           <button
             type="button"
             onClick={() => setActiveTab("radar")}
-            className={`min-h-11 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shrink-0 ${
-              activeTab === "radar" ? "bg-ink text-white shadow-md shadow-ink/20" : "text-slate-600 hover:text-ink hover:bg-white/60"
+            className={`min-h-9 px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
+              activeTab === "radar" ? "bg-white text-[#142B3B] shadow-2xs font-bold" : "text-[#647077] hover:text-[#142B3B]"
             }`}
           >
-            🛰️ Doctor Delay Radar
+            Doctor Delay Radar
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab("doctors")}
-            className={`min-h-11 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shrink-0 ${
-              activeTab === "doctors" ? "bg-ink text-white shadow-md shadow-ink/20" : "text-slate-600 hover:text-ink hover:bg-white/60"
+            className={`min-h-9 px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
+              activeTab === "doctors" ? "bg-white text-[#142B3B] shadow-2xs font-bold" : "text-[#647077] hover:text-[#142B3B]"
             }`}
           >
-            🩺 Doctor Timings & Leaves
+            Doctor Timings &amp; Overrides
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab("backups")}
-            className={`min-h-11 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shrink-0 ${
-              activeTab === "backups" ? "bg-ink text-white shadow-md shadow-ink/20" : "text-slate-600 hover:text-ink hover:bg-white/60"
+            className={`min-h-9 px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
+              activeTab === "backups" ? "bg-white text-[#142B3B] shadow-2xs font-bold" : "text-[#647077] hover:text-[#142B3B]"
             }`}
           >
-            💾 Daily Backups & Reports
-            <span className="rounded-full bg-teal-100 text-teal-800 text-[10px] px-2 py-0.5 font-bold">
-              New
-            </span>
+            Backups &amp; Owner Reports
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab("search")}
-            className={`min-h-11 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shrink-0 ${
-              activeTab === "search" ? "bg-ink text-white shadow-md shadow-ink/20" : "text-slate-600 hover:text-ink hover:bg-white/60"
+            className={`min-h-9 px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
+              activeTab === "search" ? "bg-white text-[#142B3B] shadow-2xs font-bold" : "text-[#647077] hover:text-[#142B3B]"
             }`}
           >
-            🔍 Patient Search
+            Patient Search
           </button>
         </nav>
 
