@@ -10,7 +10,7 @@ import { categories, clinic, doctors, services, type DoctorCategory } from "@/da
 import { DAY_NAMES, formatTime } from "@/lib/schedule";
 import { DoctorMark } from "./DoctorMark";
 import { NextAvailable } from "./NextAvailable";
-import { CalendarIcon, ChevronRightIcon, SearchIcon, ServiceIcon } from "./Icons";
+import { ChevronRightIcon, SearchIcon, ServiceIcon } from "./Icons";
 
 export type Filter = "all" | DoctorCategory;
 
@@ -121,144 +121,133 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
               <li
                 key={doctor.id}
                 id={`doctor-${doctor.id}`}
-                className="card card-hover flex flex-col gap-3.5 rounded-3xl border border-line/60 p-4 transition-all duration-200 sm:p-5"
+                className="bg-white flex flex-col justify-between rounded-xl border border-[#E2E4DC] p-5 hover:border-[#C4DBD8] hover:shadow-xs transition-all duration-200"
               >
-                {/* Doctor Identity Header */}
-                <div className="flex items-start gap-3 sm:gap-4">
-                  <DoctorMark
-                    doctor={doctor}
-                    className="size-14 shrink-0 rounded-2xl bg-brand-tint text-2xl text-brand sm:size-16"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center justify-between gap-1.5">
-                      <h3 className="text-lg font-bold leading-snug sm:text-xl">
+                <div>
+                  {/* Doctor Identity Header */}
+                  <div className="flex items-start gap-4">
+                    <DoctorMark
+                      doctor={doctor}
+                      className="size-14 shrink-0 rounded-xl"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="inline-block rounded-md bg-[#F2F7F6] border border-[#C4DBD8] px-2 py-0.5 text-xs font-semibold text-[#397C78]">
+                          {doctor.categoryLabel}
+                        </span>
+                      </div>
+                      <h3 className="text-base sm:text-lg font-bold tracking-tight text-[#142B3B] mt-1 leading-snug font-display">
                         <Link
                           href={`/doctors/${doctor.id}`}
-                          className="underline-offset-4 hover:text-brand hover:underline"
+                          className="hover:text-[#397C78] transition-colors"
                         >
                           {doctor.name ?? doctor.speciality}
                         </Link>
                       </h3>
-                      <span className="inline-block rounded-full bg-brand-tint px-2.5 py-0.5 text-xs font-semibold text-brand">
-                        {doctor.categoryLabel}
-                      </span>
-                    </div>
-                    {doctor.name && (
-                      <p className="mt-0.5 text-sm font-semibold text-slate-800">
-                        {doctor.speciality}
-                      </p>
-                    )}
-                    <p className="text-xs text-muted">
-                      {[
-                        doctor.degree &&
-                        doctor.degree.toLowerCase() !==
-                          doctor.speciality.toLowerCase()
-                          ? doctor.degree
-                          : null,
-                        doctor.experienceYears
-                          ? `${doctor.experienceYears} yrs experience`
-                          : null,
-                      ]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Structured Timings & Availability */}
-                <div className="rounded-2xl border border-line/60 bg-ground/80 p-3 sm:p-3.5">
-                  <div className="flex items-start gap-2.5">
-                    <CalendarIcon className="mt-0.5 size-4.5 shrink-0 text-brand" />
-                    <div className="min-w-0 flex-1 space-y-1.5">
-                      {hasOpd ? (
-                        <>
-                          <div className="space-y-1">
-                            {doctor.opd.map((s, idx) => {
-                              const dayLabel =
-                                s.recurrence === "first-of-month"
-                                  ? `1st ${DAY_NAMES[s.day]} of every month`
-                                  : s.recurrence === "alternate"
-                                    ? `Alternate ${DAY_NAMES[s.day]}s`
-                                    : DAY_NAMES[s.day];
-                              return (
-                                <div
-                                  key={idx}
-                                  className="flex flex-wrap items-center justify-between gap-x-2 text-xs sm:text-sm"
-                                >
-                                  <span className="font-semibold text-ink">
-                                    {dayLabel}
-                                  </span>
-                                  <span className="tabular-nums font-medium text-muted">
-                                    {formatTime(s.start)} – {formatTime(s.end)}
-                                  </span>
-                                </div>
-                              );
-                            })}
-                          </div>
-                          <div className="flex items-center justify-between border-t border-line/70 pt-1.5 text-xs">
-                            <span className="flex items-center gap-1.5 font-medium text-muted">
-                              <span className="relative flex size-2">
-                                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                                <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
-                              </span>
-                              Next free slot
-                            </span>
-                            <NextAvailable
-                              doctorId={doctor.id}
-                              fallback={"—"}
-                              prefix=""
-                              className="font-bold text-brand"
-                            />
-                          </div>
-                        </>
-                      ) : (
-                        <p className="text-xs leading-relaxed text-slate-700 sm:text-sm">
-                          {doctor.availability ??
-                            "Days coming soon. Please call to ask."}
+                      {doctor.name && (
+                        <p className="text-xs sm:text-sm font-semibold text-[#252C30]">
+                          {doctor.speciality}
                         </p>
                       )}
+                      <p className="text-xs text-[#647077] mt-0.5">
+                        {[
+                          doctor.degree &&
+                          doctor.degree.toLowerCase() !==
+                            doctor.speciality.toLowerCase()
+                            ? doctor.degree
+                            : null,
+                          doctor.experienceYears
+                            ? `${doctor.experienceYears} yrs experience`
+                            : null,
+                        ]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Structured Timings & Availability */}
+                  <div className="mt-4 rounded-lg border border-[#E2E4DC] bg-[#F7F7F3] p-3 text-xs">
+                    {hasOpd ? (
+                      <div className="space-y-1.5">
+                        {doctor.opd.map((s, idx) => {
+                          const dayLabel =
+                            s.recurrence === "first-of-month"
+                              ? `1st ${DAY_NAMES[s.day]} of every month`
+                              : s.recurrence === "alternate"
+                                ? `Alternate ${DAY_NAMES[s.day]}s`
+                                : DAY_NAMES[s.day];
+                          return (
+                            <div
+                              key={idx}
+                              className="flex items-center justify-between text-[#252C30]"
+                            >
+                              <span className="font-semibold text-[#142B3B]">
+                                {dayLabel}
+                              </span>
+                              <span className="tabular-nums text-[#647077]">
+                                {formatTime(s.start)} – {formatTime(s.end)}
+                              </span>
+                            </div>
+                          );
+                        })}
+                        <div className="flex items-center justify-between border-t border-[#E2E4DC] pt-1.5 text-xs">
+                          <span className="text-[#647077]">Next available slot</span>
+                          <NextAvailable
+                            doctorId={doctor.id}
+                            fallback={"—"}
+                            prefix=""
+                            className="font-bold text-[#397C78]"
+                          />
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-[#647077]">
+                        {doctor.availability ??
+                          "Consultation by appointment. Call to confirm."}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Conditions / Helps With */}
+                  <div className="mt-3.5 space-y-1.5">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-[#858D91]">
+                      Primary Conditions:
+                    </span>
+                    <div className="flex flex-wrap gap-1">
+                      {doctor.concerns.slice(0, 3).map((c) => (
+                        <span
+                          key={c}
+                          className="inline-flex items-center rounded-md border border-[#E2E4DC] bg-white px-2 py-0.5 text-xs text-[#252C30]"
+                        >
+                          {c}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </div>
 
-                {/* Conditions / Helps With Chips */}
-                <div className="space-y-1.5">
-                  <p className="text-xs font-bold uppercase tracking-wider text-muted">
-                    Helps with
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {doctor.concerns.slice(0, 4).map((c) => (
-                      <span
-                        key={c}
-                        className="inline-flex items-center rounded-lg border border-line/70 bg-ground px-2.5 py-1 text-xs font-medium text-slate-700 transition-colors hover:border-brand-line hover:bg-brand-tint hover:text-brand"
-                      >
-                        {c}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Action Buttons: Primary Booking + Profile Link */}
-                <div className="mt-auto grid grid-cols-2 gap-2 pt-1 sm:gap-3">
+                {/* Refined Action Buttons */}
+                <div className="mt-5 grid grid-cols-2 gap-2 pt-2 border-t border-[#E2E4DC]/80">
                   <Link
                     href={`/doctors/${doctor.id}`}
-                    className="inline-flex min-h-11 items-center justify-center rounded-2xl border border-line bg-ground px-3 text-center text-sm font-semibold text-ink transition-colors hover:bg-slate-200"
+                    className="inline-flex min-h-10 items-center justify-center rounded-lg border border-[#E2E4DC] bg-white px-3 text-center text-xs font-semibold text-[#142B3B] hover:bg-[#F7F7F3] transition-colors"
                   >
-                    View profile
+                    View Details
                   </Link>
                   {hasOpd ? (
                     <Link
                       href={`/book?doctor=${doctor.id}`}
-                      className="inline-flex min-h-11 items-center justify-center rounded-2xl bg-brand px-3 text-center text-sm font-bold text-white shadow-sm transition-all hover:bg-brand-dark hover:shadow"
+                      className="inline-flex min-h-10 items-center justify-center rounded-lg bg-[#397C78] px-3 text-center text-xs font-semibold text-white hover:bg-[#2A5D5A] transition-colors shadow-2xs"
                     >
-                      Book OPD
+                      Book OPD →
                     </Link>
                   ) : (
                     <a
                       href={`tel:${clinic.phone}`}
-                      className="inline-flex min-h-11 items-center justify-center rounded-2xl bg-brand-tint px-3 text-center text-sm font-bold text-brand transition-colors hover:bg-brand-line/40"
+                      className="inline-flex min-h-10 items-center justify-center rounded-lg bg-[#142B3B] px-3 text-center text-xs font-semibold text-white hover:bg-[#252C30] transition-colors"
                     >
-                      Call to book
+                      Call Helpline
                     </a>
                   )}
                 </div>
