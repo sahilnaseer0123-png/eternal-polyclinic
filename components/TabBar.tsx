@@ -54,7 +54,7 @@ export function TabBar() {
             className="sheet-in fixed inset-x-3 bottom-[4.75rem] z-50 rounded-3xl bg-white p-2.5 shadow-2xl border border-line/60"
           >
             <ul>
-              {[...NAV.filter((n) => n.href !== "/doctors"), { href: "/privacy", label: "Privacy notice" }].map((item) => (
+              {[...NAV.filter((n) => n.href !== "/doctors"), { href: "/privacy", label: "Privacy notice" }, { href: "/admin", label: "Reception Portal" }].map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
