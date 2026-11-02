@@ -50,12 +50,23 @@ import {
 const DEFAULT_PIN = "1234";
 
 export default function AdminPage() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return sessionStorage.getItem("ep_reception_auth") === "true";
-  });
+  const [mounted, setMounted] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [pinInput, setPinInput] = useState<string>("");
   const [pinError, setPinError] = useState<string>("");
+
+  useEffect(() => {
+    setMounted(true);
+    try {
+      if (typeof window !== "undefined" && sessionStorage.getItem("ep_reception_auth") === "true") {
+        setIsAuthenticated(true);
+      }
+    } catch {
+      // Storage access protected
+    }
+    const currentClock = clinicClock(new Date());
+    setSelectedDate(currentClock.dateKey);
+  }, []);
 
   // Navigation tabs
   const [activeTab, setActiveTab] = useState<"opd" | "radar" | "doctors" | "backups" | "search">("opd");
@@ -293,7 +304,7 @@ export default function AdminPage() {
   // ---------------------------------------------------------------------------
   // ELEGANT RECEPTION ACCESS SCREEN (SWISS MEDICAL MINIMALIST)
   // ---------------------------------------------------------------------------
-  if (!isAuthenticated) {
+  if (!mounted || !isAuthenticated) {
     return (
       <div className="min-h-[85vh] bg-[#F7F7F3] text-[#142B3B] flex flex-col justify-center px-4 py-16">
         <div className="w-full max-w-[420px] mx-auto bg-white border border-[#E2E4DC] rounded-2xl p-8 sm:p-9 shadow-xs">
