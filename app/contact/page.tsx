@@ -29,16 +29,16 @@ export default function ContactPage() {
         aria-label="Address and contact"
         className="mx-auto max-w-6xl px-4 sm:px-6 pb-24 sm:pb-16"
       >
-        <div className="grid gap-8 card rounded-2xl p-6 sm:p-9 md:grid-cols-2 border border-line shadow-card bg-white">
+        <div className="grid gap-8 card rounded-3xl p-6 sm:p-9 md:grid-cols-2">
           {/* Left Column: Details & Photo */}
           <div className="flex flex-col gap-6">
             <figure>
               <ReceptionPhoto
-                className="aspect-[3/2] rounded-xl shadow-subtle border border-line object-cover"
+                className="aspect-[3/2] rounded-2xl object-cover"
                 eager
                 sizes="(min-width: 1152px) 500px, (min-width: 768px) 45vw, 100vw"
               />
-              <figcaption className="mt-2 text-xs text-muted">
+              <figcaption className="mt-2 text-sm text-muted">
                 Reception and patient triage lounge on the 1st Floor.
               </figcaption>
             </figure>
@@ -49,8 +49,8 @@ export default function ContactPage() {
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand-tint border border-brand-line/60 text-brand mt-0.5">
                   <MapPinIcon className="size-4.5" />
                 </span>
-                <div className="text-xs sm:text-sm">
-                  <strong className="block font-bold text-ink font-display text-sm sm:text-base">
+                <div className="text-sm sm:text-base">
+                  <strong className="block font-display text-lg font-medium text-ink">
                     {clinic.name}
                   </strong>
                   <span className="text-charcoal block mt-0.5 leading-relaxed">
@@ -66,7 +66,7 @@ export default function ContactPage() {
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand-tint border border-brand-line/60 text-brand mt-0.5">
                   <ClockIcon className="size-4.5" />
                 </span>
-                <div className="text-xs sm:text-sm">
+                <div className="text-sm sm:text-base">
                   <strong className="block font-bold text-ink">
                     Clinic Hours: {hours} (Daily)
                   </strong>
@@ -81,7 +81,7 @@ export default function ContactPage() {
             <div className="flex flex-col gap-2.5">
               <a
                 href={`tel:${clinic.phone}`}
-                className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-xl bg-brand px-6 text-xs sm:text-sm font-bold text-white hover:bg-brand-dark shadow-subtle hover:shadow-card transition-all"
+                className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-xl bg-brand px-6 text-sm sm:text-base font-bold text-white hover:bg-brand-dark "
               >
                 <PhoneIcon className="size-4 shrink-0" />
                 <span>Call Reception Helpline: {clinic.phoneDisplay}</span>
@@ -91,7 +91,7 @@ export default function ContactPage() {
                 href={`https://wa.me/${clinic.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 text-xs sm:text-sm font-bold text-white hover:bg-[#20ba59] shadow-subtle transition-all"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 text-sm sm:text-base font-bold text-white hover:bg-[#20ba59]"
               >
                 <ChatIcon className="size-4 shrink-0" />
                 <span>WhatsApp Desk: {clinic.whatsappDisplay}</span>
@@ -101,7 +101,7 @@ export default function ContactPage() {
                 href={clinic.mapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-line bg-white px-6 text-xs sm:text-sm font-bold text-charcoal hover:border-brand-line hover:text-ink hover:bg-ground transition-all"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-6 text-sm sm:text-base font-bold hover:bg-ink hover:text-white"
               >
                 <MapPinIcon className="size-4 text-brand shrink-0" />
                 <span>Open in Google Maps App ↗</span>
@@ -112,20 +112,20 @@ export default function ContactPage() {
           {/* Right Column: Interactive Map */}
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between pb-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-muted">
+              <span className="eyebrow text-muted">
                 Interactive Clinic Location
               </span>
               <a
                 href={clinic.mapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs font-semibold text-brand hover:underline"
+                className="text-sm font-semibold text-brand underline"
               >
                 Full Screen Map ↗
               </a>
             </div>
 
-            <div className="relative min-h-[22rem] flex-1 overflow-hidden rounded-xl border border-line bg-ground md:min-h-[28rem] shadow-subtle">
+            <div className="relative min-h-[22rem] flex-1 overflow-hidden rounded-2xl border border-line bg-ground md:min-h-[28rem]">
               <iframe
                 src={clinic.mapEmbedUrl}
                 title={`Map: ${clinic.name}, ${clinic.location.name}, Sopore`}
