@@ -352,147 +352,87 @@ export default function AdminPage() {
   const allRecordedDates = Object.keys(dateGroups).sort((a, b) => b.localeCompare(a));
 
   // ---------------------------------------------------------------------------
-  // PROFESSIONAL HEALTHCARE RECEPTION ACCESS SCREEN
+  // ELEGANT MINIMALIST ADMIN LOGIN VIEW (MATCHING TAMYIZ ARCHITECTURE)
   // ---------------------------------------------------------------------------
   if (!isAuthenticated) {
     return (
-      <div className="flex min-h-[85vh] items-center justify-center px-4 py-12 bg-ground text-ink">
-        <div className="w-full max-w-md rounded-3xl bg-white p-7 sm:p-9 shadow-xl border border-line flex flex-col gap-6 animate-fade-in">
-          {/* Header */}
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-tint px-3 py-1 text-xs font-bold uppercase tracking-wider text-brand">
-                <span className="size-1.5 rounded-full bg-brand animate-pulse" />
-                Staff Console
-              </span>
-              <h1 className="mt-3 text-2xl font-extrabold tracking-tight text-ink font-display">
-                Reception Access
-              </h1>
-              <p className="mt-1 text-sm text-muted">
-                Eternal Polyclinic · Sopore, Kashmir
-              </p>
-            </div>
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand text-white shadow-md shadow-brand/20">
-              <StethoscopeIcon className="size-6 text-white" />
-            </div>
+      <div className="min-h-[85vh] bg-[#F2F2EF] text-[#0B0B0B] flex flex-col justify-center px-4 py-16">
+        <div className="w-full max-w-[420px] mx-auto bg-white border border-[#0B0B0B]/10 rounded-[24px] p-8 sm:p-9 shadow-[0_20px_45px_-20px_rgba(0,0,0,0.15)]">
+          {/* Top Icon Badge */}
+          <div className="size-12 rounded-[14px] bg-[#0B0B0B] flex items-center justify-center mb-5 text-white">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#FFFFFF"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="4" y="11" width="16" height="10" rx="2" />
+              <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+            </svg>
           </div>
 
-          <p className="text-xs text-muted leading-relaxed border-t border-line pt-4">
-            Enter the 4-digit reception PIN to manage the live OPD queue, register walk-ins, update doctor delays, and review patient visits.
+          <p className="font-semibold text-xs tracking-[1.5px] uppercase text-[#5E5E59] mb-1.5 font-display">
+            Eternal Polyclinic™ Console
+          </p>
+          <h1 className="font-bold text-[26px] leading-[1.2] tracking-tight text-[#0B0B0B] mb-2 font-display">
+            Administrator Access
+          </h1>
+          <p className="text-[#5E5E59] text-sm mb-6 leading-relaxed">
+            Enter your administrative password or PIN to manage the clinic OPD register, patient queue, and operations.
           </p>
 
-          {/* Form */}
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              if (pinInput.length === 4) {
-                verifyPin(pinInput);
+              if (pinInput.trim()) {
+                verifyPin(pinInput.trim());
               }
             }}
-            className="flex flex-col gap-5"
           >
-            <div>
-              <label
-                htmlFor="kiosk-pin-hidden-input"
-                className="block text-xs font-bold uppercase tracking-wider text-muted mb-2"
-              >
-                Reception Desk PIN
-              </label>
+            <label
+              htmlFor="clinic-admin-pass"
+              className="block font-semibold text-sm mb-2 text-[#0B0B0B]"
+            >
+              Master Password / PIN
+            </label>
+            <input
+              id="clinic-admin-pass"
+              type="password"
+              autoComplete="current-password"
+              autoFocus
+              required
+              placeholder="Enter password or 1234…"
+              value={pinInput}
+              onChange={(e) => {
+                setPinInput(e.target.value);
+                setPinError("");
+              }}
+              className="w-full text-[15px] p-3.5 border-[1.5px] border-[#0B0B0B]/20 rounded-xl bg-white text-[#0B0B0B] outline-none mb-3 transition-colors focus:border-[#0B0B0B]"
+            />
 
-              <div className="relative">
-                <input
-                  id="kiosk-pin-hidden-input"
-                  type="password"
-                  inputMode="numeric"
-                  maxLength={4}
-                  autoFocus
-                  placeholder="••••"
-                  value={pinInput}
-                  onChange={(e) => {
-                    const val = e.target.value.replace(/\D/g, "").slice(0, 4);
-                    setPinInput(val);
-                    setPinError("");
-                    if (val.length === 4) {
-                      verifyPin(val);
-                    }
-                  }}
-                  className="w-full rounded-2xl border-2 border-line bg-ground px-4 py-3.5 text-center font-mono text-2xl font-bold tracking-[0.5em] text-ink outline-none transition-all focus:border-brand focus:bg-white"
-                />
+            {pinError && (
+              <div className="mb-3 text-sm font-semibold text-[#B3261E]">
+                {pinError}
               </div>
-
-              {pinError ? (
-                <p className="mt-2 text-xs font-semibold text-rose-600 animate-shake">
-                  {pinError}
-                </p>
-              ) : (
-                <p className="mt-2 text-[11px] text-muted">
-                  Default clinic PIN: <span className="font-bold text-ink font-mono">1234</span>
-                </p>
-              )}
-            </div>
-
-            {/* Quick Touch Numpad for Tablets & Mobile */}
-            <div className="grid grid-cols-3 gap-2 pt-1">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                <button
-                  key={num}
-                  type="button"
-                  onClick={() => handlePinDigit(String(num))}
-                  className="h-12 rounded-xl bg-ground hover:bg-slate-200 active:bg-brand active:text-white font-mono text-lg font-bold text-ink transition-colors flex items-center justify-center shadow-2xs"
-                >
-                  {num}
-                </button>
-              ))}
-
-              <button
-                type="button"
-                onClick={() => {
-                  setPinInput("");
-                  setPinError("");
-                }}
-                className="h-12 rounded-xl bg-ground hover:bg-slate-200 text-xs font-bold uppercase tracking-wider text-muted transition-colors flex items-center justify-center"
-              >
-                Clear
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handlePinDigit("0")}
-                className="h-12 rounded-xl bg-ground hover:bg-slate-200 active:bg-brand active:text-white font-mono text-lg font-bold text-ink transition-colors flex items-center justify-center shadow-2xs"
-              >
-                0
-              </button>
-
-              <button
-                type="button"
-                onClick={handlePinBackspace}
-                className="h-12 rounded-xl bg-ground hover:bg-slate-200 text-base font-bold text-ink transition-colors flex items-center justify-center"
-                aria-label="Backspace"
-              >
-                ⌫
-              </button>
-            </div>
+            )}
 
             <button
               type="submit"
-              disabled={pinInput.length !== 4}
-              className={`w-full rounded-2xl py-3.5 text-sm font-bold text-white shadow-md transition-all ${
-                pinInput.length === 4
-                  ? "bg-brand hover:bg-brand-dark cursor-pointer shadow-brand/20 active:scale-[0.99]"
-                  : "bg-slate-300 cursor-not-allowed shadow-none"
-              }`}
+              className="w-full font-semibold text-[15px] rounded-full py-3.5 px-5 bg-[#0B0B0B] text-white hover:bg-black cursor-pointer transition-all active:scale-[0.99] shadow-sm mb-4"
             >
-              Sign In to Reception Desk
+              Sign In to Dashboard
             </button>
           </form>
 
-          <div className="border-t border-line pt-4 text-center">
-            <Link
-              href="/"
-              className="text-xs font-semibold text-muted hover:text-brand transition-colors underline"
-            >
-              ← Back to Patient Website
+          <div className="border-t border-[#0B0B0B]/10 pt-4 flex items-center justify-between text-xs text-[#5E5E59]">
+            <Link href="/" className="hover:text-[#0B0B0B] transition-colors underline">
+              ← Storefront
             </Link>
+            <span>Default: 1234</span>
           </div>
         </div>
       </div>
