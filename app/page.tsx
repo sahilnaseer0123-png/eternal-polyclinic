@@ -10,6 +10,7 @@ import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { DoctorMark } from "@/components/DoctorMark";
 import { NextAvailable } from "@/components/NextAvailable";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
+import { PatientReviews } from "@/components/PatientReviews";
 import {
   ChevronRightIcon,
   MapPinIcon,
@@ -214,6 +215,9 @@ export default function Home() {
           })}
         </ul>
       </section>
+
+      {/* Patient Trust & Google Reviews Section */}
+      <PatientReviews />
 
       {/* Tests and medicines + visit, on a soft tinted band */}
       <section className="mt-10 bg-brand-tint sm:mt-14">
