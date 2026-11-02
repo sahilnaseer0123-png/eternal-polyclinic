@@ -6,11 +6,12 @@ import Link from "next/link";
 import { clinic, doctors, services } from "@/data/clinic";
 import { formatTime } from "@/lib/schedule";
 import { DayPicker } from "@/components/DayPicker";
+import { TodayCard } from "@/components/TodayCard";
 import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import { WhatsAppPreview } from "@/components/WhatsAppPreview";
 import { EmergencyNote } from "@/components/EmergencyNote";
-import { MapPinIcon, PhoneIcon, ServiceIcon } from "@/components/Icons";
+import { CheckIcon, MapPinIcon, PhoneIcon, ServiceIcon } from "@/components/Icons";
 
 // Every page names its own address for search engines (alternates.canonical); this is "/".
 export const metadata: Metadata = { alternates: { canonical: "/" } };
@@ -18,12 +19,7 @@ export const metadata: Metadata = { alternates: { canonical: "/" } };
 const hours = `${formatTime(clinic.hours.open)} – ${formatTime(clinic.hours.close)}`;
 const byAppointment = doctors.filter((d) => d.opd.length === 0);
 
-const facts = [
-  "No registration charge",
-  "No account needed",
-  "Reception confirms by phone",
-  `Open every day, ${hours}`,
-];
+const facts = ["No registration charge", "No account needed", `Open daily, ${hours}`];
 
 const steps = [
   { n: "1", title: "Pick a day", text: "See which specialists sit on the day that suits you." },
@@ -37,38 +33,41 @@ export default function Home() {
       <LegacyBookingLink />
 
       {/* Hero */}
-      <section className="bg-night text-ground">
-        <div className="mx-auto max-w-6xl px-5 pb-12 pt-10 sm:px-6 sm:pb-20 sm:pt-20">
-          <p className="rise eyebrow text-mint">{clinic.name} · Opposite SDH Hospital, Sopore</p>
-          <h1 className="rise rise-2 mt-5 max-w-4xl text-[3.25rem] font-light leading-[0.95] tracking-[-0.04em] sm:text-[5.5rem] lg:text-[7rem]">
-            Find the day <em className="text-mint">your doctor</em> is in.
-          </h1>
-          <p className="rise rise-3 mt-6 max-w-xl text-base leading-relaxed text-night-muted sm:text-xl">
-            {doctors.length} visiting specialists, one clinic in Sopore. Pick a day to see who sits, then book on WhatsApp.
-          </p>
-          <div className="rise rise-3 mt-8 flex flex-wrap gap-3">
-            <a
-              href="#days"
-              className="inline-flex min-h-12 items-center justify-center rounded-xl bg-mint px-6 text-base font-bold text-night hover:bg-white"
-            >
-              See who&rsquo;s in
-            </a>
-            <a
-              href={`tel:${clinic.phone}`}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-night-line px-6 text-base font-bold text-ground hover:border-mint"
-            >
-              <PhoneIcon className="size-4" />
-              Call {clinic.phoneDisplay}
-            </a>
+      <section className="border-b border-line bg-brand-tint">
+        <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 py-10 sm:px-6 sm:py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-14 lg:py-16">
+          <div>
+            <p className="rise eyebrow text-brand">Opposite SDH Hospital, Sopore</p>
+            <h1 className="rise rise-2 mt-4 max-w-2xl text-balance text-[3rem] font-light leading-[0.97] tracking-[-0.04em] sm:text-[4.5rem] lg:text-[5rem]">
+              Find the day <em className="text-brand">your doctor</em> is in.
+            </h1>
+            <p className="rise rise-3 mt-5 max-w-lg text-base leading-relaxed text-charcoal sm:text-xl">
+              {doctors.length} visiting specialists, one clinic in Sopore. See who sits today, then book on WhatsApp.
+            </p>
+            <div className="rise rise-3 mt-7 flex flex-wrap gap-3">
+              <Link
+                href="/book"
+                className="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark"
+              >
+                Book a visit
+              </Link>
+              <a
+                href={`tel:${clinic.phone}`}
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-6 text-base font-bold hover:bg-ink hover:text-white"
+              >
+                <PhoneIcon className="size-4" />
+                Call {clinic.phoneDisplay}
+              </a>
+            </div>
+            <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-1.5 text-sm font-semibold text-charcoal sm:text-base">
+              {facts.map((f) => (
+                <li key={f} className="flex items-center gap-2">
+                  <CheckIcon className="size-4 shrink-0 text-brand" />
+                  {f}
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul className="mt-10 grid grid-cols-2 gap-x-6 gap-y-3 border-t border-night-line pt-6 text-sm font-semibold text-night-muted sm:mt-14 sm:grid-cols-4 sm:text-base">
-            {facts.map((f) => (
-              <li key={f} className="flex items-start gap-2">
-                <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-mint" />
-                {f}
-              </li>
-            ))}
-          </ul>
+          <TodayCard />
         </div>
       </section>
 

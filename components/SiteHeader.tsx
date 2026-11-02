@@ -1,6 +1,6 @@
 "use client";
 
-// Header on every page (design v3): night bar. Wide screens: menu, Call and Book.
+// Header on every page (design v3): light bar, one dark-teal primary button. Wide screens: menu, Staff, Call and Book.
 // Phones and tablets: logo, Call and Book; the menu lives in the bottom tab bar (TabBar.tsx).
 
 import Link from "next/link";
@@ -14,15 +14,15 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-30 [view-transition-name:site-header] border-b border-night-line bg-night text-ground">
+    <header className="sticky top-0 z-30 [view-transition-name:site-header] border-b border-line bg-ground/95 text-ink backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-2.5 sm:px-6">
         <Link href="/" className="group flex min-h-11 items-center gap-3">
           <Logo className="size-10 shrink-0" />
           <span className="leading-tight">
-            <span className="block font-display text-lg font-medium tracking-tight group-hover:text-mint">
+            <span className="block font-display text-lg font-medium tracking-tight group-hover:text-brand">
               {clinic.name}
             </span>
-            <span className="block text-xs font-medium text-night-muted">
+            <span className="block text-xs font-medium text-muted">
               <span className="sm:hidden">Sopore, Kashmir</span>
               <span className="hidden sm:inline">Opposite SDH Hospital, Sopore</span>
             </span>
@@ -35,8 +35,8 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               aria-current={pathname === item.href ? "page" : undefined}
-              className={`inline-flex min-h-11 items-center rounded-xl px-3.5 hover:text-mint ${
-                pathname === item.href ? "text-mint" : "text-night-muted"
+              className={`inline-flex min-h-11 items-center rounded-xl px-3.5 hover:text-brand ${
+                pathname === item.href ? "text-brand" : "text-charcoal"
               }`}
             >
               {item.label}
@@ -45,20 +45,20 @@ export function SiteHeader() {
           <Link
             href="/admin"
             aria-current={pathname === "/admin" ? "page" : undefined}
-            className="inline-flex min-h-11 items-center rounded-xl px-3 text-xs font-bold uppercase tracking-wider text-night-muted hover:text-mint"
+            className="inline-flex min-h-11 items-center rounded-xl px-3 text-xs font-bold uppercase tracking-wider text-muted hover:text-brand"
           >
             Staff
           </Link>
           <a
             href={`tel:${clinic.phone}`}
-            className="ml-2 inline-flex min-h-11 items-center gap-2 rounded-xl border-[1.5px] border-night-line px-4 hover:border-mint"
+            className="ml-2 inline-flex min-h-11 items-center gap-2 rounded-xl border-[1.5px] border-ink px-4 hover:bg-ink hover:text-white"
           >
-            <PhoneIcon className="size-4 text-mint" />
+            <PhoneIcon className="size-4" />
             {clinic.phoneDisplay}
           </a>
           <Link
             href="/book"
-            className="ml-1 inline-flex min-h-11 items-center rounded-xl bg-mint px-5 font-bold text-night hover:bg-white"
+            className="ml-1 inline-flex min-h-11 items-center rounded-xl bg-brand px-5 font-bold text-white hover:bg-brand-dark"
           >
             Book a visit
           </Link>
@@ -68,13 +68,13 @@ export function SiteHeader() {
           <a
             href={`tel:${clinic.phone}`}
             aria-label={`Call the clinic, ${clinic.phoneDisplay}`}
-            className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl border-[1.5px] border-night-line"
+            className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl border-[1.5px] border-ink"
           >
-            <PhoneIcon className="size-4 text-mint" />
+            <PhoneIcon className="size-4" />
           </a>
           <Link
             href="/book"
-            className="inline-flex min-h-11 items-center rounded-xl bg-mint px-4 text-sm font-bold text-night"
+            className="inline-flex min-h-11 items-center rounded-xl bg-brand px-4 text-sm font-bold text-white"
           >
             Book
           </Link>
