@@ -61,12 +61,19 @@ export const clinic = {
   siteUrl: "https://eternal-polyclinic.pages.dev",
   founder: "Naseer Ah Lone",
   address: "1st Floor, Lone Complex, Opposite SDH Hospital, Sopore",
-  /** For calls. */
+  /** Main clinic phone line and pharmacy desk */
   phone: "+919797796909",
   phoneDisplay: "97977 96909",
-  /** For WhatsApp: booking requests arrive here. A different number from calls. */
+  pharmacyPhone: "+919797796909",
+  pharmacyPhoneDisplay: "97977 96909",
+  /** Owner direct number & official WhatsApp booking line */
   whatsapp: "919419055528",
   whatsappDisplay: "94190 55528",
+  ownerPhone: "+919419055528",
+  ownerPhoneDisplay: "94190 55528",
+  /** Lab technician line (Musadiq Ahmad) for test reports, inquiries and dispatch */
+  labTechPhone: "+917780827886",
+  labTechPhoneDisplay: "77808 27886",
   hours: { open: "07:00", close: "20:00" },
   timeZone: "Asia/Kolkata",
   /**
@@ -91,11 +98,12 @@ export const clinic = {
     `Landmark: Old Municipal Office building\n\n` +
     `🗺️ Google Maps Location:\n` +
     `https://www.google.com/maps/dir/?api=1&destination=34.2938233,74.455089\n\n` +
-    `📞 Reception Helpline: 97977 96909\n` +
-    `💬 WhatsApp Desk: 94190 55528`
+    `📞 Reception & Pharmacy: 97977 96909\n` +
+    `💬 Owner / WhatsApp Desk: 94190 55528\n` +
+    `🔬 Lab Tech (Reports): 77808 27886`
   )}`,
-  /** Pre-filled WhatsApp message for patients requesting lab or diagnostic test reports without traveling back */
-  reportRequestUrl: `https://wa.me/919419055528?text=${encodeURIComponent(
+  /** Pre-filled WhatsApp message for patients requesting lab or diagnostic test reports directly from lab tech */
+  reportRequestUrl: `https://wa.me/917780827886?text=${encodeURIComponent(
     `*Report Request | Eternal Polyclinic*\n` +
     `Hello, I would like to receive my lab / scan report on WhatsApp.\n\n` +
     `• Patient Name: \n` +
@@ -105,10 +113,10 @@ export const clinic = {
   )}`,
   /** Google verified ratings & reviews */
   googleRating: {
-    score: "4.9",
+    score: "4.3",
     max: "5",
-    count: 42,
-    url: "https://www.google.com/maps/dir/?api=1&destination=34.2938233,74.455089",
+    count: 14,
+    url: "https://www.google.com/maps/place/ETERNAL+Diagnostic+centre/@34.29393,74.455178,17z/data=!4m8!3m7!1s0x38e109006455f87d:0x84dfd5924d4faf10!8m2!3d34.29393!4d74.455178!9m1!1b1!16s%2Fg%2F11x6mthb2q",
   },
   /** Shown wherever patients might book: the clinic is not an emergency service. 112 = India's emergency number.
    *  SDH Hospital's 24-hour emergency department confirmed by the clinic, 23 Oct 2026. */
@@ -159,15 +167,15 @@ export const services: Service[] = [
     id: "lab",
     short: "Lab",
     name: "Diagnostic lab",
-    description: "Blood tests and pathology reports.",
+    description: "Blood tests and pathology reports. Direct lab line: 77808 27886.",
     lead: "Musadiq Ahmad (Lab Technician)",
   },
   {
     id: "pharmacy",
     short: "Pharmacy",
     name: "In-house pharmacy",
-    description: "Get your prescribed medicines before you leave.",
-    lead: null,
+    description: "Get your prescribed medicines before you leave. Direct pharmacy line: 97977 96909.",
+    lead: "Pharmacy Desk (97977 96909)",
   },
 ];
 

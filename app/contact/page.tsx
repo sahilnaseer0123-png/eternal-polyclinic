@@ -78,6 +78,37 @@ export default function ContactPage() {
               </div>
             </div>
 
+            {/* Department Quick Direct Directory */}
+            <div className="rounded-2xl border border-line bg-ground/60 p-4">
+              <span className="eyebrow text-muted block mb-2">Direct Phone Directory</span>
+              <dl className="grid gap-2 text-xs sm:text-sm">
+                <div className="flex items-center justify-between py-1 border-b border-line/60">
+                  <dt className="text-charcoal font-medium">Reception &amp; Pharmacy</dt>
+                  <dd className="font-bold text-ink">
+                    <a href={`tel:${clinic.pharmacyPhone}`} className="hover:text-brand transition-colors">
+                      {clinic.pharmacyPhoneDisplay}
+                    </a>
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between py-1 border-b border-line/60">
+                  <dt className="text-charcoal font-medium">Owner &amp; WhatsApp Desk</dt>
+                  <dd className="font-bold text-ink">
+                    <a href={`https://wa.me/${clinic.whatsapp}`} target="_blank" rel="noopener noreferrer" className="hover:text-brand transition-colors">
+                      {clinic.whatsappDisplay}
+                    </a>
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between py-1">
+                  <dt className="text-charcoal font-medium">Lab Tech (Musadiq Ahmad)</dt>
+                  <dd className="font-bold text-ink">
+                    <a href={`tel:${clinic.labTechPhone}`} className="hover:text-brand transition-colors">
+                      {clinic.labTechPhoneDisplay}
+                    </a>
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
             {/* Direct Action Buttons */}
             <div className="flex flex-col gap-2.5">
               <a
@@ -85,7 +116,7 @@ export default function ContactPage() {
                 className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-xl bg-brand px-6 text-sm sm:text-base font-bold text-white hover:bg-brand-dark transition-colors"
               >
                 <PhoneIcon className="size-4 shrink-0" />
-                <span>Call Reception Helpline: {clinic.phoneDisplay}</span>
+                <span>Call Reception &amp; Pharmacy: {clinic.phoneDisplay}</span>
               </a>
 
               <a
@@ -95,14 +126,22 @@ export default function ContactPage() {
                 className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 text-sm sm:text-base font-bold text-white hover:bg-[#20ba59]"
               >
                 <ChatIcon className="size-4 shrink-0" />
-                <span>WhatsApp Desk: {clinic.whatsappDisplay}</span>
+                <span>WhatsApp Owner Desk: {clinic.whatsappDisplay}</span>
+              </a>
+
+              <a
+                href={`tel:${clinic.labTechPhone}`}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-line-strong bg-white px-6 text-sm sm:text-base font-bold text-charcoal hover:border-brand hover:text-brand transition-colors"
+              >
+                <PhoneIcon className="size-4 text-brand shrink-0" />
+                <span>Call Lab Tech: {clinic.labTechPhoneDisplay}</span>
               </a>
 
               <a
                 href={clinic.mapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-6 text-sm sm:text-base font-bold hover:bg-ink hover:text-white"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-6 text-sm sm:text-base font-bold hover:bg-ink hover:text-white"
               >
                 <MapPinIcon className="size-4 text-brand shrink-0" />
                 <span>Open in Google Maps App ↗</span>
@@ -112,7 +151,7 @@ export default function ContactPage() {
                 href={clinic.locationShareUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-line-strong bg-white px-6 text-sm sm:text-base font-bold text-charcoal hover:border-[#25D366] hover:text-brand transition-colors"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-line-strong bg-white px-6 text-sm sm:text-base font-bold text-charcoal hover:border-[#25D366] hover:text-brand transition-colors"
               >
                 <WhatsAppIcon className="size-4.5 text-[#25D366] shrink-0" />
                 <span>Share Location on WhatsApp</span>

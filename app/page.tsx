@@ -7,7 +7,6 @@ import { clinic, doctors, services } from "@/data/clinic";
 import { formatTime } from "@/lib/schedule";
 import { DayPicker } from "@/components/DayPicker";
 import { TodayCard } from "@/components/TodayCard";
-import { ClinicStatusTicker } from "@/components/ClinicStatusTicker";
 import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import { WhatsAppPreview } from "@/components/WhatsAppPreview";
@@ -37,10 +36,6 @@ export default function Home() {
       <section className="relative flex min-h-[calc(100vh-61px)] min-h-[calc(100dvh-61px)] w-full flex-col justify-center border-b border-line bg-brand-tint">
         <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-5 py-8 sm:px-6 sm:py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-14 lg:py-16">
           <div className="min-w-0 w-full">
-            <div className="rise mb-3.5 sm:mb-4">
-              <ClinicStatusTicker />
-            </div>
-
             <div className="rise flex flex-wrap items-center gap-2 sm:gap-3">
               <p className="eyebrow text-brand shrink-0">Opposite SDH Hospital, Sopore</p>
               <span className="text-line-strong hidden sm:inline" aria-hidden="true">·</span>
@@ -58,11 +53,11 @@ export default function Home() {
               </a>
             </div>
             <h1 className="rise rise-2 mt-4 max-w-2xl text-balance font-normal tracking-[-0.025em] text-[2.5rem] leading-[1.08] sm:text-[4.25rem] sm:leading-[0.97] lg:text-[5rem]">
-              Find the day <br className="sm:hidden" />
-              <em className="text-brand whitespace-nowrap">your doctor</em> is in.
+              The patient comes <br className="sm:hidden" />
+              <em className="text-brand whitespace-nowrap">before everything else.</em>
             </h1>
             <p className="rise rise-3 mt-4 sm:mt-5 max-w-lg text-base leading-relaxed text-charcoal sm:text-xl">
-              {doctors.length} visiting specialists, one clinic in Sopore. See who sits today, then book on WhatsApp.
+              Visiting specialists, one clinic in Sopore. See who sits today, then book on WhatsApp.
             </p>
             <div className="rise rise-3 mt-6 sm:mt-7 flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <Link
@@ -99,30 +94,45 @@ export default function Home() {
         <section aria-labelledby="by-appointment" className="bg-ground">
           <div className="mx-auto max-w-6xl px-5 pb-12 sm:px-6 sm:pb-20">
             <div className="rounded-3xl bg-sand p-6 sm:p-10">
-              <p className="eyebrow text-brand">By appointment</p>
-              <h2 id="by-appointment" className="mt-3 text-3xl font-normal leading-none tracking-[-0.025em] sm:text-5xl">
-                Any day, <em className="text-brand">by appointment</em>
-              </h2>
-              <p className="mt-3 max-w-xl text-base text-muted">
-                These specialists don&rsquo;t sit on fixed days. Call reception to fix a time.
-              </p>
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                <div>
+                  <p className="eyebrow text-brand">By appointment</p>
+                  <h2 id="by-appointment" className="mt-3 text-3xl font-normal leading-none tracking-[-0.025em] sm:text-5xl">
+                    Any day, <em className="text-brand">by appointment</em>
+                  </h2>
+                  <p className="mt-3 max-w-xl text-base text-muted">
+                    These specialists don&rsquo;t sit on fixed days. Call reception to fix a time.
+                  </p>
+                </div>
+                <a
+                  href={`tel:${clinic.phone}`}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-brand px-5 text-sm font-bold text-white hover:bg-brand-dark transition-colors self-start sm:self-auto shrink-0 shadow-xs"
+                >
+                  <PhoneIcon className="size-4 shrink-0" />
+                  Call {clinic.phoneDisplay}
+                </a>
+              </div>
               <ul className="mt-6 grid gap-3 sm:grid-cols-2">
                 {byAppointment.map((d) => (
-                  <li key={d.id} className="rounded-2xl bg-white p-5">
-                    <h3 className="font-display text-xl font-medium tracking-tight sm:text-2xl">
-                      <Link href={`/doctors/${d.id}`} className="hover:text-brand">
-                        {d.name ?? d.speciality}
+                  <li key={d.id} className="flex flex-col justify-between rounded-2xl bg-white p-5 shadow-xs">
+                    <div>
+                      <h3 className="font-display text-xl font-medium tracking-tight sm:text-2xl">
+                        <Link href={`/doctors/${d.id}`} className="hover:text-brand transition-colors">
+                          {d.name ?? d.speciality}
+                        </Link>
+                      </h3>
+                      <p className="font-semibold text-brand">{d.speciality}</p>
+                      <p className="text-[15px] text-muted">{d.credentials ?? d.degree}</p>
+                    </div>
+                    <div className="mt-5 pt-3.5 border-t border-line/70 flex items-center justify-between">
+                      <span className="text-xs font-semibold text-muted">By appointment only</span>
+                      <Link
+                        href={`/doctors/${d.id}`}
+                        className="inline-flex items-center gap-1 text-sm font-bold text-brand hover:text-brand-dark transition-colors"
+                      >
+                        View profile <span aria-hidden="true">→</span>
                       </Link>
-                    </h3>
-                    <p className="font-semibold text-brand">{d.speciality}</p>
-                    <p className="text-[15px] text-muted">{d.credentials ?? d.degree}</p>
-                    <a
-                      href={`tel:${clinic.phone}`}
-                      className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl border-[1.5px] border-ink px-4 text-base font-bold hover:bg-ink hover:text-white"
-                    >
-                      <PhoneIcon className="size-4" />
-                      Call {clinic.phoneDisplay}
-                    </a>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -200,11 +210,11 @@ export default function Home() {
                   Collect Your Reports on WhatsApp
                 </strong>
                 <p className="text-sm text-muted">
-                  No need to travel back to Sopore. Send your Bill or Token number to receive your digital PDF report.
+                  No need to travel back to Sopore. WhatsApp or call our lab technician ({clinic.labTechPhoneDisplay}) to receive your digital PDF report.
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-2.5 shrink-0">
+            <div className="flex flex-wrap items-center gap-2.5 shrink-0">
               <a
                 href={clinic.reportRequestUrl}
                 target="_blank"
@@ -214,12 +224,13 @@ export default function Home() {
                 <WhatsAppIcon className="size-4 shrink-0" />
                 <span>Get Report</span>
               </a>
-              <Link
-                href="/services"
-                className="inline-flex min-h-10 items-center justify-center rounded-xl border border-line-strong bg-white px-4 text-sm font-bold text-ink hover:text-brand hover:border-brand transition-colors"
+              <a
+                href={`tel:${clinic.labTechPhone}`}
+                className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl border border-line-strong bg-white px-4 text-sm font-bold text-ink hover:text-brand hover:border-brand transition-colors"
               >
-                Learn More
-              </Link>
+                <PhoneIcon className="size-3.5 shrink-0 text-brand" />
+                <span>Call Lab ({clinic.labTechPhoneDisplay})</span>
+              </a>
             </div>
           </div>
         </div>

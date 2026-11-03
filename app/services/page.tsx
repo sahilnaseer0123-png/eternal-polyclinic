@@ -27,9 +27,6 @@ export default function ServicesPage() {
                   <span className="flex size-12 items-center justify-center rounded-xl bg-brand-tint text-brand">
                     <ServiceIcon id={service.id} className="size-6" />
                   </span>
-                  <span className="rounded-full bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
-                    {service.short}
-                  </span>
                 </div>
                 <h2 className="mt-3 text-xl font-medium tracking-tight text-ink font-display sm:text-2xl">
                   {service.name}

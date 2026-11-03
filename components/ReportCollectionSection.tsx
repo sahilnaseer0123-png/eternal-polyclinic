@@ -29,7 +29,7 @@ export function ReportCollectionSection({
           <p className="mt-2.5 text-base text-charcoal leading-relaxed">
             Had blood tests, an ultrasound scan, or an echocardiogram done? There is no need to travel
             back to Sopore from Baramulla, Kupwara, or Bandipora just to collect paper sheets. Send your
-            Bill or Token number to our desk, and we will dispatch your verified PDF report directly to your chat.
+            Bill or Token number directly to our lab technician, and we will dispatch your verified PDF report directly to your chat.
           </p>
 
           {/* 3 Simple Steps */}
@@ -42,8 +42,8 @@ export function ReportCollectionSection({
               },
               {
                 num: "2",
-                title: "Message Reception",
-                desc: "Send your details with 1 tap to our official WhatsApp.",
+                title: "Contact Lab Tech",
+                desc: `WhatsApp or call our lab technician at ${clinic.labTechPhoneDisplay}.`,
               },
               {
                 num: "3",
@@ -80,7 +80,7 @@ export function ReportCollectionSection({
         {/* Right Column: 1-Tap Actions */}
         <div className="flex flex-col justify-center gap-3 shrink-0 lg:w-72 lg:border-l lg:border-line/70 lg:pl-8">
           <span className="text-xs font-bold uppercase tracking-wider text-muted hidden lg:block">
-            Direct Report Desk
+            Direct Lab &amp; Report Desk
           </span>
 
           <a
@@ -90,23 +90,23 @@ export function ReportCollectionSection({
             className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-5 text-sm sm:text-base font-bold text-white shadow-subtle hover:bg-[#20ba59] active:translate-y-0.5 transition-all text-center"
           >
             <WhatsAppIcon className="size-5 shrink-0" />
-            <span>Request on WhatsApp</span>
+            <span>WhatsApp Lab Tech</span>
           </a>
 
           <a
-            href={`tel:${clinic.phone}`}
+            href={`tel:${clinic.labTechPhone}`}
             className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-line-strong bg-white px-5 text-sm font-bold text-ink hover:border-brand hover:text-brand transition-colors text-center"
           >
             <PhoneIcon className="size-4 text-brand group-hover:scale-110 transition-transform" />
-            <span>Call Lab: {clinic.phoneDisplay}</span>
+            <span>Call Lab Tech: {clinic.labTechPhoneDisplay}</span>
           </a>
 
           <div className="rounded-xl bg-ground/80 p-3 border border-line/50 text-center">
             <span className="block text-[11px] font-semibold text-muted">
-              Report Desk Hours
+              Lab Technician Desk
             </span>
             <span className="block text-xs font-bold text-ink mt-0.5 tabular-nums lining-nums">
-              7:00 am – 8:00 pm (Daily)
+              Musadiq Ahmad · {clinic.labTechPhoneDisplay}
             </span>
           </div>
         </div>
