@@ -86,7 +86,7 @@ export function SiteFooter() {
         </p>
         <div className="flex items-center gap-5">
           <Link href="/admin" className="inline-flex min-h-10 items-center hover:text-white">
-            Staff
+            Admin
           </Link>
           <Link href="/privacy" className="inline-flex min-h-10 items-center hover:text-white">
             Privacy notice

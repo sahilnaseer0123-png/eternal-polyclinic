@@ -53,12 +53,12 @@ export function SiteHeader() {
             aria-current={pathname === "/admin" ? "page" : undefined}
             className="inline-flex min-h-11 items-center rounded-xl px-3 text-xs font-bold uppercase tracking-wider text-muted hover:text-brand"
           >
-            Staff
+            Admin
           </Link>
           <a
             href={`tel:${clinic.phone}`}
             aria-label={`Call the clinic, ${clinic.phoneDisplay}`}
-            className="ml-2 inline-flex min-h-11 items-center gap-2 rounded-xl border-[1.5px] border-ink px-3 xl:px-4 hover:bg-ink hover:text-white whitespace-nowrap shrink-0"
+            className="ml-2 inline-flex min-h-11 items-center gap-2 rounded-xl border-[1.5px] border-ink px-3 xl:px-4 hover:bg-ink hover:text-white tabular-nums lining-nums whitespace-nowrap shrink-0"
           >
             <PhoneIcon className="size-4 shrink-0" />
             <span className="hidden xl:inline">{clinic.phoneDisplay}</span>
@@ -75,9 +75,10 @@ export function SiteHeader() {
           <a
             href={`tel:${clinic.phone}`}
             aria-label={`Call the clinic, ${clinic.phoneDisplay}`}
-            className="inline-flex size-11 shrink-0 items-center justify-center rounded-xl border-[1.5px] border-ink"
+            className="inline-flex min-h-11 shrink-0 items-center justify-center gap-1.5 rounded-xl border-[1.5px] border-ink px-3 text-sm font-semibold tabular-nums lining-nums"
           >
-            <PhoneIcon className="size-4" />
+            <PhoneIcon className="size-4 shrink-0" />
+            <span className="hidden sm:inline">{clinic.phoneDisplay}</span>
           </a>
           <Link
             href="/book"

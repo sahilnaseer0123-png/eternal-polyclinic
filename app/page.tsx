@@ -72,25 +72,8 @@ export default function Home() {
               Visiting specialists, one clinic in Sopore. See who sits today, then book on WhatsApp.
             </p>
 
-            {/* Primary & Secondary CTAs (balanced side-by-side pair on mobile & desktop) */}
-            <div className="rise rise-3 grid w-full grid-cols-[1fr_1.16fr] gap-2.5 pt-0.5 sm:flex sm:w-auto sm:flex-row sm:gap-3">
-              <Link
-                href="/book"
-                className="inline-flex min-h-11 sm:min-h-12 items-center justify-center rounded-xl bg-[#202624] px-3.5 sm:px-6 text-[0.875rem] sm:text-[0.95rem] font-semibold text-white hover:bg-brand transition-all active:scale-[0.99] whitespace-nowrap"
-              >
-                Book a visit
-              </Link>
-              <a
-                href={`tel:${clinic.phone}`}
-                className="inline-flex min-h-11 sm:min-h-12 items-center justify-center gap-1.5 sm:gap-2 rounded-xl border border-[#D5DDD9] bg-white/95 px-3 sm:px-5 text-[0.84rem] min-[390px]:text-[0.875rem] sm:text-[0.95rem] font-semibold text-[#171D1B] tabular-nums lining-nums hover:border-[#202624] hover:bg-[#F7F9F8] transition-all active:scale-[0.99] whitespace-nowrap"
-              >
-                <PhoneIcon className="size-3.5 sm:size-4 shrink-0 text-brand" />
-                <span>Call {clinic.phoneDisplay}</span>
-              </a>
-            </div>
-
             {/* Subtle Trust Row */}
-            <ul className="flex flex-wrap gap-x-3.5 gap-y-1 pt-0.5 text-[11.5px] sm:text-[0.8125rem] font-medium text-[#52605B] min-[72rem]:max-w-[21rem]">
+            <ul className="rise rise-3 flex flex-wrap gap-x-3.5 gap-y-1 pt-0.5 text-[11.5px] sm:text-[0.8125rem] font-medium text-[#52605B] min-[72rem]:max-w-[21rem]">
               {facts.map((f) => (
                 <li key={f} className="flex items-center gap-1.5">
                   <CheckIcon className="size-3 sm:size-3.5 shrink-0 text-brand" />
