@@ -11,7 +11,7 @@ import { useClinicMinute } from "./useClinicMinute";
 
 const MAX_ROWS = 4;
 const shell =
-  "rounded-3xl p-5 sm:p-7 min-h-[17rem] scroll-mt-24 w-full min-w-0 max-w-full border border-brand/20 bg-brand/5 lg:bg-white lg:border-line";
+  "rounded-3xl p-5 sm:p-7 min-h-[17rem] scroll-mt-24 w-full min-w-0 max-w-full min-[900px]:max-w-[420px] border border-line bg-white shadow-card";
 
 export function TodayCardSkeleton() {
   return (
@@ -90,7 +90,7 @@ export function TodayCard() {
   return (
     <div id="today" className={shell}>
       <p className="eyebrow text-muted">In the clinic today · {DAY_NAMES[weekday]}</p>
-      <ul className="mt-3 divide-y divide-brand/15 lg:divide-line">
+      <ul className="mt-3 divide-y divide-line">
         {shown.map(({ doctor, session }) => {
           const status = sessionStatus(session, now);
           return (

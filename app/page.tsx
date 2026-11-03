@@ -34,9 +34,11 @@ export default function Home() {
 
       {/* Hero: Full viewport coverage below the header */}
       <section className="relative flex min-h-[calc(100vh-61px)] min-h-[calc(100dvh-61px)] w-full flex-col justify-center border-b border-line bg-brand-tint">
-        <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-5 py-8 sm:px-6 sm:py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-14 lg:py-16">
-          <div className="min-w-0 w-full">
-            <div className="rise flex flex-wrap items-center gap-2 sm:gap-3">
+        <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-5 py-8 sm:px-6 sm:py-12 min-[900px]:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] min-[900px]:gap-12 min-[900px]:py-16">
+          {/* Left Column: Text Content */}
+          <div className="flex min-w-0 w-full flex-col items-start gap-4 sm:gap-5">
+            {/* 1. Location and Google Rating Badge */}
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <p className="eyebrow text-brand shrink-0">Opposite SDH Hospital, Sopore</p>
               <span className="text-line-strong hidden sm:inline" aria-hidden="true">·</span>
               <a
@@ -52,14 +54,19 @@ export default function Home() {
                 <span className="text-muted tabular-nums lining-nums">({clinic.googleRating.count} reviews)</span>
               </a>
             </div>
-            <h1 className="rise rise-2 mt-4 max-w-2xl text-balance font-normal tracking-[-0.025em] text-[2.5rem] leading-[1.08] sm:text-[4.25rem] sm:leading-[0.97] lg:text-[5rem]">
-              The patient comes <br className="sm:hidden" />
-              <em className="text-brand whitespace-nowrap">before everything else.</em>
+
+            {/* 2. Headline with fluid clamp and natural wrap */}
+            <h1 className="max-w-full font-normal tracking-[-0.025em] text-[2.4rem] min-[900px]:text-[clamp(2.5rem,5.2vw,4.5rem)] leading-[1.05]">
+              The patient comes <em className="text-brand">before everything else.</em>
             </h1>
-            <p className="rise rise-3 mt-4 sm:mt-5 max-w-lg text-base leading-relaxed text-charcoal sm:text-xl">
+
+            {/* 3. Subtext */}
+            <p className="max-w-xl text-base leading-relaxed text-charcoal sm:text-xl">
               Visiting specialists, one clinic in Sopore. See who sits today, then book on WhatsApp.
             </p>
-            <div className="rise rise-3 mt-6 sm:mt-7 flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+
+            {/* 4. Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <Link
                 href="/book"
                 className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark transition-all shadow-xs active:scale-[0.99]"
@@ -68,13 +75,15 @@ export default function Home() {
               </Link>
               <a
                 href={`tel:${clinic.phone}`}
-                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink bg-brand/5 px-6 text-base font-bold text-ink hover:bg-ink hover:text-white transition-all active:scale-[0.99]"
+                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink bg-white/70 px-6 text-base font-bold text-ink hover:bg-ink hover:text-white transition-all active:scale-[0.99]"
               >
                 <PhoneIcon className="size-4 shrink-0" />
                 Call {clinic.phoneDisplay}
               </a>
             </div>
-            <ul className="mt-6 sm:mt-7 flex flex-col sm:flex-row sm:flex-wrap gap-2.5 sm:gap-x-5 sm:gap-y-1.5 text-sm font-semibold text-charcoal sm:text-base">
+
+            {/* 5. Trust Checkmarks */}
+            <ul className="flex flex-col sm:flex-row sm:flex-wrap gap-2.5 sm:gap-x-5 sm:gap-y-1.5 text-sm font-semibold text-charcoal sm:text-base">
               {facts.map((f) => (
                 <li key={f} className="flex items-center gap-2">
                   <CheckIcon className="size-4 shrink-0 text-brand" />
@@ -83,7 +92,11 @@ export default function Home() {
               ))}
             </ul>
           </div>
-          <TodayCard />
+
+          {/* Right Column: Status Card */}
+          <div className="min-w-0 w-full flex justify-center min-[900px]:justify-end">
+            <TodayCard />
+          </div>
         </div>
       </section>
 
