@@ -55,6 +55,18 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
                 <CategoryIcon category={doctor.category} className="size-3.5" />
                 {doctor.categoryLabel}
               </span>
+              {doctor.opd.length > 0 && (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-brand/10 border border-brand/20 px-3 py-1 text-xs font-bold text-brand">
+                  <span className="size-1.5 rounded-full bg-brand animate-pulse" />
+                  <NextAvailable
+                    doctorId={doctor.id}
+                    prefix="Next: "
+                    fallback="Fixed weekly OPD"
+                    short
+                    className="tabular-nums lining-nums"
+                  />
+                </span>
+              )}
               {doctor.experienceYears && (
                 <span className="inline-flex items-center rounded-full bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
                   {doctor.experienceYears}+ Yrs Exp.
@@ -121,13 +133,27 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
             )}
 
             {doctor.opd.length > 0 && (
-              <div className="mt-3 border-t border-line pt-4">
-                <p className="eyebrow flex items-center gap-2 text-muted">
-                  <span className="size-2 rounded-full bg-brand" />
-                  Next free slot
+              <div className="mt-4 rounded-2xl bg-brand-tint/60 border border-brand-line/60 p-4">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="eyebrow flex items-center gap-2 text-brand">
+                    <span className="size-2 rounded-full bg-brand animate-pulse" />
+                    Next Available Sitting
+                  </p>
+                  <span className="rounded-full bg-white px-2.5 py-0.5 text-[11px] font-bold text-brand shadow-subtle">
+                    Live Schedule
+                  </span>
+                </div>
+                <p className="mt-2 text-base sm:text-lg font-bold text-ink">
+                  <NextAvailable
+                    doctorId={doctor.id}
+                    prefix=""
+                    full
+                    fallback={opdSummary(doctor) ?? "Call reception for schedule"}
+                    className="tabular-nums lining-nums text-brand"
+                  />
                 </p>
-                <p className="mt-1.5 text-lg font-semibold">
-                  <NextAvailable doctorId={doctor.id} fallback={"Checking next slot..."} />
+                <p className="mt-1 text-xs text-muted">
+                  Book online to reserve your slot; reception calls you to confirm your token.
                 </p>
               </div>
             )}

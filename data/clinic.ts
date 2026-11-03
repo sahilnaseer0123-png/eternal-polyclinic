@@ -85,6 +85,16 @@ export const clinic = {
   },
   mapUrl: "https://www.google.com/maps/dir/?api=1&destination=34.2938233,74.455089",
   mapEmbedUrl: "https://maps.google.com/maps?q=34.2938233,74.455089&z=18&output=embed",
+  /** Pre-filled WhatsApp message to easily share the clinic's location and landmark with drivers or relatives */
+  locationShareUrl: `https://wa.me/?text=${encodeURIComponent(
+    `*Eternal Polyclinic, Sopore*\n` +
+    `1st Floor, Lone Complex, Opposite SDH Hospital, Sopore, Kashmir\n` +
+    `Landmark: Old Municipal Office building\n\n` +
+    `🗺️ Google Maps Location:\n` +
+    `https://www.google.com/maps/dir/?api=1&destination=34.2938233,74.455089\n\n` +
+    `📞 Reception Helpline: 97977 96909\n` +
+    `💬 WhatsApp Desk: 94190 55528`
+  )}`,
   /** Google verified ratings & reviews */
   googleRating: {
     score: "4.9",

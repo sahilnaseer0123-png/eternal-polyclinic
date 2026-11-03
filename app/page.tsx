@@ -11,7 +11,7 @@ import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import { WhatsAppPreview } from "@/components/WhatsAppPreview";
 import { EmergencyNote } from "@/components/EmergencyNote";
-import { CheckIcon, GoogleIcon, MapPinIcon, PhoneIcon, ServiceIcon } from "@/components/Icons";
+import { CheckIcon, GoogleIcon, MapPinIcon, PhoneIcon, ServiceIcon, WhatsAppIcon } from "@/components/Icons";
 
 // Every page names its own address for search engines (alternates.canonical); this is "/".
 export const metadata: Metadata = { alternates: { canonical: "/" } };
@@ -212,6 +212,16 @@ export default function Home() {
                 className="inline-flex min-h-12 items-center justify-center rounded-xl border-[1.5px] border-ink px-6 text-base font-bold hover:bg-ink hover:text-white"
               >
                 Call {clinic.phoneDisplay}
+              </a>
+              <a
+                href={clinic.locationShareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-line-strong bg-white px-5 text-base font-bold text-charcoal hover:border-[#25D366] hover:text-brand transition-colors"
+                title="Forward address and map link to family or drivers on WhatsApp"
+              >
+                <WhatsAppIcon className="size-4.5 text-[#25D366] shrink-0" />
+                <span>Share location</span>
               </a>
             </div>
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { clinic } from "@/data/clinic";
 import { formatTime } from "@/lib/schedule";
 import { PageIntro } from "@/components/SiteChrome";
-import { ChatIcon, ClockIcon, MapPinIcon, PhoneIcon } from "@/components/Icons";
+import { ChatIcon, ClockIcon, MapPinIcon, PhoneIcon, WhatsAppIcon } from "@/components/Icons";
 import { EmergencyNote } from "@/components/EmergencyNote";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 
@@ -105,6 +105,16 @@ export default function ContactPage() {
               >
                 <MapPinIcon className="size-4 text-brand shrink-0" />
                 <span>Open in Google Maps App ↗</span>
+              </a>
+
+              <a
+                href={clinic.locationShareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-line-strong bg-white px-6 text-sm sm:text-base font-bold text-charcoal hover:border-[#25D366] hover:text-brand transition-colors"
+              >
+                <WhatsAppIcon className="size-4.5 text-[#25D366] shrink-0" />
+                <span>Share Location on WhatsApp</span>
               </a>
             </div>
           </div>
