@@ -42,7 +42,8 @@ export function DayPicker() {
   const nextDay = sittingsOn(selected).length === 0 ? firstBusyFrom(((selected + 1) % 7) as Weekday) : undefined;
 
   return (
-    <section id="days" aria-labelledby="days-title" className="bg-ground scroll-mt-20">
+    <div className="bg-white">
+      <section id="days" aria-labelledby="days-title" className="rounded-t-[2rem] sm:rounded-t-[2.75rem] border-t border-line/80 bg-ground scroll-mt-20">
       <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-20">
         <p className="eyebrow text-brand">Visiting specialists</p>
         <h2 id="days-title" className="mt-3 text-[2.125rem] font-normal leading-none tracking-[-0.025em] sm:text-6xl">
@@ -141,6 +142,7 @@ export function DayPicker() {
           )}
         </div>
       </div>
-    </section>
+      </section>
+    </div>
   );
 }

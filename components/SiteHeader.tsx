@@ -13,8 +13,14 @@ import { NAV } from "./nav";
 export function SiteHeader() {
   const pathname = usePathname();
 
+  const isHome = pathname === "/";
+
   return (
-    <header className="sticky top-0 z-30 [view-transition-name:site-header] border-b border-line bg-ground/95 text-ink backdrop-blur-md">
+    <header
+      className={`sticky top-0 z-30 [view-transition-name:site-header] border-b text-ink backdrop-blur-md ${
+        isHome ? "border-[#ECEFEA] bg-white/95" : "border-line bg-ground/95"
+      }`}
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 sm:gap-4 px-4 py-2.5 sm:px-6">
         <Link href="/" className="group flex min-h-11 items-center gap-2.5 sm:gap-3 min-w-0">
           <Logo className="size-10 shrink-0" />

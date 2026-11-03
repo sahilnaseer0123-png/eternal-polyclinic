@@ -6,7 +6,7 @@ import Link from "next/link";
 import { clinic, doctors, services } from "@/data/clinic";
 import { formatTime } from "@/lib/schedule";
 import { DayPicker } from "@/components/DayPicker";
-import { TodayCard } from "@/components/TodayCard";
+import { HeroRightColumn } from "@/components/HeroRightColumn";
 import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import { WhatsAppPreview } from "@/components/WhatsAppPreview";
@@ -32,70 +32,88 @@ export default function Home() {
     <>
       <LegacyBookingLink />
 
-      {/* Hero: Full viewport coverage below the header */}
-      <section className="relative flex min-h-[calc(100vh-61px)] min-h-[calc(100dvh-61px)] w-full flex-col justify-center border-b border-line bg-brand-tint">
-        <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-5 py-8 sm:px-6 sm:py-12 min-[900px]:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] min-[900px]:gap-12 min-[900px]:py-16">
-          {/* Left Column: Text Content */}
-          <div className="flex min-w-0 w-full flex-col items-start gap-4 sm:gap-5">
-            {/* 1. Location and Google Rating Badge */}
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-              <p className="eyebrow text-brand shrink-0">Opposite SDH Hospital, Sopore</p>
-              <span className="text-line-strong hidden sm:inline" aria-hidden="true">·</span>
+      {/* Hero: Crisp white architectural canvas with diagonal 3D DNA sculpture */}
+      <section className="relative overflow-hidden bg-white">
+        <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-6 px-5 pt-6 pb-10 sm:px-8 sm:pt-10 sm:pb-14 min-[72rem]:grid min-[72rem]:min-h-[630px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-18 xl:min-h-[660px] xl:grid-cols-[minmax(0,1fr)_350px]">
+          {/* 1. Top-Left Content Block */}
+          <div className="relative z-10 flex min-w-0 flex-col items-start gap-4 sm:gap-5 min-[72rem]:max-w-[35rem] min-[72rem]:pt-3 min-[72rem]:pb-20 xl:max-w-[38rem]">
+            {/* Location & Google Rating */}
+            <div className="rise flex flex-wrap items-center gap-2 sm:gap-2.5">
+              <p className="eyebrow text-[#3E504B] shrink-0">Opposite SDH Hospital, Sopore</p>
+              <span className="text-[#D4DCD8] hidden sm:inline" aria-hidden="true">·</span>
               <a
                 href={clinic.googleRating.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full border border-brand/25 bg-brand/10 px-2.5 py-0.5 text-xs font-semibold text-charcoal hover:border-brand hover:text-brand transition-all shrink-0"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[#E4EAE6] bg-[#F7F9F7] px-2.5 py-0.5 text-xs font-semibold text-charcoal hover:border-[#C5D8CD] hover:bg-[#EFF5EE] transition-all shrink-0"
                 aria-label={`Rated ${clinic.googleRating.score} out of 5 on Google with ${clinic.googleRating.count} reviews`}
               >
                 <GoogleIcon className="size-3.5 shrink-0" />
                 <span className="font-bold text-ink tabular-nums lining-nums">{clinic.googleRating.score}</span>
                 <span className="text-[#F59E0B] text-xs leading-none tracking-tighter" aria-hidden="true">★★★★★</span>
-                <span className="text-muted tabular-nums lining-nums">({clinic.googleRating.count} reviews)</span>
+                <span className="text-muted tabular-nums lining-nums">({clinic.googleRating.count})</span>
               </a>
             </div>
 
-            {/* 2. Headline with fluid clamp and natural wrap */}
-            <h1 className="max-w-full font-normal tracking-[-0.025em] text-[2.4rem] min-[900px]:text-[clamp(2.5rem,5.2vw,4.5rem)] leading-[1.05]">
-              The patient comes <em className="text-brand">before everything else.</em>
+            {/* Clean Modern Two-Line Sans Headline */}
+            <h1 className="rise rise-2 max-w-full font-sans font-semibold tracking-[-0.035em] text-[#171D1B] text-[clamp(1.85rem,7.5vw,2.5rem)] leading-[1.08] sm:text-[2.85rem] min-[72rem]:text-[2.95rem] xl:text-[3.3rem]">
+              The patient comes
+              <span className="block">before everything else.</span>
             </h1>
 
-            {/* 3. Subtext */}
-            <p className="max-w-xl text-base leading-relaxed text-charcoal sm:text-xl">
+            {/* Concise Subtext */}
+            <p className="rise rise-3 max-w-[24rem] text-[0.95rem] leading-relaxed text-[#586560] sm:text-[1rem]">
               Visiting specialists, one clinic in Sopore. See who sits today, then book on WhatsApp.
             </p>
 
-            {/* 4. Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            {/* Primary & Secondary CTAs */}
+            <div className="rise rise-3 flex flex-col sm:flex-row gap-3 w-full sm:w-auto pt-0.5">
               <Link
                 href="/book"
-                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark transition-all shadow-xs active:scale-[0.99]"
+                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center rounded-xl bg-[#202624] px-6 text-[0.95rem] font-semibold text-white hover:bg-brand transition-all active:scale-[0.99]"
               >
                 Book a visit
               </Link>
               <a
                 href={`tel:${clinic.phone}`}
-                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink bg-white/70 px-6 text-base font-bold text-ink hover:bg-ink hover:text-white transition-all active:scale-[0.99]"
+                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[#D5DDD9] bg-white/95 px-5 text-[0.95rem] font-semibold text-[#171D1B] hover:border-[#202624] hover:bg-[#F7F9F8] transition-all active:scale-[0.99]"
               >
-                <PhoneIcon className="size-4 shrink-0" />
+                <PhoneIcon className="size-4 shrink-0 text-brand" />
                 Call {clinic.phoneDisplay}
               </a>
             </div>
 
-            {/* 5. Trust Checkmarks */}
-            <ul className="flex flex-col sm:flex-row sm:flex-wrap gap-2.5 sm:gap-x-5 sm:gap-y-1.5 text-sm font-semibold text-charcoal sm:text-base">
+            {/* Subtle Trust Row (constrained width on desktop so bottom-center corridor stays open for DNA) */}
+            <ul className="flex flex-wrap gap-x-4 gap-y-1.5 pt-1 text-xs sm:text-[0.8125rem] font-medium text-[#52605B] min-[72rem]:max-w-[21rem]">
               {facts.map((f) => (
-                <li key={f} className="flex items-center gap-2">
-                  <CheckIcon className="size-4 shrink-0 text-brand" />
+                <li key={f} className="flex items-center gap-1.5">
+                  <CheckIcon className="size-3.5 shrink-0 text-brand" />
                   <span>{f}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Right Column: Status Card */}
-          <div className="min-w-0 w-full flex justify-center min-[900px]:justify-end">
-            <TodayCard />
+          {/* 2. Centerpiece 3D Sculptural DNA Helix */}
+          <div className="pointer-events-none relative z-0 -mx-5 my-1 aspect-[1376/768] w-[calc(100%+2.5rem)] select-none sm:-mx-8 sm:w-[calc(100%+4rem)] min-[72rem]:absolute min-[72rem]:left-[27%] min-[72rem]:top-[-3%] min-[72rem]:mx-0 min-[72rem]:my-0 min-[72rem]:w-[67%] min-[72rem]:-rotate-[16deg] xl:left-[28%] xl:top-[-4%] xl:w-[65%]">
+            <picture>
+              <source media="(min-width: 640px)" srcSet="/photos/dna-helix-1376.webp" />
+              <img
+                src="/photos/dna-helix-800.webp"
+                alt=""
+                aria-hidden="true"
+                width={1376}
+                height={768}
+                fetchPriority="high"
+                decoding="async"
+                className="h-full w-full object-contain min-[72rem]:[mask-image:linear-gradient(90deg,transparent_0%,black_12%,black_90%,transparent_100%)]"
+              />
+            </picture>
+          </div>
+
+          {/* 3. Right-Side Compact Appointment & Live Clinic Cards */}
+          <div className="relative z-10 w-full min-[72rem]:self-end min-[72rem]:pt-46 xl:pt-50">
+            <HeroRightColumn />
           </div>
         </div>
       </section>
