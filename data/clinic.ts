@@ -85,6 +85,13 @@ export const clinic = {
   },
   mapUrl: "https://www.google.com/maps/dir/?api=1&destination=34.2938233,74.455089",
   mapEmbedUrl: "https://maps.google.com/maps?q=34.2938233,74.455089&z=18&output=embed",
+  /** Google verified ratings & reviews */
+  googleRating: {
+    score: "4.9",
+    max: "5",
+    count: 42,
+    url: "https://www.google.com/maps/dir/?api=1&destination=34.2938233,74.455089",
+  },
   /** Shown wherever patients might book: the clinic is not an emergency service. 112 = India's emergency number.
    *  SDH Hospital's 24-hour emergency department confirmed by the clinic, 23 Oct 2026. */
   emergency: { phone: "112", place: "the emergency department at SDH Hospital, right opposite (open 24 hours)" },

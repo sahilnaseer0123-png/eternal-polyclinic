@@ -46,6 +46,12 @@ export function clinicSchema() {
     },
     geo: { "@type": "GeoCoordinates", latitude: clinic.location.lat, longitude: clinic.location.lng },
     hasMap: clinic.mapUrl,
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: clinic.googleRating.score,
+      bestRating: clinic.googleRating.max,
+      ratingCount: clinic.googleRating.count,
+    },
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: DAYS,

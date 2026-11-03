@@ -11,7 +11,7 @@ import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import { WhatsAppPreview } from "@/components/WhatsAppPreview";
 import { EmergencyNote } from "@/components/EmergencyNote";
-import { CheckIcon, MapPinIcon, PhoneIcon, ServiceIcon } from "@/components/Icons";
+import { CheckIcon, GoogleIcon, MapPinIcon, PhoneIcon, ServiceIcon } from "@/components/Icons";
 
 // Every page names its own address for search engines (alternates.canonical); this is "/".
 export const metadata: Metadata = { alternates: { canonical: "/" } };
@@ -36,7 +36,22 @@ export default function Home() {
       <section className="relative flex min-h-[calc(100vh-61px)] min-h-[calc(100dvh-61px)] w-full flex-col justify-center border-b border-line bg-brand-tint">
         <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-5 py-10 sm:px-6 sm:py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-14 lg:py-16">
           <div>
-            <p className="rise eyebrow text-brand">Opposite SDH Hospital, Sopore</p>
+            <div className="rise flex flex-wrap items-center gap-2.5 sm:gap-3">
+              <p className="eyebrow text-brand">Opposite SDH Hospital, Sopore</p>
+              <span className="text-line-strong hidden sm:inline" aria-hidden="true">·</span>
+              <a
+                href={clinic.googleRating.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-line-strong bg-white/90 px-2.5 py-0.5 text-xs font-semibold text-charcoal hover:border-brand hover:text-brand transition-all hover:bg-white"
+                aria-label={`Rated ${clinic.googleRating.score} out of 5 on Google with ${clinic.googleRating.count} reviews`}
+              >
+                <GoogleIcon className="size-3.5 shrink-0" />
+                <span className="font-bold text-ink tabular-nums lining-nums">{clinic.googleRating.score}</span>
+                <span className="text-[#F59E0B] text-xs leading-none tracking-tighter" aria-hidden="true">★★★★★</span>
+                <span className="text-muted tabular-nums lining-nums">({clinic.googleRating.count} reviews)</span>
+              </a>
+            </div>
             <h1 className="rise rise-2 mt-4 max-w-2xl text-balance text-[3rem] font-normal leading-[0.97] tracking-[-0.025em] sm:text-[4.5rem] lg:text-[5rem]">
               Find the day <em className="text-brand">your doctor</em> is in.
             </h1>
@@ -199,6 +214,39 @@ export default function Home() {
                 Call {clinic.phoneDisplay}
               </a>
             </div>
+
+            {/* Google Reviews Card */}
+            <div className="mt-6 rounded-2xl border border-line bg-white p-4 sm:p-5 shadow-card">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-ground border border-line">
+                    <GoogleIcon className="size-5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-display text-xl font-medium tracking-tight text-ink tabular-nums lining-nums">
+                        {clinic.googleRating.score}
+                      </span>
+                      <span className="text-[#F59E0B] text-base leading-none tracking-tight" aria-hidden="true">★★★★★</span>
+                      <span className="text-xs font-semibold text-muted">on Google</span>
+                    </div>
+                    <p className="text-xs text-muted mt-0.5">
+                      Based on {clinic.googleRating.count} patient ratings & reviews
+                    </p>
+                  </div>
+                </div>
+                <a
+                  href={clinic.googleRating.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl border border-line-strong bg-ground px-4 text-xs font-bold uppercase tracking-wider text-charcoal hover:border-brand hover:text-brand transition-colors whitespace-nowrap shrink-0"
+                >
+                  <span>Review on Google</span>
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </div>
+
             <p className="mt-6 text-base text-charcoal">
               <span className="font-bold">Please bring</span> old prescriptions, any test reports, and a list of the medicines you take now.
             </p>

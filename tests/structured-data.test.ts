@@ -9,6 +9,8 @@ test("clinic schema carries location, hours and booking from clinic.ts", () => {
   assert.equal(s.geo.latitude, clinic.location.lat);
   assert.equal(s.geo.longitude, clinic.location.lng);
   assert.equal(s.hasMap, clinic.mapUrl);
+  assert.equal(s.aggregateRating?.ratingValue, clinic.googleRating.score);
+  assert.equal(s.aggregateRating?.ratingCount, clinic.googleRating.count);
   assert.equal(s.openingHoursSpecification.opens, clinic.hours.open);
   assert.equal(s.openingHoursSpecification.closes, clinic.hours.close);
   assert.equal(s.openingHoursSpecification.dayOfWeek.length, 7);
