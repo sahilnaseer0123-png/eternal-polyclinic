@@ -29,7 +29,7 @@ const chip = (on: boolean) =>
   }`;
 const label = "text-xs font-bold uppercase tracking-[0.12em] text-muted";
 const input =
-  "min-h-12 w-full rounded-xl border border-[#BFB8A9] bg-white px-3.5 text-base text-ink placeholder:text-muted/70 focus:border-brand focus:outline-none";
+  "min-h-12 w-full rounded-xl border border-line-strong bg-white px-3.5 text-base text-ink placeholder:text-muted/70 focus:border-brand focus:outline-none";
 
 function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null;
@@ -201,7 +201,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
                   }}
                   className={`${chip(d === date)} flex min-h-16 flex-col items-start justify-center px-4 py-2.5 text-left`}
                 >
-                  <span className={`text-sm font-semibold ${d === date ? "text-[#D4F5EF]" : "text-muted"}`}>{top}</span>
+                  <span className={`text-sm font-semibold ${d === date ? "text-mint" : "text-muted"}`}>{top}</span>
                   <span className="font-display text-xl font-medium leading-tight">
                     {day} {SHORT_MONTH[mo - 1]}
                   </span>

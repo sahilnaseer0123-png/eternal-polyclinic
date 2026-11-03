@@ -17,8 +17,8 @@ export default function PrivacyPage() {
   return (
     <>
       <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 pt-8 pb-24 sm:py-12">
-        <div className="card rounded-2xl border border-line bg-white p-6 sm:p-10 shadow-card">
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-ink font-display">Privacy Notice</h1>
+        <div className="card rounded-3xl p-6 sm:p-10">
+          <h1 className="font-display text-[2rem] font-light leading-none tracking-[-0.04em] sm:text-5xl text-ink">Privacy Notice</h1>
           <p className="mt-1 text-xs text-muted">Last updated {LAST_UPDATED} · Eternal Polyclinic Sopore</p>
 
           <div className="mt-8 flex flex-col gap-8 text-xs sm:text-sm text-charcoal leading-relaxed [&_h2]:mb-2.5 [&_h2]:text-base sm:[&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-ink [&_h2]:font-display [&_li]:mt-1 [&_ul]:list-disc [&_ul]:pl-5">

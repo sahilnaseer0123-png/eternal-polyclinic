@@ -12,9 +12,31 @@ import { useClinicMinute } from "./useClinicMinute";
 const MAX_ROWS = 4;
 const shell = "card rounded-3xl p-5 sm:p-7 min-h-[18rem]";
 
+export function TodayCardSkeleton() {
+  return (
+    <div className={shell} aria-busy="true" aria-label="Loading clinic schedule">
+      <div className="h-3 w-40 animate-pulse rounded bg-stone" />
+      <div className="mt-4 divide-y divide-line">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="flex items-start gap-4 py-3.5">
+            <div className="w-24 shrink-0 space-y-1.5 pt-0.5">
+              <div className="h-4 w-16 animate-pulse rounded bg-stone" />
+              <div className="h-3 w-12 animate-pulse rounded bg-stone" />
+            </div>
+            <div className="min-w-0 flex-1 space-y-1.5">
+              <div className="h-5 w-40 animate-pulse rounded bg-stone" />
+              <div className="h-3.5 w-24 animate-pulse rounded bg-stone" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function TodayCard() {
   const minute = useClinicMinute();
-  if (minute === null) return <div className={shell} aria-busy="true" />;
+  if (minute === null) return <TodayCardSkeleton />;
 
   const now = new Date(minute);
   const { dateKey, weekday } = clinicClock(now);

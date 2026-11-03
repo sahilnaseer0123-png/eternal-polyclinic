@@ -137,26 +137,38 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
 
           <div className="grid gap-2.5 pt-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
             {doctor.opd.length > 0 ? (
-              <Link
-                href={`/book?doctor=${doctor.id}`}
-                className="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand px-5 text-base font-bold text-white hover:bg-brand-dark"
-              >
-                Book this doctor
-              </Link>
+              <>
+                <Link
+                  href={`/book?doctor=${doctor.id}`}
+                  className="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand px-5 text-base font-bold text-white hover:bg-brand-dark"
+                >
+                  Book this doctor
+                </Link>
+                <a
+                  href={`tel:${clinic.phone}`}
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-5 text-base font-bold hover:bg-ink hover:text-white"
+                >
+                  <PhoneIcon className="size-4" /> Call {clinic.phoneDisplay}
+                </a>
+              </>
             ) : (
-              <a
-                href={`tel:${clinic.phone}`}
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand px-5 text-base font-bold text-white hover:bg-brand-dark"
-              >
-                <PhoneIcon className="size-4" /> Call to book
-              </a>
+              <>
+                <a
+                  href={`tel:${clinic.phone}`}
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand px-5 text-base font-bold text-white hover:bg-brand-dark"
+                >
+                  <PhoneIcon className="size-4" /> Call {clinic.phoneDisplay}
+                </a>
+                <a
+                  href={`https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(`Hello ${clinic.name}, I would like to enquire about an appointment with ${title(doctor)} (${doctor.speciality}).`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-5 text-base font-bold hover:bg-ink hover:text-white"
+                >
+                  WhatsApp Reception
+                </a>
+              </>
             )}
-            <a
-              href={`tel:${clinic.phone}`}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-5 text-base font-bold hover:bg-ink hover:text-white"
-            >
-              <PhoneIcon className="size-4" /> Call {clinic.phoneDisplay}
-            </a>
             <ShareButton
               title={`${title(doctor)} at ${clinic.name}`}
               className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-line-strong px-5 text-base font-bold hover:border-brand sm:col-span-2 lg:col-span-1 xl:col-span-2"
@@ -170,11 +182,9 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
       {/* Facilities & procedures if any */}
       {doctor.facilities && doctor.facilities.length > 0 && (
         <section aria-labelledby="facilities" className="reveal mt-8 sm:mt-12">
-          <div className="flex items-center gap-2">
-                        <h2 id="facilities" className="font-display text-2xl font-medium tracking-tight sm:text-3xl text-ink">
-              Specialized Facilities &amp; In-Clinic Procedures
-            </h2>
-          </div>
+          <h2 id="facilities" className="font-display text-2xl font-medium tracking-tight sm:text-3xl text-ink">
+            Specialized Facilities &amp; In-Clinic Procedures
+          </h2>
           <ul className="mt-4 flex flex-wrap gap-2.5">
             {doctor.facilities.map((f) => (
               <li key={f} className="card card-hover flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-charcoal">
@@ -188,11 +198,9 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
 
       {/* Common reasons to visit */}
       <section aria-labelledby="reasons" className="reveal mt-8 sm:mt-12">
-        <div className="flex items-center gap-2">
-                    <h2 id="reasons" className="font-display text-2xl font-medium tracking-tight sm:text-3xl text-ink">
-            When to consult {doctor.name ? doctor.name : `a ${doctor.speciality.toLowerCase()}`}
-          </h2>
-        </div>
+        <h2 id="reasons" className="font-display text-2xl font-medium tracking-tight sm:text-3xl text-ink">
+          When to consult {doctor.name ? doctor.name : `a ${doctor.speciality.toLowerCase()}`}
+        </h2>
         <p className="mt-1 text-sm text-muted">Common symptoms, evaluations, and clinical conditions treated</p>
         <ul className="mt-4 flex flex-wrap gap-2">
           {doctor.concerns.map((c) => (
@@ -212,11 +220,9 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
 
       {/* Other doctors */}
       <section aria-labelledby="others" className="reveal mt-8 sm:mt-12">
-        <div className="flex items-center gap-2">
-                    <h2 id="others" className="font-display text-2xl font-medium tracking-tight sm:text-3xl text-ink">
-            Other Visiting Specialists
-          </h2>
-        </div>
+        <h2 id="others" className="font-display text-2xl font-medium tracking-tight sm:text-3xl text-ink">
+          Other Visiting Specialists
+        </h2>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           {others.map((d) => (
             <li key={d.id}>

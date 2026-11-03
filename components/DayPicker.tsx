@@ -74,7 +74,7 @@ export function DayPicker() {
                   {count === 0 ? "No OPD" : count === 1 ? "specialist" : "specialists"}
                 </span>
                 {today === day && (
-                  <span className={`text-[0.6875rem] font-bold uppercase tracking-wider ${on ? "text-white" : "text-brand"}`}>
+                  <span className={`text-[0.625rem] sm:text-[0.6875rem] font-bold uppercase tracking-tight sm:tracking-wider ${on ? "text-white" : "text-brand"}`}>
                     Today
                   </span>
                 )}

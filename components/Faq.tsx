@@ -16,7 +16,7 @@ export function Faq() {
             <span>{faq.question}</span>
             <span
               aria-hidden="true"
-              className="flex size-6.5 shrink-0 items-center justify-center rounded-full bg-sand text-sm font-bold text-muted transition-transform group-open:rotate-45 group-open:bg-brand-tint  group-open:text-brand"
+              className="flex size-6.5 shrink-0 items-center justify-center rounded-full bg-sand text-sm font-bold text-muted transition-transform group-open:rotate-45 group-open:bg-brand-tint group-open:text-brand"
             >
               +
             </span>

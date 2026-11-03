@@ -90,7 +90,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
         </div>
       </div>
 
-      <div role="group" aria-label="Filter doctors by speciality" className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:flex-wrap w-[calc(100%+2.5rem)] max-w-none">
+      <div role="group" aria-label="Filter doctors by speciality" className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:mx-0 sm:w-auto sm:px-0 sm:flex-wrap w-[calc(100%+2.5rem)] max-w-none">
         {options.map((o) => {
           const on = filter === o.id;
           return (
@@ -121,7 +121,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
               <li
                 key={doctor.id}
                 id={`doctor-${doctor.id}`}
-                className="bg-white flex flex-col justify-between rounded-2xl border border-line p-5 hover:border-brand-line  transition-all duration-200"
+                className="bg-white flex flex-col justify-between rounded-2xl border border-line p-5 hover:border-brand-line transition-all duration-200"
               >
                 <div>
                   {/* Doctor Identity Header */}
@@ -145,7 +145,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                         </Link>
                       </h3>
                       {doctor.name && (
-                        <p className="text-sm sm:text-sm font-semibold text-ink">
+                        <p className="text-sm font-semibold text-ink">
                           {doctor.speciality}
                         </p>
                       )}
@@ -238,14 +238,14 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                   {hasOpd ? (
                     <Link
                       href={`/book?doctor=${doctor.id}`}
-                      className="inline-flex min-h-10 items-center justify-center rounded-xl bg-brand px-3 text-center text-sm font-semibold text-white hover:bg-brand-dark transition-colors "
+                      className="inline-flex min-h-10 items-center justify-center rounded-xl bg-brand px-3 text-center text-sm font-semibold text-white hover:bg-brand-dark transition-colors"
                     >
                       Book OPD →
                     </Link>
                   ) : (
                     <a
                       href={`tel:${clinic.phone}`}
-                      className="inline-flex min-h-10 items-center justify-center rounded-xl bg-ink px-3 text-center text-sm font-semibold text-white hover:bg-ink transition-colors"
+                      className="inline-flex min-h-10 items-center justify-center rounded-xl bg-ink px-3 text-center text-sm font-semibold text-white hover:bg-brand transition-colors"
                     >
                       Call Helpline
                     </a>
@@ -274,7 +274,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                 <Link href="/services" className="card flex min-h-14 items-center gap-3 rounded-2xl px-4 py-2">
                   <ServiceIcon id={s.id} className="size-6 shrink-0 text-brand" />
                   <span className="flex-1 font-semibold">{s.name}</span>
-                  <ChevronRightIcon className="size-5 text-slate-400" />
+                  <ChevronRightIcon className="size-5 text-muted" />
                 </Link>
               </li>
             ))}

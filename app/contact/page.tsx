@@ -81,7 +81,7 @@ export default function ContactPage() {
             <div className="flex flex-col gap-2.5">
               <a
                 href={`tel:${clinic.phone}`}
-                className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-xl bg-brand px-6 text-sm sm:text-base font-bold text-white hover:bg-brand-dark "
+                className="inline-flex min-h-12 items-center justify-center gap-2.5 rounded-xl bg-brand px-6 text-sm sm:text-base font-bold text-white hover:bg-brand-dark transition-colors"
               >
                 <PhoneIcon className="size-4 shrink-0" />
                 <span>Call Reception Helpline: {clinic.phoneDisplay}</span>

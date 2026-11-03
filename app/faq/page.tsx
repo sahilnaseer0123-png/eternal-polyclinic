@@ -35,9 +35,9 @@ export default function FaqPage() {
             <div className="flex items-center gap-2.5 shrink-0">
               <a
                 href={`tel:${clinic.phone}`}
-                className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border-[1.5px] border-ink bg-transparent px-4 text-sm font-bold text-ink hover:bg-ink hover:text-white transition-colors"
+                className="group inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border-[1.5px] border-ink bg-transparent px-4 text-sm font-bold text-ink hover:bg-ink hover:text-white transition-colors"
               >
-                <PhoneIcon className="size-3.5 text-brand" />
+                <PhoneIcon className="size-3.5 text-brand group-hover:text-white transition-colors" />
                 <span>Call {clinic.phoneDisplay}</span>
               </a>
 

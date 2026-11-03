@@ -25,7 +25,7 @@ export function WhatsAppPreview({ className = "" }: { className?: string }) {
         <Logo className="size-9 shrink-0" />
         <div className="min-w-0 leading-tight">
           <p className="font-semibold">{clinic.name}</p>
-          <p className="text-sm text-slate-400">WhatsApp {clinic.whatsappDisplay}</p>
+          <p className="text-sm text-night-muted">WhatsApp {clinic.whatsappDisplay}</p>
         </div>
       </div>
       <div className="flex flex-col gap-2 bg-ground px-4 py-5">

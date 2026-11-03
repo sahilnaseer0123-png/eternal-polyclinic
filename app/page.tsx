@@ -32,9 +32,9 @@ export default function Home() {
     <>
       <LegacyBookingLink />
 
-      {/* Hero */}
-      <section className="border-b border-line bg-brand-tint">
-        <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 py-10 sm:px-6 sm:py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-14 lg:py-16">
+      {/* Hero: Full viewport coverage below the header */}
+      <section className="relative flex min-h-[calc(100vh-61px)] min-h-[calc(100dvh-61px)] w-full flex-col justify-center border-b border-line bg-brand-tint">
+        <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-5 py-10 sm:px-6 sm:py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-14 lg:py-16">
           <div>
             <p className="rise eyebrow text-brand">Opposite SDH Hospital, Sopore</p>
             <h1 className="rise rise-2 mt-4 max-w-2xl text-balance text-[3rem] font-light leading-[0.97] tracking-[-0.04em] sm:text-[4.5rem] lg:text-[5rem]">
@@ -46,13 +46,13 @@ export default function Home() {
             <div className="rise rise-3 mt-7 flex flex-wrap gap-3">
               <Link
                 href="/book"
-                className="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark"
+                className="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark transition-colors"
               >
                 Book a visit
               </Link>
               <a
                 href={`tel:${clinic.phone}`}
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-6 text-base font-bold hover:bg-ink hover:text-white"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-6 text-base font-bold hover:bg-ink hover:text-white transition-colors"
               >
                 <PhoneIcon className="size-4" />
                 Call {clinic.phoneDisplay}
@@ -114,7 +114,7 @@ export default function Home() {
       <section aria-labelledby="steps" className="bg-brand text-white">
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-6 sm:py-20 lg:grid-cols-[1.2fr_1fr] lg:items-center">
           <div>
-            <p className="eyebrow text-[#BDF1E8]">How booking works</p>
+            <p className="eyebrow text-mint">How booking works</p>
             <h2 id="steps" className="mt-3 text-[2.125rem] font-light leading-none tracking-[-0.04em] sm:text-6xl">
               Three steps. <em>No account.</em>
             </h2>
@@ -126,7 +126,7 @@ export default function Home() {
                   </span>
                   <span>
                     <span className="block text-lg font-bold">{s.title}</span>
-                    <span className="block text-base text-[#D4F5EF]">{s.text}</span>
+                    <span className="block text-base text-mint/90">{s.text}</span>
                   </span>
                 </li>
               ))}
