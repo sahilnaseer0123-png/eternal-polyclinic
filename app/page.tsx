@@ -8,7 +8,6 @@ import { DayPicker } from "@/components/DayPicker";
 import { HeroRightColumn } from "@/components/HeroRightColumn";
 import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
-import { WhatsAppPreview } from "@/components/WhatsAppPreview";
 import { EmergencyNote } from "@/components/EmergencyNote";
 import {
   CalendarCheckIcon,
@@ -36,12 +35,6 @@ const heroHighlights = [
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const byAppointment = doctors.filter((d) => d.opd.length === 0);
-
-const steps = [
-  { n: "1", title: "Pick a day", text: "See which specialists sit on the day that suits you." },
-  { n: "2", title: "Choose a time", text: "Pick a doctor, a date and a time. We ask for your name and number only." },
-  { n: "3", title: "Send on WhatsApp", text: "Your request opens in WhatsApp. Reception calls you to confirm." },
-];
 
 export default function Home() {
   return (
@@ -187,38 +180,6 @@ export default function Home() {
           </div>
         </section>
       )}
-
-      {/* Three steps */}
-      <section aria-labelledby="steps" className="bg-brand text-white">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-6 sm:py-20 lg:grid-cols-[1.2fr_1fr] lg:items-center">
-          <div>
-            <p className="eyebrow text-mint">How booking works</p>
-            <h2 id="steps" className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] sm:text-5xl">
-              Three steps. <em>No account.</em>
-            </h2>
-            <ol className="mt-8 flex flex-col gap-5">
-              {steps.map((s) => (
-                <li key={s.n} className="flex gap-4">
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-mint font-display text-lg font-semibold tabular-nums lining-nums">
-                    {s.n}
-                  </span>
-                  <span>
-                    <span className="block text-lg font-semibold text-white">{s.title}</span>
-                    <span className="block text-base text-night-muted">{s.text}</span>
-                  </span>
-                </li>
-              ))}
-            </ol>
-            <Link
-              href="/book"
-              className="mt-8 inline-flex min-h-12 items-center justify-center rounded-xl bg-mint px-6 text-base font-semibold text-ink hover:bg-[#D1EFB5] transition-colors"
-            >
-              Book a visit
-            </Link>
-          </div>
-          <WhatsAppPreview className="mx-auto w-full max-w-sm" />
-        </div>
-      </section>
 
       {/* Tests and medicines */}
       <section aria-labelledby="services" className="bg-white">

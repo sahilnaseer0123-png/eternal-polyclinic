@@ -1,9 +1,9 @@
 "use client";
 
-// Ultra-Modern Tablet & Reception Management Portal for Eternal Polyclinic, Sopore.
+// Reception & Admin Desk (design v4, Minimalist Clinical / Healist):
 // Real-time OPD registration, walk-in entry, double-booking prevention,
 // doctor live delay radar, village/town disambiguation,
-// cross-device cloud sync, end-of-day Excel/JSON backup, and 1-tap WhatsApp report to owner.
+// local tab sync, end-of-day CSV/JSON backup, and 1-tap WhatsApp report to owner.
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
@@ -43,14 +43,34 @@ import {
   type AppointmentStatus,
   type DoctorLiveState,
 } from "@/lib/appointments";
+import { DoctorMark } from "@/components/DoctorMark";
 import {
+  CalendarCheckIcon,
+  CheckIcon,
+  ClockIcon,
+  CloseIcon,
+  CopyIcon,
+  DownloadIcon,
+  LockIcon,
+  MapPinIcon,
   PhoneIcon,
+  PlusIcon,
+  PrinterIcon,
+  RadarIcon,
+  RefreshIcon,
+  ReportIcon,
   SearchIcon,
+  ShieldCheckIcon,
   StethoscopeIcon,
+  UserIcon,
   WhatsAppIcon,
 } from "@/components/Icons";
 
 const emptySubscribe = () => () => {};
+
+const fieldLabel = "text-xs font-bold uppercase tracking-[0.12em] text-muted";
+const fieldInput =
+  "min-h-12 w-full rounded-xl border border-line-strong bg-white px-3.5 text-base text-ink placeholder:text-muted/70 focus:border-brand focus:outline-none transition-colors";
 
 export default function AdminPage() {
   const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
@@ -105,11 +125,15 @@ export default function AdminPage() {
   // Restore file input ref
   const restoreFileInputRef = useRef<HTMLInputElement>(null);
 
-  // Cloud sync state
+  // Local tab sync state
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
   const lastSyncTime = getLastSyncTime();
   const lastSyncDisplay = lastSyncTime
-    ? new Date(lastSyncTime).toLocaleTimeString("en-IN", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit" })
+    ? new Date(lastSyncTime).toLocaleTimeString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
     : "Just now";
 
   async function handleManualSync() {
@@ -176,7 +200,9 @@ export default function AdminPage() {
   filteredAppointments.sort((a, b) => a.time.localeCompare(b.time));
 
   // Counts
-  const countWaiting = filteredAppointments.filter((a) => a.status === "confirmed" || a.status === "arrived").length;
+  const countWaiting = filteredAppointments.filter(
+    (a) => a.status === "confirmed" || a.status === "arrived",
+  ).length;
   const countInConsult = filteredAppointments.filter((a) => a.status === "in_consultation").length;
   const countCompleted = filteredAppointments.filter((a) => a.status === "completed").length;
   const countCancelled = filteredAppointments.filter((a) => a.status === "cancelled").length;
@@ -205,7 +231,6 @@ export default function AdminPage() {
     const doc = allDoctors.find((d) => d.id === walkInDocId);
     if (!doc) return;
 
-    // Generate collision-free walk-in token
     const token = generateToken(selectedDate, walkInDocId, true);
 
     const walkInApt: Appointment = {
@@ -247,7 +272,7 @@ export default function AdminPage() {
   function copyBroadcast(text: string) {
     if (!navigator.clipboard) return;
     navigator.clipboard.writeText(text);
-    setBroadcastToast("Broadcast copied to clipboard! Ready to paste in WhatsApp.");
+    setBroadcastToast("Broadcast copied to clipboard. Ready to paste in WhatsApp.");
     setTimeout(() => setBroadcastToast(""), 4000);
   }
 
@@ -261,7 +286,8 @@ export default function AdminPage() {
       if (content) {
         const res = restoreFromJsonBackup(content);
         if (res.success) {
-          setBroadcastToast(`Restore successful: ${res.count} records restored!`);
+          setBroadcastToast(`Restore complete: ${res.count} records restored.`);
+          setTimeout(() => setBroadcastToast(""), 4000);
         } else {
           alert(`Restore failed: ${res.message}`);
         }
@@ -316,90 +342,187 @@ export default function AdminPage() {
   const allRecordedDates = Object.keys(dateGroups).sort((a, b) => b.localeCompare(a));
 
   // ---------------------------------------------------------------------------
-  // ELEGANT ADMIN ACCESS SCREEN (MINIMALIST CLINICAL)
+  // STAFF UNLOCK SCREEN — MATCHES SITE ARCHITECTURE & BOOKING PAGE LAYOUT
   // ---------------------------------------------------------------------------
   if (!mounted || !isAuthenticated) {
     return (
-      <div className="flex-1 flex flex-col justify-center px-4 py-16 sm:py-20 text-ink bg-ground">
-        <div className="w-full max-w-[420px] mx-auto bg-white border border-line rounded-3xl p-8 sm:p-9 shadow-xs">
-          {/* Top Medical Stethoscope Badge */}
-          <div className="size-11 rounded-xl bg-brand-tint ring-1 ring-brand-line/80 flex items-center justify-center mb-5 text-ink">
-            <StethoscopeIcon className="size-5 text-ink" />
+      <>
+        <section className="bg-white">
+          <div className="mx-auto max-w-6xl px-5 pt-6 pb-6 sm:px-6 sm:pt-9 sm:pb-8">
+            <p className="eyebrow text-muted">Authorized Staff Console</p>
+            <h1 className="mt-2.5 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
+              Reception &amp;{" "}
+              <em className="inline-block rounded-xl bg-brand-tint px-2.5 py-0.5 text-ink ring-1 ring-brand-line/70">
+                admin portal
+              </em>
+            </h1>
+            <p className="mt-2.5 max-w-2xl text-muted sm:text-lg leading-relaxed">
+              Manage today&rsquo;s OPD register, walk-in tokens, specialist arrival status, and daily clinic reports.
+            </p>
           </div>
+        </section>
 
-          <p className="eyebrow mb-1.5">
-            Eternal Polyclinic · Sopore
-          </p>
-          <h1 className="font-semibold text-2xl tracking-tight text-ink mb-2 font-display">
-            Admin &amp; Reception Portal
-          </h1>
-          <p className="text-muted text-xs sm:text-sm mb-6 leading-relaxed">
-            Enter admin security PIN to access the live OPD queue, walk-in register, and delay radar.
-          </p>
+        <div className="bg-white">
+          <section className="rounded-t-[2rem] sm:rounded-t-[2.75rem] border-t border-line/80 bg-ground">
+            <div className="mx-auto grid max-w-6xl gap-6 px-5 py-8 pb-24 sm:px-6 sm:py-12 sm:pb-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+              {/* Unlock Form Card */}
+              <div className="card rounded-3xl p-6 sm:p-9">
+                <div className="flex items-center gap-3">
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-ink ring-1 ring-brand-line/70">
+                    <LockIcon className="size-5" />
+                  </span>
+                  <div>
+                    <p className="eyebrow text-muted">Device Security</p>
+                    <h2 className="font-display text-xl font-semibold tracking-tight text-ink sm:text-2xl">
+                      Unlock reception desk
+                    </h2>
+                  </div>
+                </div>
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (pinInput.trim()) {
-                verifyPin(pinInput.trim());
-              }
-            }}
-          >
-            <label
-              htmlFor="clinic-admin-pass"
-              className="block font-semibold text-xs uppercase tracking-wider mb-2 text-charcoal"
-            >
-              Admin Security PIN
-            </label>
-            <input
-              id="clinic-admin-pass"
-              type="password"
-              autoComplete="current-password"
-              autoFocus
-              required
-              placeholder="Enter security PIN…"
-              value={pinInput}
-              onChange={(e) => {
-                setPinInput(e.target.value);
-                setPinError("");
-              }}
-              className="w-full text-sm p-3 border border-line rounded-xl bg-ground text-ink outline-none mb-3 transition-colors focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand"
-            />
+                <p className="mt-3 text-base text-muted leading-relaxed">
+                  Enter the clinic security PIN to open the live patient queue, walk-in slip printer, and specialist delay controls.
+                </p>
 
-            {pinError && (
-              <div className="mb-3 text-xs font-semibold text-emergency">
-                {pinError}
+                <form
+                  className="mt-6 flex flex-col gap-4"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (pinInput.trim()) {
+                      verifyPin(pinInput.trim());
+                    }
+                  }}
+                >
+                  <div className="flex flex-col gap-1.5">
+                    <label htmlFor="clinic-admin-pass" className={fieldLabel}>
+                      Admin Security PIN
+                    </label>
+                    <input
+                      id="clinic-admin-pass"
+                      type="password"
+                      autoComplete="current-password"
+                      autoFocus
+                      required
+                      placeholder="Enter security PIN"
+                      value={pinInput}
+                      onChange={(e) => {
+                        setPinInput(e.target.value);
+                        setPinError("");
+                      }}
+                      className={fieldInput}
+                    />
+                    {pinError && (
+                      <p role="alert" className="mt-1 text-sm font-semibold text-emergency">
+                        {pinError}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center">
+                    <button
+                      type="submit"
+                      className="group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-xl bg-brand px-6 text-base font-semibold text-white hover:bg-brand-dark transition-all cursor-pointer"
+                    >
+                      <span>Unlock Console</span>
+                      <span className="inline-flex size-6 items-center justify-center rounded-lg bg-mint text-ink transition-transform duration-200 group-hover:translate-x-0.5">
+                        <span aria-hidden="true" className="text-xs font-bold leading-none">
+                          →
+                        </span>
+                      </span>
+                    </button>
+
+                    <Link
+                      href="/"
+                      className="inline-flex min-h-12 items-center justify-center rounded-xl border-[1.5px] border-ink px-5 text-base font-semibold text-ink hover:bg-ink hover:text-white transition-colors"
+                    >
+                      Back to Website
+                    </Link>
+                  </div>
+                </form>
               </div>
-            )}
 
-            <button
-              type="submit"
-              className="w-full font-semibold text-sm rounded-xl py-3 px-5 bg-brand text-white hover:bg-brand-dark cursor-pointer transition-all active:scale-[0.99] shadow-2xs mb-4"
-            >
-              Unlock Admin Portal →
-            </button>
-          </form>
+              {/* Right Column: What lives inside the portal */}
+              <div className="flex flex-col gap-5">
+                <div className="card rounded-3xl p-6">
+                  <h2 className="font-display text-xl font-medium tracking-tight text-ink sm:text-2xl">
+                    Reception tools inside
+                  </h2>
+                  <ul className="mt-4 flex flex-col gap-4 text-base text-charcoal">
+                    {[
+                      {
+                        Icon: CalendarCheckIcon,
+                        title: "OPD queue & walk-in slips",
+                        desc: "Register walk-in patients, lock consultation slots, and print token slips.",
+                      },
+                      {
+                        Icon: RadarIcon,
+                        title: "Live specialist delay radar",
+                        desc: "Update doctor arrival or delay status on the home page and copy WhatsApp alerts.",
+                      },
+                      {
+                        Icon: ReportIcon,
+                        title: "Daily CSV backups & owner summary",
+                        desc: "Export Excel sheets and send a 1-tap closing summary on WhatsApp.",
+                      },
+                    ].map(({ Icon, title, desc }) => (
+                      <li key={title} className="flex items-start gap-3">
+                        <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-ink ring-1 ring-brand-line/60 mt-0.5">
+                          <Icon className="size-4.5" />
+                        </span>
+                        <div>
+                          <strong className="block font-semibold text-ink">{title}</strong>
+                          <span className="text-sm text-muted leading-relaxed">{desc}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
 
-          <div className="border-t border-line pt-4 flex items-center justify-between text-xs text-muted">
-            <Link href="/" className="text-charcoal font-medium hover:text-ink transition-colors underline decoration-line-strong hover:decoration-ink">
-              ← Back to Website
-            </Link>
-            <span>Authorized Staff Only</span>
-          </div>
+                <div className="rounded-3xl bg-sand p-6">
+                  <div className="flex items-center gap-2 text-ink">
+                    <ShieldCheckIcon className="size-4" />
+                    <span className="eyebrow">Local device storage</span>
+                  </div>
+                  <p className="mt-2 text-sm sm:text-base text-charcoal leading-relaxed">
+                    Records stay locally on this reception device and sync across open browser tabs. Download a JSON or CSV backup at closing time.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
-      </div>
+      </>
     );
   }
 
   // ---------------------------------------------------------------------------
-  // MAIN TABLET WORKSPACE & DASHBOARD
+  // AUTHENTICATED RECEPTION & OPD WORKSPACE
   // ---------------------------------------------------------------------------
   const currentDoctorObj = doctorFilter === "all" ? null : allDoctors.find((d) => d.id === doctorFilter);
   const ownerReportText = formatDailyOwnerSummary(selectedDate, doctorFilter);
   const ownerWaUrl = `https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(ownerReportText)}`;
 
+  const tabs = [
+    { id: "opd" as const, label: "OPD Queue", Icon: CalendarCheckIcon, badge: countWaiting },
+    { id: "radar" as const, label: "Delay Radar", Icon: RadarIcon },
+    { id: "doctors" as const, label: "Doctors & Timings", Icon: StethoscopeIcon },
+    { id: "backups" as const, label: "Backups & Reports", Icon: ReportIcon },
+    { id: "search" as const, label: "Patient Search", Icon: SearchIcon },
+  ];
+
+  const searchMatches = searchQuery.trim()
+    ? appointments.filter((a) => {
+        const q = searchQuery.trim().toLowerCase();
+        return (
+          a.patientName.toLowerCase().includes(q) ||
+          (a.patientAddress && a.patientAddress.toLowerCase().includes(q)) ||
+          a.patientPhone.includes(q) ||
+          a.token.toLowerCase().includes(q)
+        );
+      })
+    : [];
+
   return (
-    <div className="min-w-0 w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6 font-sans bg-ground">
+    <>
       {/* Hidden file input for JSON restore */}
       <input
         ref={restoreFileInputRef}
@@ -410,945 +533,1077 @@ export default function AdminPage() {
       />
 
       {/* Screen View (hidden on print) */}
-      <div className="no-print flex flex-col gap-6">
-        {/* Top Header Bar */}
-        <header className="rounded-3xl p-5 bg-white border border-line text-ink shadow-2xs flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3.5">
-            <div className="size-11 rounded-xl bg-brand-tint ring-1 ring-brand-line/80 text-ink flex items-center justify-center font-bold">
-              <StethoscopeIcon className="size-5 text-ink" />
-            </div>
+      <div className="no-print">
+        {/* Crisp Pure-White Hero Intro Band (matches Homepage & Inner Pages) */}
+        <section className="bg-white">
+          <div className="mx-auto flex max-w-6xl flex-col gap-5 px-5 pt-6 pb-6 sm:px-6 sm:pt-8 sm:pb-8 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="text-lg sm:text-xl font-semibold tracking-tight text-ink font-display">
-                  Admin &amp; Reception Portal
-                </h1>
-                {/* Cross-Device Sync Badge */}
+              {/* Status Pills Row */}
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-ground px-3 py-1 text-xs font-semibold text-charcoal tabular-nums lining-nums">
+                  <ClockIcon className="size-3.5 text-ink" />
+                  <span>{fromMinutes(clock.minutes)} IST</span>
+                </span>
+
                 <button
                   type="button"
                   onClick={handleManualSync}
-                  title="Click to manually sync cross-device"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-brand-tint/70 border border-brand-line text-ink text-[11px] px-2.5 py-0.5 font-semibold hover:bg-brand-tint transition-all"
+                  title="Sync open tabs on this device"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-line bg-brand-tint/65 px-3 py-1 text-xs font-semibold text-ink hover:bg-brand-tint transition-colors cursor-pointer"
                 >
-                  <span className={`size-1.5 rounded-full bg-[#22A05B] ${isSyncing ? "animate-spin" : "animate-pulse"}`} />
-                  <span>{isSyncing ? "Syncing..." : `Sync: ${lastSyncDisplay}`}</span>
+                  <RefreshIcon className={`size-3.5 ${isSyncing ? "animate-spin" : ""}`} />
+                  <span>{isSyncing ? "Syncing tabs…" : `Synced · ${lastSyncDisplay}`}</span>
                 </button>
               </div>
-              <p className="text-xs text-muted mt-0.5">
-                {clinic.name} · Opposite SDH Hospital, Sopore
-              </p>
-            </div>
-          </div>
 
-          <div className="flex items-center gap-2.5">
-            {/* Live Clock Badge */}
-            <div className="hidden sm:flex flex-col text-right px-3 py-1.5 rounded-xl bg-ground border border-line font-mono">
-              <span className="text-[10px] text-muted uppercase font-sans font-bold">Kashmir Time</span>
-              <span className="text-xs font-bold text-ink">{fromMinutes(clock.minutes)} IST</span>
-            </div>
-
-            {/* Quick Walk-in Button */}
-            <button
-              type="button"
-              onClick={() => {
-                setShowWalkInModal(true);
-                setWalkInDocId(doctorFilter !== "all" ? doctorFilter : allDoctors[0]?.id || "");
-              }}
-              className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-brand px-4 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-brand-dark shadow-2xs transition-all active:scale-95"
-            >
-              <span>+ Add Walk-In Patient</span>
-            </button>
-
-            {/* Logout Lock */}
-            <button
-              type="button"
-              onClick={handleLogout}
-              title="Lock Tablet"
-              className="min-h-10 px-3.5 rounded-xl bg-white hover:bg-ground text-xs font-semibold text-charcoal transition-all border border-line-strong"
-            >
-              Lock Console
-            </button>
-          </div>
-        </header>
-
-        {/* Broadcast Toast Notification */}
-        {broadcastToast && (
-          <div className="rounded-2xl bg-brand text-white font-semibold text-xs sm:text-sm px-4 py-3 shadow-xs flex items-center justify-between animate-fade-in border border-night-line">
-            <span className="flex items-center gap-2">
-              <span className="text-mint">✓</span> {broadcastToast}
-            </span>
-            <button type="button" onClick={() => setBroadcastToast("")} className="text-mint hover:underline text-xs">
-              Dismiss
-            </button>
-          </div>
-        )}
-
-        {/* Tab Navigation Segmented Bar */}
-        <nav className="flex gap-1.5 p-1.5 rounded-2xl bg-sand border border-line overflow-x-auto text-xs font-semibold">
-          <button
-            type="button"
-            onClick={() => setActiveTab("opd")}
-            className={`min-h-9 px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
-              activeTab === "opd" ? "bg-brand text-white shadow-2xs font-semibold" : "text-muted hover:text-ink hover:bg-white/60"
-            }`}
-          >
-            OPD Patient Queue
-            {countWaiting > 0 && (
-              <span className={`rounded-full text-[10px] px-1.5 py-0.2 font-bold ${
-                activeTab === "opd"
-                  ? "bg-brand-tint text-ink"
-                  : "bg-brand-tint border border-brand-line text-ink"
-              }`}>
-                {countWaiting}
-              </span>
-            )}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("radar")}
-            className={`min-h-9 px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
-              activeTab === "radar" ? "bg-brand text-white shadow-2xs font-semibold" : "text-muted hover:text-ink hover:bg-white/60"
-            }`}
-          >
-            Doctor Delay Radar
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("doctors")}
-            className={`min-h-9 px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
-              activeTab === "doctors" ? "bg-brand text-white shadow-2xs font-semibold" : "text-muted hover:text-ink hover:bg-white/60"
-            }`}
-          >
-            Doctor Timings &amp; Overrides
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("backups")}
-            className={`min-h-9 px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
-              activeTab === "backups" ? "bg-brand text-white shadow-2xs font-semibold" : "text-muted hover:text-ink hover:bg-white/60"
-            }`}
-          >
-            Backups &amp; Owner Reports
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("search")}
-            className={`min-h-9 px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
-              activeTab === "search" ? "bg-brand text-white shadow-2xs font-semibold" : "text-muted hover:text-ink hover:bg-white/60"
-            }`}
-          >
-            Patient Search
-          </button>
-        </nav>
-
-        {/* ===================================================================== */}
-        {/* TAB 1: OPD PATIENT REGISTER                                          */}
-        {/* ===================================================================== */}
-        {activeTab === "opd" && (
-          <div className="flex flex-col gap-6 animate-fade-in">
-            {/* Filter Controls Bar */}
-            <div className="card rounded-3xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 border border-line shadow-2xs">
-              <div className="flex flex-wrap items-center gap-3">
-                <div className="flex flex-col">
-                  <label htmlFor="date-select" className="text-[11px] font-bold uppercase tracking-wider text-muted mb-1">
-                    OPD Date
-                  </label>
-                  <input
-                    id="date-select"
-                    type="date"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className="min-h-11 rounded-xl border border-line px-3 py-1 text-sm font-semibold text-ink bg-ground focus:bg-white focus:border-brand outline-none"
-                  />
-                </div>
-
-                <div className="flex gap-1.5 self-end pb-0.5">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedDate(todayKey)}
-                    className={`min-h-10 px-3.5 rounded-xl text-xs font-semibold transition-all ${
-                      selectedDate === todayKey ? "bg-brand text-white shadow-2xs" : "bg-sand text-charcoal hover:bg-brand-tint"
-                    }`}
-                  >
-                    Today
-                  </button>
-                </div>
-
-                <div className="flex flex-col min-w-48">
-                  <label htmlFor="doc-select" className="text-[11px] font-bold uppercase tracking-wider text-muted mb-1">
-                    Filter by Doctor
-                  </label>
-                  <select
-                    id="doc-select"
-                    value={doctorFilter}
-                    onChange={(e) => setDoctorFilter(e.target.value)}
-                    className="min-h-11 rounded-xl border border-line px-3 py-1 text-sm font-semibold text-ink bg-ground focus:bg-white focus:border-brand outline-none"
-                  >
-                    <option value="all">All Specialists ({allDoctors.length})</option>
-                    {allDoctors.map((d) => (
-                      <option key={d.id} value={d.id}>
-                        {d.name ?? d.speciality} ({d.speciality})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Action Buttons: Excel Export, Print, and Owner Summary */}
-              <div className="flex flex-wrap items-center gap-2 self-end">
-                <button
-                  type="button"
-                  onClick={() => downloadCsv(selectedDate)}
-                  title="Download Excel spreadsheet of this day"
-                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-brand-line bg-brand-tint/75 px-3.5 py-2 text-xs font-semibold text-ink hover:bg-brand-tint shadow-2xs transition-colors"
-                >
-                  📊 Export to Excel
-                </button>
-
-                <a
-                  href={ownerWaUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={
-                    doctorFilter === "all"
-                      ? "Send All Doctors Daily Summary to Clinic Owner on WhatsApp"
-                      : `Send ${currentDoctorObj?.name || "Doctor"} Daily Summary to Clinic Owner on WhatsApp`
-                  }
-                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-brand px-3.5 py-2 text-xs font-semibold text-white hover:bg-brand-dark shadow-2xs"
-                >
-                  <WhatsAppIcon className="size-4" />
-                  <span>
-                    {doctorFilter === "all"
-                      ? "Report All Doctors to Owner"
-                      : `Report ${currentDoctorObj?.name?.replace(/^Dr\.\s*/, "") || "Doctor"} to Owner`}
-                  </span>
-                </a>
-
-                <button
-                  type="button"
-                  onClick={() => window.print()}
-                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-line-strong bg-white px-3.5 py-2 text-xs font-semibold text-ink hover:bg-ground shadow-2xs transition-colors"
-                >
-                  🖨️ Print Sheet
-                </button>
-              </div>
-            </div>
-
-            {/* KPI Metric Cards */}
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-              <div className="card rounded-3xl p-4 sm:p-5 border border-line bg-white shadow-2xs">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-muted">Total Booked</span>
-                <p className="text-3xl font-semibold tracking-tight text-ink mt-1 font-display tabular-nums">{filteredAppointments.length}</p>
-                <div className="text-xs text-muted mt-1 flex flex-wrap gap-1">
-                  <span className="font-semibold text-ink">{filteredAppointments.filter((a) => a.type === "online").length} Online</span>
-                  <span>·</span>
-                  <span className="font-semibold text-charcoal">{filteredAppointments.filter((a) => a.type === "walk_in").length} Walk-in</span>
-                  {countCancelled > 0 && <span>· {countCancelled} Cancelled</span>}
-                </div>
-              </div>
-
-              <div className="card rounded-3xl p-4 sm:p-5 border border-line bg-white shadow-2xs">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-charcoal flex items-center gap-1.5">
-                  <span className="size-2 rounded-full bg-amber-400 animate-pulse" />
-                  Waiting in Lounge
-                </span>
-                <p className="text-3xl font-semibold tracking-tight text-ink mt-1 font-display tabular-nums">{countWaiting}</p>
-                <span className="text-xs text-muted">Ready for consultation</span>
-              </div>
-
-              <div className="card rounded-3xl p-4 sm:p-5 border border-night-line bg-brand text-white shadow-2xs">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-mint flex items-center gap-1.5">
-                  <span className="size-2 rounded-full bg-[#DFF5CA]" />
-                  In Cabin
-                </span>
-                <p className="text-3xl font-semibold tracking-tight text-white mt-1 font-display tabular-nums">{countInConsult}</p>
-                <span className="text-xs text-night-muted">With the doctor now</span>
-              </div>
-
-              <div className="card rounded-3xl p-4 sm:p-5 border border-brand-line bg-brand-tint/45 shadow-2xs">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-ink flex items-center gap-1.5">
-                  <span className="size-2 rounded-full bg-[#22A05B]" />
-                  Completed
-                </span>
-                <p className="text-3xl font-semibold tracking-tight text-ink mt-1 font-display tabular-nums">{countCompleted}</p>
-                <span className="text-xs text-charcoal">Consultation finished</span>
-              </div>
-            </div>
-
-            {/* Patient Queue Cards */}
-            {filteredAppointments.length === 0 ? (
-              <div className="card rounded-3xl p-12 text-center border border-dashed border-line-strong bg-white">
-                <div className="size-14 rounded-2xl bg-brand-tint ring-1 ring-brand-line/80 text-ink flex items-center justify-center mx-auto mb-3.5">
-                  <StethoscopeIcon className="size-7" />
-                </div>
-                <p className="text-lg font-semibold text-ink font-display">No patients scheduled yet for this date.</p>
-                <p className="text-xs text-muted mt-1 max-w-md mx-auto leading-relaxed">
-                  When patients book online or you register walk-ins via the <strong className="text-ink">&quot;+ Add Walk-In Patient&quot;</strong> button, they will appear in this live queue.
-                </p>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-3.5">
-                {filteredAppointments.map((apt) => {
-                  const statusColors: Record<AppointmentStatus, string> = {
-                    confirmed: "bg-amber-50 text-amber-900 border-amber-200",
-                    arrived: "bg-sand text-ink border-line-strong",
-                    in_consultation: "bg-brand text-mint border-brand",
-                    completed: "bg-brand-tint text-ink border-brand-line",
-                    cancelled: "bg-rose-50 text-rose-900 border-rose-200",
-                  };
-
-                  const callMsg = `Hello ${apt.patientName}, your token #${apt.token} for ${apt.doctorName} at Eternal Polyclinic, Sopore is now being called. Please proceed to Consultation Cabin.`;
-                  const callWaUrl = `https://wa.me/91${apt.patientPhone}?text=${encodeURIComponent(callMsg)}`;
-
-                  return (
-                    <div
-                      key={apt.token}
-                      className={`card rounded-3xl p-4 sm:p-5 border transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-4 ${
-                        apt.status === "in_consultation"
-                          ? "border-brand-line bg-brand-tint/25 ring-2 ring-brand-line/70 shadow-sm"
-                          : "border-line bg-white hover:border-line-strong shadow-2xs"
-                      }`}
-                    >
-                      {/* Left Block: Token Stub, Name, Address & Info */}
-                      <div className="flex items-start gap-3 sm:gap-4 min-w-0">
-                        {/* Token Badge Stub */}
-                        <div className="flex flex-col items-center justify-center rounded-2xl bg-brand text-mint px-3 py-2 font-mono font-bold shrink-0 min-w-28 text-center shadow-2xs border border-night-line">
-                          <span className="text-[10px] uppercase tracking-wider text-night-muted">Token</span>
-                          <span className="text-base sm:text-lg font-bold tracking-wider text-mint">{apt.token}</span>
-                          <span className="text-[11px] text-white/80 mt-0.5">{formatTime(apt.time)}</span>
-                        </div>
-
-                        {/* Patient Identity Block with prominent Village/Town Address */}
-                        <div className="flex flex-col min-w-0">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-lg font-semibold text-ink font-display">{apt.patientName}</span>
-
-                            {/* Prominent Village / Town Address to avoid same-name confusion */}
-                            {apt.patientAddress ? (
-                              <span className="inline-flex items-center gap-1 rounded-lg bg-brand-tint/80 border border-brand-line text-ink px-2.5 py-0.5 text-xs font-semibold">
-                                <span>📍</span> {apt.patientAddress}
-                              </span>
-                            ) : (
-                              <span className="inline-flex items-center gap-1 rounded-lg bg-ground text-muted px-2 py-0.5 text-xs italic border border-line">
-                                Area not added
-                              </span>
-                            )}
-
-                            {/* Type Badge */}
-                            <span
-                              className={`rounded-md px-2 py-0.5 text-[10px] font-bold uppercase border ${
-                                apt.type === "walk_in"
-                                  ? "bg-ground text-charcoal border-line-strong"
-                                  : "bg-brand-tint text-ink border-brand-line"
-                              }`}
-                            >
-                              {apt.type === "walk_in" ? "Walk-In" : "Online"}
-                            </span>
-                          </div>
-
-                          <div className="text-xs text-muted mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
-                            <span className="font-semibold text-charcoal">🩺 {apt.doctorName} ({apt.speciality})</span>
-                            <span>·</span>
-                            <span className="font-mono text-muted">📱 +91 {apt.patientPhone}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Right Block: Live Workflow Controls */}
-                      <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-line lg:border-t-0 lg:pt-0">
-                        {/* Status Dropdown */}
-                        <select
-                          value={apt.status}
-                          onChange={(e) => updateAppointmentStatus(apt.token, e.target.value as AppointmentStatus)}
-                          className={`min-h-11 rounded-xl px-3 py-1.5 text-xs font-semibold border outline-none cursor-pointer ${statusColors[apt.status]}`}
-                        >
-                          <option value="confirmed">⏳ Confirmed (Waiting)</option>
-                          <option value="arrived">🚶 Arrived in Clinic</option>
-                          <option value="in_consultation">🩺 With Doctor (Cabin)</option>
-                          <option value="completed">✅ Consultation Done</option>
-                          <option value="cancelled">❌ Cancelled / No Show</option>
-                        </select>
-
-                        {/* WhatsApp Patient Call-In Alert */}
-                        <a
-                          href={callWaUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          title="Message Patient on WhatsApp"
-                          className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-brand px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-brand-dark shadow-2xs transition-all active:scale-95"
-                        >
-                          <WhatsAppIcon className="size-4" />
-                          <span>Call In</span>
-                        </a>
-
-                        {/* Phone Call */}
-                        <a
-                          href={`tel:+91${apt.patientPhone}`}
-                          title="Call Mobile Number"
-                          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-ground px-3 py-1.5 text-xs font-semibold text-ink hover:bg-sand transition-colors"
-                        >
-                          <PhoneIcon className="size-4" />
-                        </a>
-
-                        {/* Cancel / Remove */}
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (confirm(`Cancel token ${apt.token} for ${apt.patientName}?`)) {
-                              deleteAppointment(apt.token);
-                            }
-                          }}
-                          title="Remove Token"
-                          className="min-h-11 rounded-xl px-2.5 py-1.5 text-xs text-muted hover:text-emergency hover:bg-rose-50 transition-colors"
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ===================================================================== */}
-        {/* TAB 2: LIVE DOCTOR DELAY RADAR                                       */}
-        {/* ===================================================================== */}
-        {activeTab === "radar" && (
-          <div className="flex flex-col gap-6 animate-fade-in">
-            <div className="rounded-3xl p-6 bg-brand text-white shadow-sm border border-night-line">
-              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-mint mb-1">Real-Time Status</p>
-              <h2 className="text-xl font-semibold text-white font-display">Live OPD Delay &amp; Arrival Radar</h2>
-              <p className="text-xs sm:text-sm text-night-muted mt-1.5 max-w-3xl leading-relaxed">
-                When a visiting specialist from Srinagar is travelling, delayed in surgery, or arrives at the clinic,
-                update their status here. The website homepage immediately displays a live alert badge, and you can copy a 1-tap WhatsApp broadcast.
+              <h1 className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
+                Reception &amp;{" "}
+                <em className="inline-block rounded-xl bg-brand-tint px-2.5 py-0.5 text-ink ring-1 ring-brand-line/70">
+                  OPD desk
+                </em>
+              </h1>
+              <p className="mt-2 max-w-xl text-muted sm:text-lg leading-relaxed">
+                {clinic.name} · {dateLabel(selectedDate)}
               </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              {allDoctors.map((doc) => {
-                const live = doctorStatuses[doc.id] ?? getDoctorLiveStatus(doc.id);
-                const broadcastMsg = doctorDelayBroadcastText(doc.name ?? doc.speciality, live, dateLabel(selectedDate));
-
-                return (
-                  <div key={doc.id} className="card rounded-3xl p-5 sm:p-6 border border-line flex flex-col justify-between gap-4 bg-white shadow-2xs">
-                    <div>
-                      <div className="flex items-start justify-between gap-3 border-b border-line pb-3">
-                        <div>
-                          <h3 className="text-lg font-semibold text-ink font-display">{doc.name ?? doc.speciality}</h3>
-                          <p className="text-xs text-muted font-medium mt-0.5">{doc.speciality} · {doc.degree}</p>
-                        </div>
-
-                        {/* Status Badge */}
-                        <span
-                          className={`rounded-xl px-3 py-1 text-xs font-semibold uppercase tracking-wider ${
-                            live.state === "in_clinic"
-                              ? "bg-brand-tint text-ink border border-brand-line"
-                              : live.state === "delayed"
-                              ? "bg-amber-50 text-amber-900 border border-amber-200"
-                              : live.state === "cancelled"
-                              ? "bg-rose-50 text-rose-900 border border-rose-200"
-                              : "bg-ground text-charcoal border border-line"
-                          }`}
-                        >
-                          {live.state === "in_clinic"
-                            ? "● In Clinic"
-                            : live.state === "delayed"
-                            ? `⚠️ Delayed (~${live.delayMinutes ?? 30}m)`
-                            : live.state === "cancelled"
-                            ? "🔴 Cancelled Today"
-                            : "Scheduled"}
-                        </span>
-                      </div>
-
-                      {/* State Switcher */}
-                      <div className="flex flex-col gap-2 mt-4">
-                        <label className="text-[11px] font-bold uppercase tracking-wider text-muted">Live Doctor Status</label>
-                        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                          <button
-                            type="button"
-                            onClick={() => updateDoctorRadar(doc.id, "scheduled")}
-                            className={`min-h-11 rounded-xl text-xs font-semibold border transition-all ${
-                              live.state === "scheduled" ? "bg-brand text-white border-brand shadow-2xs" : "border-line bg-white hover:bg-ground text-charcoal"
-                            }`}
-                          >
-                            Scheduled
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => updateDoctorRadar(doc.id, "in_clinic")}
-                            className={`min-h-11 rounded-xl text-xs font-semibold border transition-all ${
-                              live.state === "in_clinic" ? "bg-brand-tint text-ink border-brand-line shadow-2xs font-bold" : "border-line bg-white hover:bg-brand-tint/40 text-ink"
-                            }`}
-                          >
-                            🟢 In Clinic
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => updateDoctorRadar(doc.id, "delayed", live.delayMinutes || 30)}
-                            className={`min-h-11 rounded-xl text-xs font-semibold border transition-all ${
-                              live.state === "delayed" ? "bg-amber-500 text-white border-amber-500 shadow-2xs" : "border-line bg-white hover:bg-amber-50 text-amber-900"
-                            }`}
-                          >
-                            🟡 Delayed
-                          </button>
-
-                          <button
-                            type="button"
-                            onClick={() => updateDoctorRadar(doc.id, "cancelled")}
-                            className={`min-h-11 rounded-xl text-xs font-semibold border transition-all ${
-                              live.state === "cancelled" ? "bg-rose-600 text-white border-rose-600 shadow-2xs" : "border-line bg-white hover:bg-rose-50 text-rose-800"
-                            }`}
-                          >
-                            🔴 Cancelled
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Delay Configuration */}
-                      {live.state === "delayed" && (
-                        <div className="flex flex-col gap-2.5 rounded-2xl bg-amber-50/70 p-4 border border-amber-200 mt-3">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-semibold text-amber-900">Estimated Delay:</span>
-                            <div className="flex gap-1">
-                              {[15, 30, 45, 60, 90].map((min) => (
-                                <button
-                                  key={min}
-                                  type="button"
-                                  onClick={() => updateDoctorRadar(doc.id, "delayed", min)}
-                                  className={`px-2 py-1 rounded-lg text-xs font-semibold transition-all ${
-                                    (live.delayMinutes ?? 30) === min
-                                      ? "bg-amber-600 text-white"
-                                      : "bg-white text-amber-900 border border-amber-300 hover:bg-amber-100"
-                                  }`}
-                                >
-                                  {min}m
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-
-                          <input
-                            type="text"
-                            placeholder="Reason (e.g. Traffic near Sangrama / SKIMS surgery)"
-                            value={live.note ?? ""}
-                            onChange={(e) => updateDoctorRadar(doc.id, "delayed", live.delayMinutes, e.target.value)}
-                            className="min-h-10 rounded-xl border border-amber-300 bg-white px-3 text-xs text-ink outline-none"
-                          />
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Broadcast WhatsApp Preview & Copy */}
-                    {broadcastMsg && (
-                      <div className="flex flex-col gap-2 border-t border-line pt-3 mt-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[11px] font-bold text-muted uppercase tracking-wider">WhatsApp Broadcast Notice:</span>
-                          <button
-                            type="button"
-                            onClick={() => copyBroadcast(broadcastMsg)}
-                            className="inline-flex items-center gap-1 text-xs font-semibold text-ink underline decoration-brand-line hover:decoration-ink"
-                          >
-                            📋 Copy Message
-                          </button>
-                        </div>
-                        <pre className="whitespace-pre-wrap rounded-xl bg-ground p-3 text-[11px] text-charcoal border border-line font-sans leading-relaxed">
-                          {broadcastMsg}
-                        </pre>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        {/* ===================================================================== */}
-        {/* TAB 3: DOCTOR TIMINGS & LEAVE MANAGER                                 */}
-        {/* ===================================================================== */}
-        {activeTab === "doctors" && (
-          <div className="flex flex-col gap-6 animate-fade-in">
-            <div className="flex flex-wrap items-center justify-between gap-4 card rounded-3xl p-5 border border-line shadow-2xs">
-              <div>
-                <h2 className="text-xl font-semibold text-ink font-display">OPD Days &amp; Timings Management</h2>
-                <p className="text-xs text-muted mt-0.5">
-                  Update doctor sitting days, mark doctors on leave, or register a new visiting specialist.
-                </p>
-              </div>
+            {/* Primary Console Actions */}
+            <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowWalkInModal(true);
+                  setWalkInDocId(doctorFilter !== "all" ? doctorFilter : allDoctors[0]?.id || "");
+                }}
+                className="group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-xl bg-brand px-5 text-sm sm:text-base font-semibold text-white hover:bg-brand-dark transition-all cursor-pointer"
+              >
+                <span>Add Walk-In</span>
+                <span className="inline-flex size-6 items-center justify-center rounded-lg bg-mint text-ink">
+                  <PlusIcon className="size-3.5" />
+                </span>
+              </button>
 
               <button
                 type="button"
-                onClick={() => setShowNewDocModal(true)}
-                className="inline-flex min-h-11 items-center gap-2 rounded-2xl bg-brand px-5 text-sm font-semibold text-white hover:bg-brand-dark shadow-2xs transition-all"
+                onClick={handleLogout}
+                title="Lock reception console"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink bg-white px-4 text-sm sm:text-base font-semibold text-ink hover:bg-ink hover:text-white transition-colors cursor-pointer"
               >
-                + Register New Specialist
+                <LockIcon className="size-4" />
+                <span>Lock</span>
               </button>
             </div>
-
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              {allDoctors.map((doc) => {
-                const isOnLeave = doc.availability?.toLowerCase().includes("leave");
-
-                return (
-                  <div key={doc.id} className="card rounded-3xl p-5 border border-line flex flex-col justify-between gap-4 shadow-2xs">
-                    <div>
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
-                          <h3 className="text-lg font-semibold text-ink font-display">{doc.name ?? doc.speciality}</h3>
-                          <p className="text-xs text-muted font-medium mt-0.5">{doc.speciality} · {doc.degree}</p>
-                        </div>
-
-                        {isOnLeave ? (
-                          <span className="rounded-lg bg-rose-50 text-rose-800 text-xs px-2.5 py-0.5 font-semibold border border-rose-200">
-                            On Leave
-                          </span>
-                        ) : (
-                          <span className="rounded-lg bg-brand-tint text-ink text-xs px-2.5 py-0.5 font-semibold border border-brand-line">
-                            Active OPD
-                          </span>
-                        )}
-                      </div>
-
-                      {/* OPD Sessions */}
-                      <div className="mt-3 flex flex-col gap-1.5 text-xs text-charcoal">
-                        <span className="font-bold text-muted uppercase text-[10px] tracking-wider">Sitting Schedule:</span>
-                        {doc.opd.length > 0 ? (
-                          doc.opd.map((s, idx) => (
-                            <div key={idx} className="flex justify-between items-center rounded-xl bg-ground px-3 py-1.5 border border-line">
-                              <span className="font-semibold text-ink">{DAY_NAMES[s.day]}</span>
-                              <span className="font-medium text-muted">{formatTime(s.start)} – {formatTime(s.end)}</span>
-                            </div>
-                          ))
-                        ) : (
-                          <p className="text-muted italic">No scheduled weekly OPD. By appointment.</p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Actions: Toggle Leave + Delete / Preview */}
-                    <div className="border-t border-line pt-3 flex flex-wrap justify-between items-center gap-2">
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const newLeave = !isOnLeave;
-                            setDoctorOverride(doc.id, { onLeave: newLeave });
-                          }}
-                          className={`min-h-9 px-3 rounded-lg text-xs font-semibold transition-all ${
-                            isOnLeave
-                              ? "bg-brand-tint text-ink border border-brand-line hover:bg-[#D1EFB5]"
-                              : "bg-ground text-emergency border border-line hover:bg-rose-50"
-                          }`}
-                        >
-                          {isOnLeave ? "End Leave (Active)" : "Mark On Leave"}
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            const label = doc.name ?? doc.speciality;
-                            if (window.confirm(`Are you sure you want to remove ${label} from the active clinic roster?`)) {
-                              removeCustomDoctor(doc.id);
-                              setDoctorOverride(doc.id, { deactivated: true, onLeave: true });
-                              setBroadcastToast(`${label} removed from active roster.`);
-                              setTimeout(() => setBroadcastToast(""), 3500);
-                            }
-                          }}
-                          className="min-h-9 px-2.5 rounded-lg text-xs font-semibold text-muted hover:text-emergency hover:bg-rose-50 transition-colors"
-                          title="Remove doctor from active roster"
-                        >
-                          Remove
-                        </button>
-                      </div>
-
-                      <Link
-                        href={`/book?doctor=${doc.id}`}
-                        target="_blank"
-                        className="text-xs text-ink font-semibold underline decoration-brand-line hover:decoration-ink"
-                      >
-                        Preview Booking →
-                      </Link>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
           </div>
-        )}
+        </section>
 
-        {/* ===================================================================== */}
-        {/* TAB 4: DAILY BACKUPS, CLOUD SYNC & OWNER REPORTING                    */}
-        {/* ===================================================================== */}
-        {activeTab === "backups" && (
-          <div className="flex flex-col gap-6 animate-fade-in">
-            {/* Owner Daily Report Card */}
-            <div className="rounded-3xl p-6 border border-night-line bg-brand text-white shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-5">
-              <div className="space-y-1.5">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-mint">
-                  <WhatsAppIcon className="size-3.5" /> 1-Tap WhatsApp to Owner
-                </span>
-                <h3 className="text-xl font-semibold font-display text-white">Daily OPD Summary for Clinic Owner</h3>
-                <p className="text-xs text-night-muted max-w-xl leading-relaxed">
-                  Send today&apos;s total patient counts, completed visits, and doctor breakdowns directly to the owner&apos;s WhatsApp with one tap at closing time.
-                </p>
-              </div>
-
-              <a
-                href={ownerWaUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-mint px-6 text-sm font-semibold text-ink hover:bg-[#D1EFB5] shadow-sm transition-all shrink-0 active:scale-95"
-              >
-                <WhatsAppIcon className="size-5" />
-                <span>
-                  {doctorFilter === "all"
-                    ? "Send All Doctors Report to Owner"
-                    : `Send ${currentDoctorObj?.name || "Doctor"} Report to Owner`}
-                </span>
-              </a>
-            </div>
-
-            {/* Quick Actions Grid: JSON Backup, Local Tab Sync & PIN Security */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Full JSON Backup */}
-              <div className="card rounded-3xl p-5 border border-line shadow-2xs flex flex-col justify-between gap-4 bg-white">
-                <div>
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-2xl">💾</span>
-                    <h4 className="text-base font-semibold text-ink font-display">Full Clinic JSON Backup</h4>
-                  </div>
-                  <p className="text-xs text-muted mt-2 leading-relaxed">
-                    Downloads a complete JSON backup file of all appointments, walk-ins, doctor schedule overrides, and custom specialists stored on this device.
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-2 pt-2 border-t border-line">
-                  <button
-                    type="button"
-                    onClick={downloadFullJsonBackup}
-                    className="flex-1 min-h-11 rounded-xl bg-brand text-white text-xs font-semibold hover:bg-brand-dark transition-all shadow-2xs px-3"
-                  >
-                    📥 Download (.json)
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => restoreFileInputRef.current?.click()}
-                    className="min-h-11 px-3.5 rounded-xl border border-line bg-ground text-charcoal text-xs font-semibold hover:bg-sand transition-all"
-                  >
-                    🔄 Restore
-                  </button>
-                </div>
-              </div>
-
-              {/* Local Browser Tab Sync */}
-              <div className="card rounded-3xl p-5 border border-line shadow-2xs flex flex-col justify-between gap-4 bg-white">
-                <div>
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-2xl">🛰️</span>
-                    <h4 className="text-base font-semibold text-ink font-display">Live Browser Tab Sync</h4>
-                  </div>
-                  <p className="text-xs text-muted mt-2 leading-relaxed">
-                    Instantly syncs live OPD updates across open tabs on this reception device. To move data between separate devices, use JSON Backup &amp; Restore.
-                  </p>
-                  <p className="text-xs font-semibold text-ink mt-1.5">
-                    Last Synced: <span className="text-charcoal">{lastSyncDisplay}</span>
-                  </p>
-                </div>
-
-                <div className="pt-2 border-t border-line">
-                  <button
-                    type="button"
-                    onClick={handleManualSync}
-                    className="w-full min-h-11 rounded-xl bg-brand-tint border border-brand-line text-ink text-xs font-semibold hover:bg-[#D1EFB5] transition-all shadow-2xs"
-                  >
-                    🔄 Broadcast Local Sync
-                  </button>
-                </div>
-              </div>
-
-              {/* Change Admin PIN */}
-              <div className="card rounded-3xl p-5 border border-line shadow-2xs flex flex-col justify-between gap-4 bg-white">
-                <div>
-                  <div className="flex items-center gap-2.5">
-                    <span className="text-2xl">🔒</span>
-                    <h4 className="text-base font-semibold text-ink font-display">Admin Security PIN</h4>
-                  </div>
-                  <p className="text-xs text-muted mt-2 leading-relaxed">
-                    Update the unlock PIN required to access this reception console on this device.
-                  </p>
-                </div>
-
-                <div className="flex gap-2 pt-2 border-t border-line">
-                  <input
-                    type="password"
-                    placeholder="New PIN (4+ chars)"
-                    value={newPinValue}
-                    onChange={(e) => setNewPinValue(e.target.value)}
-                    className="min-w-0 flex-1 min-h-11 rounded-xl border border-line bg-ground px-3 text-xs font-semibold text-ink focus:bg-white focus:border-brand outline-none"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleUpdatePin}
-                    className="min-h-11 px-4 rounded-xl bg-brand text-white text-xs font-semibold hover:bg-brand-dark transition-all shrink-0"
-                  >
-                    Save PIN
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Daily Archive Table */}
-            <div className="card rounded-3xl p-5 border border-line shadow-2xs flex flex-col gap-4 bg-white">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
-                <div>
-                  <h4 className="text-base font-semibold text-ink font-display">Historical OPD Records by Date</h4>
-                  <p className="text-xs text-muted">Download past days into individual Excel / CSV sheets.</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => downloadCsv()}
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-ink underline decoration-brand-line hover:decoration-ink"
+        {/* Rounded-Top Sage-Mist Workspace Band (matches DayPicker on Homepage) */}
+        <div className="bg-white">
+          <section className="rounded-t-[2rem] sm:rounded-t-[2.75rem] border-t border-line/80 bg-ground">
+            <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-8 pb-24 sm:px-6 sm:py-10 sm:pb-16">
+              {/* Broadcast / Action Toast */}
+              {broadcastToast && (
+                <div
+                  role="status"
+                  className="fade-in flex items-center justify-between gap-4 rounded-2xl bg-brand px-5 py-3.5 text-sm font-semibold text-white"
                 >
-                  📥 Export Complete All-Time CSV
-                </button>
-              </div>
-
-              {allRecordedDates.length === 0 ? (
-                <p className="text-xs text-muted py-4 text-center">No past records stored yet.</p>
-              ) : (
-                <div className="flex flex-col divide-y divide-line">
-                  {allRecordedDates.map((dateKey) => {
-                    const dayApts = dateGroups[dateKey] || [];
-                    const completed = dayApts.filter((a) => a.status === "completed").length;
-
-                    return (
-                      <div key={dateKey} className="py-3 flex flex-wrap items-center justify-between gap-3">
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold text-sm text-ink">{dateLabel(dateKey)}</span>
-                            <span className="text-xs text-muted font-mono">({dateKey})</span>
-                          </div>
-                          <p className="text-xs text-muted mt-0.5">
-                            {dayApts.length} patient{dayApts.length > 1 ? "s" : ""} · {completed} completed
-                          </p>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => downloadCsv(dateKey)}
-                            className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-brand-line bg-brand-tint/75 px-3 py-1.5 text-xs font-semibold text-ink hover:bg-brand-tint transition-colors"
-                          >
-                            📊 Download Excel (.csv)
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
+                  <span className="flex items-center gap-2.5">
+                    <span className="inline-flex size-6 shrink-0 items-center justify-center rounded-lg bg-mint text-ink">
+                      <CheckIcon className="size-3.5" />
+                    </span>
+                    <span>{broadcastToast}</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setBroadcastToast("")}
+                    className="text-xs font-bold uppercase tracking-wider text-mint hover:underline cursor-pointer"
+                  >
+                    Dismiss
+                  </button>
                 </div>
               )}
-            </div>
-          </div>
-        )}
 
-        {/* ===================================================================== */}
-        {/* TAB 5: PATIENT SEARCH WITH VILLAGE/ADDRESS MATCHING                   */}
-        {/* ===================================================================== */}
-        {activeTab === "search" && (
-          <div className="flex flex-col gap-6 animate-fade-in">
-            <div className="card rounded-3xl p-5 border border-line shadow-2xs flex flex-col gap-3">
-              <label htmlFor="search-input" className="text-lg font-semibold text-ink font-display">
-                Find Patient Record by Name, Village/Area, Phone, or Token
-              </label>
-              <div className="flex items-center gap-3 rounded-2xl border border-line px-4 bg-ground focus-within:border-brand focus-within:bg-white transition-all">
-                <SearchIcon className="size-5 text-muted" />
-                <input
-                  id="search-input"
-                  type="text"
-                  placeholder="e.g. Ghulam Mohammad, Tarzoo, Dangerpora, 97977... or EP-AK..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full min-h-13 bg-transparent text-base text-ink outline-none font-medium"
-                />
-              </div>
-            </div>
+              {/* Pill Filter Tabs (matches DoctorDirectory speciality chips) */}
+              <nav
+                aria-label="Admin sections"
+                className="-mx-5 flex w-[calc(100%+2.5rem)] max-w-none gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:mx-0 sm:w-auto sm:flex-wrap sm:px-0"
+              >
+                {tabs.map(({ id, label, Icon, badge }) => {
+                  const on = activeTab === id;
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      aria-pressed={on}
+                      onClick={() => setActiveTab(id)}
+                      className={`inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 text-sm sm:text-base font-semibold transition-colors cursor-pointer ${
+                        on ? "bg-ink text-white" : "card text-charcoal hover:border-line-strong hover:text-ink"
+                      }`}
+                    >
+                      <Icon className="size-4 shrink-0" />
+                      <span>{label}</span>
+                      {badge !== undefined && badge > 0 && (
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-xs font-bold tabular-nums lining-nums ${
+                            on ? "bg-mint text-ink" : "bg-brand-tint text-ink ring-1 ring-brand-line/70"
+                          }`}
+                        >
+                          {badge}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </nav>
 
-            {searchQuery.trim() && (
-              <div className="flex flex-col gap-3">
-                {appointments
-                  .filter((a) => {
-                    const q = searchQuery.toLowerCase();
-                    return (
-                      a.patientName.toLowerCase().includes(q) ||
-                      (a.patientAddress && a.patientAddress.toLowerCase().includes(q)) ||
-                      a.patientPhone.includes(q) ||
-                      a.token.toLowerCase().includes(q)
-                    );
-                  })
-                  .map((a) => (
-                    <div key={a.token} className="card rounded-3xl p-4 sm:p-5 border border-line flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                      <div>
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-mono font-bold text-mint bg-brand px-2.5 py-0.5 rounded-md text-xs">{a.token}</span>
-                          <span className="font-semibold text-ink text-base">{a.patientName}</span>
-                          {a.patientAddress && (
-                            <span className="inline-flex items-center gap-1 rounded-md bg-brand-tint border border-brand-line text-ink px-2 py-0.5 text-xs font-semibold">
-                              📍 {a.patientAddress}
-                            </span>
+              {/* ================================================================= */}
+              {/* TAB 1: OPD PATIENT REGISTER                                       */}
+              {/* ================================================================= */}
+              {activeTab === "opd" && (
+                <div className="fade-in flex flex-col gap-6">
+                  {/* Filter & Export Controls Card */}
+                  <div className="card rounded-3xl p-5 sm:p-6 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+                    <div className="flex flex-wrap items-end gap-2.5 sm:flex-nowrap min-w-0">
+                      <div className="flex flex-col gap-1.5 shrink-0">
+                        <label htmlFor="date-select" className={fieldLabel}>
+                          OPD Date
+                        </label>
+                        <input
+                          id="date-select"
+                          type="date"
+                          value={selectedDate}
+                          onChange={(e) => setSelectedDate(e.target.value)}
+                          className="min-h-11 rounded-xl border border-line-strong bg-white px-3 text-sm font-semibold text-ink tabular-nums lining-nums focus:border-brand focus:outline-none"
+                        />
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => setSelectedDate(todayKey)}
+                        className={`min-h-11 shrink-0 rounded-xl border px-3.5 text-sm font-semibold transition-colors cursor-pointer ${
+                          selectedDate === todayKey
+                            ? "border-brand bg-brand text-white"
+                            : "border-line-strong bg-white text-ink hover:border-brand"
+                        }`}
+                      >
+                        Today
+                      </button>
+
+                      <div className="flex w-full sm:w-58 flex-col gap-1.5 min-w-0">
+                        <label htmlFor="doc-select" className={fieldLabel}>
+                          Specialist Filter
+                        </label>
+                        <select
+                          id="doc-select"
+                          value={doctorFilter}
+                          onChange={(e) => setDoctorFilter(e.target.value)}
+                          className="min-h-11 w-full truncate rounded-xl border border-line-strong bg-white px-3 text-sm font-semibold text-ink focus:border-brand focus:outline-none"
+                        >
+                          <option value="all">All Specialists ({allDoctors.length})</option>
+                          {allDoctors.map((d) => (
+                            <option key={d.id} value={d.id}>
+                              {d.name ?? d.speciality} ({d.speciality})
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Export, Print & Owner Summary Buttons */}
+                    <div className="flex flex-wrap items-center gap-2 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => downloadCsv(selectedDate)}
+                        title="Download CSV spreadsheet for this date"
+                        className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-brand-line bg-brand-tint/75 px-3.5 text-sm font-semibold text-ink whitespace-nowrap hover:bg-brand-tint transition-colors cursor-pointer"
+                      >
+                        <DownloadIcon className="size-4 shrink-0" />
+                        <span>Export CSV</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => window.print()}
+                        className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-line-strong bg-white px-3.5 text-sm font-semibold text-ink whitespace-nowrap hover:bg-ground transition-colors cursor-pointer"
+                      >
+                        <PrinterIcon className="size-4 shrink-0" />
+                        <span>Print Sheet</span>
+                      </button>
+
+                      <a
+                        href={ownerWaUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={
+                          doctorFilter === "all"
+                            ? "Send All Doctors Daily Summary to Clinic Owner on WhatsApp"
+                            : `Send ${currentDoctorObj?.name || "Doctor"} Daily Summary to Clinic Owner on WhatsApp`
+                        }
+                        className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-brand px-4 text-sm font-semibold text-white whitespace-nowrap hover:bg-brand-dark transition-colors"
+                      >
+                        <WhatsAppIcon className="size-4 shrink-0" />
+                        <span>
+                          {doctorFilter === "all"
+                            ? "Summary to Owner"
+                            : `Report ${currentDoctorObj?.name?.replace(/^Dr\.\s*/, "") || "Doctor"}`}
+                        </span>
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* 4 KPI Summary Cards */}
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+                    <div className="card rounded-2xl sm:rounded-3xl p-4 sm:p-5">
+                      <span className="eyebrow text-muted">Total Booked</span>
+                      <p className="mt-2 font-display text-3xl sm:text-4xl font-semibold tracking-tight text-ink tabular-nums lining-nums">
+                        {filteredAppointments.length}
+                      </p>
+                      <p className="mt-1.5 text-xs sm:text-sm text-muted tabular-nums lining-nums">
+                        <strong className="font-semibold text-ink">
+                          {filteredAppointments.filter((a) => a.type === "online").length}
+                        </strong>{" "}
+                        online ·{" "}
+                        <strong className="font-semibold text-ink">
+                          {filteredAppointments.filter((a) => a.type === "walk_in").length}
+                        </strong>{" "}
+                        walk-in
+                        {countCancelled > 0 ? ` · ${countCancelled} cancelled` : ""}
+                      </p>
+                    </div>
+
+                    <div className="card rounded-2xl sm:rounded-3xl p-4 sm:p-5">
+                      <span className="eyebrow text-charcoal flex items-center gap-1.5">
+                        <span className="size-2 rounded-full bg-amber-500" />
+                        Waiting
+                      </span>
+                      <p className="mt-2 font-display text-3xl sm:text-4xl font-semibold tracking-tight text-ink tabular-nums lining-nums">
+                        {countWaiting}
+                      </p>
+                      <p className="mt-1.5 text-xs sm:text-sm text-muted">In reception lounge</p>
+                    </div>
+
+                    <div className="rounded-2xl sm:rounded-3xl border border-night-line bg-brand p-4 sm:p-5 text-white">
+                      <span className="eyebrow text-mint flex items-center gap-1.5">
+                        <span className="size-2 rounded-full bg-mint" />
+                        In Cabin
+                      </span>
+                      <p className="mt-2 font-display text-3xl sm:text-4xl font-semibold tracking-tight text-white tabular-nums lining-nums">
+                        {countInConsult}
+                      </p>
+                      <p className="mt-1.5 text-xs sm:text-sm text-night-muted">With specialist now</p>
+                    </div>
+
+                    <div className="rounded-2xl sm:rounded-3xl border border-brand-line bg-brand-tint/55 p-4 sm:p-5">
+                      <span className="eyebrow text-ink flex items-center gap-1.5">
+                        <span className="size-2 rounded-full bg-[#22A05B]" />
+                        Completed
+                      </span>
+                      <p className="mt-2 font-display text-3xl sm:text-4xl font-semibold tracking-tight text-ink tabular-nums lining-nums">
+                        {countCompleted}
+                      </p>
+                      <p className="mt-1.5 text-xs sm:text-sm text-charcoal">Consultations done</p>
+                    </div>
+                  </div>
+
+                  {/* Patient Queue List */}
+                  {filteredAppointments.length === 0 ? (
+                    <div className="card rounded-3xl p-10 sm:p-14 text-center">
+                      <span className="mx-auto mb-4 flex size-13 items-center justify-center rounded-2xl bg-brand-tint text-ink ring-1 ring-brand-line/70">
+                        <StethoscopeIcon className="size-6" />
+                      </span>
+                      <h2 className="font-display text-xl sm:text-2xl font-medium tracking-tight text-ink">
+                        No patients scheduled for {dateLabel(selectedDate)}
+                      </h2>
+                      <p className="mx-auto mt-2 max-w-md text-sm sm:text-base text-muted leading-relaxed">
+                        Online bookings confirmed at reception and walk-ins added with{" "}
+                        <strong className="font-semibold text-ink">Add Walk-In</strong> appear here in slot order.
+                      </p>
+                    </div>
+                  ) : (
+                    <ul className="flex flex-col gap-3">
+                      {filteredAppointments.map((apt) => {
+                        const statusStyles: Record<AppointmentStatus, string> = {
+                          confirmed: "bg-amber-50 text-amber-950 border-amber-200",
+                          arrived: "bg-sand text-ink border-line-strong",
+                          in_consultation: "bg-brand text-mint border-brand",
+                          completed: "bg-brand-tint text-ink border-brand-line",
+                          cancelled: "bg-rose-50 text-rose-900 border-rose-200",
+                        };
+
+                        const callMsg = `Hello ${apt.patientName}, your token #${apt.token} for ${apt.doctorName} at Eternal Polyclinic, Sopore is now being called. Please proceed to Consultation Cabin.`;
+                        const callWaUrl = `https://wa.me/91${apt.patientPhone}?text=${encodeURIComponent(callMsg)}`;
+
+                        return (
+                          <li
+                            key={apt.token}
+                            className={`card rounded-2xl sm:rounded-3xl p-4 sm:p-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between transition-colors ${
+                              apt.status === "in_consultation"
+                                ? "border-brand-line bg-brand-tint/20 ring-1 ring-brand-line"
+                                : "hover:border-line-strong"
+                            }`}
+                          >
+                            {/* Left Block: Token Badge + Patient Details */}
+                            <div className="flex items-start gap-3.5 sm:gap-5 min-w-0">
+                              <div className="flex min-w-27 shrink-0 flex-col items-center justify-center rounded-2xl bg-brand px-3.5 py-2.5 text-center text-white">
+                                <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-night-muted">
+                                  Token
+                                </span>
+                                <span className="font-display text-base sm:text-lg font-semibold tracking-tight text-mint tabular-nums lining-nums">
+                                  {apt.token}
+                                </span>
+                                <span className="mt-0.5 text-xs font-medium text-white/80 tabular-nums lining-nums">
+                                  {formatTime(apt.time)}
+                                </span>
+                              </div>
+
+                              <div className="min-w-0 flex-1">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <h3 className="font-display text-lg sm:text-xl font-medium tracking-tight text-ink">
+                                    {apt.patientName}
+                                  </h3>
+
+                                  {apt.patientAddress ? (
+                                    <span className="inline-flex items-center gap-1 rounded-full border border-brand-line bg-brand-tint/75 px-2.5 py-0.5 text-xs font-semibold text-ink">
+                                      <MapPinIcon className="size-3 shrink-0" />
+                                      <span>{apt.patientAddress}</span>
+                                    </span>
+                                  ) : (
+                                    <span className="inline-flex items-center rounded-full border border-line bg-ground px-2.5 py-0.5 text-xs text-muted">
+                                      Area not added
+                                    </span>
+                                  )}
+
+                                  <span
+                                    className={`rounded-full border px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider ${
+                                      apt.type === "walk_in"
+                                        ? "border-line-strong bg-ground text-charcoal"
+                                        : "border-brand-line bg-brand-tint text-ink"
+                                    }`}
+                                  >
+                                    {apt.type === "walk_in" ? "Walk-In" : "Online"}
+                                  </span>
+                                </div>
+
+                                <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
+                                  <span className="inline-flex items-center gap-1.5 font-semibold text-charcoal">
+                                    <StethoscopeIcon className="size-3.5 shrink-0 text-ink" />
+                                    <span>
+                                      {apt.doctorName} ({apt.speciality})
+                                    </span>
+                                  </span>
+                                  <span aria-hidden="true">·</span>
+                                  <span className="inline-flex items-center gap-1 tabular-nums lining-nums">
+                                    <PhoneIcon className="size-3.5 shrink-0" />
+                                    <span>+91 {apt.patientPhone}</span>
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Right Block: Workflow Controls */}
+                            <div className="flex flex-wrap items-center gap-2 border-t border-line pt-3.5 lg:border-t-0 lg:pt-0">
+                              <select
+                                aria-label={`Appointment status for ${apt.patientName}`}
+                                value={apt.status}
+                                onChange={(e) =>
+                                  updateAppointmentStatus(apt.token, e.target.value as AppointmentStatus)
+                                }
+                                className={`min-h-11 rounded-xl border px-3.5 py-1.5 text-xs sm:text-sm font-semibold outline-none cursor-pointer ${statusStyles[apt.status]}`}
+                              >
+                                <option value="confirmed">Confirmed (Waiting)</option>
+                                <option value="arrived">Arrived in Clinic</option>
+                                <option value="in_consultation">With Doctor (Cabin)</option>
+                                <option value="completed">Consultation Done</option>
+                                <option value="cancelled">Cancelled / No Show</option>
+                              </select>
+
+                              <a
+                                href={callWaUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title="Message patient on WhatsApp"
+                                className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-brand px-4 text-xs sm:text-sm font-semibold text-white hover:bg-brand-dark transition-colors"
+                              >
+                                <WhatsAppIcon className="size-4 shrink-0" />
+                                <span>Call In</span>
+                              </a>
+
+                              <a
+                                href={`tel:+91${apt.patientPhone}`}
+                                aria-label={`Call ${apt.patientName}`}
+                                title="Call patient mobile"
+                                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line-strong bg-white px-3 text-ink hover:bg-ground transition-colors"
+                              >
+                                <PhoneIcon className="size-4" />
+                              </a>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (confirm(`Cancel token ${apt.token} for ${apt.patientName}?`)) {
+                                    deleteAppointment(apt.token);
+                                  }
+                                }}
+                                aria-label={`Remove token ${apt.token}`}
+                                title="Remove token"
+                                className="inline-flex min-h-11 items-center justify-center rounded-xl px-2.5 text-muted hover:bg-rose-50 hover:text-emergency transition-colors cursor-pointer"
+                              >
+                                <CloseIcon className="size-4" />
+                              </button>
+                            </div>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </div>
+              )}
+
+              {/* ================================================================= */}
+              {/* TAB 2: LIVE DOCTOR DELAY RADAR                                    */}
+              {/* ================================================================= */}
+              {activeTab === "radar" && (
+                <div className="fade-in flex flex-col gap-6">
+                  <div className="rounded-3xl border border-night-line bg-brand p-6 sm:p-8 text-white">
+                    <p className="eyebrow text-mint">Real-Time Website Banner</p>
+                    <h2 className="mt-2 font-display text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+                      Live OPD arrival &amp; delay radar
+                    </h2>
+                    <p className="mt-2 max-w-3xl text-sm sm:text-base text-night-muted leading-relaxed">
+                      When a visiting specialist is on the way from Srinagar, delayed in surgery, or seated in the cabin, update their live state below. The home page updates immediately and prepares a WhatsApp notice.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+                    {allDoctors.map((doc) => {
+                      const live = doctorStatuses[doc.id] ?? getDoctorLiveStatus(doc.id);
+                      const broadcastMsg = doctorDelayBroadcastText(
+                        doc.name ?? doc.speciality,
+                        live,
+                        dateLabel(selectedDate),
+                      );
+
+                      return (
+                        <div
+                          key={doc.id}
+                          className="card rounded-2xl sm:rounded-3xl p-5 sm:p-6 flex flex-col justify-between gap-5"
+                        >
+                          <div>
+                            <div className="flex items-start justify-between gap-3 border-b border-line pb-4">
+                              <div className="flex items-start gap-3.5 min-w-0">
+                                <DoctorMark doctor={doc} className="size-12 shrink-0 rounded-xl" />
+                                <div className="min-w-0">
+                                  <h3 className="font-display text-lg sm:text-xl font-medium tracking-tight text-ink">
+                                    {doc.name ?? doc.speciality}
+                                  </h3>
+                                  <p className="text-sm font-semibold text-charcoal">{doc.speciality}</p>
+                                  <p className="text-xs text-muted mt-0.5">{doc.credentials ?? doc.degree}</p>
+                                </div>
+                              </div>
+
+                              <span
+                                className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wider ${
+                                  live.state === "in_clinic"
+                                    ? "border-brand-line bg-brand-tint text-ink"
+                                    : live.state === "delayed"
+                                    ? "border-amber-200 bg-amber-50 text-amber-950"
+                                    : live.state === "cancelled"
+                                    ? "border-rose-200 bg-rose-50 text-rose-900"
+                                    : "border-line bg-ground text-charcoal"
+                                }`}
+                              >
+                                <span
+                                  className={`size-2 rounded-full ${
+                                    live.state === "in_clinic"
+                                      ? "bg-[#22A05B]"
+                                      : live.state === "delayed"
+                                      ? "bg-amber-500"
+                                      : live.state === "cancelled"
+                                      ? "bg-rose-600"
+                                      : "bg-muted"
+                                  }`}
+                                />
+                                <span>
+                                  {live.state === "in_clinic"
+                                    ? "In Clinic"
+                                    : live.state === "delayed"
+                                    ? `Delayed ~${live.delayMinutes ?? 30}m`
+                                    : live.state === "cancelled"
+                                    ? "Cancelled"
+                                    : "Scheduled"}
+                                </span>
+                              </span>
+                            </div>
+
+                            {/* State Switcher */}
+                            <div className="mt-4 flex flex-col gap-2">
+                              <span className={fieldLabel}>Live Doctor Status</span>
+                              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                                <button
+                                  type="button"
+                                  onClick={() => updateDoctorRadar(doc.id, "scheduled")}
+                                  className={`min-h-11 rounded-xl border text-xs sm:text-sm font-semibold transition-colors cursor-pointer ${
+                                    live.state === "scheduled"
+                                      ? "border-brand bg-brand text-white"
+                                      : "border-line-strong bg-white text-charcoal hover:border-brand"
+                                  }`}
+                                >
+                                  Scheduled
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => updateDoctorRadar(doc.id, "in_clinic")}
+                                  className={`min-h-11 rounded-xl border text-xs sm:text-sm font-semibold transition-colors cursor-pointer ${
+                                    live.state === "in_clinic"
+                                      ? "border-brand-line bg-brand-tint font-bold text-ink"
+                                      : "border-line-strong bg-white text-ink hover:bg-brand-tint/40"
+                                  }`}
+                                >
+                                  In Clinic
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => updateDoctorRadar(doc.id, "delayed", live.delayMinutes || 30)}
+                                  className={`min-h-11 rounded-xl border text-xs sm:text-sm font-semibold transition-colors cursor-pointer ${
+                                    live.state === "delayed"
+                                      ? "border-amber-300 bg-amber-100 font-bold text-amber-950"
+                                      : "border-line-strong bg-white text-charcoal hover:bg-amber-50"
+                                  }`}
+                                >
+                                  Delayed
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => updateDoctorRadar(doc.id, "cancelled")}
+                                  className={`min-h-11 rounded-xl border text-xs sm:text-sm font-semibold transition-colors cursor-pointer ${
+                                    live.state === "cancelled"
+                                      ? "border-rose-300 bg-rose-100 font-bold text-rose-950"
+                                      : "border-line-strong bg-white text-charcoal hover:bg-rose-50"
+                                  }`}
+                                >
+                                  Cancelled
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Delay Configuration */}
+                            {live.state === "delayed" && (
+                              <div className="mt-3 flex flex-col gap-3 rounded-2xl border border-amber-200 bg-amber-50/60 p-4">
+                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                  <span className="text-xs font-bold uppercase tracking-wider text-amber-950">
+                                    Estimated Delay
+                                  </span>
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {[15, 30, 45, 60, 90].map((min) => (
+                                      <button
+                                        key={min}
+                                        type="button"
+                                        onClick={() => updateDoctorRadar(doc.id, "delayed", min)}
+                                        className={`min-h-8 rounded-lg px-2.5 text-xs font-semibold tabular-nums lining-nums transition-colors cursor-pointer ${
+                                          (live.delayMinutes ?? 30) === min
+                                            ? "bg-brand text-white"
+                                            : "border border-amber-300 bg-white text-amber-950 hover:bg-amber-100"
+                                        }`}
+                                      >
+                                        {min}m
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                <input
+                                  type="text"
+                                  placeholder="Optional note (e.g. Traffic near Sangrama / SKIMS OT)"
+                                  value={live.note ?? ""}
+                                  onChange={(e) =>
+                                    updateDoctorRadar(doc.id, "delayed", live.delayMinutes, e.target.value)
+                                  }
+                                  className="min-h-11 rounded-xl border border-amber-300 bg-white px-3.5 text-sm text-ink outline-none focus:border-brand"
+                                />
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Broadcast WhatsApp Preview & Copy */}
+                          {broadcastMsg && (
+                            <div className="flex flex-col gap-2 border-t border-line pt-4">
+                              <div className="flex items-center justify-between gap-2">
+                                <span className={fieldLabel}>WhatsApp Broadcast Notice</span>
+                                <button
+                                  type="button"
+                                  onClick={() => copyBroadcast(broadcastMsg)}
+                                  className="inline-flex items-center gap-1.5 text-xs font-bold text-ink underline decoration-brand-line hover:decoration-ink cursor-pointer"
+                                >
+                                  <CopyIcon className="size-3.5" />
+                                  <span>Copy Message</span>
+                                </button>
+                              </div>
+                              <pre className="whitespace-pre-wrap rounded-2xl border border-line bg-ground p-3.5 font-sans text-xs text-charcoal leading-relaxed">
+                                {broadcastMsg}
+                              </pre>
+                            </div>
                           )}
-                          <span className="text-xs text-muted font-mono">(+91 {a.patientPhone})</span>
                         </div>
-                        <p className="text-xs text-muted mt-1">
-                          {a.doctorName} ({a.speciality}) · {dateLabel(a.date)} at {formatTime(a.time)} · Status: <strong className="text-ink">{a.status}</strong>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* ================================================================= */}
+              {/* TAB 3: DOCTOR TIMINGS & LEAVE MANAGER                             */}
+              {/* ================================================================= */}
+              {activeTab === "doctors" && (
+                <div className="fade-in flex flex-col gap-6">
+                  <div className="card rounded-3xl p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                      <p className="eyebrow text-muted">Specialist Roster</p>
+                      <h2 className="mt-1 font-display text-xl sm:text-2xl font-semibold tracking-tight text-ink">
+                        OPD days, leave &amp; visiting specialists
+                      </h2>
+                      <p className="mt-1 text-sm text-muted">
+                        Mark a doctor on leave to pause online slot booking, or add a new visiting specialist.
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setShowNewDocModal(true)}
+                      className="inline-flex min-h-12 items-center gap-2.5 rounded-xl bg-brand px-5 text-sm sm:text-base font-semibold text-white hover:bg-brand-dark transition-colors cursor-pointer"
+                    >
+                      <span>Register Specialist</span>
+                      <span className="inline-flex size-6 items-center justify-center rounded-lg bg-mint text-ink">
+                        <PlusIcon className="size-3.5" />
+                      </span>
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    {allDoctors.map((doc) => {
+                      const isOnLeave = doc.availability?.toLowerCase().includes("leave");
+
+                      return (
+                        <div
+                          key={doc.id}
+                          className="card rounded-2xl sm:rounded-3xl p-5 sm:p-6 flex flex-col justify-between gap-5"
+                        >
+                          <div>
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex items-start gap-3.5 min-w-0">
+                                <DoctorMark doctor={doc} className="size-12 shrink-0 rounded-xl" />
+                                <div className="min-w-0">
+                                  <h3 className="font-display text-lg sm:text-xl font-medium tracking-tight text-ink">
+                                    {doc.name ?? doc.speciality}
+                                  </h3>
+                                  <p className="text-sm font-semibold text-charcoal">{doc.speciality}</p>
+                                  <p className="text-xs text-muted mt-0.5">{doc.credentials ?? doc.degree}</p>
+                                </div>
+                              </div>
+
+                              {isOnLeave ? (
+                                <span className="shrink-0 rounded-full border border-rose-200 bg-rose-50 px-3 py-0.5 text-xs font-bold text-rose-900">
+                                  On Leave
+                                </span>
+                              ) : (
+                                <span className="shrink-0 rounded-full border border-brand-line bg-brand-tint px-3 py-0.5 text-xs font-bold text-ink">
+                                  Active OPD
+                                </span>
+                              )}
+                            </div>
+
+                            {/* OPD Sessions */}
+                            <div className="mt-4 flex flex-col gap-1.5">
+                              <span className={fieldLabel}>Sitting Schedule</span>
+                              {doc.opd.length > 0 ? (
+                                doc.opd.map((s, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="flex items-center justify-between rounded-xl border border-line bg-ground px-3.5 py-2 text-sm"
+                                  >
+                                    <span className="font-semibold text-ink">{DAY_NAMES[s.day]}</span>
+                                    <span className="text-muted tabular-nums lining-nums">
+                                      {formatTime(s.start)} – {formatTime(s.end)}
+                                    </span>
+                                  </div>
+                                ))
+                              ) : (
+                                <p className="rounded-xl border border-line bg-ground px-3.5 py-2 text-sm text-muted">
+                                  By appointment via reception
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Actions */}
+                          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line pt-4">
+                            <div className="flex items-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newLeave = !isOnLeave;
+                                  setDoctorOverride(doc.id, { onLeave: newLeave });
+                                }}
+                                className={`min-h-10 rounded-xl border px-3.5 text-xs sm:text-sm font-semibold transition-colors cursor-pointer ${
+                                  isOnLeave
+                                    ? "border-brand-line bg-brand-tint text-ink hover:bg-[#D1EFB5]"
+                                    : "border-line-strong bg-white text-charcoal hover:border-rose-300 hover:bg-rose-50 hover:text-emergency"
+                                }`}
+                              >
+                                {isOnLeave ? "End Leave" : "Mark On Leave"}
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const label = doc.name ?? doc.speciality;
+                                  if (
+                                    window.confirm(
+                                      `Are you sure you want to remove ${label} from the active clinic roster?`,
+                                    )
+                                  ) {
+                                    removeCustomDoctor(doc.id);
+                                    setDoctorOverride(doc.id, { deactivated: true, onLeave: true });
+                                    setBroadcastToast(`${label} removed from active roster.`);
+                                    setTimeout(() => setBroadcastToast(""), 3500);
+                                  }
+                                }}
+                                className="min-h-10 rounded-xl px-3 text-xs sm:text-sm font-semibold text-muted hover:bg-rose-50 hover:text-emergency transition-colors cursor-pointer"
+                                title="Remove doctor from active roster"
+                              >
+                                Remove
+                              </button>
+                            </div>
+
+                            <Link
+                              href={`/book?doctor=${doc.id}`}
+                              target="_blank"
+                              className="inline-flex min-h-10 items-center text-sm font-semibold text-ink underline decoration-brand-line hover:decoration-ink"
+                            >
+                              Preview Booking →
+                            </Link>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* ================================================================= */}
+              {/* TAB 4: DAILY BACKUPS, TAB SYNC & OWNER REPORTING                  */}
+              {/* ================================================================= */}
+              {activeTab === "backups" && (
+                <div className="fade-in flex flex-col gap-6">
+                  {/* Owner Daily Report Dark Band */}
+                  <div className="rounded-3xl border border-night-line bg-brand p-6 sm:p-8 text-white flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="max-w-xl">
+                      <span className="eyebrow text-mint">Closing Time Summary</span>
+                      <h2 className="mt-2 font-display text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+                        Daily OPD summary on WhatsApp
+                      </h2>
+                      <p className="mt-2 text-sm sm:text-base text-night-muted leading-relaxed">
+                        Send today&rsquo;s total patient counts, completed consultations, and doctor breakdown directly to the clinic owner&rsquo;s WhatsApp in one tap.
+                      </p>
+                    </div>
+
+                    <a
+                      href={ownerWaUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-mint px-6 text-sm sm:text-base font-bold text-ink hover:bg-[#D1EFB5] transition-colors"
+                    >
+                      <WhatsAppIcon className="size-5 shrink-0" />
+                      <span>
+                        {doctorFilter === "all"
+                          ? "Send All Doctors Summary"
+                          : `Send ${currentDoctorObj?.name || "Doctor"} Summary`}
+                      </span>
+                    </a>
+                  </div>
+
+                  {/* 3 Utility Cards (matches /services icon cards) */}
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    {/* Full JSON Backup */}
+                    <div className="card rounded-3xl p-6 flex flex-col justify-between gap-5">
+                      <div>
+                        <span className="flex size-12 items-center justify-center rounded-xl bg-brand-tint text-ink ring-1 ring-brand-line/60">
+                          <DownloadIcon className="size-6" />
+                        </span>
+                        <h3 className="mt-4 font-display text-xl font-medium tracking-tight text-ink">
+                          Full JSON backup
+                        </h3>
+                        <p className="mt-1.5 text-sm text-muted leading-relaxed">
+                          Download or restore all appointments, walk-ins, schedule overrides, and custom specialists stored on this device.
                         </p>
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <a
-                          href={`tel:+91${a.patientPhone}`}
-                          className="min-h-10 px-3.5 rounded-xl bg-brand hover:bg-brand-dark text-white text-xs font-semibold inline-flex items-center gap-1.5"
+                      <div className="flex flex-wrap gap-2 border-t border-line pt-4">
+                        <button
+                          type="button"
+                          onClick={downloadFullJsonBackup}
+                          className="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-brand px-4 text-xs sm:text-sm font-semibold text-white hover:bg-brand-dark transition-colors cursor-pointer"
                         >
-                          <PhoneIcon className="size-3.5" /> Call
-                        </a>
+                          <DownloadIcon className="size-4 shrink-0" />
+                          <span>Download JSON</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => restoreFileInputRef.current?.click()}
+                          className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-line-strong bg-white px-3.5 text-xs sm:text-sm font-semibold text-ink hover:bg-ground transition-colors cursor-pointer"
+                        >
+                          <RefreshIcon className="size-4 shrink-0" />
+                          <span>Restore</span>
+                        </button>
                       </div>
                     </div>
-                  ))}
-              </div>
-            )}
-          </div>
-        )}
+
+                    {/* Local Browser Tab Sync */}
+                    <div className="card rounded-3xl p-6 flex flex-col justify-between gap-5">
+                      <div>
+                        <span className="flex size-12 items-center justify-center rounded-xl bg-brand-tint text-ink ring-1 ring-brand-line/60">
+                          <RefreshIcon className="size-6" />
+                        </span>
+                        <h3 className="mt-4 font-display text-xl font-medium tracking-tight text-ink">
+                          Live browser tab sync
+                        </h3>
+                        <p className="mt-1.5 text-sm text-muted leading-relaxed">
+                          Broadcasts queue changes across open browser tabs on this reception computer or tablet. Last synced:{" "}
+                          <strong className="font-semibold text-ink tabular-nums lining-nums">
+                            {lastSyncDisplay}
+                          </strong>
+                          .
+                        </p>
+                      </div>
+
+                      <div className="border-t border-line pt-4">
+                        <button
+                          type="button"
+                          onClick={handleManualSync}
+                          className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-brand-line bg-brand-tint/80 px-4 text-xs sm:text-sm font-semibold text-ink hover:bg-brand-tint transition-colors cursor-pointer"
+                        >
+                          <RefreshIcon className={`size-4 shrink-0 ${isSyncing ? "animate-spin" : ""}`} />
+                          <span>Broadcast Local Sync</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Admin Security PIN */}
+                    <div className="card rounded-3xl p-6 flex flex-col justify-between gap-5">
+                      <div>
+                        <span className="flex size-12 items-center justify-center rounded-xl bg-brand-tint text-ink ring-1 ring-brand-line/60">
+                          <LockIcon className="size-6" />
+                        </span>
+                        <h3 className="mt-4 font-display text-xl font-medium tracking-tight text-ink">
+                          Admin security PIN
+                        </h3>
+                        <p className="mt-1.5 text-sm text-muted leading-relaxed">
+                          Update the staff PIN required to unlock this reception console on this device.
+                        </p>
+                      </div>
+
+                      <div className="flex gap-2 border-t border-line pt-4">
+                        <input
+                          type="password"
+                          aria-label="New admin PIN"
+                          placeholder="New PIN (4+ chars)"
+                          value={newPinValue}
+                          onChange={(e) => setNewPinValue(e.target.value)}
+                          className="min-h-11 min-w-0 flex-1 rounded-xl border border-line-strong bg-white px-3 text-sm text-ink outline-none focus:border-brand"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleUpdatePin}
+                          className="min-h-11 shrink-0 rounded-xl bg-brand px-4 text-xs sm:text-sm font-semibold text-white hover:bg-brand-dark transition-colors cursor-pointer"
+                        >
+                          Save PIN
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Historical OPD Records by Date */}
+                  <div className="card rounded-3xl p-6 flex flex-col gap-4">
+                    <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
+                      <div>
+                        <h3 className="font-display text-xl font-medium tracking-tight text-ink">
+                          Historical OPD records by date
+                        </h3>
+                        <p className="mt-0.5 text-sm text-muted">
+                          Download any recorded day as a spreadsheet-ready CSV file.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => downloadCsv()}
+                        className="inline-flex min-h-10 items-center gap-1.5 text-sm font-semibold text-ink underline decoration-brand-line hover:decoration-ink cursor-pointer"
+                      >
+                        <DownloadIcon className="size-4" />
+                        <span>Export All-Time CSV</span>
+                      </button>
+                    </div>
+
+                    {allRecordedDates.length === 0 ? (
+                      <p className="py-6 text-center text-sm text-muted">No recorded OPD sheets on this device yet.</p>
+                    ) : (
+                      <div className="flex flex-col divide-y divide-line">
+                        {allRecordedDates.map((dateKey) => {
+                          const dayApts = dateGroups[dateKey] || [];
+                          const completed = dayApts.filter((a) => a.status === "completed").length;
+
+                          return (
+                            <div key={dateKey} className="flex flex-wrap items-center justify-between gap-3 py-3.5">
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-display text-base font-semibold text-ink">
+                                    {dateLabel(dateKey)}
+                                  </span>
+                                  <span className="text-xs text-muted tabular-nums lining-nums">({dateKey})</span>
+                                </div>
+                                <p className="mt-0.5 text-xs sm:text-sm text-muted tabular-nums lining-nums">
+                                  {dayApts.length} patient{dayApts.length === 1 ? "" : "s"} · {completed} completed
+                                </p>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => downloadCsv(dateKey)}
+                                className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-brand-line bg-brand-tint/75 px-3.5 text-xs sm:text-sm font-semibold text-ink hover:bg-brand-tint transition-colors cursor-pointer"
+                              >
+                                <DownloadIcon className="size-4" />
+                                <span>Download CSV</span>
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* ================================================================= */}
+              {/* TAB 5: PATIENT SEARCH (MATCHES DOCTOR DIRECTORY SEARCH BAR)       */}
+              {/* ================================================================= */}
+              {activeTab === "search" && (
+                <div className="fade-in flex flex-col gap-5">
+                  <div className="card rounded-3xl p-6">
+                    <label htmlFor="search-input" className="font-display text-xl font-medium tracking-tight text-ink block">
+                      Find patient by name, village, phone, or token
+                    </label>
+                    <p className="mt-1 text-sm text-muted">
+                      Search across all registered appointments and walk-in records stored on this device.
+                    </p>
+
+                    <div className="mt-4 card flex items-center gap-3 rounded-2xl px-4 focus-within:outline-3 focus-within:outline-ink">
+                      <SearchIcon className="size-5 shrink-0 text-brand" />
+                      <input
+                        id="search-input"
+                        type="search"
+                        placeholder="e.g. Ghulam Mohammad, Tarzoo, Dangerpora, 97977… or EP-"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        autoComplete="off"
+                        className="min-h-13 min-w-0 flex-1 bg-transparent text-lg text-ink outline-none placeholder:text-muted"
+                      />
+                    </div>
+                  </div>
+
+                  {searchQuery.trim() !== "" &&
+                    (searchMatches.length === 0 ? (
+                      <p className="card rounded-2xl p-6 text-base text-muted">
+                        No patient records match &ldquo;{searchQuery.trim()}&rdquo;.
+                      </p>
+                    ) : (
+                      <ul className="flex flex-col gap-3">
+                        {searchMatches.map((a) => (
+                          <li
+                            key={a.token}
+                            className="card rounded-2xl sm:rounded-3xl p-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+                          >
+                            <div>
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="rounded-lg bg-brand px-2.5 py-0.5 font-display text-xs font-semibold text-mint tabular-nums lining-nums">
+                                  {a.token}
+                                </span>
+                                <span className="font-display text-lg font-medium text-ink">{a.patientName}</span>
+                                {a.patientAddress && (
+                                  <span className="inline-flex items-center gap-1 rounded-full border border-brand-line bg-brand-tint/75 px-2.5 py-0.5 text-xs font-semibold text-ink">
+                                    <MapPinIcon className="size-3 shrink-0" />
+                                    <span>{a.patientAddress}</span>
+                                  </span>
+                                )}
+                                <span className="text-xs text-muted tabular-nums lining-nums">
+                                  +91 {a.patientPhone}
+                                </span>
+                              </div>
+                              <p className="mt-1.5 text-sm text-muted">
+                                {a.doctorName} ({a.speciality}) · {dateLabel(a.date)} at {formatTime(a.time)} ·{" "}
+                                <strong className="font-semibold text-ink capitalize">
+                                  {a.status.replace("_", " ")}
+                                </strong>
+                              </p>
+                            </div>
+
+                            <div className="flex items-center gap-2 shrink-0">
+                              <a
+                                href={`tel:+91${a.patientPhone}`}
+                                className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-dark transition-colors"
+                              >
+                                <PhoneIcon className="size-4" />
+                                <span>Call</span>
+                              </a>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    ))}
+                </div>
+              )}
+            </div>
+          </section>
+        </div>
       </div>
 
       {/* ======================================================================= */}
-      {/* 1-TAP WALK-IN PATIENT ENTRY MODAL (WITH VILLAGE / ADDRESS FIELD)        */}
+      {/* WALK-IN PATIENT ENTRY MODAL                                             */}
       {/* ======================================================================= */}
       {showWalkInModal && (
-        <div className="no-print fixed inset-0 z-50 flex items-center justify-center bg-night/70 p-4 backdrop-blur-sm animate-fade-in">
-          <div className="card w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border border-line flex flex-col gap-5 max-h-[90vh] overflow-y-auto bg-white">
-            <div className="flex items-start justify-between border-b border-line pb-3">
-              <div>
-                <h3 className="text-xl font-semibold text-ink font-display">Register Walk-in Patient</h3>
-                <p className="text-xs text-muted">Locks the slot instantly to prevent double-booking.</p>
+        <div className="no-print fade-in fixed inset-0 z-50 flex items-center justify-center bg-night/60 p-4 backdrop-blur-xs">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="walkin-modal-title"
+            className="sheet-in card flex max-h-[90vh] w-full max-w-lg flex-col gap-5 overflow-y-auto rounded-3xl p-6 sm:p-8"
+          >
+            <div className="flex items-start justify-between gap-4 border-b border-line pb-4">
+              <div className="flex items-center gap-3">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-ink ring-1 ring-brand-line/70">
+                  <UserIcon className="size-5" />
+                </span>
+                <div>
+                  <h2 id="walkin-modal-title" className="font-display text-xl font-semibold tracking-tight text-ink">
+                    Register walk-in patient
+                  </h2>
+                  <p className="text-xs sm:text-sm text-muted">
+                    Reserves the consultation slot immediately on this device.
+                  </p>
+                </div>
               </div>
               <button
                 type="button"
                 onClick={() => setShowWalkInModal(false)}
-                className="size-8 rounded-full bg-ground flex items-center justify-center font-bold text-charcoal hover:bg-sand"
+                aria-label="Close modal"
+                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-ground text-charcoal hover:bg-sand cursor-pointer"
               >
-                ✕
+                <CloseIcon className="size-4" />
               </button>
             </div>
 
             {walkInError && (
-              <p className="rounded-xl bg-rose-50 p-3 text-xs font-semibold text-rose-800 border border-rose-200">
+              <p role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-3 text-sm font-semibold text-emergency">
                 {walkInError}
               </p>
             )}
@@ -1356,7 +1611,9 @@ export default function AdminPage() {
             <div className="flex flex-col gap-4">
               {/* Doctor */}
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="walkin-doc" className="text-xs font-bold uppercase tracking-wider text-muted">Consultant Specialist</label>
+                <label htmlFor="walkin-doc" className={fieldLabel}>
+                  Consultant Specialist
+                </label>
                 <select
                   id="walkin-doc"
                   value={walkInDocId}
@@ -1364,7 +1621,7 @@ export default function AdminPage() {
                     setWalkInDocId(e.target.value);
                     setWalkInTime("");
                   }}
-                  className="min-h-12 rounded-xl border border-line px-3 text-sm sm:text-base font-semibold text-ink bg-ground focus:bg-white focus:border-brand outline-none"
+                  className={fieldInput}
                 >
                   <option value="">Select Doctor</option>
                   {allDoctors.map((d) => (
@@ -1378,17 +1635,23 @@ export default function AdminPage() {
               {/* Time Slots */}
               {walkInDocId && (
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-muted">
-                    Select Available Slot ({dateLabel(selectedDate)})
-                  </label>
+                  <span className={fieldLabel}>Available Slot ({dateLabel(selectedDate)})</span>
                   {(() => {
                     const doc = allDoctors.find((d) => d.id === walkInDocId);
                     if (!doc) return null;
                     const slots = timeSlots(doc, selectedDate, now);
                     const taken = getBookedSlots(doc.id, selectedDate);
 
+                    if (slots.length === 0) {
+                      return (
+                        <p className="rounded-xl border border-line bg-ground p-3.5 text-sm text-muted">
+                          No scheduled OPD slots remain for {doc.name ?? doc.speciality} on {dateLabel(selectedDate)}. Pick another OPD date first.
+                        </p>
+                      );
+                    }
+
                     return (
-                      <div className="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto p-1.5 border border-line rounded-xl bg-ground">
+                      <div className="grid max-h-44 grid-cols-3 gap-2 overflow-y-auto rounded-2xl border border-line bg-ground p-2">
                         {slots.map((s) => {
                           const isOccupied = taken.includes(s);
                           return (
@@ -1397,12 +1660,12 @@ export default function AdminPage() {
                               type="button"
                               disabled={isOccupied}
                               onClick={() => setWalkInTime(s)}
-                              className={`min-h-10 rounded-lg text-xs font-semibold border transition-all ${
+                              className={`min-h-10 rounded-xl border text-xs sm:text-sm font-semibold tabular-nums lining-nums transition-colors ${
                                 isOccupied
-                                  ? "bg-sand text-muted/60 border-line cursor-not-allowed line-through"
+                                  ? "cursor-not-allowed border-line bg-sand text-muted/60 line-through"
                                   : walkInTime === s
-                                  ? "bg-brand text-white border-brand shadow-2xs"
-                                  : "bg-white text-ink border-line hover:border-line-strong"
+                                  ? "border-brand bg-brand text-white cursor-pointer"
+                                  : "border-line-strong bg-white text-ink hover:border-brand cursor-pointer"
                               }`}
                             >
                               {formatTime(s)}
@@ -1417,24 +1680,26 @@ export default function AdminPage() {
 
               {/* Patient Name */}
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="walkin-name" className="text-xs font-bold uppercase tracking-wider text-muted">Patient Full Name</label>
+                <label htmlFor="walkin-name" className={fieldLabel}>
+                  Patient Full Name
+                </label>
                 <input
                   id="walkin-name"
                   type="text"
                   placeholder="e.g. Ghulam Mohammad"
                   value={walkInName}
                   onChange={(e) => setWalkInName(e.target.value)}
-                  className="min-h-12 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-4 text-base font-medium text-ink"
+                  className={fieldInput}
                 />
               </div>
 
-              {/* Patient Village / Address (Crucial for disambiguating identical names) */}
+              {/* Patient Village / Address */}
               <div className="flex flex-col gap-1.5">
-                <div className="flex justify-between items-baseline">
-                  <label htmlFor="walkin-address" className="text-xs font-bold uppercase tracking-wider text-muted">
-                    Village / Town / Address
+                <div className="flex items-baseline justify-between gap-2">
+                  <label htmlFor="walkin-address" className={fieldLabel}>
+                    Village / Town / Area
                   </label>
-                  <span className="text-[11px] text-charcoal font-semibold">Prevents same-name confusion</span>
+                  <span className="text-xs font-medium text-muted">Helps distinguish similar names</span>
                 </div>
                 <input
                   id="walkin-address"
@@ -1442,40 +1707,44 @@ export default function AdminPage() {
                   placeholder="e.g. Tarzoo, Dangerpora, Sangrama, Sopore"
                   value={walkInAddress}
                   onChange={(e) => setWalkInAddress(e.target.value)}
-                  className="min-h-12 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-4 text-base font-medium text-ink"
+                  className={fieldInput}
                 />
               </div>
 
               {/* Patient Phone */}
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="walkin-phone" className="text-xs font-bold uppercase tracking-wider text-muted">Mobile Number (10 Digits)</label>
-                <div className="flex rounded-xl border border-line overflow-hidden bg-ground focus-within:bg-white focus-within:border-brand">
-                  <span className="bg-sand px-3.5 py-3 text-sm font-semibold text-charcoal border-r border-line">+91</span>
+                <label htmlFor="walkin-phone" className={fieldLabel}>
+                  Mobile Number (10 Digits)
+                </label>
+                <div className="flex overflow-hidden rounded-xl border border-line-strong bg-white focus-within:border-brand">
+                  <span className="flex items-center border-r border-line bg-ground px-3.5 text-sm font-semibold text-charcoal tabular-nums lining-nums">
+                    +91
+                  </span>
                   <input
                     id="walkin-phone"
                     type="tel"
                     inputMode="numeric"
-                    placeholder="10-digit number"
+                    placeholder="10-digit mobile number"
                     value={walkInPhone}
                     onChange={(e) => setWalkInPhone(e.target.value)}
-                    className="flex-1 bg-transparent px-4 min-h-12 text-base font-medium text-ink outline-none"
+                    className="min-h-12 flex-1 bg-transparent px-3.5 text-base text-ink outline-none placeholder:text-muted/70"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="flex gap-3 border-t border-line pt-4 mt-2">
+            <div className="flex gap-3 border-t border-line pt-4">
               <button
                 type="button"
                 onClick={() => setShowWalkInModal(false)}
-                className="flex-1 min-h-12 rounded-2xl border border-line text-charcoal font-semibold hover:bg-ground"
+                className="min-h-12 flex-1 rounded-xl border border-line-strong bg-white font-semibold text-charcoal hover:bg-ground transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleAddWalkIn}
-                className="flex-1 min-h-12 rounded-2xl bg-brand text-white font-semibold hover:bg-brand-dark shadow-2xs transition-colors"
+                className="min-h-12 flex-1 rounded-xl bg-brand font-semibold text-white hover:bg-brand-dark transition-colors cursor-pointer"
               >
                 Issue Token Slip
               </button>
@@ -1485,41 +1754,72 @@ export default function AdminPage() {
       )}
 
       {/* ======================================================================= */}
-      {/* WALK-IN SUCCESS TOKEN SLIP POPUP                                       */}
+      {/* WALK-IN SUCCESS TOKEN SLIP MODAL                                        */}
       {/* ======================================================================= */}
       {walkInSuccessSlip && (
-        <div className="no-print fixed inset-0 z-50 flex items-center justify-center bg-night/70 p-4 backdrop-blur-sm animate-fade-in">
-          <div className="card w-full max-w-md rounded-3xl p-6 shadow-2xl border-2 border-brand-line flex flex-col gap-4 text-center bg-white">
-            <span className="text-4xl">🎟️</span>
+        <div className="no-print fade-in fixed inset-0 z-50 flex items-center justify-center bg-night/60 p-4 backdrop-blur-xs">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="token-slip-title"
+            className="sheet-in card flex w-full max-w-md flex-col gap-5 rounded-3xl border-brand-line p-6 sm:p-8 text-center"
+          >
+            <span className="mx-auto flex size-13 items-center justify-center rounded-2xl bg-brand-tint text-ink ring-1 ring-brand-line">
+              <CheckIcon className="size-6" />
+            </span>
+
             <div>
-              <span className="inline-block rounded-full bg-brand-tint border border-brand-line px-3 py-0.5 text-xs font-semibold uppercase text-ink">Official Token Slip Issued</span>
-              <h3 className="text-3xl font-bold font-mono tracking-wider text-ink mt-2 font-display">
+              <span className="inline-block rounded-full border border-brand-line bg-brand-tint px-3 py-0.5 text-xs font-bold uppercase tracking-wider text-ink">
+                Official Token Issued
+              </span>
+              <h2
+                id="token-slip-title"
+                className="mt-2 font-display text-3xl font-semibold tracking-tight text-ink tabular-nums lining-nums"
+              >
                 {walkInSuccessSlip.token}
-              </h3>
+              </h2>
             </div>
 
-            <div className="rounded-2xl bg-ground p-4 text-left text-xs space-y-1.5 border border-line text-charcoal">
-              <p><strong className="text-ink">Patient:</strong> {walkInSuccessSlip.patientName}</p>
+            <dl className="rounded-2xl border border-line bg-ground p-4 text-left text-sm space-y-2 text-charcoal">
+              <div className="flex justify-between gap-3">
+                <dt className="text-muted">Patient</dt>
+                <dd className="font-semibold text-ink text-right">{walkInSuccessSlip.patientName}</dd>
+              </div>
               {walkInSuccessSlip.patientAddress && (
-                <p className="text-ink font-semibold"><strong>Village / Area:</strong> 📍 {walkInSuccessSlip.patientAddress}</p>
+                <div className="flex justify-between gap-3">
+                  <dt className="text-muted">Area / Village</dt>
+                  <dd className="font-semibold text-ink text-right">{walkInSuccessSlip.patientAddress}</dd>
+                </div>
               )}
-              <p><strong className="text-ink">Doctor:</strong> {walkInSuccessSlip.doctorName}</p>
-              <p><strong className="text-ink">Slot:</strong> {formatTime(walkInSuccessSlip.time)}</p>
-              <p><strong className="text-ink">Date:</strong> {dateLabel(walkInSuccessSlip.date)}</p>
-            </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-muted">Doctor</dt>
+                <dd className="font-semibold text-ink text-right">{walkInSuccessSlip.doctorName}</dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-muted">Slot</dt>
+                <dd className="font-semibold text-ink tabular-nums lining-nums">
+                  {formatTime(walkInSuccessSlip.time)}
+                </dd>
+              </div>
+              <div className="flex justify-between gap-3">
+                <dt className="text-muted">Date</dt>
+                <dd className="font-semibold text-ink">{dateLabel(walkInSuccessSlip.date)}</dd>
+              </div>
+            </dl>
 
             <div className="flex gap-2.5">
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="flex-1 min-h-12 rounded-2xl bg-brand text-white font-semibold text-xs hover:bg-brand-dark"
+                className="inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-brand text-sm font-semibold text-white hover:bg-brand-dark transition-colors cursor-pointer"
               >
-                🖨️ Print Slip
+                <PrinterIcon className="size-4" />
+                <span>Print Slip</span>
               </button>
               <button
                 type="button"
                 onClick={() => setWalkInSuccessSlip(null)}
-                className="flex-1 min-h-12 rounded-2xl border border-line text-ink font-semibold text-xs hover:bg-ground"
+                className="min-h-12 flex-1 rounded-xl border border-line-strong bg-white text-sm font-semibold text-ink hover:bg-ground transition-colors cursor-pointer"
               >
                 Done
               </button>
@@ -1529,70 +1829,93 @@ export default function AdminPage() {
       )}
 
       {/* ======================================================================= */}
-      {/* REGISTER NEW SPECIALIST MODAL                                          */}
+      {/* REGISTER NEW SPECIALIST MODAL                                           */}
       {/* ======================================================================= */}
       {showNewDocModal && (
-        <div className="no-print fixed inset-0 z-50 flex items-center justify-center bg-night/70 p-4 backdrop-blur-sm animate-fade-in">
-          <div className="card w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border border-line flex flex-col gap-4 bg-white">
-            <div className="flex items-start justify-between border-b border-line pb-3">
-              <div>
-                <h3 className="text-xl font-semibold text-ink font-display">Add Visiting Specialist</h3>
-                <p className="text-xs text-muted">Register doctor details and sitting schedule.</p>
+        <div className="no-print fade-in fixed inset-0 z-50 flex items-center justify-center bg-night/60 p-4 backdrop-blur-xs">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="new-doc-title"
+            className="sheet-in card flex w-full max-w-lg flex-col gap-5 rounded-3xl p-6 sm:p-8"
+          >
+            <div className="flex items-start justify-between gap-4 border-b border-line pb-4">
+              <div className="flex items-center gap-3">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-ink ring-1 ring-brand-line/70">
+                  <StethoscopeIcon className="size-5" />
+                </span>
+                <div>
+                  <h2 id="new-doc-title" className="font-display text-xl font-semibold tracking-tight text-ink">
+                    Add visiting specialist
+                  </h2>
+                  <p className="text-xs sm:text-sm text-muted">
+                    Register specialist credentials and weekly OPD hours.
+                  </p>
+                </div>
               </div>
               <button
                 type="button"
                 onClick={() => setShowNewDocModal(false)}
-                className="size-8 rounded-full bg-ground flex items-center justify-center font-bold text-charcoal hover:bg-sand"
+                aria-label="Close modal"
+                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-ground text-charcoal hover:bg-sand cursor-pointer"
               >
-                ✕
+                <CloseIcon className="size-4" />
               </button>
             </div>
 
-            <div className="flex flex-col gap-3">
-              <div>
-                <label htmlFor="new-doc-name" className="text-xs font-bold uppercase text-muted">Doctor Full Name</label>
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="new-doc-name" className={fieldLabel}>
+                  Doctor Full Name
+                </label>
                 <input
                   id="new-doc-name"
                   type="text"
                   placeholder="e.g. Dr. Shabir Ahmad"
                   value={newDocName}
                   onChange={(e) => setNewDocName(e.target.value)}
-                  className="w-full min-h-11 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-3 text-sm font-medium text-ink mt-1"
+                  className={fieldInput}
                 />
               </div>
 
-              <div>
-                <label htmlFor="new-doc-spec" className="text-xs font-bold uppercase text-muted">Speciality</label>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="new-doc-spec" className={fieldLabel}>
+                  Speciality
+                </label>
                 <input
                   id="new-doc-spec"
                   type="text"
                   placeholder="e.g. Orthopedics & Joint Replacement"
                   value={newDocSpec}
                   onChange={(e) => setNewDocSpec(e.target.value)}
-                  className="w-full min-h-11 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-3 text-sm font-medium text-ink mt-1"
+                  className={fieldInput}
                 />
               </div>
 
-              <div>
-                <label htmlFor="new-doc-degree" className="text-xs font-bold uppercase text-muted">Degree &amp; Credentials</label>
+              <div className="flex flex-col gap-1.5">
+                <label htmlFor="new-doc-degree" className={fieldLabel}>
+                  Degree &amp; Credentials
+                </label>
                 <input
                   id="new-doc-degree"
                   type="text"
-                  placeholder="e.g. MBBS, MS Ortho, Former SKIMS"
+                  placeholder="e.g. MBBS, MS Ortho"
                   value={newDocDegree}
                   onChange={(e) => setNewDocDegree(e.target.value)}
-                  className="w-full min-h-11 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-3 text-sm font-medium text-ink mt-1"
+                  className={fieldInput}
                 />
               </div>
 
-              <div className="grid grid-cols-3 gap-2">
-                <div>
-                  <label htmlFor="new-doc-day" className="text-xs font-bold uppercase text-muted">OPD Day</label>
+              <div className="grid grid-cols-3 gap-2.5">
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="new-doc-day" className={fieldLabel}>
+                    OPD Day
+                  </label>
                   <select
                     id="new-doc-day"
                     value={newDocDay}
                     onChange={(e) => setNewDocDay(Number(e.target.value))}
-                    className="w-full min-h-11 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-2 text-xs font-semibold text-ink mt-1"
+                    className="min-h-12 rounded-xl border border-line-strong bg-white px-2.5 text-sm font-semibold text-ink outline-none focus:border-brand"
                   >
                     {DAY_NAMES.map((name, i) => (
                       <option key={i} value={i}>
@@ -1602,25 +1925,29 @@ export default function AdminPage() {
                   </select>
                 </div>
 
-                <div>
-                  <label htmlFor="new-doc-start" className="text-xs font-bold uppercase text-muted">Start Time</label>
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="new-doc-start" className={fieldLabel}>
+                    Start
+                  </label>
                   <input
                     id="new-doc-start"
                     type="time"
                     value={newDocStart}
                     onChange={(e) => setNewDocStart(e.target.value)}
-                    className="w-full min-h-11 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-2 text-xs font-semibold text-ink mt-1"
+                    className="min-h-12 rounded-xl border border-line-strong bg-white px-2.5 text-sm font-semibold text-ink tabular-nums lining-nums outline-none focus:border-brand"
                   />
                 </div>
 
-                <div>
-                  <label htmlFor="new-doc-end" className="text-xs font-bold uppercase text-muted">End Time</label>
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="new-doc-end" className={fieldLabel}>
+                    End
+                  </label>
                   <input
                     id="new-doc-end"
                     type="time"
                     value={newDocEnd}
                     onChange={(e) => setNewDocEnd(e.target.value)}
-                    className="w-full min-h-11 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-2 text-xs font-semibold text-ink mt-1"
+                    className="min-h-12 rounded-xl border border-line-strong bg-white px-2.5 text-sm font-semibold text-ink tabular-nums lining-nums outline-none focus:border-brand"
                   />
                 </div>
               </div>
@@ -1630,16 +1957,16 @@ export default function AdminPage() {
               <button
                 type="button"
                 onClick={() => setShowNewDocModal(false)}
-                className="flex-1 min-h-11 rounded-2xl border border-line text-charcoal font-semibold text-sm hover:bg-ground"
+                className="min-h-12 flex-1 rounded-xl border border-line-strong bg-white font-semibold text-charcoal hover:bg-ground transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleSaveNewDoctor}
-                className="flex-1 min-h-11 rounded-2xl bg-brand text-white font-semibold text-sm hover:bg-brand-dark"
+                className="min-h-12 flex-1 rounded-xl bg-brand font-semibold text-white hover:bg-brand-dark transition-colors cursor-pointer"
               >
-                Save Doctor
+                Save Specialist
               </button>
             </div>
           </div>
@@ -1656,21 +1983,37 @@ export default function AdminPage() {
               <div>
                 <p className="text-xs font-bold uppercase tracking-widest">Official OPD Token Slip</p>
                 <h2 className="text-2xl font-bold mt-0.5">{clinic.name}</h2>
-                <p className="text-xs mt-0.5">{clinic.address} · Helpline: {clinic.phoneDisplay}</p>
+                <p className="text-xs mt-0.5">
+                  {clinic.address} · Helpline: {clinic.phoneDisplay}
+                </p>
               </div>
-              <div className="text-right font-mono">
+              <div className="text-right tabular-nums lining-nums">
                 <span className="text-xs uppercase font-bold block">Token No</span>
                 <span className="text-2xl font-bold">{walkInSuccessSlip.token}</span>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-y-2 gap-x-6 text-sm">
-              <p><strong>Patient Name:</strong> {walkInSuccessSlip.patientName}</p>
-              <p><strong>Mobile:</strong> +91 {walkInSuccessSlip.patientPhone}</p>
-              <p><strong>Area / Village:</strong> {walkInSuccessSlip.patientAddress || "—"}</p>
-              <p><strong>Date:</strong> {dateLabel(walkInSuccessSlip.date)} ({walkInSuccessSlip.date})</p>
-              <p><strong>Consultant:</strong> {walkInSuccessSlip.doctorName}</p>
-              <p><strong>Slot Time:</strong> {formatTime(walkInSuccessSlip.time)}</p>
-              <p className="col-span-2"><strong>Speciality:</strong> {walkInSuccessSlip.speciality}</p>
+              <p>
+                <strong>Patient Name:</strong> {walkInSuccessSlip.patientName}
+              </p>
+              <p>
+                <strong>Mobile:</strong> +91 {walkInSuccessSlip.patientPhone}
+              </p>
+              <p>
+                <strong>Area / Village:</strong> {walkInSuccessSlip.patientAddress || "—"}
+              </p>
+              <p>
+                <strong>Date:</strong> {dateLabel(walkInSuccessSlip.date)} ({walkInSuccessSlip.date})
+              </p>
+              <p>
+                <strong>Consultant:</strong> {walkInSuccessSlip.doctorName}
+              </p>
+              <p>
+                <strong>Slot Time:</strong> {formatTime(walkInSuccessSlip.time)}
+              </p>
+              <p className="col-span-2">
+                <strong>Speciality:</strong> {walkInSuccessSlip.speciality}
+              </p>
             </div>
             <p className="mt-4 pt-3 border-t border-black/30 text-xs">
               Please present this slip at the reception desk 10–15 minutes before your scheduled slot.
@@ -1681,16 +2024,23 @@ export default function AdminPage() {
             <div className="border-b-2 border-black pb-3 mb-4 flex items-end justify-between gap-4">
               <div>
                 <h2 className="text-xl font-bold">{clinic.name} — Daily OPD Register</h2>
-                <p className="text-xs mt-0.5">{clinic.address} · Reception: {clinic.phoneDisplay}</p>
+                <p className="text-xs mt-0.5">
+                  {clinic.address} · Reception: {clinic.phoneDisplay}
+                </p>
               </div>
               <div className="text-right text-xs">
-                <p><strong>OPD Date:</strong> {dateLabel(selectedDate)} ({selectedDate})</p>
                 <p>
-                  <strong>Doctor:</strong>{" "}
-                  {currentDoctorObj ? `${currentDoctorObj.name ?? currentDoctorObj.speciality} (${currentDoctorObj.speciality})` : "All Visiting Specialists"}
+                  <strong>OPD Date:</strong> {dateLabel(selectedDate)} ({selectedDate})
                 </p>
                 <p>
-                  <strong>Summary:</strong> {filteredAppointments.length} Total · {countCompleted} Done · {countWaiting} Waiting · {countCancelled} Cancelled
+                  <strong>Doctor:</strong>{" "}
+                  {currentDoctorObj
+                    ? `${currentDoctorObj.name ?? currentDoctorObj.speciality} (${currentDoctorObj.speciality})`
+                    : "All Visiting Specialists"}
+                </p>
+                <p>
+                  <strong>Summary:</strong> {filteredAppointments.length} Total · {countCompleted} Done ·{" "}
+                  {countWaiting} Waiting · {countCancelled} Cancelled
                 </p>
               </div>
             </div>
@@ -1714,11 +2064,11 @@ export default function AdminPage() {
                 <tbody>
                   {filteredAppointments.map((apt) => (
                     <tr key={apt.token} className="border-b border-black/25">
-                      <td className="py-2 pr-2 font-mono font-bold">{apt.token}</td>
-                      <td className="py-2 pr-2">{formatTime(apt.time)}</td>
+                      <td className="py-2 pr-2 font-bold tabular-nums lining-nums">{apt.token}</td>
+                      <td className="py-2 pr-2 tabular-nums lining-nums">{formatTime(apt.time)}</td>
                       <td className="py-2 pr-2 font-semibold">{apt.patientName}</td>
                       <td className="py-2 pr-2">{apt.patientAddress || "—"}</td>
-                      <td className="py-2 pr-2 font-mono">{apt.patientPhone}</td>
+                      <td className="py-2 pr-2 tabular-nums lining-nums">{apt.patientPhone}</td>
                       <td className="py-2 pr-2">{apt.doctorName}</td>
                       <td className="py-2 pr-2 uppercase">{apt.type === "walk_in" ? "Walk-In" : "Online"}</td>
                       <td className="py-2 uppercase">{apt.status.replace("_", " ")}</td>
@@ -1730,6 +2080,6 @@ export default function AdminPage() {
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 }
