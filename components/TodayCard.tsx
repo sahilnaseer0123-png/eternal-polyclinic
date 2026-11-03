@@ -95,15 +95,15 @@ export function TodayCard() {
           return (
             <li key={doctor.id}>
               <Link href={`/doctors/${doctor.id}`} className="flex items-start gap-4 py-3.5 hover:text-brand">
-                <span className="w-24 shrink-0 pt-0.5 text-sm font-bold text-charcoal">
+                <span className="w-24 shrink-0 pt-0.5 text-[15px] font-bold text-charcoal tabular-nums lining-nums">
                   {formatTime(session.start)}
-                  <span className="block font-medium text-muted">to {formatTime(session.end)}</span>
+                  <span className="block text-[15px] font-medium text-muted tabular-nums lining-nums">to {formatTime(session.end)}</span>
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block font-display text-lg font-medium leading-snug tracking-tight">
                     {doctor.name ?? doctor.speciality}
                   </span>
-                  <span className="block text-sm text-muted">{doctor.speciality}</span>
+                  <span className="block text-[15px] text-muted">{doctor.speciality}</span>
                 </span>
                 {status !== "upcoming" && (
                   <span

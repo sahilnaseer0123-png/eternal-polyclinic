@@ -39,7 +39,7 @@ export default function BookPage() {
                 ["Wait for our call.", "Reception phones you to confirm. The time is booked only after that."],
               ].map(([bold, rest], i) => (
                 <li key={bold} className="flex items-start gap-3">
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-tint font-display text-lg font-medium text-brand">
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-tint font-display text-lg font-medium text-brand tabular-nums lining-nums">
                     {i + 1}
                   </span>
                   <span>

@@ -15,8 +15,8 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-30 [view-transition-name:site-header] border-b border-line bg-ground/95 text-ink backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-2.5 sm:px-6">
-        <Link href="/" className="group flex min-h-11 items-center gap-3">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 sm:gap-4 px-4 py-2.5 sm:px-6">
+        <Link href="/" className="group flex min-h-11 items-center gap-2.5 sm:gap-3 min-w-0">
           <Logo className="size-10 shrink-0" />
           <span className="leading-tight">
             <span className="block font-display text-lg font-medium tracking-tight group-hover:text-brand">
@@ -51,20 +51,21 @@ export function SiteHeader() {
           </Link>
           <a
             href={`tel:${clinic.phone}`}
-            className="ml-2 inline-flex min-h-11 items-center gap-2 rounded-xl border-[1.5px] border-ink px-4 hover:bg-ink hover:text-white"
+            aria-label={`Call the clinic, ${clinic.phoneDisplay}`}
+            className="ml-2 inline-flex min-h-11 items-center gap-2 rounded-xl border-[1.5px] border-ink px-3 xl:px-4 hover:bg-ink hover:text-white whitespace-nowrap shrink-0"
           >
-            <PhoneIcon className="size-4" />
-            {clinic.phoneDisplay}
+            <PhoneIcon className="size-4 shrink-0" />
+            <span className="hidden xl:inline">{clinic.phoneDisplay}</span>
           </a>
           <Link
             href="/book"
-            className="ml-1 inline-flex min-h-11 items-center rounded-xl bg-brand px-5 font-bold text-white hover:bg-brand-dark"
+            className="ml-1 inline-flex min-h-11 items-center rounded-xl bg-brand px-4 xl:px-5 font-bold text-white hover:bg-brand-dark whitespace-nowrap shrink-0"
           >
             Book a visit
           </Link>
         </nav>
 
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-2 shrink-0 lg:hidden">
           <a
             href={`tel:${clinic.phone}`}
             aria-label={`Call the clinic, ${clinic.phoneDisplay}`}
@@ -74,9 +75,9 @@ export function SiteHeader() {
           </a>
           <Link
             href="/book"
-            className="inline-flex min-h-11 items-center rounded-xl bg-brand px-4 text-sm font-bold text-white"
+            className="inline-flex min-h-11 items-center rounded-xl bg-brand px-3.5 text-sm font-bold text-white whitespace-nowrap shrink-0"
           >
-            Book
+            Book a visit
           </Link>
         </div>
       </div>

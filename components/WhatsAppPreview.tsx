@@ -45,7 +45,7 @@ export function WhatsAppPreview({ className = "" }: { className?: string }) {
           </p>
         </div>
       </div>
-      <figcaption className="border-t border-line px-4 py-3 text-sm text-muted">
+      <figcaption className="border-t border-line px-4 py-3 text-[15px] text-muted">
         Reception calls you back to confirm the time.
       </figcaption>
     </figure>

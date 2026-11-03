@@ -10,7 +10,7 @@ import { TabBar } from "./TabBar";
 
 export function SiteFooter() {
   const hours = `${formatTime(clinic.hours.open)} – ${formatTime(clinic.hours.close)}`;
-  const label = "mb-3 text-xs font-bold uppercase tracking-[0.14em] text-mint";
+  const label = "mb-3 font-sans text-[13.5px] font-bold uppercase tracking-[0.14em] text-mint";
   const link = "inline-flex min-h-10 items-center gap-x-1 text-sm text-night-muted hover:text-white";
   return (
     <footer className="bg-night pb-24 pt-12 text-ground sm:pt-16 lg:pb-12">
@@ -20,7 +20,7 @@ export function SiteFooter() {
             <Logo className="size-10 shrink-0" />
             <span className="font-display text-xl font-medium tracking-tight">{clinic.name}</span>
           </Link>
-          <p className="max-w-sm text-sm leading-relaxed text-night-muted">
+          <p className="max-w-sm text-[15px] leading-relaxed text-night-muted">
             {clinic.address}
             <br />
             {clinic.location.name} building, Sopore, Kashmir
@@ -109,9 +109,9 @@ export function QuickActions() {
           href={`https://wa.me/${clinic.whatsapp}`}
           aria-label={`Message the clinic on WhatsApp, ${clinic.whatsappDisplay}`}
           title="WhatsApp"
-          className="fixed bottom-6 right-6 z-40 hidden [view-transition-name:wa-float] size-14 items-center justify-center rounded-full bg-[#25D366] text-night shadow-xl hover:bg-[#20ba59] hover:scale-105 active:scale-95 transition-all lg:inline-flex"
+          className="fixed bottom-6 right-6 z-40 hidden [view-transition-name:wa-float] size-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-xl hover:bg-[#20ba59] hover:scale-105 active:scale-95 transition-all lg:inline-flex"
         >
-          <ChatIcon className="size-7" />
+          <ChatIcon className="size-8 text-white" />
         </a>
       </aside>
     </>
@@ -130,7 +130,7 @@ export function PageIntro({
 }) {
   return (
     <div className={className ?? "mx-auto max-w-6xl px-5 pt-6 pb-3 sm:pt-8 sm:pb-4 sm:px-6"}>
-      <h1 className="text-[2rem] font-light leading-none tracking-[-0.04em] sm:text-5xl lg:text-6xl">
+      <h1 className="text-[2rem] font-normal leading-none tracking-[-0.025em] sm:text-5xl lg:text-6xl">
         {title}
       </h1>
       {children && (

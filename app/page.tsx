@@ -37,7 +37,7 @@ export default function Home() {
         <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-5 py-10 sm:px-6 sm:py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-14 lg:py-16">
           <div>
             <p className="rise eyebrow text-brand">Opposite SDH Hospital, Sopore</p>
-            <h1 className="rise rise-2 mt-4 max-w-2xl text-balance text-[3rem] font-light leading-[0.97] tracking-[-0.04em] sm:text-[4.5rem] lg:text-[5rem]">
+            <h1 className="rise rise-2 mt-4 max-w-2xl text-balance text-[3rem] font-normal leading-[0.97] tracking-[-0.025em] sm:text-[4.5rem] lg:text-[5rem]">
               Find the day <em className="text-brand">your doctor</em> is in.
             </h1>
             <p className="rise rise-3 mt-5 max-w-lg text-base leading-relaxed text-charcoal sm:text-xl">
@@ -79,7 +79,7 @@ export default function Home() {
           <div className="mx-auto max-w-6xl px-5 pb-12 sm:px-6 sm:pb-20">
             <div className="rounded-3xl bg-sand p-6 sm:p-10">
               <p className="eyebrow text-brand">By appointment</p>
-              <h2 id="by-appointment" className="mt-3 text-3xl font-light leading-none tracking-[-0.04em] sm:text-5xl">
+              <h2 id="by-appointment" className="mt-3 text-3xl font-normal leading-none tracking-[-0.025em] sm:text-5xl">
                 Any day, <em className="text-brand">by appointment</em>
               </h2>
               <p className="mt-3 max-w-xl text-base text-muted">
@@ -94,7 +94,7 @@ export default function Home() {
                       </Link>
                     </h3>
                     <p className="font-semibold text-brand">{d.speciality}</p>
-                    <p className="text-sm text-muted">{d.credentials ?? d.degree}</p>
+                    <p className="text-[15px] text-muted">{d.credentials ?? d.degree}</p>
                     <a
                       href={`tel:${clinic.phone}`}
                       className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-xl border-[1.5px] border-ink px-4 text-base font-bold hover:bg-ink hover:text-white"
@@ -115,13 +115,13 @@ export default function Home() {
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-6 sm:py-20 lg:grid-cols-[1.2fr_1fr] lg:items-center">
           <div>
             <p className="eyebrow text-mint">How booking works</p>
-            <h2 id="steps" className="mt-3 text-[2.125rem] font-light leading-none tracking-[-0.04em] sm:text-6xl">
+            <h2 id="steps" className="mt-3 text-[2.125rem] font-normal leading-none tracking-[-0.025em] sm:text-6xl">
               Three steps. <em>No account.</em>
             </h2>
             <ol className="mt-8 flex flex-col gap-5">
               {steps.map((s) => (
                 <li key={s.n} className="flex gap-4">
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/15 font-display text-xl font-medium">
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/15 font-display text-xl font-medium tabular-nums lining-nums">
                     {s.n}
                   </span>
                   <span>
@@ -146,7 +146,7 @@ export default function Home() {
       <section aria-labelledby="services" className="bg-ground">
         <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-20">
           <p className="eyebrow text-brand">In the clinic</p>
-          <h2 id="services" className="mt-3 text-[2.125rem] font-light leading-none tracking-[-0.04em] sm:text-6xl">
+          <h2 id="services" className="mt-3 text-[2.125rem] font-normal leading-none tracking-[-0.025em] sm:text-6xl">
             Tests and <em className="text-brand">medicines</em>
           </h2>
           <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -161,7 +161,7 @@ export default function Home() {
                   </span>
                   <span>
                     <span className="block text-lg font-bold">{s.short}</span>
-                    <span className="block text-sm text-muted">{s.description}</span>
+                    <span className="block text-[15px] text-muted">{s.description}</span>
                   </span>
                 </Link>
               </li>
@@ -175,14 +175,14 @@ export default function Home() {
         <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:px-6 sm:py-20 lg:grid-cols-2 lg:items-center">
           <div>
             <p className="eyebrow text-brand">Visit us</p>
-            <h2 id="visit" className="mt-3 text-[2.125rem] font-light leading-none tracking-[-0.04em] sm:text-6xl">
+            <h2 id="visit" className="mt-3 text-[2.125rem] font-normal leading-none tracking-[-0.025em] sm:text-6xl">
               Opposite <em className="text-brand">SDH Hospital</em>
             </h2>
             <p className="mt-4 flex items-start gap-2 text-lg font-semibold">
               <MapPinIcon className="mt-1 size-5 shrink-0 text-brand" />
               <span>
                 {clinic.address}
-                <span className="block text-base font-normal text-muted">{clinic.location.name} building</span>
+                <span className="block text-[15px] font-normal text-muted sm:text-base">{clinic.location.name} building</span>
               </span>
             </p>
             <div className="mt-6 flex flex-wrap gap-3">

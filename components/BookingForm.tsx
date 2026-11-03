@@ -84,7 +84,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
     return (
       <div className="card rounded-3xl p-6 sm:p-9" aria-live="polite">
         <p className="eyebrow text-brand">Almost done</p>
-        <h2 className="mt-3 text-[2rem] font-light leading-none tracking-[-0.04em] sm:text-5xl">
+        <h2 className="mt-3 text-[2rem] font-normal leading-none tracking-[-0.025em] sm:text-5xl">
           Press <em className="text-brand">Send</em> in WhatsApp
         </h2>
         <p className="mt-4 text-base text-muted">

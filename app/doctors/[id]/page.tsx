@@ -65,7 +65,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
               </span>
             </div>
 
-            <h1 className="mt-3 text-[2rem] font-light leading-none tracking-[-0.04em] [overflow-wrap:anywhere] sm:text-5xl text-ink font-display">
+            <h1 className="mt-3 text-[2rem] font-normal leading-none tracking-[-0.025em] [overflow-wrap:anywhere] sm:text-5xl text-ink font-display">
               {title(doctor)}
             </h1>
             <p className="mt-1 text-base font-semibold text-brand">
@@ -79,7 +79,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
               </p>
             )}
             {doctor.credentials && (
-              <p className="mt-1.5 text-xs text-muted leading-relaxed">
+              <p className="mt-1.5 text-[15px] text-muted leading-relaxed">
                 {doctor.credentials}
               </p>
             )}
@@ -105,7 +105,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
                           ? `Alternate ${DAY_NAMES[s.day]}s`
                           : `${DAY_NAMES[s.day]}s`}
                     </span>
-                    <span className="text-base font-semibold text-charcoal">
+                    <span className="text-base font-semibold text-charcoal tabular-nums lining-nums">
                       {formatTime(s.start)} – {formatTime(s.end)}
                     </span>
                     {s.recurrence === "alternate" && (

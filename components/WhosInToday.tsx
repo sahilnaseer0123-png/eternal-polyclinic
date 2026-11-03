@@ -89,8 +89,8 @@ export function WhosInToday() {
                       <DoctorMark doctor={doctor} className="size-12 shrink-0 rounded-2xl text-lg sm:size-16 sm:text-2xl" />
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-base font-bold tracking-tight text-ink sm:text-xl">{doctor.name ?? doctor.speciality}</p>
-                        <div className="text-xs text-muted sm:text-sm">
-                          <p className="truncate font-medium">
+                        <div className="text-[15px] text-muted">
+                          <p className="truncate font-medium tabular-nums lining-nums">
                             {doctor.speciality} · {formatTime(session.start)} – {formatTime(session.end)}
                           </p>
                           {session.recurrence === "first-of-month" && (

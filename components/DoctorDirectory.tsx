@@ -149,7 +149,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                           {doctor.speciality}
                         </p>
                       )}
-                      <p className="text-sm text-muted mt-0.5">
+                      <p className="text-[15px] text-muted mt-0.5">
                         {[
                           doctor.degree &&
                           doctor.degree.toLowerCase() !==
@@ -185,7 +185,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                               <span className="font-semibold text-ink">
                                 {dayLabel}
                               </span>
-                              <span className="tabular-nums text-muted">
+                              <span className="tabular-nums lining-nums text-muted">
                                 {formatTime(s.start)} – {formatTime(s.end)}
                               </span>
                             </div>

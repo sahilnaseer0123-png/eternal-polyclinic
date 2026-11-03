@@ -33,7 +33,7 @@ export default function ServicesPage() {
                 <h2 className="mt-3 text-xl font-medium tracking-tight text-ink font-display sm:text-2xl">
                   {service.name}
                 </h2>
-                <p className="mt-1 text-sm text-muted leading-relaxed">{service.description}</p>
+                <p className="mt-1 text-[15px] text-muted leading-relaxed">{service.description}</p>
               </div>
               {service.lead && (
                 <div className="border-t border-line/60 pt-3">

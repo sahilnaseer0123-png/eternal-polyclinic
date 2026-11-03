@@ -45,7 +45,7 @@ export function DayPicker() {
     <section id="days" aria-labelledby="days-title" className="bg-ground scroll-mt-20">
       <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-20">
         <p className="eyebrow text-brand">Visiting specialists</p>
-        <h2 id="days-title" className="mt-3 text-[2.125rem] font-light leading-none tracking-[-0.04em] sm:text-6xl">
+        <h2 id="days-title" className="mt-3 text-[2.125rem] font-normal leading-none tracking-[-0.025em] sm:text-6xl">
           Who sits on <em className="text-brand">{dayName}</em>
         </h2>
 
@@ -69,8 +69,8 @@ export function DayPicker() {
                   <span className="sm:hidden">{DAY_NAMES[day].slice(0, 3)}</span>
                   <span className="hidden sm:inline">{DAY_NAMES[day]}</span>
                 </span>
-                <span className="font-display text-xl font-medium leading-tight sm:text-3xl">{count || "–"}</span>
-                <span className={`hidden text-xs sm:block ${on ? "text-white/80" : "text-muted"}`}>
+                <span className="font-display text-xl font-medium leading-tight sm:text-3xl tabular-nums lining-nums">{count || "–"}</span>
+                <span className={`hidden text-[15px] sm:block ${on ? "text-white/80" : "text-muted"}`}>
                   {count === 0 ? "No OPD" : count === 1 ? "specialist" : "specialists"}
                 </span>
                 {today === day && (
@@ -110,9 +110,9 @@ export function DayPicker() {
                     key={`${doctor.id}-${session.day}`}
                     className="card grid gap-3 rounded-2xl p-4 sm:grid-cols-[11rem_1fr_auto] sm:items-center sm:gap-6 sm:p-6"
                   >
-                    <p className="font-display text-xl font-medium tracking-tight sm:text-2xl">
+                    <p className="font-display text-xl font-medium tracking-tight sm:text-2xl tabular-nums lining-nums">
                       {formatTime(session.start)}
-                      <span className="block text-sm font-normal text-muted">to {formatTime(session.end)}</span>
+                      <span className="block text-[15px] font-normal text-muted tabular-nums lining-nums">to {formatTime(session.end)}</span>
                     </p>
                     <div className="min-w-0">
                       <h3 className="font-display text-xl font-medium leading-snug tracking-tight sm:text-[1.5625rem]">
@@ -121,7 +121,7 @@ export function DayPicker() {
                         </Link>
                       </h3>
                       <p className="text-base font-semibold text-brand">{doctor.speciality}</p>
-                      <p className="text-sm text-muted">{doctor.credentials ?? doctor.degree}</p>
+                      <p className="text-[15px] text-muted">{doctor.credentials ?? doctor.degree}</p>
                       {note && (
                         <p className="mt-2 inline-block rounded-full bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
                           {note}
