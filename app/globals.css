@@ -152,6 +152,21 @@ body {
   animation-delay: 0.16s;
 }
 
+/* Hero headline & primary CTA fade-in (1s ease-out with 0.5s delay; disabled under prefers-reduced-motion) */
+@keyframes hero-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero-fade-in {
+  animation: hero-fade-in 1s ease-out 0.5s both;
+}
+
 /* Sections are fully visible by default so no content is ever hidden or clipped. */
 .reveal {
   opacity: 1;

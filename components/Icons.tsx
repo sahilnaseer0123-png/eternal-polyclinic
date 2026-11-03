@@ -85,6 +85,17 @@ export function CalendarIcon({ className = "size-5" }: IconProps) {
   );
 }
 
+/** Calendar with confirmation checkmark for same-day appointment booking */
+export function CalendarCheckIcon({ className = "size-5" }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <rect x="3" y="4" width="18" height="18" rx="3" />
+      <path d="M16 2v4M8 2v4M3 10h18" />
+      <path d="m9 15.5 2 2 4-4" strokeWidth={2.1} />
+    </svg>
+  );
+}
+
 /** Realistic location marker pin */
 export function MapPinIcon({ className = "size-5" }: IconProps) {
   return (

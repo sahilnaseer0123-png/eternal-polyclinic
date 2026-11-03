@@ -91,7 +91,7 @@ export function HeroRightColumn() {
       {/* Mobile (< 640px): Full-screen balanced twin-panel live clinic + studio stethoscope card */}
       <div className="sm:hidden">
         <div className="flex items-stretch gap-2.5 min-[390px]:gap-3">
-          <div className="flex min-h-[132px] min-[390px]:min-h-[144px] min-w-0 flex-1 flex-col justify-between rounded-2xl border border-[#E5EBE7] bg-[#F5F7F5] p-3.5 min-[390px]:p-4">
+          <div className="flex min-h-[120px] min-[390px]:min-h-[132px] min-w-0 flex-1 flex-col justify-between rounded-2xl border border-[#E5EBE7] bg-[#F5F7F5] p-3 min-[390px]:p-3.5">
             <div className="flex items-center justify-between gap-1.5 min-w-0">
               <p className="flex items-center gap-1.5 font-sans text-[10.5px] min-[390px]:text-[11px] font-bold uppercase tracking-[0.09em] text-[#171D1B] whitespace-nowrap truncate">
                 <SparkleCross className="size-3 text-brand shrink-0" />
@@ -103,7 +103,7 @@ export function HeroRightColumn() {
                 {openBadge}
               </span>
             </div>
-            <p className="mt-2.5 text-[12.5px] min-[390px]:text-[13px] leading-[1.48] text-[#4A5853]">
+            <p className="mt-2 text-[12px] min-[390px]:text-[12.5px] leading-[1.45] text-[#4A5853]">
               {statusCopy}
             </p>
           </div>

@@ -1,4 +1,4 @@
-// Home (design v3, "day-first"): night hero, "Who sits on <day>" picker, by-appointment doctors,
+// Home (design v3, "day-first"): hero, "Who sits on <day>" picker, by-appointment doctors,
 // three booking steps, tests and medicines, and how to find us. All facts come from data/clinic.ts.
 
 import type { Metadata } from "next";
@@ -10,7 +10,27 @@ import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import { WhatsAppPreview } from "@/components/WhatsAppPreview";
 import { EmergencyNote } from "@/components/EmergencyNote";
-import { GoogleIcon, MapPinIcon, PhoneIcon, ReportIcon, ServiceIcon, WhatsAppIcon } from "@/components/Icons";
+import {
+  CalendarCheckIcon,
+  GoogleIcon,
+  MapPinIcon,
+  PhoneIcon,
+  ReportIcon,
+  ServiceIcon,
+  StethoscopeIcon,
+  WhatsAppIcon,
+} from "@/components/Icons";
+
+function UltrasoundWaveIcon({ className = "size-5" }: { className?: string }) {
+  return <ServiceIcon id="ultrasound" className={className} />;
+}
+
+const heroHighlights = [
+  { lines: ["Visiting", "Specialists"], Icon: StethoscopeIcon },
+  { lines: ["Ultrasound", "Scans"], Icon: UltrasoundWaveIcon },
+  { lines: ["PDF Lab", "Reports"], Icon: ReportIcon },
+  { lines: ["Same-Day", "Booking"], Icon: CalendarCheckIcon },
+] as const;
 
 // Every page names its own address for search engines (alternates.canonical); this is "/".
 export const metadata: Metadata = { alternates: { canonical: "/" } };
@@ -30,16 +50,16 @@ export default function Home() {
 
       {/* Hero: Crisp white architectural canvas with diagonal 3D DNA sculpture */}
       <section className="relative overflow-hidden bg-white">
-        <div className="hero-mobile-screen relative mx-auto flex w-full max-w-7xl flex-col justify-between gap-3.5 px-5 pt-5 sm:justify-start sm:gap-6 sm:px-8 sm:pt-10 sm:pb-14 min-[72rem]:grid min-[72rem]:min-h-[630px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-18 xl:min-h-[660px] xl:grid-cols-[minmax(0,1fr)_350px]">
+        <div className="hero-mobile-screen relative mx-auto flex w-full max-w-7xl flex-col justify-between gap-2.5 px-5 pt-3.5 sm:justify-start sm:gap-4 sm:px-8 sm:pt-7 sm:pb-12 min-[72rem]:grid min-[72rem]:min-h-[650px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-16 xl:min-h-[680px] xl:grid-cols-[minmax(0,1fr)_350px]">
           {/* 1. Top-Left Content Block */}
-          <div className="relative z-10 flex min-w-0 flex-col items-start gap-3.5 sm:gap-5 min-[72rem]:max-w-[35rem] min-[72rem]:pt-3 min-[72rem]:pb-20 xl:max-w-[38rem]">
+          <div className="relative z-10 flex min-w-0 flex-col items-start gap-2.5 min-[390px]:gap-3 sm:gap-4 min-[72rem]:gap-5 min-[72rem]:max-w-[36rem] min-[72rem]:pt-2 min-[72rem]:pb-8 xl:max-w-[39rem]">
             {/* Google Rating Pill */}
             <div className="rise flex items-center">
               <a
                 href={clinic.googleRating.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full border border-[#E4EAE6] bg-[#F7F9F7] px-3 py-1 sm:px-2.5 sm:py-0.5 text-xs font-semibold text-charcoal hover:border-[#C5D8CD] hover:bg-[#EFF5EE] transition-all shrink-0"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[#E4EAE6] bg-[#F7F9F7] px-2.5 py-0.5 sm:py-1 text-[11.5px] sm:text-xs font-semibold text-charcoal hover:border-[#C5D8CD] hover:bg-[#EFF5EE] transition-all shrink-0"
                 aria-label={`Rated ${clinic.googleRating.score} out of 5 on Google with ${clinic.googleRating.count} reviews`}
               >
                 <GoogleIcon className="size-3.5 shrink-0" />
@@ -51,24 +71,54 @@ export default function Home() {
               </a>
             </div>
 
-            {/* Clean Modern Two-Line Sans Headline */}
-            <h1 className="rise rise-2 max-w-full font-sans font-semibold tracking-[-0.038em] text-[#171D1B] text-[clamp(1.76rem,8.05vw,2.32rem)] leading-[1.07] sm:tracking-[-0.035em] sm:text-[2.95rem] sm:leading-[1.07] min-[72rem]:text-[3.1rem] xl:text-[3.45rem]">
-              The patient comes
-              <span className="block">before everything else.</span>
+            {/* Main Headline (>= 30px mobile, >= 36px tablet, >= 48px desktop) */}
+            <h1 className="hero-fade-in max-w-full font-sans font-semibold tracking-[-0.036em] text-[#171D1B] text-[clamp(1.875rem,8.3vw,2.35rem)] leading-[1.08] sm:tracking-[-0.035em] sm:text-[2.65rem] sm:leading-[1.07] min-[72rem]:text-[3.05rem] xl:text-[3.35rem]">
+              Book a Specialist
+              <span className="block">Appointment Today</span>
             </h1>
+
+            {/* Primary CTA Button */}
+            <Link
+              href="/book"
+              className="hero-fade-in group inline-flex min-h-11 sm:min-h-13 items-center justify-center gap-2.5 rounded-xl bg-brand px-5 sm:px-7 py-2.5 sm:py-3 text-[1.0625rem] sm:text-[1.125rem] font-semibold text-white hover:bg-brand-dark transition-all"
+            >
+              <span>Book Appointment</span>
+              <span className="inline-flex size-6 items-center justify-center rounded-lg bg-mint text-ink transition-transform duration-200 group-hover:translate-x-0.5">
+                <span aria-hidden="true" className="text-xs font-bold leading-none">→</span>
+              </span>
+            </Link>
+
+            {/* 4 Clinic-Accurate Value Proposition Icons */}
+            <div className="grid w-full max-w-[26rem] sm:max-w-[32rem] grid-cols-4 gap-1.5 min-[390px]:gap-2 sm:gap-3 pt-0.5">
+              {heroHighlights.map(({ lines, Icon }) => (
+                <div
+                  key={lines.join(" ")}
+                  className="flex flex-col items-start gap-1.5 rounded-xl border border-[#EAEFEA] bg-[#F8FAF8]/95 p-2 sm:p-2.5 backdrop-blur-2xs"
+                >
+                  <span className="flex size-8 min-[390px]:size-9 sm:size-10 items-center justify-center rounded-lg bg-white text-[#1D2321] ring-1 ring-[#E4EAE6]">
+                    <Icon className="size-4 min-[390px]:size-4.5 sm:size-5" />
+                  </span>
+                  <span className="text-[11px] min-[390px]:text-[12px] sm:text-[12.5px] font-semibold leading-[1.2] tracking-[-0.01em] text-[#2E3935]">
+                    {lines[0]}
+                    <span className="block">{lines[1]}</span>
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* 2. Centerpiece 3D Sculptural DNA Helix (softly feathered on all 4 unrotated container edges on mobile/tablet, diagonal sweep on desktop) */}
-          <div className="pointer-events-none relative z-0 -mx-5 my-auto flex min-h-[190px] max-h-[310px] min-[390px]:min-h-[220px] min-[390px]:max-h-[330px] min-[420px]:min-h-[248px] min-[420px]:max-h-[365px] flex-1 items-center w-[calc(100%+2.5rem)] select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_9%,black_91%,transparent_100%)] sm:block sm:flex-none sm:min-h-0 sm:max-h-none sm:-mx-8 sm:my-0 sm:h-[250px] sm:w-[calc(100%+4rem)] md:h-[280px] min-[72rem]:absolute min-[72rem]:left-[27%] min-[72rem]:top-[-3%] min-[72rem]:mx-0 min-[72rem]:h-auto min-[72rem]:aspect-[1376/768] min-[72rem]:w-[67%] min-[72rem]:overflow-visible min-[72rem]:-rotate-[16deg] min-[72rem]:[mask-image:linear-gradient(90deg,transparent_0%,black_12%,black_90%,transparent_100%)] xl:left-[28%] xl:top-[-4%] xl:w-[65%]">
+          {/* 2. Centerpiece 3D Sculptural DNA Helix (16:9 WebP + JPG fallback < 200KB) */}
+          <div className="pointer-events-none relative z-0 -mx-5 my-auto flex min-h-[142px] max-h-[265px] min-[390px]:min-h-[168px] min-[390px]:max-h-[285px] min-[420px]:min-h-[195px] min-[420px]:max-h-[315px] flex-1 items-center w-[calc(100%+2.5rem)] select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_9%,black_91%,transparent_100%)] sm:block sm:flex-none sm:min-h-0 sm:max-h-none sm:-mx-8 sm:my-0 sm:h-[195px] sm:w-[calc(100%+4rem)] md:h-[215px] min-[72rem]:absolute min-[72rem]:left-[33%] min-[72rem]:top-[-2%] min-[72rem]:mx-0 min-[72rem]:h-auto min-[72rem]:aspect-video min-[72rem]:w-[61%] min-[72rem]:overflow-visible min-[72rem]:-rotate-[16deg] min-[72rem]:[mask-image:linear-gradient(90deg,transparent_0%,black_14%,black_90%,transparent_100%)] xl:left-[34%] xl:top-[-3%] xl:w-[59%]">
             <div className="flex h-full w-full items-center justify-center [mask-image:linear-gradient(to_bottom,transparent_0%,black_18%,black_82%,transparent_100%)] sm:block min-[72rem]:[mask-image:none]">
               <picture className="block h-full w-full">
-                <source media="(min-width: 640px)" srcSet="/photos/dna-helix-1376.webp" />
+                <source type="image/webp" media="(min-width: 640px)" srcSet="/photos/dna-helix-1920.webp" />
+                <source type="image/webp" srcSet="/photos/dna-helix-800.webp" />
                 <img
-                  src="/photos/dna-helix-800.webp"
+                  src="/photos/dna-helix-1920.jpg"
                   alt=""
                   aria-hidden="true"
-                  width={1376}
-                  height={768}
+                  width={1920}
+                  height={1080}
                   fetchPriority="high"
                   decoding="async"
                   className="h-full w-full scale-[1.18] -rotate-[7deg] object-cover sm:scale-[1.06] sm:-rotate-[4deg] min-[72rem]:scale-100 min-[72rem]:rotate-0 min-[72rem]:object-contain"
