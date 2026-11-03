@@ -48,14 +48,6 @@ export default function ServicesPage() {
         <div className="mt-8">
           <ReportCollectionSection />
         </div>
-
-        <p className="mt-6 text-base text-muted">
-          For timings and test prices,{" "}
-          <a href={`tel:${clinic.phone}`} className="font-semibold text-brand underline">
-            call <span className="whitespace-nowrap">{clinic.phoneDisplay}</span>
-          </a>
-          .
-        </p>
       </section>
     </>
   );
