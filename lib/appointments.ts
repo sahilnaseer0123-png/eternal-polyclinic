@@ -1,5 +1,5 @@
-// Appointments, Live OPD Status, Cross-Device Cloud Syncing, and End-of-Day Backup store.
-// Works seamlessly in static export, with automatic cloud sync across all devices and tablets.
+// Appointments, Live OPD Status, Local Browser Tab Sync, and End-of-Day Backup store.
+// Works seamlessly in static export on the reception tablet.
 
 import { useSyncExternalStore } from "react";
 import { doctors as defaultDoctors, type Doctor, type OpdSession } from "@/data/clinic";
@@ -34,6 +34,7 @@ export type DoctorLiveStatus = {
 
 export type DoctorOverride = {
   onLeave?: boolean;
+  deactivated?: boolean;
   leaveUntil?: string; // "YYYY-MM-DD"
   customOpd?: OpdSession[];
   customFee?: string;
@@ -144,12 +145,26 @@ export function getAppointmentByToken(token: string): Appointment | null {
   return all.find((a) => a.token.toUpperCase() === token.trim().toUpperCase()) ?? null;
 }
 
-/** Generates clean, predictable token numbers like #EP-AK1031-01 */
-export function generateToken(date: string, doctorId: string, isWalkIn = false): string {
-  const all = getAllAppointments();
+/** Generates clean, collision-free token numbers like EP-AK1031-01 (even if earlier tokens were deleted) */
+export function generateToken(
+  date: string,
+  doctorId: string,
+  isWalkIn = false,
+  existingAppointments?: Appointment[],
+): string {
+  const all = existingAppointments ?? getAllAppointments();
   const forSitting = all.filter((a) => a.date === date && a.doctorId === doctorId);
-  const nextNumber = forSitting.length + 1;
-  const docCode = doctorId.slice(0, 2).toUpperCase();
+  let maxSeq = 0;
+  for (const a of forSitting) {
+    const m = a.token.match(/-(\d+)(?:-W)?$/);
+    if (m) {
+      const n = parseInt(m[1], 10);
+      if (n > maxSeq) maxSeq = n;
+    }
+  }
+  const nextNumber = Math.max(maxSeq, forSitting.length) + 1;
+  const cleanCode = doctorId.replace(/^dr\.?\s*/i, "").replace(/[^a-zA-Z0-9]/g, "");
+  const docCode = (cleanCode.slice(0, 2) || "DR").toUpperCase();
   const dateCode = date.replace(/-/g, "").slice(4); // "1031" for Oct 31
   const suffix = isWalkIn ? "-W" : "";
   return `EP-${docCode}${dateCode}-${String(nextNumber).padStart(2, "0")}${suffix}`;
@@ -250,19 +265,31 @@ export function removeCustomDoctor(doctorId: string): void {
   }
 }
 
+export function isBuiltInDoctor(doctorId: string): boolean {
+  return defaultDoctors.some((d) => d.id === doctorId);
+}
+
+export function isDoctorOnLeave(doctor: Doctor): boolean {
+  return Boolean(doctor.availability?.toLowerCase().startsWith("on leave"));
+}
+
 /** Returns all active doctors including customized OPD schedules & custom added doctors */
 export function getActiveDoctors(): Doctor[] {
   const overrides = getDoctorOverrides();
   const custom = getCustomDoctors();
-  const mergedDefaults = defaultDoctors.map((doc) => {
-    const ov = overrides[doc.id];
-    if (!ov) return doc;
-    return {
-      ...doc,
-      opd: ov.customOpd ?? doc.opd,
-      availability: ov.onLeave ? `On Leave${ov.leaveUntil ? ` until ${ov.leaveUntil}` : ""}` : doc.availability,
-    };
-  });
+  const mergedDefaults = defaultDoctors
+    .filter((doc) => !overrides[doc.id]?.deactivated)
+    .map((doc) => {
+      const ov = overrides[doc.id];
+      if (!ov) return doc;
+      return {
+        ...doc,
+        opd: ov.customOpd ?? doc.opd,
+        availability: ov.onLeave
+          ? `On Leave${ov.leaveUntil ? ` until ${ov.leaveUntil}` : ""}`
+          : doc.availability,
+      };
+    });
   return [...mergedDefaults, ...custom];
 }
 
@@ -274,12 +301,17 @@ export const DEFAULT_ADMIN_PIN = "1234";
 
 export function getAdminPin(): string {
   if (!isBrowser()) return DEFAULT_ADMIN_PIN;
-  return window.localStorage.getItem(STORAGE_KEYS.ADMIN_PIN) || DEFAULT_ADMIN_PIN;
+  return (
+    window.localStorage.getItem(STORAGE_KEYS.ADMIN_PIN) ||
+    window.localStorage.getItem("ep_admin_pin") ||
+    DEFAULT_ADMIN_PIN
+  );
 }
 
 export function setAdminPin(pin: string): void {
   if (!isBrowser()) return;
   window.localStorage.setItem(STORAGE_KEYS.ADMIN_PIN, pin);
+  window.localStorage.removeItem("ep_admin_pin");
 }
 
 // ---------------------------------------------------------------------------

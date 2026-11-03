@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: `How ${clinic.name} handles the details you share when you book an appointment.`,
 };
 
-const LAST_UPDATED = "2 November 2026";
+const LAST_UPDATED = "3 November 2026";
 
 export default function PrivacyPage() {
   const tel = `tel:${clinic.phone}`;
@@ -49,6 +49,7 @@ export default function PrivacyPage() {
             <h2>What the booking form collects</h2>
             <ul>
               <li>Your name and mobile number</li>
+              <li>Your village or area (optional, to tell apart patients who share a name)</li>
               <li>The doctor you chose, and the day and time you want</li>
             </ul>
             <p className="mt-3">

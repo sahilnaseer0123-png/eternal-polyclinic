@@ -6,7 +6,7 @@ import { PhoneIcon, WhatsAppIcon } from "@/components/Icons";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/faq" },
-  title: "Frequently Asked Questions | Eternal Polyclinic Sopore",
+  title: "Frequently Asked Questions",
   description: `Answers regarding doctor booking, OPD timings, ultrasound reporting, consultation fees, and directions at ${clinic.name}, Sopore.`,
 };
 
@@ -45,7 +45,7 @@ export default function FaqPage() {
                 href={`https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent("Hello Eternal Polyclinic, I have a query regarding clinical services.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-4 text-sm font-bold text-white hover:bg-[#20ba59] transition-colors"
+                className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-brand px-4 text-sm font-bold text-white hover:bg-brand-dark transition-colors"
               >
                 <WhatsAppIcon className="size-3.5" />
                 <span>WhatsApp</span>

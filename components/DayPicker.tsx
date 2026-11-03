@@ -7,20 +7,14 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { clinic, doctors, type Doctor, type OpdSession, type Weekday } from "@/data/clinic";
-import { clinicClock, DAY_NAMES, formatTime } from "@/lib/schedule";
+import { clinic, type Doctor, type OpdSession, type Weekday } from "@/data/clinic";
+import { isBuiltInDoctor, isDoctorOnLeave, useActiveDoctors, useDoctorStatuses } from "@/lib/appointments";
+import { addDays, clinicClock, DAY_NAMES, formatTime, sessionOn } from "@/lib/schedule";
 import { useClinicMinute } from "./useClinicMinute";
 
 const DAY_ORDER: Weekday[] = [0, 1, 2, 3, 4, 5, 6];
 
 type Sitting = { doctor: Doctor; session: OpdSession };
-
-/** Every sitting on a weekday, earliest first. Rotating sittings (1st-of-month, alternate) carry a note. */
-function sittingsOn(day: Weekday): Sitting[] {
-  return doctors
-    .flatMap((doctor) => doctor.opd.filter((s) => s.day === day).map((session) => ({ doctor, session })))
-    .sort((a, b) => a.session.start.localeCompare(b.session.start));
-}
 
 function noteFor(s: OpdSession): string | null {
   if (s.note) return s.note;
@@ -31,15 +25,45 @@ function noteFor(s: OpdSession): string | null {
 
 export function DayPicker() {
   const minute = useClinicMinute();
+  const activeDoctors = useActiveDoctors();
+  const statuses = useDoctorStatuses();
   const [picked, setPicked] = useState<Weekday | null>(null);
-  const today: Weekday | null = minute === null ? null : clinicClock(new Date(minute)).weekday;
+  const clock = minute === null ? null : clinicClock(new Date(minute));
+  const today: Weekday | null = clock ? clock.weekday : null;
+
+  const dateFor = (day: Weekday): string | undefined =>
+    clock ? addDays(clock.dateKey, (day - clock.weekday + 7) % 7) : undefined;
+
+  const sittingsOn = (day: Weekday): Sitting[] => {
+    const targetDate = dateFor(day);
+    const isTodayDay = today !== null && day === today;
+    return activeDoctors
+      .filter((doctor) => !isDoctorOnLeave(doctor))
+      .filter((doctor) => !(isTodayDay && statuses[doctor.id]?.state === "cancelled"))
+      .flatMap((doctor) => {
+        const session = sessionOn(doctor, day, targetDate);
+        return session ? [{ doctor, session }] : [];
+      })
+      .sort((a, b) => a.session.start.localeCompare(b.session.start));
+  };
+
   // Open on today; if no specialist sits today, open on the next day that has one.
   const firstBusyFrom = (from: Weekday): Weekday =>
     DAY_ORDER.map((_, i) => ((from + i) % 7) as Weekday).find((d) => sittingsOn(d).length > 0) ?? from;
   const selected: Weekday = picked ?? (today === null ? 0 : firstBusyFrom(today));
   const list = sittingsOn(selected);
   const dayName = DAY_NAMES[selected];
-  const nextDay = sittingsOn(selected).length === 0 ? firstBusyFrom(((selected + 1) % 7) as Weekday) : undefined;
+  const nextDay = list.length === 0 ? firstBusyFrom(((selected + 1) % 7) as Weekday) : undefined;
+
+  // Specialists who normally sit on this weekday once a month, when this upcoming weekday isn't their week
+  const monthlyNotThisWeek = clock
+    ? activeDoctors.filter((doctor) => {
+        if (isDoctorOnLeave(doctor)) return false;
+        const raw = doctor.opd.find((s) => s.day === selected && s.recurrence === "first-of-month");
+        if (!raw) return false;
+        return !sessionOn(doctor, selected, dateFor(selected));
+      })
+    : [];
 
   return (
     <div className="bg-white">
@@ -109,6 +133,8 @@ export function DayPicker() {
             <ul className="flex flex-col gap-3">
               {list.map(({ doctor, session }) => {
                 const note = noteFor(session);
+                const live = today === selected ? statuses[doctor.id] : undefined;
+                const profileHref = isBuiltInDoctor(doctor.id) ? `/doctors/${doctor.id}` : `/book?doctor=${doctor.id}`;
                 return (
                   <li
                     key={`${doctor.id}-${session.day}`}
@@ -120,17 +146,30 @@ export function DayPicker() {
                     </p>
                     <div className="min-w-0">
                       <h3 className="font-display text-xl font-medium leading-snug tracking-tight sm:text-[1.5625rem]">
-                        <Link href={`/doctors/${doctor.id}`} className="hover:text-brand">
+                        <Link href={profileHref} className="hover:text-brand">
                           {doctor.name ?? doctor.speciality}
                         </Link>
                       </h3>
                       <p className="text-base font-semibold text-brand">{doctor.speciality}</p>
                       <p className="text-[15px] text-muted">{doctor.credentials ?? doctor.degree}</p>
-                      {note && (
-                        <p className="mt-2 inline-block rounded-full bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
-                          {note}
-                        </p>
-                      )}
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {note && (
+                          <span className="inline-block rounded-full bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
+                            {note}
+                          </span>
+                        )}
+                        {live?.state === "in_clinic" && (
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-tint border border-brand-line px-3 py-1 text-xs font-bold text-ink">
+                            <span className="size-1.5 rounded-full bg-[#22A05B]" aria-hidden="true" />
+                            In Clinic Now
+                          </span>
+                        )}
+                        {live?.state === "delayed" && (
+                          <span className="inline-block rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-xs font-bold text-amber-800">
+                            Delayed ~{live.delayMinutes ?? 30}m
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <Link
                       href={`/book?doctor=${doctor.id}`}
@@ -142,6 +181,19 @@ export function DayPicker() {
                 );
               })}
             </ul>
+          )}
+          {monthlyNotThisWeek.length > 0 && (
+            <p className="mt-4 text-sm text-muted">
+              Note:{" "}
+              {monthlyNotThisWeek.map((d, idx) => (
+                <span key={d.id}>
+                  {idx > 0 ? ", " : ""}
+                  <strong className="font-semibold text-ink">{d.name ?? d.speciality}</strong> ({d.speciality}) sits on
+                  the 1st {dayName} of every month
+                </span>
+              ))}
+              .
+            </p>
           )}
         </div>
       </div>

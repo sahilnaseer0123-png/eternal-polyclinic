@@ -19,7 +19,10 @@ const TABS = [
 export function TabBar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const moreActive = NAV.some((n) => n.href === pathname && n.href !== "/doctors") || pathname === "/privacy";
+  const moreActive =
+    NAV.some((n) => n.href === pathname && n.href !== "/doctors") ||
+    pathname === "/privacy" ||
+    pathname === "/admin";
   const tabClass = (on: boolean) =>
     `flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${on ? "text-ink" : "text-muted"}`;
 
@@ -75,7 +78,7 @@ export function TabBar() {
                 href={`https://wa.me/${clinic.whatsapp}`}
                 className="flex min-h-11 items-center justify-center gap-2 rounded-xl bg-sand text-ink border border-line text-sm font-bold hover:bg-stone transition-colors"
               >
-                <ChatIcon className="size-4 text-[#25D366]" /> WhatsApp
+                <ChatIcon className="size-4 text-ink" /> WhatsApp
               </a>
               <a
                 href={`tel:${clinic.phone}`}

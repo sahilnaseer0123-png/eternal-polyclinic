@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: PageProps<"/doctors/[id]">): 
   return {
     alternates: { canonical: `/doctors/${doctor.id}` },
     title: doctor.name ? `${doctor.name}, ${doctor.speciality}` : doctor.speciality,
-    description: `${title(doctor)} at ${clinic.name}, Sopore. ${days ? `Sits on ${days}.` : "Days coming soon."}`,
+    description: `${title(doctor)} at ${clinic.name}, Sopore. ${days ? `Sits on ${days}.` : (doctor.availability ? `${doctor.availability}.` : `Call ${clinic.phoneDisplay} to confirm timings.`)}`,
   };
 }
 
@@ -128,7 +128,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
               </ul>
             ) : (
               <p className="mt-4 text-base text-charcoal leading-relaxed">
-                {doctor.availability ?? "Days coming soon. Please call reception and we will arrange your slot."}
+                {doctor.availability ?? "Consultation by prior appointment. Please call reception and we will arrange your slot."}
               </p>
             )}
 

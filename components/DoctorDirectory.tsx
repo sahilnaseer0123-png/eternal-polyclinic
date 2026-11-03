@@ -6,7 +6,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { categories, clinic, doctors, services, type DoctorCategory } from "@/data/clinic";
+import { categories, clinic, services, type DoctorCategory } from "@/data/clinic";
+import { isBuiltInDoctor, isDoctorOnLeave, useActiveDoctors, useDoctorStatuses } from "@/lib/appointments";
 import { DAY_NAMES, formatTime } from "@/lib/schedule";
 import { DoctorMark } from "./DoctorMark";
 import { NextAvailable } from "./NextAvailable";
@@ -37,11 +38,13 @@ const matches = (query: string, ...fields: (string | null | undefined)[]) => {
 };
 
 export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { initialFilter?: Filter; initialQuery?: string }) {
+  const activeDoctors = useActiveDoctors();
+  const statuses = useDoctorStatuses();
   const [filter, setFilter] = useState<Filter>(initialFilter);
   const [query, setQuery] = useState(initialQuery);
   const q = query.trim().toLowerCase();
 
-  const shown = doctors.filter((d) => {
+  const shown = activeDoctors.filter((d) => {
     if (filter !== "all" && d.category !== filter) return false;
     if (!q) return true;
     // When searching specifically for "skin", only dermatology specialists should match
@@ -116,7 +119,10 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
       {shown.length > 0 ? (
         <ul className="grid gap-3.5 sm:gap-4 md:grid-cols-2">
           {shown.map((doctor) => {
-            const hasOpd = doctor.opd.length > 0;
+            const onLeave = isDoctorOnLeave(doctor);
+            const hasOpd = doctor.opd.length > 0 && !onLeave;
+            const builtIn = isBuiltInDoctor(doctor.id);
+            const live = statuses[doctor.id];
             return (
               <li
                 key={doctor.id}
@@ -131,14 +137,28 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                       className="size-14 shrink-0 rounded-xl"
                     />
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center justify-between gap-2">
+                      <div className="flex flex-wrap items-center justify-between gap-1.5">
                         <span className="inline-block rounded-full bg-brand-tint border border-brand-line px-2 py-0.5 text-sm font-semibold text-brand">
                           {doctor.categoryLabel}
                         </span>
+                        {onLeave ? (
+                          <span className="inline-block rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-xs font-bold text-amber-800">
+                            On Leave
+                          </span>
+                        ) : live?.state === "in_clinic" ? (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-brand-tint border border-brand-line px-2.5 py-0.5 text-xs font-bold text-ink">
+                            <span className="size-1.5 rounded-full bg-[#22A05B]" aria-hidden="true" />
+                            In Clinic
+                          </span>
+                        ) : live?.state === "delayed" ? (
+                          <span className="inline-block rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-xs font-bold text-amber-800">
+                            Delayed ~{live.delayMinutes ?? 30}m
+                          </span>
+                        ) : null}
                       </div>
                       <h3 className="text-lg sm:text-xl font-medium tracking-tight text-ink mt-1 leading-snug font-display">
                         <Link
-                          href={`/doctors/${doctor.id}`}
+                          href={builtIn ? `/doctors/${doctor.id}` : `/book?doctor=${doctor.id}`}
                           className="hover:text-brand transition-colors"
                         >
                           {doctor.name ?? doctor.speciality}
@@ -229,12 +249,21 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
 
                 {/* Refined Action Buttons */}
                 <div className="mt-5 grid grid-cols-2 gap-2 pt-2 border-t border-line/80">
-                  <Link
-                    href={`/doctors/${doctor.id}`}
-                    className="inline-flex min-h-10 items-center justify-center rounded-xl border border-line bg-white px-3 text-center text-sm font-semibold text-ink hover:bg-ground transition-colors"
-                  >
-                    View Details
-                  </Link>
+                  {builtIn ? (
+                    <Link
+                      href={`/doctors/${doctor.id}`}
+                      className="inline-flex min-h-10 items-center justify-center rounded-xl border border-line bg-white px-3 text-center text-sm font-semibold text-ink hover:bg-ground transition-colors"
+                    >
+                      View Details
+                    </Link>
+                  ) : (
+                    <a
+                      href={`tel:${clinic.phone}`}
+                      className="inline-flex min-h-10 items-center justify-center rounded-xl border border-line bg-white px-3 text-center text-sm font-semibold text-ink hover:bg-ground transition-colors"
+                    >
+                      Call Helpline
+                    </a>
+                  )}
                   {hasOpd ? (
                     <Link
                       href={`/book?doctor=${doctor.id}`}

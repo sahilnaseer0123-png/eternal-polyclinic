@@ -3,15 +3,16 @@
 // Weekly OPD schedule: a doctor × day grid on wider screens, a day-by-day list on phones.
 // The grid itself is prebuilt; WeeklySchedule adds today's highlight in the visitor's browser.
 
-import { doctors, type Weekday } from "@/data/clinic";
+import { clinic, doctors as defaultDoctors, type Doctor, type Weekday } from "@/data/clinic";
+import { isDoctorOnLeave, useActiveDoctors } from "@/lib/appointments";
 import { clinicClock, DAY_NAMES, formatTimeShort, sessionOn } from "@/lib/schedule";
 import { useClinicMinute } from "./useClinicMinute";
 
 const WEEK: Weekday[] = [1, 2, 3, 4, 5, 6, 0]; // Monday first
-const confirmed = doctors.filter((d) => d.opd.length > 0);
-const unconfirmed = doctors.filter((d) => d.opd.length === 0);
 
-export function ScheduleView({ today }: { today?: Weekday }) {
+export function ScheduleView({ today, doctorList = defaultDoctors }: { today?: Weekday; doctorList?: Doctor[] }) {
+  const confirmed = doctorList.filter((d) => d.opd.length > 0 && !isDoctorOnLeave(d));
+  const byAppointment = doctorList.filter((d) => d.opd.length === 0 && !isDoctorOnLeave(d));
   return (
     <div className="flex flex-col gap-4">
       {/* Wider screens: grid */}
@@ -101,10 +102,16 @@ export function ScheduleView({ today }: { today?: Weekday }) {
         })}
       </ul>
 
-      {unconfirmed.length > 0 && (
-        <p className="text-muted">
-          Timings for the {unconfirmed.map((d) => d.speciality.toLowerCase()).join(" and ")} are coming soon. Call to
-          ask.
+      {byAppointment.length > 0 && (
+        <p className="text-sm text-muted">
+          {byAppointment
+            .map((d) => `${d.name ?? d.speciality} (${d.availability ?? "by prior appointment"})`)
+            .join(" · ")}{" "}
+          — call{" "}
+          <a href={`tel:${clinic.phone}`} className="font-semibold text-ink underline hover:text-brand">
+            {clinic.phoneDisplay}
+          </a>{" "}
+          to confirm timings.
         </p>
       )}
     </div>
@@ -114,5 +121,6 @@ export function ScheduleView({ today }: { today?: Weekday }) {
 /** Highlights today's column, worked out in the visitor's browser (the prebuilt page shows no highlight). */
 export function WeeklySchedule() {
   const minute = useClinicMinute();
-  return <ScheduleView today={minute === null ? undefined : clinicClock(new Date(minute)).weekday} />;
+  const activeDoctors = useActiveDoctors();
+  return <ScheduleView today={minute === null ? undefined : clinicClock(new Date(minute)).weekday} doctorList={activeDoctors} />;
 }

@@ -3,10 +3,8 @@ import { PhoneIcon, ReportIcon, ShieldCheckIcon, WhatsAppIcon } from "@/componen
 
 export function ReportCollectionSection({
   className = "",
-  compact = false,
 }: {
   className?: string;
-  compact?: boolean;
 }) {
   return (
     <div
@@ -87,7 +85,7 @@ export function ReportCollectionSection({
             href={clinic.reportRequestUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-5 text-sm sm:text-base font-bold text-white shadow-subtle hover:bg-[#20ba59] active:translate-y-0.5 transition-all text-center"
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand px-5 text-sm sm:text-base font-bold text-white shadow-subtle hover:bg-brand-dark active:translate-y-0.5 transition-all text-center"
           >
             <WhatsAppIcon className="size-5 shrink-0" />
             <span>WhatsApp Lab Tech</span>

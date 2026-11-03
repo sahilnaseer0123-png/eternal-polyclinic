@@ -5,7 +5,7 @@
 // doctor live delay radar, village/town disambiguation,
 // cross-device cloud sync, end-of-day Excel/JSON backup, and 1-tap WhatsApp report to owner.
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { clinic, type Weekday } from "@/data/clinic";
 import {
@@ -22,6 +22,8 @@ import {
   downloadCsv,
   downloadFullJsonBackup,
   formatDailyOwnerSummary,
+  generateToken,
+  getAdminPin,
   getBookedSlots,
   getDoctorLiveStatus,
   getLastSyncTime,
@@ -30,6 +32,7 @@ import {
   restoreFromJsonBackup,
   saveAppointment,
   saveCustomDoctor,
+  setAdminPin,
   setDoctorLiveStatus,
   setDoctorOverride,
   updateAppointmentStatus,
@@ -47,32 +50,25 @@ import {
   WhatsAppIcon,
 } from "@/components/Icons";
 
-const DEFAULT_PIN = "1234";
+const emptySubscribe = () => () => {};
 
 export default function AdminPage() {
-  const [mounted, setMounted] = useState<boolean>(false);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    try {
+      return typeof window !== "undefined" && window.sessionStorage?.getItem("ep_reception_auth") === "true";
+    } catch {
+      return false;
+    }
+  });
   const [pinInput, setPinInput] = useState<string>("");
   const [pinError, setPinError] = useState<string>("");
-
-  useEffect(() => {
-    setMounted(true);
-    try {
-      if (typeof window !== "undefined" && sessionStorage.getItem("ep_reception_auth") === "true") {
-        setIsAuthenticated(true);
-      }
-    } catch {
-      // Storage access protected
-    }
-    const currentClock = clinicClock(new Date());
-    setSelectedDate(currentClock.dateKey);
-  }, []);
 
   // Navigation tabs
   const [activeTab, setActiveTab] = useState<"opd" | "radar" | "doctors" | "backups" | "search">("opd");
 
   // Clock
-  const [now, setNow] = useState<Date>(new Date());
+  const [now, setNow] = useState<Date>(() => new Date());
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(t);
@@ -82,7 +78,7 @@ export default function AdminPage() {
   const todayKey = clock.dateKey;
 
   // Selected date for OPD register
-  const [selectedDate, setSelectedDate] = useState<string>(todayKey);
+  const [selectedDate, setSelectedDate] = useState<string>(() => clinicClock(new Date()).dateKey);
   const [doctorFilter, setDoctorFilter] = useState<string>("all");
 
   // Reactive appointments, statuses, and doctors store
@@ -121,7 +117,7 @@ export default function AdminPage() {
     await pushToCloud();
     setTimeout(() => {
       setIsSyncing(false);
-      setBroadcastToast("Cloud sync complete! All connected tablets & devices are up to date.");
+      setBroadcastToast("Local sync complete across open browser tabs on this device.");
       setTimeout(() => setBroadcastToast(""), 4000);
     }, 500);
   }
@@ -135,9 +131,12 @@ export default function AdminPage() {
   const [newDocStart, setNewDocStart] = useState<string>("10:00");
   const [newDocEnd, setNewDocEnd] = useState<string>("14:00");
 
+  // Change PIN state
+  const [newPinValue, setNewPinValue] = useState<string>("");
+
   function verifyPin(pin: string) {
-    const storedPin = typeof window !== "undefined" ? localStorage.getItem("ep_admin_pin") || DEFAULT_PIN : DEFAULT_PIN;
-    if (pin === storedPin || pin === DEFAULT_PIN) {
+    const activePin = getAdminPin();
+    if (pin === activePin) {
       sessionStorage.setItem("ep_reception_auth", "true");
       setIsAuthenticated(true);
       setPinError("");
@@ -145,6 +144,19 @@ export default function AdminPage() {
       setPinError("Incorrect PIN. Please try again.");
       setTimeout(() => setPinInput(""), 600);
     }
+  }
+
+  function handleUpdatePin() {
+    const trimmed = newPinValue.trim();
+    if (trimmed.length < 4) {
+      setBroadcastToast("PIN must be at least 4 characters.");
+      setTimeout(() => setBroadcastToast(""), 3500);
+      return;
+    }
+    setAdminPin(trimmed);
+    setNewPinValue("");
+    setBroadcastToast("Admin security PIN updated on this device.");
+    setTimeout(() => setBroadcastToast(""), 3500);
   }
 
   function handleLogout() {
@@ -193,12 +205,8 @@ export default function AdminPage() {
     const doc = allDoctors.find((d) => d.id === walkInDocId);
     if (!doc) return;
 
-    // Generate walk-in token
-    const forSitting = appointments.filter((a) => a.date === selectedDate && a.doctorId === walkInDocId);
-    const nextNum = forSitting.length + 1;
-    const docCode = walkInDocId.slice(0, 2).toUpperCase();
-    const dateCode = selectedDate.replace(/-/g, "").slice(4);
-    const token = `EP-${docCode}${dateCode}-${String(nextNum).padStart(2, "0")}-W`;
+    // Generate collision-free walk-in token
+    const token = generateToken(selectedDate, walkInDocId, true);
 
     const walkInApt: Appointment = {
       token,
@@ -266,7 +274,13 @@ export default function AdminPage() {
   // Handle adding new custom doctor
   function handleSaveNewDoctor() {
     if (!newDocName.trim() || !newDocSpec.trim()) return;
-    const id = newDocName.toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 8) || "doc" + Date.now();
+    const baseSlug = newDocName
+      .replace(/^dr\.?\s*/i, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "")
+      .slice(0, 14);
+    const id = `${baseSlug || "specialist"}-${Date.now().toString(36).slice(-4)}`;
     const doc = {
       id,
       name: newDocName.trim(),
@@ -290,6 +304,7 @@ export default function AdminPage() {
     setShowNewDocModal(false);
     setNewDocName("");
     setNewDocSpec("");
+    setNewDocDegree("");
   }
 
   // Group appointments by date for historical day-by-day backups
@@ -342,7 +357,7 @@ export default function AdminPage() {
               autoComplete="current-password"
               autoFocus
               required
-              placeholder="Enter PIN (e.g. 1234)…"
+              placeholder="Enter security PIN…"
               value={pinInput}
               onChange={(e) => {
                 setPinInput(e.target.value);
@@ -369,7 +384,7 @@ export default function AdminPage() {
             <Link href="/" className="text-charcoal font-medium hover:text-ink transition-colors underline decoration-line-strong hover:decoration-ink">
               ← Back to Website
             </Link>
-            <span>Default PIN: 1234</span>
+            <span>Authorized Staff Only</span>
           </div>
         </div>
       </div>
@@ -602,7 +617,7 @@ export default function AdminPage() {
                       ? "Send All Doctors Daily Summary to Clinic Owner on WhatsApp"
                       : `Send ${currentDoctorObj?.name || "Doctor"} Daily Summary to Clinic Owner on WhatsApp`
                   }
-                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-[#25D366] px-3.5 py-2 text-xs font-semibold text-white hover:bg-[#20ba59] shadow-2xs"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-brand px-3.5 py-2 text-xs font-semibold text-white hover:bg-brand-dark shadow-2xs"
                 >
                   <WhatsAppIcon className="size-4" />
                   <span>
@@ -763,7 +778,7 @@ export default function AdminPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           title="Message Patient on WhatsApp"
-                          className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-[#20ba59] shadow-2xs transition-all active:scale-95"
+                          className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-brand px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-brand-dark shadow-2xs transition-all active:scale-95"
                         >
                           <WhatsAppIcon className="size-4" />
                           <span>Call In</span>
@@ -1038,11 +1053,11 @@ export default function AdminPage() {
                         <button
                           type="button"
                           onClick={() => {
-                            if (window.confirm(`Are you sure you want to deactivate/remove ${doc.name ?? doc.speciality} from the active clinic roster?`)) {
+                            const label = doc.name ?? doc.speciality;
+                            if (window.confirm(`Are you sure you want to remove ${label} from the active clinic roster?`)) {
                               removeCustomDoctor(doc.id);
-                              // Also mark on leave as a soft deactivation for default doctors
-                              setDoctorOverride(doc.id, { onLeave: true });
-                              setBroadcastToast(`Dr. ${doc.name ?? doc.speciality} removed/deactivated.`);
+                              setDoctorOverride(doc.id, { deactivated: true, onLeave: true });
+                              setBroadcastToast(`${label} removed from active roster.`);
                               setTimeout(() => setBroadcastToast(""), 3500);
                             }
                           }}
@@ -1089,7 +1104,7 @@ export default function AdminPage() {
                 href={ownerWaUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-6 text-sm font-semibold text-white hover:bg-[#20ba59] shadow-sm transition-all shrink-0 active:scale-95"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-mint px-6 text-sm font-semibold text-ink hover:bg-[#D1EFB5] shadow-sm transition-all shrink-0 active:scale-95"
               >
                 <WhatsAppIcon className="size-5" />
                 <span>
@@ -1100,17 +1115,17 @@ export default function AdminPage() {
               </a>
             </div>
 
-            {/* Quick Actions Grid: Excel & JSON */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Quick Actions Grid: JSON Backup, Local Tab Sync & PIN Security */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Full JSON Backup */}
               <div className="card rounded-3xl p-5 border border-line shadow-2xs flex flex-col justify-between gap-4 bg-white">
                 <div>
                   <div className="flex items-center gap-2.5">
                     <span className="text-2xl">💾</span>
-                    <h4 className="text-base font-semibold text-ink font-display">Full Clinic JSON Database Backup</h4>
+                    <h4 className="text-base font-semibold text-ink font-display">Full Clinic JSON Backup</h4>
                   </div>
                   <p className="text-xs text-muted mt-2 leading-relaxed">
-                    Downloads an encrypted complete backup file of all appointments, walk-ins, doctor schedule overrides, and custom specialists.
+                    Downloads a complete JSON backup file of all appointments, walk-ins, doctor schedule overrides, and custom specialists stored on this device.
                   </p>
                 </div>
 
@@ -1118,30 +1133,30 @@ export default function AdminPage() {
                   <button
                     type="button"
                     onClick={downloadFullJsonBackup}
-                    className="flex-1 min-h-11 rounded-xl bg-brand text-white text-xs font-semibold hover:bg-brand-dark transition-all shadow-2xs"
+                    className="flex-1 min-h-11 rounded-xl bg-brand text-white text-xs font-semibold hover:bg-brand-dark transition-all shadow-2xs px-3"
                   >
-                    📥 Download Backup File (.json)
+                    📥 Download (.json)
                   </button>
 
                   <button
                     type="button"
                     onClick={() => restoreFileInputRef.current?.click()}
-                    className="min-h-11 px-4 rounded-xl border border-line bg-ground text-charcoal text-xs font-semibold hover:bg-sand transition-all"
+                    className="min-h-11 px-3.5 rounded-xl border border-line bg-ground text-charcoal text-xs font-semibold hover:bg-sand transition-all"
                   >
-                    🔄 Restore Backup
+                    🔄 Restore
                   </button>
                 </div>
               </div>
 
-              {/* Cross-Device Cloud Sync */}
+              {/* Local Browser Tab Sync */}
               <div className="card rounded-3xl p-5 border border-line shadow-2xs flex flex-col justify-between gap-4 bg-white">
                 <div>
                   <div className="flex items-center gap-2.5">
                     <span className="text-2xl">🛰️</span>
-                    <h4 className="text-base font-semibold text-ink font-display">Cross-Device Live Sync Status</h4>
+                    <h4 className="text-base font-semibold text-ink font-display">Live Browser Tab Sync</h4>
                   </div>
                   <p className="text-xs text-muted mt-2 leading-relaxed">
-                    Synchronizes real-time appointments across all clinic tablets, receptionist phones, and patient booking channels.
+                    Instantly syncs live OPD updates across open tabs on this reception device. To move data between separate devices, use JSON Backup &amp; Restore.
                   </p>
                   <p className="text-xs font-semibold text-ink mt-1.5">
                     Last Synced: <span className="text-charcoal">{lastSyncDisplay}</span>
@@ -1154,7 +1169,37 @@ export default function AdminPage() {
                     onClick={handleManualSync}
                     className="w-full min-h-11 rounded-xl bg-brand-tint border border-brand-line text-ink text-xs font-semibold hover:bg-[#D1EFB5] transition-all shadow-2xs"
                   >
-                    🔄 Force Cloud Sync Now
+                    🔄 Broadcast Local Sync
+                  </button>
+                </div>
+              </div>
+
+              {/* Change Admin PIN */}
+              <div className="card rounded-3xl p-5 border border-line shadow-2xs flex flex-col justify-between gap-4 bg-white">
+                <div>
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-2xl">🔒</span>
+                    <h4 className="text-base font-semibold text-ink font-display">Admin Security PIN</h4>
+                  </div>
+                  <p className="text-xs text-muted mt-2 leading-relaxed">
+                    Update the unlock PIN required to access this reception console on this device.
+                  </p>
+                </div>
+
+                <div className="flex gap-2 pt-2 border-t border-line">
+                  <input
+                    type="password"
+                    placeholder="New PIN (4+ chars)"
+                    value={newPinValue}
+                    onChange={(e) => setNewPinValue(e.target.value)}
+                    className="min-w-0 flex-1 min-h-11 rounded-xl border border-line bg-ground px-3 text-xs font-semibold text-ink focus:bg-white focus:border-brand outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleUpdatePin}
+                    className="min-h-11 px-4 rounded-xl bg-brand text-white text-xs font-semibold hover:bg-brand-dark transition-all shrink-0"
+                  >
+                    Save PIN
                   </button>
                 </div>
               </div>
@@ -1286,7 +1331,7 @@ export default function AdminPage() {
       {/* 1-TAP WALK-IN PATIENT ENTRY MODAL (WITH VILLAGE / ADDRESS FIELD)        */}
       {/* ======================================================================= */}
       {showWalkInModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-night/70 p-4 backdrop-blur-sm animate-fade-in">
+        <div className="no-print fixed inset-0 z-50 flex items-center justify-center bg-night/70 p-4 backdrop-blur-sm animate-fade-in">
           <div className="card w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border border-line flex flex-col gap-5 max-h-[90vh] overflow-y-auto bg-white">
             <div className="flex items-start justify-between border-b border-line pb-3">
               <div>
@@ -1443,7 +1488,7 @@ export default function AdminPage() {
       {/* WALK-IN SUCCESS TOKEN SLIP POPUP                                       */}
       {/* ======================================================================= */}
       {walkInSuccessSlip && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-night/70 p-4 backdrop-blur-sm animate-fade-in">
+        <div className="no-print fixed inset-0 z-50 flex items-center justify-center bg-night/70 p-4 backdrop-blur-sm animate-fade-in">
           <div className="card w-full max-w-md rounded-3xl p-6 shadow-2xl border-2 border-brand-line flex flex-col gap-4 text-center bg-white">
             <span className="text-4xl">🎟️</span>
             <div>
@@ -1487,7 +1532,7 @@ export default function AdminPage() {
       {/* REGISTER NEW SPECIALIST MODAL                                          */}
       {/* ======================================================================= */}
       {showNewDocModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-night/70 p-4 backdrop-blur-sm animate-fade-in">
+        <div className="no-print fixed inset-0 z-50 flex items-center justify-center bg-night/70 p-4 backdrop-blur-sm animate-fade-in">
           <div className="card w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border border-line flex flex-col gap-4 bg-white">
             <div className="flex items-start justify-between border-b border-line pb-3">
               <div>
@@ -1600,6 +1645,91 @@ export default function AdminPage() {
           </div>
         </div>
       )}
+
+      {/* ======================================================================= */}
+      {/* DEDICATED PRINT LAYOUT: TOKEN SLIP OR DAILY OPD REGISTER SHEET          */}
+      {/* ======================================================================= */}
+      <div className="print-only hidden text-black">
+        {walkInSuccessSlip ? (
+          <div className="appointment-slip text-left">
+            <div className="border-b-2 border-black pb-3 mb-4 flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-widest">Official OPD Token Slip</p>
+                <h2 className="text-2xl font-bold mt-0.5">{clinic.name}</h2>
+                <p className="text-xs mt-0.5">{clinic.address} · Helpline: {clinic.phoneDisplay}</p>
+              </div>
+              <div className="text-right font-mono">
+                <span className="text-xs uppercase font-bold block">Token No</span>
+                <span className="text-2xl font-bold">{walkInSuccessSlip.token}</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-y-2 gap-x-6 text-sm">
+              <p><strong>Patient Name:</strong> {walkInSuccessSlip.patientName}</p>
+              <p><strong>Mobile:</strong> +91 {walkInSuccessSlip.patientPhone}</p>
+              <p><strong>Area / Village:</strong> {walkInSuccessSlip.patientAddress || "—"}</p>
+              <p><strong>Date:</strong> {dateLabel(walkInSuccessSlip.date)} ({walkInSuccessSlip.date})</p>
+              <p><strong>Consultant:</strong> {walkInSuccessSlip.doctorName}</p>
+              <p><strong>Slot Time:</strong> {formatTime(walkInSuccessSlip.time)}</p>
+              <p className="col-span-2"><strong>Speciality:</strong> {walkInSuccessSlip.speciality}</p>
+            </div>
+            <p className="mt-4 pt-3 border-t border-black/30 text-xs">
+              Please present this slip at the reception desk 10–15 minutes before your scheduled slot.
+            </p>
+          </div>
+        ) : (
+          <div className="p-4">
+            <div className="border-b-2 border-black pb-3 mb-4 flex items-end justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-bold">{clinic.name} — Daily OPD Register</h2>
+                <p className="text-xs mt-0.5">{clinic.address} · Reception: {clinic.phoneDisplay}</p>
+              </div>
+              <div className="text-right text-xs">
+                <p><strong>OPD Date:</strong> {dateLabel(selectedDate)} ({selectedDate})</p>
+                <p>
+                  <strong>Doctor:</strong>{" "}
+                  {currentDoctorObj ? `${currentDoctorObj.name ?? currentDoctorObj.speciality} (${currentDoctorObj.speciality})` : "All Visiting Specialists"}
+                </p>
+                <p>
+                  <strong>Summary:</strong> {filteredAppointments.length} Total · {countCompleted} Done · {countWaiting} Waiting · {countCancelled} Cancelled
+                </p>
+              </div>
+            </div>
+
+            {filteredAppointments.length === 0 ? (
+              <p className="text-sm py-8 text-center">No patients scheduled for this date / filter.</p>
+            ) : (
+              <table className="w-full border-collapse text-xs">
+                <thead>
+                  <tr className="border-b-2 border-black text-left">
+                    <th className="py-2 pr-2 font-bold">Token</th>
+                    <th className="py-2 pr-2 font-bold">Time</th>
+                    <th className="py-2 pr-2 font-bold">Patient Name</th>
+                    <th className="py-2 pr-2 font-bold">Village / Area</th>
+                    <th className="py-2 pr-2 font-bold">Mobile</th>
+                    <th className="py-2 pr-2 font-bold">Doctor</th>
+                    <th className="py-2 pr-2 font-bold">Type</th>
+                    <th className="py-2 font-bold">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredAppointments.map((apt) => (
+                    <tr key={apt.token} className="border-b border-black/25">
+                      <td className="py-2 pr-2 font-mono font-bold">{apt.token}</td>
+                      <td className="py-2 pr-2">{formatTime(apt.time)}</td>
+                      <td className="py-2 pr-2 font-semibold">{apt.patientName}</td>
+                      <td className="py-2 pr-2">{apt.patientAddress || "—"}</td>
+                      <td className="py-2 pr-2 font-mono">{apt.patientPhone}</td>
+                      <td className="py-2 pr-2">{apt.doctorName}</td>
+                      <td className="py-2 pr-2 uppercase">{apt.type === "walk_in" ? "Walk-In" : "Online"}</td>
+                      <td className="py-2 uppercase">{apt.status.replace("_", " ")}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

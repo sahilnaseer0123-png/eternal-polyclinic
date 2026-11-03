@@ -30,21 +30,21 @@ export default function Home() {
 
       {/* Hero: Crisp white architectural canvas with diagonal 3D DNA sculpture */}
       <section className="relative overflow-hidden bg-white">
-        <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-3.5 px-5 pt-4 pb-6 sm:gap-6 sm:px-8 sm:pt-10 sm:pb-14 min-[72rem]:grid min-[72rem]:min-h-[630px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-18 xl:min-h-[660px] xl:grid-cols-[minmax(0,1fr)_350px]">
+        <div className="hero-mobile-screen relative mx-auto flex w-full max-w-7xl flex-col justify-between gap-3.5 px-5 pt-5 sm:justify-start sm:gap-6 sm:px-8 sm:pt-10 sm:pb-14 min-[72rem]:grid min-[72rem]:min-h-[630px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-18 xl:min-h-[660px] xl:grid-cols-[minmax(0,1fr)_350px]">
           {/* 1. Top-Left Content Block */}
-          <div className="relative z-10 flex min-w-0 flex-col items-start gap-3 sm:gap-5 min-[72rem]:max-w-[35rem] min-[72rem]:pt-3 min-[72rem]:pb-20 xl:max-w-[38rem]">
+          <div className="relative z-10 flex min-w-0 flex-col items-start gap-3.5 sm:gap-5 min-[72rem]:max-w-[35rem] min-[72rem]:pt-3 min-[72rem]:pb-20 xl:max-w-[38rem]">
             {/* Google Rating Pill */}
             <div className="rise flex items-center">
               <a
                 href={clinic.googleRating.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 sm:gap-1.5 rounded-full border border-[#E4EAE6] bg-[#F7F9F7] px-2.5 py-0.5 text-[11px] sm:text-xs font-semibold text-charcoal hover:border-[#C5D8CD] hover:bg-[#EFF5EE] transition-all shrink-0"
+                className="inline-flex items-center gap-1.5 rounded-full border border-[#E4EAE6] bg-[#F7F9F7] px-3 py-1 sm:px-2.5 sm:py-0.5 text-xs font-semibold text-charcoal hover:border-[#C5D8CD] hover:bg-[#EFF5EE] transition-all shrink-0"
                 aria-label={`Rated ${clinic.googleRating.score} out of 5 on Google with ${clinic.googleRating.count} reviews`}
               >
-                <GoogleIcon className="size-3 sm:size-3.5 shrink-0" />
+                <GoogleIcon className="size-3.5 shrink-0" />
                 <span className="font-bold text-ink tabular-nums lining-nums">{clinic.googleRating.score}</span>
-                <span className="text-[#F59E0B] text-[11px] sm:text-xs leading-none tracking-tighter" aria-hidden="true">
+                <span className="text-[#F59E0B] text-xs leading-none tracking-tighter" aria-hidden="true">
                   ★★★★★
                 </span>
                 <span className="text-muted tabular-nums lining-nums">({clinic.googleRating.count})</span>
@@ -52,16 +52,16 @@ export default function Home() {
             </div>
 
             {/* Clean Modern Two-Line Sans Headline */}
-            <h1 className="rise rise-2 max-w-full font-sans font-semibold tracking-[-0.035em] text-[#171D1B] text-[clamp(1.85rem,8vw,2.4rem)] leading-[1.07] sm:text-[2.95rem] sm:leading-[1.07] min-[72rem]:text-[3.1rem] xl:text-[3.45rem]">
+            <h1 className="rise rise-2 max-w-full font-sans font-semibold tracking-[-0.038em] text-[#171D1B] text-[clamp(1.76rem,8.05vw,2.32rem)] leading-[1.07] sm:tracking-[-0.035em] sm:text-[2.95rem] sm:leading-[1.07] min-[72rem]:text-[3.1rem] xl:text-[3.45rem]">
               The patient comes
               <span className="block">before everything else.</span>
             </h1>
           </div>
 
           {/* 2. Centerpiece 3D Sculptural DNA Helix (softly feathered on all 4 unrotated container edges on mobile/tablet, diagonal sweep on desktop) */}
-          <div className="pointer-events-none relative z-0 -mx-5 -my-1.5 h-[152px] min-[390px]:h-[168px] w-[calc(100%+2.5rem)] select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_8%,black_92%,transparent_100%)] sm:-mx-8 sm:my-0 sm:h-[250px] sm:w-[calc(100%+4rem)] md:h-[280px] min-[72rem]:absolute min-[72rem]:left-[27%] min-[72rem]:top-[-3%] min-[72rem]:mx-0 min-[72rem]:h-auto min-[72rem]:aspect-[1376/768] min-[72rem]:w-[67%] min-[72rem]:overflow-visible min-[72rem]:-rotate-[16deg] min-[72rem]:[mask-image:linear-gradient(90deg,transparent_0%,black_12%,black_90%,transparent_100%)] xl:left-[28%] xl:top-[-4%] xl:w-[65%]">
-            <div className="h-full w-full [mask-image:linear-gradient(to_bottom,transparent_0%,black_18%,black_82%,transparent_100%)] min-[72rem]:[mask-image:none]">
-              <picture>
+          <div className="pointer-events-none relative z-0 -mx-5 my-auto flex min-h-[190px] max-h-[310px] min-[390px]:min-h-[220px] min-[390px]:max-h-[330px] min-[420px]:min-h-[248px] min-[420px]:max-h-[365px] flex-1 items-center w-[calc(100%+2.5rem)] select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_9%,black_91%,transparent_100%)] sm:block sm:flex-none sm:min-h-0 sm:max-h-none sm:-mx-8 sm:my-0 sm:h-[250px] sm:w-[calc(100%+4rem)] md:h-[280px] min-[72rem]:absolute min-[72rem]:left-[27%] min-[72rem]:top-[-3%] min-[72rem]:mx-0 min-[72rem]:h-auto min-[72rem]:aspect-[1376/768] min-[72rem]:w-[67%] min-[72rem]:overflow-visible min-[72rem]:-rotate-[16deg] min-[72rem]:[mask-image:linear-gradient(90deg,transparent_0%,black_12%,black_90%,transparent_100%)] xl:left-[28%] xl:top-[-4%] xl:w-[65%]">
+            <div className="flex h-full w-full items-center justify-center [mask-image:linear-gradient(to_bottom,transparent_0%,black_18%,black_82%,transparent_100%)] sm:block min-[72rem]:[mask-image:none]">
+              <picture className="block h-full w-full">
                 <source media="(min-width: 640px)" srcSet="/photos/dna-helix-1376.webp" />
                 <img
                   src="/photos/dna-helix-800.webp"
@@ -71,7 +71,7 @@ export default function Home() {
                   height={768}
                   fetchPriority="high"
                   decoding="async"
-                  className="h-full w-full scale-[1.12] -rotate-[6deg] object-cover sm:scale-[1.06] sm:-rotate-[4deg] min-[72rem]:scale-100 min-[72rem]:rotate-0 min-[72rem]:object-contain"
+                  className="h-full w-full scale-[1.18] -rotate-[7deg] object-cover sm:scale-[1.06] sm:-rotate-[4deg] min-[72rem]:scale-100 min-[72rem]:rotate-0 min-[72rem]:object-contain"
                 />
               </picture>
             </div>
@@ -216,7 +216,7 @@ export default function Home() {
                 href={clinic.reportRequestUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-4 text-sm font-bold text-white shadow-subtle hover:bg-[#20ba59] active:translate-y-0.5 transition-all"
+                className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-brand px-4 text-sm font-bold text-white shadow-subtle hover:bg-brand-dark active:translate-y-0.5 transition-all"
               >
                 <WhatsAppIcon className="size-4 shrink-0" />
                 <span>Get Report</span>
@@ -265,10 +265,10 @@ export default function Home() {
                 href={clinic.locationShareUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-line-strong bg-white px-5 text-base font-bold text-charcoal hover:border-[#25D366] hover:text-brand transition-colors"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-line-strong bg-white px-5 text-base font-bold text-charcoal hover:border-ink hover:text-brand transition-colors"
                 title="Forward address and map link to family or drivers on WhatsApp"
               >
-                <WhatsAppIcon className="size-4.5 text-[#25D366] shrink-0" />
+                <WhatsAppIcon className="size-4.5 text-ink shrink-0" />
                 <span>Share location</span>
               </a>
             </div>

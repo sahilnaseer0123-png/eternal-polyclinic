@@ -5,9 +5,16 @@
 // the visit is confirmed, because only reception can do that.
 
 import { useRef, useState } from "react";
-import { clinic, doctors } from "@/data/clinic";
+import { clinic } from "@/data/clinic";
 import { bookingMessage, validateBooking, whatsappLink, type BookingErrors } from "@/lib/booking";
-import { generateToken, saveAppointment } from "@/lib/appointments";
+import {
+  deleteAppointment,
+  generateToken,
+  isDoctorOnLeave,
+  saveAppointment,
+  useActiveDoctors,
+  useAppointments,
+} from "@/lib/appointments";
 import {
   addDays,
   clinicClock,
@@ -42,6 +49,8 @@ function FieldError({ id, message }: { id: string; message?: string }) {
 }
 
 export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; initialDoctorId?: string }) {
+  const activeDoctors = useActiveDoctors();
+  const appointments = useAppointments();
   const [nowAt, setNowAt] = useState(nowMs);
   const now = new Date(nowAt);
   const [doctorId, setDoctorId] = useState(initialDoctorId);
@@ -55,9 +64,16 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
   const [bookedToken, setBookedToken] = useState<string | null>(null);
   const formRef = useRef<HTMLDivElement>(null);
 
-  const doctor = doctors.find((d) => d.id === doctorId);
-  const dates = doctor ? nextOpdDates(doctor, now, 4) : [];
-  const slots = doctor && date ? timeSlots(doctor, date, now) : [];
+  const doctor = activeDoctors.find((d) => d.id === doctorId);
+  const onLeave = doctor ? isDoctorOnLeave(doctor) : false;
+  const dates = doctor && !onLeave ? nextOpdDates(doctor, now, 4) : [];
+  const slots = doctor && date && !onLeave ? timeSlots(doctor, date, now) : [];
+  const bookedSlots =
+    doctor && date
+      ? appointments
+          .filter((a) => a.doctorId === doctor.id && a.date === date && a.status !== "cancelled")
+          .map((a) => a.time)
+      : [];
   const step = !doctor ? 1 : 2;
 
   function chooseDoctor(id: string) {
@@ -70,32 +86,40 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
   function submit() {
     const current = new Date();
     setNowAt(current.getTime());
-    const result = validateBooking({ doctorId, date, time, name, phone, address }, doctors, current);
+    const result = validateBooking({ doctorId, date, time, name, phone, address }, activeDoctors, current);
     if (!result.ok) {
       setErrors(result.errors);
       formRef.current?.querySelector<HTMLElement>("[role=alert]")?.scrollIntoView({ block: "center" });
       return;
     }
-    const token = generateToken(result.data.date, doctor!.id, false);
-    setBookedToken(token);
-    try {
-      saveAppointment({
-        token,
-        doctorId: doctor!.id,
-        doctorName: doctor!.name ?? doctor!.speciality,
-        speciality: doctor!.speciality,
-        date: result.data.date,
-        time: result.data.time,
-        patientName: result.data.name.trim(),
-        patientPhone: result.data.phone,
-        patientAddress: result.data.address?.trim() || undefined,
-        type: "online",
-        status: "confirmed",
-        createdAt: Date.now(),
-      });
-    } catch {
-      // Local storage protected or unavailable
+    const isAdminSession =
+      typeof window !== "undefined" && window.sessionStorage?.getItem("ep_reception_auth") === "true";
+
+    if (isAdminSession) {
+      const token = generateToken(result.data.date, doctor!.id, false);
+      setBookedToken(token);
+      try {
+        saveAppointment({
+          token,
+          doctorId: doctor!.id,
+          doctorName: doctor!.name ?? doctor!.speciality,
+          speciality: doctor!.speciality,
+          date: result.data.date,
+          time: result.data.time,
+          patientName: result.data.name.trim(),
+          patientPhone: result.data.phone,
+          patientAddress: result.data.address?.trim() || undefined,
+          type: "online",
+          status: "confirmed",
+          createdAt: current.getTime(),
+        });
+      } catch {
+        // Local storage protected or unavailable
+      }
+    } else {
+      setBookedToken(null);
     }
+
     const link = whatsappLink(clinic.whatsapp, bookingMessage(result.data, doctor!, clinic.name));
     setErrors({});
     setSentLink(link);
@@ -141,7 +165,13 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
         </div>
         <button
           type="button"
-          onClick={() => setSentLink(null)}
+          onClick={() => {
+            if (bookedToken) {
+              deleteAppointment(bookedToken);
+              setBookedToken(null);
+            }
+            setSentLink(null);
+          }}
           className="mt-5 min-h-11 text-base font-semibold text-brand underline"
         >
           Change the request
@@ -165,7 +195,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
         <fieldset className="flex min-w-0 flex-col gap-3">
           <legend className="font-display text-2xl font-medium tracking-tight sm:text-3xl">Choose a doctor</legend>
           <div className="mt-2 grid gap-2.5 sm:grid-cols-2">
-            {doctors.map((d) => (
+            {activeDoctors.map((d) => (
               <button
                 key={d.id}
                 type="button"
@@ -175,7 +205,9 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
                 <DoctorMark doctor={d} className="size-11 rounded-full text-base" />
                 <span className="min-w-0 flex-1">
                   <span className="block font-display text-lg font-medium leading-tight">{d.name ?? d.speciality}</span>
-                  <span className="block text-sm text-muted">{d.speciality}</span>
+                  <span className="block text-sm text-muted">
+                    {isDoctorOnLeave(d) ? `${d.speciality} · ${d.availability}` : d.speciality}
+                  </span>
                 </span>
               </button>
             ))}
@@ -187,7 +219,9 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
           <DoctorMark doctor={doctor} className="size-12 rounded-full text-lg" />
           <div className="min-w-0 flex-1">
             <p className="font-display text-xl font-medium leading-tight">{doctor.name ?? doctor.speciality}</p>
-            <p className="text-sm text-muted">{opdSummary(doctor) ?? doctor.speciality}</p>
+            <p className="text-sm text-muted">
+              {onLeave ? doctor.availability : (opdSummary(doctor) ?? doctor.speciality)}
+            </p>
           </div>
           <button
             type="button"
@@ -201,11 +235,13 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
 
       {doctor && dates.length === 0 && (
         <p className="rounded-2xl bg-sand p-4 text-base text-charcoal">
-          {doctor.name ?? doctor.speciality} sees patients by appointment. Please call{" "}
+          {onLeave
+            ? `${doctor.name ?? doctor.speciality} is currently marked ${doctor.availability?.toLowerCase() ?? "on leave"}. Please call `
+            : `${doctor.name ?? doctor.speciality} sees patients by appointment. Please call `}
           <a href={`tel:${clinic.phone}`} className="font-bold text-brand underline">
             {clinic.phoneDisplay}
           </a>{" "}
-          and reception will fix a time.
+          {onLeave ? "for the next available date." : "and reception will fix a time."}
         </p>
       )}
 
@@ -213,6 +249,11 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
       {doctor && dates.length > 0 && (
         <fieldset className="flex min-w-0 flex-col gap-3">
           <legend className={label}>Day</legend>
+          {doctor.opd.some((s) => s.recurrence === "alternate") && (
+            <p className="text-xs font-medium text-muted">
+              Visits on alternate weeks — reception will confirm the exact Friday when they call you.
+            </p>
+          )}
           <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
             {dates.map(({ date: d }) => {
               const [, mo, day] = d.split("-").map(Number);
@@ -248,20 +289,29 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
         <fieldset className="flex min-w-0 flex-col gap-3">
           <legend className={label}>Time</legend>
           <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4">
-            {slots.map((s) => (
-              <button
-                key={s}
-                type="button"
-                aria-pressed={s === time}
-                onClick={() => {
-                  setTime(s);
-                  setErrors((e) => ({ ...e, time: undefined }));
-                }}
-                className={`${chip(s === time)} min-h-12 px-1 text-[0.9375rem] font-semibold`}
-              >
-                {formatTime(s)}
-              </button>
-            ))}
+            {slots.map((s) => {
+              const taken = bookedSlots.includes(s);
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  disabled={taken}
+                  aria-pressed={s === time}
+                  onClick={() => {
+                    if (taken) return;
+                    setTime(s);
+                    setErrors((e) => ({ ...e, time: undefined }));
+                  }}
+                  className={
+                    taken
+                      ? "min-h-12 rounded-xl border border-line bg-ground px-1 text-[0.9375rem] font-semibold text-muted/60 line-through cursor-not-allowed"
+                      : `${chip(s === time)} min-h-12 px-1 text-[0.9375rem] font-semibold`
+                  }
+                >
+                  {formatTime(s)}
+                </button>
+              );
+            })}
           </div>
           <FieldError id="err-time" message={errors.time} />
         </fieldset>

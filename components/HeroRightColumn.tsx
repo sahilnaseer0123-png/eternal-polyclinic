@@ -1,12 +1,14 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 // Right-column compact cards for the Healist-inspired home hero:
 // 1. "Book an appointment" twin-panel split card (action card + studio stethoscope visual)
 // 2. "In the clinic today" live OPD & digital WhatsApp lab reports block (computed in clinic IST time)
 
 import Link from "next/link";
-import { clinic, doctors } from "@/data/clinic";
-import { addDays, clinicClock, DAY_NAMES, formatTime, sessionOn, weekdayOf } from "@/lib/schedule";
+import { clinic } from "@/data/clinic";
+import { isDoctorOnLeave, useActiveDoctors, useDoctorStatuses } from "@/lib/appointments";
+import { addDays, clinicClock, DAY_NAMES, formatTime, formatTimeShort, sessionOn, weekdayOf } from "@/lib/schedule";
 import { useClinicMinute } from "./useClinicMinute";
 
 function ArrowUpRight({ className = "size-3.5" }: { className?: string }) {
@@ -28,6 +30,8 @@ function SparkleCross({ className = "size-3.5" }: { className?: string }) {
 
 export function HeroRightColumn() {
   const minute = useClinicMinute();
+  const activeDoctors = useActiveDoctors();
+  const statuses = useDoctorStatuses();
 
   let statusHeading = "IN THE CLINIC TODAY";
   let statusHeadingCompact = "TODAY'S CLINIC";
@@ -40,24 +44,33 @@ export function HeroRightColumn() {
     const [openH, openM] = clinic.hours.open.split(":").map(Number);
     const [closeH, closeM] = clinic.hours.close.split(":").map(Number);
     const isOpenNow = minutes >= openH * 60 + openM && minutes < closeH * 60 + closeM;
-    openBadge = isOpenNow ? "Open now" : `Opens ${formatTime(clinic.hours.open)}`;
+    openBadge = isOpenNow ? "Open now" : `Opens ${formatTimeShort(clinic.hours.open)}`;
 
-    const sittingsOn = (date: string) =>
-      doctors
+    const sittingsOn = (date: string, isTodayDate = false) =>
+      activeDoctors
+        .filter((doctor) => !isDoctorOnLeave(doctor))
+        .filter((doctor) => !(isTodayDate && statuses[doctor.id]?.state === "cancelled"))
         .flatMap((doctor) => {
           const session = sessionOn(doctor, weekdayOf(date), date);
           return session ? [{ doctor, session }] : [];
         })
         .sort((a, b) => a.session.start.localeCompare(b.session.start));
 
-    const today = sittingsOn(dateKey);
+    const today = sittingsOn(dateKey, true);
     statusHeading = `TODAY · ${DAY_NAMES[weekday].toUpperCase()}`;
     statusHeadingCompact = `TODAY · ${DAY_NAMES[weekday].slice(0, 3).toUpperCase()}`;
 
     if (today.length > 0) {
       const names = today
         .slice(0, 2)
-        .map(({ doctor }) => doctor.name ?? doctor.speciality)
+        .map(({ doctor, session }) => {
+          const base = doctor.name ?? doctor.speciality;
+          const live = statuses[doctor.id];
+          if (live?.state === "delayed") return `${base} — delayed ~${live.delayMinutes ?? 30}m`;
+          if (live?.state === "in_clinic") return `${base} — in clinic`;
+          if (session.recurrence === "alternate") return `${base} (alt. Fri)`;
+          return base;
+        })
         .join(", ");
       const extra = today.length > 2 ? ` +${today.length - 2} more` : "";
       statusCopy = `${today.length} ${today.length === 1 ? "specialist" : "specialists"} consulting today (${names}${extra}). Lab & scan PDFs sent on WhatsApp.`;
@@ -75,22 +88,22 @@ export function HeroRightColumn() {
 
   return (
     <div id="today" className="w-full">
-      {/* Mobile (< 640px): Curated single-screen twin-panel live clinic + studio stethoscope card */}
+      {/* Mobile (< 640px): Full-screen balanced twin-panel live clinic + studio stethoscope card */}
       <div className="sm:hidden">
-        <div className="flex items-stretch gap-2.5">
-          <div className="flex min-w-0 flex-1 flex-col justify-between rounded-2xl border border-[#E7ECE8] bg-[#F5F7F5] p-3.5">
-            <div className="flex items-center justify-between gap-2">
-              <p className="flex items-center gap-1.5 font-sans text-[10.5px] font-bold uppercase tracking-[0.09em] text-[#171D1B] whitespace-nowrap">
+        <div className="flex items-stretch gap-2.5 min-[390px]:gap-3">
+          <div className="flex min-h-[132px] min-[390px]:min-h-[144px] min-w-0 flex-1 flex-col justify-between rounded-2xl border border-[#E5EBE7] bg-[#F5F7F5] p-3.5 min-[390px]:p-4">
+            <div className="flex items-center justify-between gap-1.5 min-w-0">
+              <p className="flex items-center gap-1.5 font-sans text-[10.5px] min-[390px]:text-[11px] font-bold uppercase tracking-[0.09em] text-[#171D1B] whitespace-nowrap truncate">
                 <SparkleCross className="size-3 text-brand shrink-0" />
-                <span className="min-[410px]:hidden">{statusHeadingCompact}</span>
-                <span className="hidden min-[410px]:inline">{statusHeading}</span>
+                <span className="min-[440px]:hidden">{statusHeadingCompact}</span>
+                <span className="hidden min-[440px]:inline">{statusHeading}</span>
               </p>
-              <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-[#3B4B45] ring-1 ring-[#E2EAE4] shrink-0">
+              <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-[#3B4B45] ring-1 ring-[#E2EAE4] shrink-0 whitespace-nowrap">
                 <span className="size-1.5 rounded-full bg-[#22A05B]" aria-hidden="true" />
                 {openBadge}
               </span>
             </div>
-            <p className="mt-2 text-[12.5px] leading-[1.45] text-[#4E5C57]">
+            <p className="mt-2.5 text-[12.5px] min-[390px]:text-[13px] leading-[1.48] text-[#4A5853]">
               {statusCopy}
             </p>
           </div>
@@ -98,7 +111,7 @@ export function HeroRightColumn() {
           <Link
             href="/book"
             aria-label="Book an appointment"
-            className="group relative w-[92px] min-[400px]:w-[104px] shrink-0 overflow-hidden rounded-2xl border border-[#E7ECE8] bg-[#E8EFECE6]"
+            className="group relative w-[96px] min-[385px]:w-[112px] min-[420px]:w-[124px] shrink-0 overflow-hidden rounded-2xl border border-[#E5EBE7] bg-[#E8EFECE6]"
           >
             <img
               src="/photos/stethoscope-card.webp"
@@ -110,16 +123,19 @@ export function HeroRightColumn() {
               decoding="async"
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
-            <span className="absolute right-2 top-2 inline-flex size-6 items-center justify-center rounded-lg bg-[#DFF5CA]/95 text-[#15221B] shadow-2xs ring-1 ring-[#CBE8B0]/80">
+            <span className="absolute right-2 top-2 inline-flex size-6.5 items-center justify-center rounded-lg bg-[#DFF5CA]/95 text-[#15221B] shadow-2xs ring-1 ring-[#CBE8B0]/80">
               <ArrowUpRight className="size-3" />
+            </span>
+            <span className="absolute bottom-2 left-2 rounded-md bg-white/92 backdrop-blur-xs px-2 py-0.5 text-[10.5px] font-semibold tracking-[-0.01em] text-[#171D1B] ring-1 ring-black/6">
+              Book
             </span>
           </Link>
         </div>
 
-        <div className="mt-3 flex items-center justify-between gap-2 px-0.5">
+        <div className="mt-2.5 min-[390px]:mt-3 flex items-center justify-between gap-2 border-t border-[#EDF1EE] pt-1.5 px-0.5">
           <a
             href="#days"
-            className="group inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#171D1B] hover:text-brand transition-colors shrink-0"
+            className="group inline-flex min-h-10 items-center gap-1.5 text-[12.5px] min-[390px]:text-[13px] font-semibold text-[#171D1B] hover:text-brand transition-colors shrink-0"
           >
             <span className="underline decoration-[#CBD5D0] underline-offset-4 group-hover:decoration-brand">
               See schedule
@@ -133,7 +149,7 @@ export function HeroRightColumn() {
             href={clinic.reportRequestUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#52605B] hover:text-brand transition-colors tabular-nums lining-nums shrink-0"
+            className="inline-flex min-h-10 items-center gap-1 text-[12px] min-[390px]:text-[12.5px] font-semibold text-[#52605B] hover:text-brand transition-colors tabular-nums lining-nums shrink-0"
           >
             <span>Lab reports ({clinic.labTechPhoneDisplay})</span>
             <span aria-hidden="true">↗</span>

@@ -9,7 +9,7 @@ import { ReportCollectionSection } from "@/components/ReportCollectionSection";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
-  title: "Location & Directions | Eternal Polyclinic Sopore",
+  title: "Location & Directions",
   description: `Find Eternal Polyclinic at 1st Floor, Lone Complex, Opposite SDH Hospital, Sopore. Call ${clinic.phoneDisplay} or WhatsApp ${clinic.whatsappDisplay}.`,
 };
 
@@ -123,7 +123,7 @@ export default function ContactPage() {
                 href={`https://wa.me/${clinic.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#25D366] px-6 text-sm sm:text-base font-bold text-white hover:bg-[#20ba59]"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand px-6 text-sm sm:text-base font-bold text-white hover:bg-brand-dark"
               >
                 <ChatIcon className="size-4 shrink-0" />
                 <span>WhatsApp Owner Desk: {clinic.whatsappDisplay}</span>
@@ -151,9 +151,9 @@ export default function ContactPage() {
                 href={clinic.locationShareUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-line-strong bg-white px-6 text-sm sm:text-base font-bold text-charcoal hover:border-[#25D366] hover:text-brand transition-colors"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-line-strong bg-white px-6 text-sm sm:text-base font-bold text-charcoal hover:border-ink hover:text-brand transition-colors"
               >
-                <WhatsAppIcon className="size-4.5 text-[#25D366] shrink-0" />
+                <WhatsAppIcon className="size-4.5 text-ink shrink-0" />
                 <span>Share Location on WhatsApp</span>
               </a>
             </div>

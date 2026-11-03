@@ -4,7 +4,7 @@
 // Until it's known (prerender), it shows `fallback` (usually the doctor's days) on the same single line,
 // so nothing moves when it switches.
 
-import { doctors } from "@/data/clinic";
+import { isDoctorOnLeave, useActiveDoctors } from "@/lib/appointments";
 import { addDays, clinicClock, dateLabel, formatTime, nextSlot, slotLabel } from "@/lib/schedule";
 import { useClinicMinute } from "./useClinicMinute";
 
@@ -24,7 +24,11 @@ export function NextAvailable({
   className?: string;
 }) {
   const minute = useClinicMinute();
-  const doctor = doctors.find((d) => d.id === doctorId);
+  const activeDoctors = useActiveDoctors();
+  const doctor = activeDoctors.find((d) => d.id === doctorId);
+  if (doctor && isDoctorOnLeave(doctor)) {
+    return <span className={className}>{doctor.availability}</span>;
+  }
   const slot = doctor && minute !== null ? nextSlot(doctor, new Date(minute)) : null;
 
   if (!slot || minute === null) {

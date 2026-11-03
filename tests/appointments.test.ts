@@ -17,6 +17,38 @@ test("token generator formats date and doctor prefix correctly", () => {
 
   const walkInToken = generateToken("2026-10-31", "akash", true);
   assert.ok(walkInToken.endsWith("-W"), `Walk-in token was ${walkInToken}`);
+
+  // Regression test: deleting an earlier token (-01) must never collide with an existing higher token (-03)
+  const existing: Appointment[] = [
+    {
+      token: "EP-AK1031-02",
+      doctorId: "akash",
+      doctorName: "Dr. Akash Bashir",
+      speciality: "Dermatology",
+      date: "2026-10-31",
+      time: "09:20",
+      patientName: "A",
+      patientPhone: "9876543210",
+      type: "online",
+      status: "confirmed",
+      createdAt: 1,
+    },
+    {
+      token: "EP-AK1031-03-W",
+      doctorId: "akash",
+      doctorName: "Dr. Akash Bashir",
+      speciality: "Dermatology",
+      date: "2026-10-31",
+      time: "09:40",
+      patientName: "B",
+      patientPhone: "9876543211",
+      type: "walk_in",
+      status: "arrived",
+      createdAt: 2,
+    },
+  ];
+  assert.equal(generateToken("2026-10-31", "akash", false, existing), "EP-AK1031-04");
+  assert.equal(generateToken("2026-10-31", "akash", true, existing), "EP-AK1031-04-W");
 });
 
 test("confirmationTicketText includes critical details, village address and helpline", () => {

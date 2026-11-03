@@ -27,7 +27,7 @@ export const faqs: Faq[] = [
   {
     question: "Will anyone know why I'm visiting?",
     answer:
-      "The website only asks for your name and number, and saves nothing. The booking message names your doctor, never the speciality or the reason for your visit. Like any WhatsApp message, it stays in your chat, so delete it if others use your phone.",
+      "The website only asks for your name, mobile number, and optional village/area, and saves nothing in your browser. The booking message names your doctor, never the speciality or the reason for your visit. Like any WhatsApp message, it stays in your chat, so delete it if others use your phone.",
   },
   {
     question: "How much does a consultation cost?",
@@ -39,7 +39,7 @@ export const faqs: Faq[] = [
   },
   {
     question: "Can I collect my lab or scan reports on WhatsApp?",
-    answer: `Yes! There is no need to travel back to Sopore just to collect paper sheets. Message our official WhatsApp desk (${clinic.whatsappDisplay}) with your Patient Name and Bill or Token number, and reception will send your signed digital PDF report directly to your chat once ready.`,
+    answer: `Yes! There is no need to travel back to Sopore just to collect paper sheets. Message our Lab Technician (Musadiq Ahmad, ${clinic.labTechPhoneDisplay}) on WhatsApp with your Patient Name and Receipt or Token number, and your signed digital PDF report will be sent directly to your chat once ready.`,
   },
   {
     question: "What should I bring?",

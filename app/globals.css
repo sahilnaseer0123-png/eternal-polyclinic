@@ -104,6 +104,13 @@ body {
   body {
     font-size: 0.9375rem;
   }
+  /* Full-screen mobile hero: SiteHeader is 65px (4.0625rem) sticky at top; 4rem leaves a 1px buffer
+     so the next section (#days) always begins below 100svh. Bottom padding clears the 65px fixed TabBar + safe area. */
+  .hero-mobile-screen {
+    min-height: calc(100vh - 4rem);
+    min-height: calc(100svh - 4rem);
+    padding-bottom: calc(4.85rem + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 /* ---------- Motion (23 Oct 2026): small, quick, and off for anyone who asks their phone for less motion ---------- */
