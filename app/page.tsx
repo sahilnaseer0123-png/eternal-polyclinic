@@ -7,6 +7,7 @@ import { clinic, doctors, services } from "@/data/clinic";
 import { formatTime } from "@/lib/schedule";
 import { DayPicker } from "@/components/DayPicker";
 import { TodayCard } from "@/components/TodayCard";
+import { ClinicStatusTicker } from "@/components/ClinicStatusTicker";
 import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import { WhatsAppPreview } from "@/components/WhatsAppPreview";
@@ -36,6 +37,10 @@ export default function Home() {
       <section className="relative flex min-h-[calc(100vh-61px)] min-h-[calc(100dvh-61px)] w-full flex-col justify-center border-b border-line bg-brand-tint">
         <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-5 py-10 sm:px-6 sm:py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-14 lg:py-16">
           <div>
+            <div className="rise mb-4">
+              <ClinicStatusTicker />
+            </div>
+
             <div className="rise flex flex-wrap items-center gap-2.5 sm:gap-3">
               <p className="eyebrow text-brand">Opposite SDH Hospital, Sopore</p>
               <span className="text-line-strong hidden sm:inline" aria-hidden="true">·</span>

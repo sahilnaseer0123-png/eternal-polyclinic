@@ -10,7 +10,7 @@ import { addDays, clinicClock, DAY_NAMES, formatTime, sessionOn, sessionStatus, 
 import { useClinicMinute } from "./useClinicMinute";
 
 const MAX_ROWS = 4;
-const shell = "card rounded-3xl p-5 sm:p-7 min-h-[18rem]";
+const shell = "card rounded-3xl p-5 sm:p-7 min-h-[18rem] scroll-mt-24";
 
 export function TodayCardSkeleton() {
   return (
@@ -56,7 +56,7 @@ export function TodayCard() {
     while (next.length === 0 && ahead < 7) next = sittingsOn(addDays(dateKey, ++ahead));
     const nextName = DAY_NAMES[weekdayOf(addDays(dateKey, ahead))];
     return (
-      <div className={shell}>
+      <div id="today" className={shell}>
         <p className="eyebrow text-muted">In the clinic today · {DAY_NAMES[weekday]}</p>
         <p className="mt-4 font-display text-3xl font-medium leading-tight tracking-tight">
           No specialist OPD today
@@ -87,7 +87,7 @@ export function TodayCard() {
 
   const shown = today.slice(0, MAX_ROWS);
   return (
-    <div className={shell}>
+    <div id="today" className={shell}>
       <p className="eyebrow text-muted">In the clinic today · {DAY_NAMES[weekday]}</p>
       <ul className="mt-3 divide-y divide-line">
         {shown.map(({ doctor, session }) => {
