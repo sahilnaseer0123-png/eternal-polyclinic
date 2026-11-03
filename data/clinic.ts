@@ -33,7 +33,6 @@ export type Doctor = {
   categoryLabel: string;
   degree: string;
   experienceYears: number | null;
-  registrationNo: string | null;
   /** Empty list = OPD days not confirmed yet; the site tells patients to call. */
   opd: OpdSession[];
   slotMinutes: number;
@@ -195,7 +194,6 @@ export const doctors: Doctor[] = [
     categoryLabel: "Mind & neuropsychiatry",
     degree: "MD",
     experienceYears: 20,
-    registrationNo: null,
     opd: [
       { day: 4, start: "09:00", end: "14:00" },
       { day: 6, start: "09:00", end: "17:00" },
@@ -221,7 +219,6 @@ export const doctors: Doctor[] = [
     categoryLabel: "Brain, spine & nerves",
     degree: "MBBS, MS, MCh (SKIMS Soura)",
     experienceYears: null,
-    registrationNo: null,
     credentials: "Member, Neuro Surgical Society of India",
     facilities: [
       "Microscopic disc surgery",
@@ -254,7 +251,6 @@ export const doctors: Doctor[] = [
     categoryLabel: "Urology, kidney & men's health",
     degree: "MBBS, MS, DNB (Urology)",
     experienceYears: 10,
-    registrationNo: null,
     designation: "First Robotic Surgeon of Kashmir",
     credentials: "Former Consultant Urologist, Fortis Hospital, Bangalore",
     facilities: [
@@ -290,7 +286,6 @@ export const doctors: Doctor[] = [
     categoryLabel: "Pediatric & fetal cardiology",
     degree: "MD, Fellowship in Pediatric Cardiology",
     experienceYears: 15,
-    registrationNo: null,
     facilities: [
       "Fetal echocardiography",
       "Pediatric echocardiography",
@@ -319,7 +314,6 @@ export const doctors: Doctor[] = [
     categoryLabel: "Heart & adult cardiology",
     degree: "DM (Cardiology)",
     experienceYears: null,
-    registrationNo: null,
     designation: "Consultant Cardiologist",
     facilities: [
       "Adult Echocardiography",
@@ -348,9 +342,9 @@ export const doctors: Doctor[] = [
     speciality: "Dermatologist",
     category: "skin",
     categoryLabel: "Skin, hair & infections",
-    degree: "MBBS (SKIMS Soura), PG (Dermatology) SMHS, DDVD, M.I.A.D.V.I. (India)",
+    degree: "MBBS (SKIMS Soura), PG (Dermatology) SMHS, DDVD",
     experienceYears: null,
-    registrationNo: null,
+    credentials: "Member, IADVL (Indian Association of Dermatologists, Venereologists and Leprologists)",
     designation: "Specialist in skin conditions, sexually transmitted diseases and leprosy",
     opd: [
       { day: 3, start: "16:00", end: "20:00" },
@@ -375,7 +369,6 @@ export const doctors: Doctor[] = [
     categoryLabel: "Pediatric & neonatal surgery",
     degree: "MS General & Minimal Access Surgery, MCh Pediatric & Neonatal Surgery",
     experienceYears: 12,
-    registrationNo: null,
     opd: [
       { day: 0, start: "10:00", end: "13:00" },
     ],
@@ -399,7 +392,6 @@ export const doctors: Doctor[] = [
     categoryLabel: "Pediatric care & vaccination",
     degree: "MD Pediatrics",
     experienceYears: null,
-    registrationNo: null,
     designation: "Associate Professor, Children Hospital Bemina",
     facilities: [
       "Pediatric care & regular child checkups",
@@ -429,7 +421,6 @@ export const doctors: Doctor[] = [
     categoryLabel: "Brain, nerves & neurology",
     degree: "MD Medicine (SKIMS Soura), DM Neurology (WBUHS), FINR, FINS",
     experienceYears: null,
-    registrationNo: null,
     designation: "Associate Director – Neurology",
     facilities: [
       "Interventional neurology",
@@ -459,9 +450,9 @@ export const doctors: Doctor[] = [
     speciality: "Gynaecologist",
     category: "women",
     categoryLabel: "Women's health & gynaecology",
-    degree: "Former Registrar, LD Hospital",
+    degree: "MBBS, DGO",
     experienceYears: 20,
-    registrationNo: null,
+    credentials: "Former Registrar, Lal Ded (LD) Hospital, Srinagar",
     opd: [
       { day: 0, start: "10:30", end: "14:30" },
     ],
@@ -485,7 +476,6 @@ export const doctors: Doctor[] = [
     categoryLabel: "Skin, hair and dermatosurgery",
     degree: "MBBS, MD, FRGUHS (Dermatosurgery), Postdoctoral Fellowship in Dermatosurgery & Hair Transplant",
     experienceYears: 10,
-    registrationNo: null,
     designation: "HOD, Department of Dermatology, Kashmir Medical College",
     facilities: [
       "Dermatosurgery",
@@ -516,7 +506,6 @@ export const doctors: Doctor[] = [
     categoryLabel: "Ultrasound & radiology",
     degree: "MD (Radiology)",
     experienceYears: null,
-    registrationNo: null,
     designation: "Consultant Radiologist",
     availability:
       "Ultrasound (USG) available 4 days a week. Call reception at 97977 96909 to confirm today's scan timings and book a slot.",

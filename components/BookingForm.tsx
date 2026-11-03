@@ -7,6 +7,7 @@
 import { useRef, useState } from "react";
 import { clinic, doctors } from "@/data/clinic";
 import { bookingMessage, validateBooking, whatsappLink, type BookingErrors } from "@/lib/booking";
+import { generateToken, saveAppointment } from "@/lib/appointments";
 import {
   addDays,
   clinicClock,
@@ -51,6 +52,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
   const [address, setAddress] = useState("");
   const [errors, setErrors] = useState<BookingErrors>({});
   const [sentLink, setSentLink] = useState<string | null>(null);
+  const [bookedToken, setBookedToken] = useState<string | null>(null);
   const formRef = useRef<HTMLDivElement>(null);
 
   const doctor = doctors.find((d) => d.id === doctorId);
@@ -74,6 +76,26 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
       formRef.current?.querySelector<HTMLElement>("[role=alert]")?.scrollIntoView({ block: "center" });
       return;
     }
+    const token = generateToken(result.data.date, doctor!.id, false);
+    setBookedToken(token);
+    try {
+      saveAppointment({
+        token,
+        doctorId: doctor!.id,
+        doctorName: doctor!.name ?? doctor!.speciality,
+        speciality: doctor!.speciality,
+        date: result.data.date,
+        time: result.data.time,
+        patientName: result.data.name.trim(),
+        patientPhone: result.data.phone,
+        patientAddress: result.data.address?.trim() || undefined,
+        type: "online",
+        status: "confirmed",
+        createdAt: Date.now(),
+      });
+    } catch {
+      // Local storage protected or unavailable
+    }
     const link = whatsappLink(clinic.whatsapp, bookingMessage(result.data, doctor!, clinic.name));
     setErrors({});
     setSentLink(link);
@@ -83,7 +105,14 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
   if (sentLink && doctor) {
     return (
       <div className="card rounded-3xl p-6 sm:p-9" aria-live="polite">
-        <p className="eyebrow text-brand">Almost done</p>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="eyebrow text-brand">Almost done</p>
+          {bookedToken && (
+            <span className="rounded-full bg-brand-tint border border-brand-line/60 px-3 py-0.5 text-xs font-bold text-brand tabular-nums lining-nums">
+              Token: #{bookedToken}
+            </span>
+          )}
+        </div>
         <h2 className="mt-3 text-[2rem] font-normal leading-none tracking-[-0.025em] sm:text-5xl">
           Press <em className="text-brand">Send</em> in WhatsApp
         </h2>

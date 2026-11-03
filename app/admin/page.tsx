@@ -275,7 +275,6 @@ export default function AdminPage() {
       categoryLabel: newDocSpec.trim(),
       degree: newDocDegree.trim() || "Consultant",
       experienceYears: null,
-      registrationNo: null,
       slotMinutes: 15,
       photo: null,
       concerns: ["Specialist consultation", "Diagnostic review"],
