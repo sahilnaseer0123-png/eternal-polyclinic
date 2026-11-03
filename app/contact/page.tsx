@@ -21,7 +21,7 @@ export default function ContactPage() {
         Located directly opposite the Sub-District Hospital (SDH) main gate in Sopore. Readily accessible from Baramulla, Bandipora, and Kupwara.
       </PageIntro>
 
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 pb-6">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 pb-4">
         <EmergencyNote />
       </div>
 

@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Page not found" };
 
 export default function NotFound() {
   return (
-    <div className="mx-auto flex max-w-xl flex-col gap-5 px-5 py-14 sm:py-20">
+    <div className="mx-auto flex max-w-xl flex-1 flex-col justify-center gap-5 px-5 py-14 sm:py-20">
       <p className="eyebrow text-brand">Page not found</p>
       <h1 className="font-display text-[2rem] font-light leading-none tracking-[-0.04em] sm:text-5xl text-ink">
         This page doesn&apos;t exist.

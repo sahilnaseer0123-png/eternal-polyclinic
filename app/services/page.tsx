@@ -14,7 +14,7 @@ export default function ServicesPage() {
     <>
       <PageIntro title="Tests and services">No need to go elsewhere for scans, reports or medicines.</PageIntro>
       <section aria-label="Services" className="mx-auto max-w-6xl px-4 pb-24 sm:px-6 sm:pb-16">
-        <ul className="reveal grid gap-4 sm:grid-cols-2">
+        <ul className="grid gap-4 sm:grid-cols-2">
           {services.map((service) => (
             <li
               key={service.id}

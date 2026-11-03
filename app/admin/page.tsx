@@ -306,7 +306,7 @@ export default function AdminPage() {
   // ---------------------------------------------------------------------------
   if (!mounted || !isAuthenticated) {
     return (
-      <div className="min-h-[85vh] bg-[#F7F7F3] text-[#142B3B] flex flex-col justify-center px-4 py-16">
+      <div className="flex-1 flex flex-col justify-center px-4 py-16 sm:py-20 text-[#142B3B]">
         <div className="w-full max-w-[420px] mx-auto bg-white border border-[#E2E4DC] rounded-2xl p-8 sm:p-9 shadow-xs">
           {/* Top Medical Stethoscope Badge */}
           <div className="size-11 rounded-xl bg-[#F2F7F6] border border-[#C4DBD8] flex items-center justify-center mb-5 text-[#397C78]">

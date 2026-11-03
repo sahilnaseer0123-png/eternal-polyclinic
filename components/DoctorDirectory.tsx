@@ -70,7 +70,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
   };
 
   return (
-    <div className="flex flex-col gap-4 sm:gap-5">
+    <div className="flex flex-col gap-3.5 sm:gap-4">
       <div>
         <label htmlFor="find" className="sr-only">
           Find a doctor or service
@@ -99,7 +99,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
               type="button"
               aria-pressed={on}
               onClick={() => choose(o.id)}
-              className={`min-h-11 shrink-0 rounded-full px-4 font-semibold sm:px-5 ${
+              className={`min-h-11 shrink-0 rounded-full px-3.5 sm:px-4 font-semibold text-sm sm:text-base ${
                 on ? "bg-ink text-white" : "card hover:text-brand"
               }`}
             >

@@ -10,6 +10,18 @@ export function RevealOnScroll() {
   const pathname = usePathname();
 
   useEffect(() => {
+    // Reveal any elements already in or near the viewport immediately
+    const checkVisible = () => {
+      document.querySelectorAll(".reveal:not(.is-visible)").forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight + 50) {
+          el.classList.add("is-visible");
+        }
+      });
+    };
+
+    checkVisible();
+
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -19,7 +31,7 @@ export function RevealOnScroll() {
           }
         }
       },
-      { rootMargin: "0px 0px -8% 0px" },
+      { rootMargin: "0px 0px 50px 0px", threshold: 0.01 },
     );
     document.querySelectorAll(".reveal:not(.is-visible)").forEach((el) => observer.observe(el));
     return () => observer.disconnect();

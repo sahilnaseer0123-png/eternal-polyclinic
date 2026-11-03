@@ -18,6 +18,27 @@ export function BookingSection() {
 }
 
 export function BookingSkeleton() {
-  // Same height as the empty form, so the page doesn't jump when the form appears.
-  return <div className="card h-[51rem] animate-pulse rounded-3xl sm:h-[52.5rem] lg:h-[54rem] xl:h-[51rem]" aria-busy="true" />;
+  return (
+    <div className="card rounded-3xl p-6 sm:p-8 flex flex-col gap-6" aria-busy="true" aria-label="Loading booking form">
+      <div className="flex items-center justify-between">
+        <div className="h-3 w-24 animate-pulse rounded bg-stone" />
+        <div className="h-1.5 w-24 animate-pulse rounded-full bg-stone" />
+      </div>
+      <div>
+        <div className="h-8 w-48 animate-pulse rounded bg-stone" />
+        <div className="mt-2 h-4 w-64 animate-pulse rounded bg-stone" />
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2">
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <div key={i} className="flex items-center gap-3.5 rounded-2xl border border-line bg-white p-3.5">
+            <div className="size-11 shrink-0 animate-pulse rounded-xl bg-stone" />
+            <div className="min-w-0 flex-1 space-y-2">
+              <div className="h-4 w-32 animate-pulse rounded bg-stone" />
+              <div className="h-3 w-20 animate-pulse rounded bg-stone" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }

@@ -122,17 +122,19 @@ export function QuickActions() {
 export function PageIntro({
   title,
   children,
+  className,
 }: {
   title: string;
   children?: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div className="mx-auto max-w-6xl px-5 pb-5 pt-7 sm:pb-6 sm:pt-14">
-      <h1 className="text-[2rem] font-light leading-none tracking-[-0.04em] sm:text-6xl">
+    <div className={className ?? "mx-auto max-w-6xl px-5 pt-6 pb-3 sm:pt-8 sm:pb-4 sm:px-6"}>
+      <h1 className="text-[2rem] font-light leading-none tracking-[-0.04em] sm:text-5xl lg:text-6xl">
         {title}
       </h1>
       {children && (
-        <div className="mt-2 max-w-2xl text-muted sm:mt-3 sm:text-lg">
+        <div className="mt-2 max-w-2xl text-muted sm:mt-2.5 sm:text-lg leading-relaxed">
           {children}
         </div>
       )}
