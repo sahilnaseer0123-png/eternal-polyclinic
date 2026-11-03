@@ -77,7 +77,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
               </span>
             </div>
 
-            <h1 className="mt-3 text-[2rem] font-normal leading-none tracking-[-0.025em] [overflow-wrap:anywhere] sm:text-5xl text-ink font-display">
+            <h1 className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] [overflow-wrap:anywhere] sm:text-5xl text-ink font-display">
               {title(doctor)}
             </h1>
             <p className="mt-1 text-base font-semibold text-brand">
@@ -133,13 +133,13 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
             )}
 
             {doctor.opd.length > 0 && (
-              <div className="mt-4 rounded-2xl bg-brand-tint/60 border border-brand-line/60 p-4">
+              <div className="mt-4 rounded-2xl bg-ground border border-line p-4">
                 <div className="flex items-center justify-between gap-2">
-                  <p className="eyebrow flex items-center gap-2 text-brand">
-                    <span className="size-2 rounded-full bg-brand animate-pulse" />
+                  <p className="eyebrow flex items-center gap-2 text-ink">
+                    <span className="size-2 rounded-full bg-[#22A05B] animate-pulse" />
                     Next Available Sitting
                   </p>
-                  <span className="rounded-full bg-white px-2.5 py-0.5 text-[11px] font-bold text-brand shadow-subtle">
+                  <span className="rounded-full bg-brand-tint px-2.5 py-0.5 text-[11px] font-bold text-ink ring-1 ring-brand-line/70">
                     Live Schedule
                   </span>
                 </div>

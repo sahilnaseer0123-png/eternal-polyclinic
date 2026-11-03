@@ -113,8 +113,8 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
             </span>
           )}
         </div>
-        <h2 className="mt-3 text-[2rem] font-normal leading-none tracking-[-0.025em] sm:text-5xl">
-          Press <em className="text-brand">Send</em> in WhatsApp
+        <h2 className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] sm:text-5xl">
+          Press <em className="inline-block rounded-xl bg-brand-tint px-2.5 py-0.5 text-ink">Send</em> in WhatsApp
         </h2>
         <p className="mt-4 text-base text-muted">
           Your request for {doctor.name ?? doctor.speciality} on {dateLabel(date)} at {formatTime(time)} is written and

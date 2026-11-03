@@ -118,9 +118,9 @@ export default function Home() {
             <div className="rounded-3xl bg-sand p-6 sm:p-10">
               <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
                 <div>
-                  <p className="eyebrow text-brand">By appointment</p>
-                  <h2 id="by-appointment" className="mt-3 text-3xl font-normal leading-none tracking-[-0.025em] sm:text-5xl">
-                    Any day, <em className="text-brand">by appointment</em>
+                  <p className="eyebrow text-muted">By appointment</p>
+                  <h2 id="by-appointment" className="mt-3 text-3xl font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
+                    Any day, <em>by appointment</em>
                   </h2>
                   <p className="mt-3 max-w-xl text-base text-muted">
                     These specialists don&rsquo;t sit on fixed days. Call reception to fix a time.
@@ -168,25 +168,25 @@ export default function Home() {
         <div className="mx-auto grid max-w-6xl gap-10 px-5 py-12 sm:px-6 sm:py-20 lg:grid-cols-[1.2fr_1fr] lg:items-center">
           <div>
             <p className="eyebrow text-mint">How booking works</p>
-            <h2 id="steps" className="mt-3 text-[2.125rem] font-normal leading-none tracking-[-0.025em] sm:text-6xl">
+            <h2 id="steps" className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] sm:text-5xl">
               Three steps. <em>No account.</em>
             </h2>
             <ol className="mt-8 flex flex-col gap-5">
               {steps.map((s) => (
                 <li key={s.n} className="flex gap-4">
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/15 font-display text-xl font-medium tabular-nums lining-nums">
+                  <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/10 text-mint font-display text-lg font-semibold tabular-nums lining-nums">
                     {s.n}
                   </span>
                   <span>
-                    <span className="block text-lg font-bold">{s.title}</span>
-                    <span className="block text-base text-mint/90">{s.text}</span>
+                    <span className="block text-lg font-semibold text-white">{s.title}</span>
+                    <span className="block text-base text-night-muted">{s.text}</span>
                   </span>
                 </li>
               ))}
             </ol>
             <Link
               href="/book"
-              className="mt-8 inline-flex min-h-12 items-center justify-center rounded-xl bg-white px-6 text-base font-bold text-brand hover:bg-sand"
+              className="mt-8 inline-flex min-h-12 items-center justify-center rounded-xl bg-mint px-6 text-base font-semibold text-ink hover:bg-[#D1EFB5] transition-colors"
             >
               Book a visit
             </Link>
@@ -196,11 +196,11 @@ export default function Home() {
       </section>
 
       {/* Tests and medicines */}
-      <section aria-labelledby="services" className="bg-ground">
+      <section aria-labelledby="services" className="bg-white">
         <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-20">
-          <p className="eyebrow text-brand">In the clinic</p>
-          <h2 id="services" className="mt-3 text-[2.125rem] font-normal leading-none tracking-[-0.025em] sm:text-6xl">
-            Tests and <em className="text-brand">medicines</em>
+          <p className="eyebrow text-muted">In the clinic</p>
+          <h2 id="services" className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
+            Tests and <em>medicines</em>
           </h2>
           <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {services.map((s) => (
@@ -209,11 +209,11 @@ export default function Home() {
                   href={`/services#${s.id}`}
                   className="card card-hover flex h-full items-start gap-4 rounded-2xl p-5"
                 >
-                  <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand">
+                  <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-ink ring-1 ring-brand-line/70">
                     <ServiceIcon id={s.id} />
                   </span>
                   <span>
-                    <span className="block text-lg font-bold">{s.short}</span>
+                    <span className="block text-lg font-semibold text-ink">{s.short}</span>
                     <span className="block text-[15px] text-muted">{s.description}</span>
                   </span>
                 </Link>
@@ -222,13 +222,13 @@ export default function Home() {
           </ul>
 
           {/* Quick Reports WhatsApp prompt */}
-          <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-brand-line/70 bg-brand-tint/60 p-5">
+          <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-line bg-ground p-5">
             <div className="flex items-start sm:items-center gap-3.5">
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand text-white shadow-subtle">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-ink ring-1 ring-brand-line/70">
                 <ReportIcon className="size-5" />
               </span>
               <div>
-                <strong className="block text-base font-bold text-ink">
+                <strong className="block text-base font-semibold text-ink">
                   Collect Your Reports on WhatsApp
                 </strong>
                 <p className="text-sm text-muted">
@@ -248,7 +248,7 @@ export default function Home() {
               </a>
               <a
                 href={`tel:${clinic.labTechPhone}`}
-                className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl border border-line-strong bg-white px-4 text-sm font-bold text-ink hover:text-brand hover:border-brand transition-colors"
+                className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl border border-line-strong bg-white px-4 text-sm font-semibold text-ink hover:border-brand transition-colors"
               >
                 <PhoneIcon className="size-3.5 shrink-0 text-brand" />
                 <span>Call Lab ({clinic.labTechPhoneDisplay})</span>
@@ -259,12 +259,12 @@ export default function Home() {
       </section>
 
       {/* Visit */}
-      <section aria-labelledby="visit" className="bg-sand">
+      <section aria-labelledby="visit" className="bg-ground border-t border-line">
         <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:px-6 sm:py-20 lg:grid-cols-2 lg:items-center">
           <div>
-            <p className="eyebrow text-brand">Visit us</p>
-            <h2 id="visit" className="mt-3 text-[2.125rem] font-normal leading-none tracking-[-0.025em] sm:text-6xl">
-              Opposite <em className="text-brand">SDH Hospital</em>
+            <p className="eyebrow text-muted">Visit us</p>
+            <h2 id="visit" className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
+              Opposite <em>SDH Hospital</em>
             </h2>
             <p className="mt-4 flex items-start gap-2 text-lg font-semibold">
               <MapPinIcon className="mt-1 size-5 shrink-0 text-brand" />

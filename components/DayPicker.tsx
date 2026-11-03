@@ -45,9 +45,12 @@ export function DayPicker() {
     <div className="bg-white">
       <section id="days" aria-labelledby="days-title" className="rounded-t-[2rem] sm:rounded-t-[2.75rem] border-t border-line/80 bg-ground scroll-mt-20">
       <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-20">
-        <p className="eyebrow text-brand">Visiting specialists</p>
-        <h2 id="days-title" className="mt-3 text-[2.125rem] font-normal leading-none tracking-[-0.025em] sm:text-6xl">
-          Who sits on <em className="text-brand">{dayName}</em>
+        <p className="eyebrow text-muted">Visiting specialists</p>
+        <h2 id="days-title" className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
+          Who sits on{" "}
+          <em className="inline-block rounded-xl bg-brand-tint px-2.5 py-0.5 text-ink ring-1 ring-brand-line/70">
+            {dayName}
+          </em>
         </h2>
 
         <div role="group" aria-label="Choose a day" className="mt-8 grid grid-cols-7 gap-1.5 sm:gap-3">
@@ -70,12 +73,12 @@ export function DayPicker() {
                   <span className="sm:hidden">{DAY_NAMES[day].slice(0, 3)}</span>
                   <span className="hidden sm:inline">{DAY_NAMES[day]}</span>
                 </span>
-                <span className="font-display text-xl font-medium leading-tight sm:text-3xl tabular-nums lining-nums">{count || "–"}</span>
-                <span className={`hidden text-[15px] sm:block ${on ? "text-white/80" : "text-muted"}`}>
+                <span className="font-display text-xl font-semibold leading-tight sm:text-3xl tabular-nums lining-nums">{count || "–"}</span>
+                <span className={`hidden text-[15px] sm:block ${on ? "text-white/75" : "text-muted"}`}>
                   {count === 0 ? "No OPD" : count === 1 ? "specialist" : "specialists"}
                 </span>
                 {today === day && (
-                  <span className={`text-[0.625rem] sm:text-[0.6875rem] font-bold uppercase tracking-tight sm:tracking-wider ${on ? "text-white" : "text-brand"}`}>
+                  <span className={`text-[0.625rem] sm:text-[0.6875rem] font-bold uppercase tracking-tight sm:tracking-wider ${on ? "text-mint" : "text-ink"}`}>
                     Today
                   </span>
                 )}

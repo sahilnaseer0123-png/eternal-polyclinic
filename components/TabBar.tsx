@@ -21,7 +21,7 @@ export function TabBar() {
   const [open, setOpen] = useState(false);
   const moreActive = NAV.some((n) => n.href === pathname && n.href !== "/doctors") || pathname === "/privacy";
   const tabClass = (on: boolean) =>
-    `flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${on ? "text-brand" : "text-muted"}`;
+    `flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${on ? "text-ink" : "text-muted"}`;
 
   // Prevent background scroll bleed when mobile drawer is open
   useEffect(() => {
@@ -90,13 +90,15 @@ export function TabBar() {
 
       <nav
         aria-label="Quick links"
-        className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-4 [view-transition-name:tab-bar] border-t border-line bg-white px-2 pb-[max(0.25rem,env(safe-area-inset-bottom))] pt-1"
+        className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-4 [view-transition-name:tab-bar] border-t border-line bg-white/95 backdrop-blur-md px-2 pb-[max(0.25rem,env(safe-area-inset-bottom))] pt-1"
       >
         {TABS.map(({ href, label, Icon }) => {
-          const on = pathname === href;
+          const on = pathname === href || (href !== "/" && Boolean(pathname?.startsWith(href)));
           return (
             <Link key={href} href={href} aria-current={on ? "page" : undefined} className={tabClass(on)}>
-              <Icon className="size-6" />
+              <span className={`inline-flex items-center justify-center rounded-full px-3 py-0.5 transition-colors ${on ? "bg-brand-tint text-ink" : ""}`}>
+                <Icon className="size-5.5" />
+              </span>
               {label}
             </Link>
           );
@@ -108,7 +110,9 @@ export function TabBar() {
           onClick={() => setOpen((o) => !o)}
           className={tabClass(open || moreActive)}
         >
-          {open ? <CloseIcon /> : <MenuIcon />}
+          <span className={`inline-flex items-center justify-center rounded-full px-3 py-0.5 transition-colors ${open || moreActive ? "bg-brand-tint text-ink" : ""}`}>
+            {open ? <CloseIcon className="size-5.5" /> : <MenuIcon className="size-5.5" />}
+          </span>
           More
         </button>
       </nav>

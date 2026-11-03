@@ -10,20 +10,20 @@ export function ReportCollectionSection({
 }) {
   return (
     <div
-      className={`card relative overflow-hidden rounded-3xl border border-brand-line/80 bg-gradient-to-br from-brand-tint/50 via-white to-brand-tint/30 p-6 sm:p-9 ${className}`}
+      className={`card relative overflow-hidden rounded-3xl border border-line bg-white p-6 sm:p-9 ${className}`}
     >
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
         {/* Left Column: Heading, Value Prop & Steps */}
         <div className="max-w-2xl">
-          <div className="flex items-center gap-2 text-brand">
-            <span className="flex size-7 items-center justify-center rounded-lg bg-brand/10">
+          <div className="flex items-center gap-2 text-ink">
+            <span className="flex size-7 items-center justify-center rounded-lg bg-brand-tint ring-1 ring-brand-line/70">
               <ReportIcon className="size-4" />
             </span>
-            <span className="eyebrow text-brand">Save a Second Trip • Digital Reports</span>
+            <span className="eyebrow text-muted">Save a Second Trip • Digital Reports</span>
           </div>
 
-          <h2 className="mt-3 text-2xl sm:text-3xl font-medium tracking-[-0.025em] text-ink font-display">
-            Collect your lab &amp; scan reports <em className="text-brand font-italic">on WhatsApp</em>
+          <h2 className="mt-3 text-2xl sm:text-3xl font-semibold tracking-[-0.03em] text-ink font-display">
+            Collect your lab &amp; scan reports <em>on WhatsApp</em>
           </h2>
 
           <p className="mt-2.5 text-base text-charcoal leading-relaxed">

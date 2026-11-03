@@ -1,38 +1,37 @@
 @import "tailwindcss";
 @import "@fontsource-variable/plus-jakarta-sans";
-@import "@fontsource-variable/fraunces/full.css";
-@import "@fontsource-variable/fraunces/full-italic.css";
 
-/* Design v3 "day-first" (Nov 2026): cream ground, night-teal hero, Fraunces headings, Plus Jakarta Sans body.
-   One brand colour (deep teal); night and mint are its dark-surface companions. */
+/* Design v4 "Minimalist Clinical / Healist" (Nov 2026):
+   Crisp pure white, cool clinical sage-mist (#F6F8F6), sleek obsidian-charcoal (#1D2321),
+   pastel mint-lime accents (#DFF5CA), and geometric Plus Jakarta Sans throughout. */
 @theme {
   --font-sans: "Plus Jakarta Sans Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Fraunces Variable", Georgia, "Times New Roman", serif;
+  --font-display: "Plus Jakarta Sans Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
-  --color-brand: #0A5A54;          /* deep teal: buttons, links, selected states */
-  --color-brand-dark: #08443F;     /* hover */
-  --color-brand-tint: #E3EEEB;     /* mist: doctor marks, tiles, soft fills */
-  --color-brand-line: #C5DAD5;
+  --color-brand: #1D2321;          /* sleek obsidian charcoal: primary buttons, active states, dark bands */
+  --color-brand-dark: #2C3632;     /* button hover */
+  --color-brand-tint: #DFF5CA;     /* pastel mint-lime: icon tiles, category pills, active badges */
+  --color-brand-line: #CBE8B0;     /* mint-lime ring/border */
 
-  --color-night: #0B1917;          /* hero and footer */
-  --color-night-line: #2E4742;
-  --color-night-muted: #A9B8B3;
-  --color-mint: #9BE3D6;           /* teal text on night */
-  --color-glow: #9BE3D6;
+  --color-night: #151A18;          /* deep architectural charcoal footer */
+  --color-night-line: #262F2B;
+  --color-night-muted: #9BA8A2;
+  --color-mint: #DFF5CA;           /* mint-lime accent on dark charcoal */
+  --color-glow: #DFF5CA;
 
-  --color-ground: #FAF8F4;         /* cream page ground */
-  --color-sand: #F3EBDD;           /* reassurance bands */
-  --color-stone: #EFEAE0;
-  --color-ink: #14201E;
-  --color-charcoal: #2B3836;
-  --color-muted: #465451;          /* > 7:1 on cream (WCAG AA compliant) */
-  --color-line: #E4DED2;
-  --color-line-strong: #D9D2C4;
+  --color-ground: #F6F8F6;         /* cool clinical sage-mist ground */
+  --color-sand: #EDF2EE;           /* soft sage secondary bands */
+  --color-stone: #E2E9E4;
+  --color-ink: #171D1B;            /* crisp architectural charcoal ink */
+  --color-charcoal: #2E3935;
+  --color-muted: #52605B;          /* WCAG AA compliant muted copy */
+  --color-line: #E5EAE6;           /* crisp cool card border */
+  --color-line-strong: #CFD8D2;
   --color-emergency: #B91C1C;
 
   --shadow-subtle: none;
   --shadow-card: none;
-  --shadow-elevated: 0 10px 28px -12px rgba(20, 32, 30, 0.22);
+  --shadow-elevated: 0 10px 28px -12px rgba(20, 32, 30, 0.18);
 }
 
 /* Cards: white, 1px border, no shadow. Pair with rounded-2xl / rounded-3xl. */
@@ -203,15 +202,14 @@ body {
   h3 {
     font-family: var(--font-display);
     font-optical-sizing: auto;
-    font-weight: 400;
-    letter-spacing: -0.025em;
+    font-weight: 600;
+    letter-spacing: -0.03em;
   }
   h1 em,
   h2 em,
   h3 em,
   em {
-    font-style: italic;
-    font-variation-settings: "WONK" 0;
+    font-style: normal;
   }
   time,
   .tabular-nums,
