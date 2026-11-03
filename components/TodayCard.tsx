@@ -10,7 +10,7 @@ import { addDays, clinicClock, DAY_NAMES, formatTime, sessionOn, sessionStatus, 
 import { useClinicMinute } from "./useClinicMinute";
 
 const MAX_ROWS = 4;
-const shell = "card rounded-3xl p-5 sm:p-7 min-h-[18rem] scroll-mt-24";
+const shell = "card rounded-3xl p-5 sm:p-7 min-h-[18rem] scroll-mt-24 w-full min-w-0 max-w-full";
 
 export function TodayCardSkeleton() {
   return (
@@ -71,7 +71,7 @@ export function TodayCard() {
         {next.length > 0 && (
           <a
             href="#days"
-            className="mt-6 flex min-h-14 items-center justify-between rounded-2xl bg-brand-tint px-5 py-3 font-semibold hover:bg-brand-line"
+            className="mt-6 flex flex-wrap gap-2 sm:gap-0 min-h-14 items-center justify-between rounded-2xl bg-brand-tint px-4 sm:px-5 py-3 font-semibold hover:bg-brand-line"
           >
             <span>
               Next: <span className="font-display text-xl font-medium">{nextName}</span>

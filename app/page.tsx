@@ -35,20 +35,20 @@ export default function Home() {
 
       {/* Hero: Full viewport coverage below the header */}
       <section className="relative flex min-h-[calc(100vh-61px)] min-h-[calc(100dvh-61px)] w-full flex-col justify-center border-b border-line bg-brand-tint">
-        <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-5 py-10 sm:px-6 sm:py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-14 lg:py-16">
-          <div>
-            <div className="rise mb-4">
+        <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-5 py-8 sm:px-6 sm:py-14 lg:grid-cols-[1.15fr_1fr] lg:gap-14 lg:py-16">
+          <div className="min-w-0 w-full">
+            <div className="rise mb-3.5 sm:mb-4">
               <ClinicStatusTicker />
             </div>
 
-            <div className="rise flex flex-wrap items-center gap-2.5 sm:gap-3">
-              <p className="eyebrow text-brand">Opposite SDH Hospital, Sopore</p>
+            <div className="rise flex flex-wrap items-center gap-2 sm:gap-3">
+              <p className="eyebrow text-brand shrink-0">Opposite SDH Hospital, Sopore</p>
               <span className="text-line-strong hidden sm:inline" aria-hidden="true">·</span>
               <a
                 href={clinic.googleRating.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full border border-line-strong bg-white/90 px-2.5 py-0.5 text-xs font-semibold text-charcoal hover:border-brand hover:text-brand transition-all hover:bg-white"
+                className="inline-flex items-center gap-1.5 rounded-full border border-line-strong bg-white/90 px-2.5 py-0.5 text-xs font-semibold text-charcoal hover:border-brand hover:text-brand transition-all hover:bg-white shrink-0"
                 aria-label={`Rated ${clinic.googleRating.score} out of 5 on Google with ${clinic.googleRating.count} reviews`}
               >
                 <GoogleIcon className="size-3.5 shrink-0" />
@@ -57,32 +57,32 @@ export default function Home() {
                 <span className="text-muted tabular-nums lining-nums">({clinic.googleRating.count} reviews)</span>
               </a>
             </div>
-            <h1 className="rise rise-2 mt-4 max-w-2xl text-balance text-[3rem] font-normal leading-[0.97] tracking-[-0.025em] sm:text-[4.5rem] lg:text-[5rem]">
+            <h1 className="rise rise-2 mt-4 max-w-2xl text-balance text-[2.5rem] font-normal leading-[1.02] tracking-[-0.025em] sm:text-[4.25rem] sm:leading-[0.97] lg:text-[5rem]">
               Find the day <em className="text-brand">your doctor</em> is in.
             </h1>
-            <p className="rise rise-3 mt-5 max-w-lg text-base leading-relaxed text-charcoal sm:text-xl">
+            <p className="rise rise-3 mt-4 sm:mt-5 max-w-lg text-base leading-relaxed text-charcoal sm:text-xl">
               {doctors.length} visiting specialists, one clinic in Sopore. See who sits today, then book on WhatsApp.
             </p>
-            <div className="rise rise-3 mt-7 flex flex-wrap gap-3">
+            <div className="rise rise-3 mt-6 sm:mt-7 flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <Link
                 href="/book"
-                className="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark transition-colors"
+                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark transition-colors"
               >
                 Book a visit
               </Link>
               <a
                 href={`tel:${clinic.phone}`}
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-6 text-base font-bold hover:bg-ink hover:text-white transition-colors"
+                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-6 text-base font-bold hover:bg-ink hover:text-white transition-colors"
               >
                 <PhoneIcon className="size-4" />
                 Call {clinic.phoneDisplay}
               </a>
             </div>
-            <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-1.5 text-sm font-semibold text-charcoal sm:text-base">
+            <ul className="mt-6 sm:mt-7 flex flex-col sm:flex-row sm:flex-wrap gap-2.5 sm:gap-x-5 sm:gap-y-1.5 text-sm font-semibold text-charcoal sm:text-base">
               {facts.map((f) => (
                 <li key={f} className="flex items-center gap-2">
                   <CheckIcon className="size-4 shrink-0 text-brand" />
-                  {f}
+                  <span>{f}</span>
                 </li>
               ))}
             </ul>

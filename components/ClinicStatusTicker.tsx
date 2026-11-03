@@ -20,22 +20,22 @@ export function ClinicStatusTicker({ className = "" }: { className?: string }) {
   if (minute === null) {
     return (
       <div
-        className={`inline-flex flex-wrap items-center gap-2 rounded-full border border-brand/20 bg-white/95 px-3 py-1.5 text-xs text-charcoal shadow-xs ${className}`}
+        className={`inline-flex max-w-full items-center gap-2 rounded-full border border-brand/20 bg-white/95 px-3 py-1.5 text-xs text-charcoal shadow-xs whitespace-nowrap ${className}`}
       >
-        <span className="flex items-center gap-1.5 font-bold text-brand">
+        <span className="flex items-center gap-1.5 font-bold text-brand shrink-0">
           <span className="size-2 rounded-full bg-brand animate-pulse" />
           <span>Open Daily</span>
         </span>
-        <span className="text-line-strong hidden sm:inline" aria-hidden="true">
+        <span className="text-line-strong" aria-hidden="true">
           ·
         </span>
-        <span className="tabular-nums lining-nums text-muted">
+        <span className="tabular-nums lining-nums text-muted shrink-0">
           {formatTime(clinic.hours.open)} – {formatTime(clinic.hours.close)}
         </span>
         <span className="text-line-strong hidden sm:inline" aria-hidden="true">
           ·
         </span>
-        <span className="font-medium text-ink">
+        <span className="font-medium text-ink hidden sm:inline">
           Diagnostic Lab &amp; Pharmacy Open
         </span>
       </div>
@@ -61,11 +61,13 @@ export function ClinicStatusTicker({ className = "" }: { className?: string }) {
   const todaySittings = sittingsOn(dateKey);
 
   let opdMessage = "";
+  let opdMessageMobile = "";
   let opdTarget = "#today";
 
   if (todaySittings.length > 0) {
     const count = todaySittings.length;
     opdMessage = `${count} ${count === 1 ? "specialist" : "specialists"} sitting today`;
+    opdMessageMobile = `${count} ${count === 1 ? "doctor" : "doctors"} today`;
   } else {
     let ahead = 1;
     let next = sittingsOn(addDays(dateKey, ahead));
@@ -74,15 +76,16 @@ export function ClinicStatusTicker({ className = "" }: { className?: string }) {
     }
     const nextDay = DAY_NAMES[weekdayOf(addDays(dateKey, ahead))];
     opdMessage = `Next OPD: ${nextDay} (${next.length} ${next.length === 1 ? "doctor" : "doctors"})`;
+    opdMessageMobile = `Next OPD: ${nextDay} (${next.length})`;
     opdTarget = "#days";
   }
 
   return (
     <div
-      className={`inline-flex flex-wrap items-center gap-2 rounded-full border border-brand/25 bg-white/95 px-3.5 py-1.5 text-xs text-charcoal shadow-xs backdrop-blur-xs transition-all hover:border-brand/50 ${className}`}
+      className={`inline-flex max-w-full items-center gap-2 rounded-full border border-brand/25 bg-white/95 px-3.5 py-1.5 text-xs text-charcoal shadow-xs backdrop-blur-xs transition-all hover:border-brand/50 whitespace-nowrap ${className}`}
     >
       {/* Clinic Open / Closed Status Dot & Text */}
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1.5 shrink-0">
         <span
           className={`size-2 rounded-full ${
             isOpenNow
@@ -102,27 +105,28 @@ export function ClinicStatusTicker({ className = "" }: { className?: string }) {
         </strong>
       </div>
 
-      <span className="text-line-strong hidden sm:inline" aria-hidden="true">
+      <span className="text-line-strong" aria-hidden="true">
         ·
       </span>
 
-      {/* Hours note */}
-      <span className="text-muted tabular-nums lining-nums hidden md:inline">
+      {/* Hours note on large screens */}
+      <span className="text-muted tabular-nums lining-nums hidden lg:inline">
         {isOpenNow
           ? `Closes at ${formatTime(clinic.hours.close)}`
           : `Daily: ${formatTime(clinic.hours.open)} – ${formatTime(clinic.hours.close)}`}
       </span>
 
-      <span className="text-line-strong" aria-hidden="true">
+      <span className="text-line-strong hidden lg:inline" aria-hidden="true">
         ·
       </span>
 
       {/* OPD Doctor live badge linking to today / days */}
       <a
         href={opdTarget}
-        className="font-bold text-brand hover:underline flex items-center gap-1 transition-colors"
+        className="font-bold text-brand hover:underline flex items-center gap-1 transition-colors shrink-0"
       >
-        <span>{opdMessage}</span>
+        <span className="sm:hidden">{opdMessageMobile}</span>
+        <span className="hidden sm:inline">{opdMessage}</span>
         <span aria-hidden="true">↓</span>
       </a>
     </div>

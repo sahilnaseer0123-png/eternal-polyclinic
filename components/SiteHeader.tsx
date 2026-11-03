@@ -75,9 +75,10 @@ export function SiteHeader() {
           </a>
           <Link
             href="/book"
-            className="inline-flex min-h-11 items-center rounded-xl bg-brand px-3.5 text-sm font-bold text-white whitespace-nowrap shrink-0"
+            className="inline-flex min-h-11 items-center rounded-xl bg-brand px-3 sm:px-3.5 text-sm font-bold text-white whitespace-nowrap shrink-0"
           >
-            Book a visit
+            <span className="sm:hidden">Book</span>
+            <span className="hidden sm:inline">Book a visit</span>
           </Link>
         </div>
       </div>
