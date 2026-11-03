@@ -10,7 +10,8 @@ import { addDays, clinicClock, DAY_NAMES, formatTime, sessionOn, sessionStatus, 
 import { useClinicMinute } from "./useClinicMinute";
 
 const MAX_ROWS = 4;
-const shell = "card rounded-3xl p-5 sm:p-7 min-h-[18rem] scroll-mt-24 w-full min-w-0 max-w-full";
+const shell =
+  "rounded-3xl p-5 sm:p-7 min-h-[17rem] scroll-mt-24 w-full min-w-0 max-w-full border border-brand/20 bg-white/75 backdrop-blur-md shadow-xs lg:bg-white lg:border-line";
 
 export function TodayCardSkeleton() {
   return (
@@ -58,10 +59,10 @@ export function TodayCard() {
     return (
       <div id="today" className={shell}>
         <p className="eyebrow text-muted">In the clinic today · {DAY_NAMES[weekday]}</p>
-        <p className="mt-4 font-display text-3xl font-medium leading-tight tracking-tight">
+        <p className="mt-3.5 font-display text-2xl sm:text-3xl font-medium leading-tight tracking-tight text-ink">
           No specialist OPD today
         </p>
-        <p className="mt-2 text-base text-muted">
+        <p className="mt-2 text-sm sm:text-base text-muted leading-relaxed">
           Scans, tests and the pharmacy are still open. Call{" "}
           <a href={`tel:${clinic.phone}`} className="whitespace-nowrap font-bold text-brand underline">
             {clinic.phoneDisplay}
@@ -71,12 +72,12 @@ export function TodayCard() {
         {next.length > 0 && (
           <a
             href="#days"
-            className="mt-6 flex flex-wrap gap-2 sm:gap-0 min-h-14 items-center justify-between rounded-2xl bg-brand-tint px-4 sm:px-5 py-3 font-semibold hover:bg-brand-line"
+            className="mt-5 flex flex-wrap gap-2 sm:gap-0 min-h-13 items-center justify-between rounded-2xl bg-white/80 border border-brand/20 px-4 sm:px-5 py-3 font-semibold text-ink hover:bg-white transition-all shadow-2xs"
           >
             <span>
-              Next: <span className="font-display text-xl font-medium">{nextName}</span>
+              Next: <span className="font-display text-lg sm:text-xl font-medium">{nextName}</span>
             </span>
-            <span className="text-brand">
+            <span className="text-brand font-bold text-sm sm:text-base">
               {next.length} {next.length === 1 ? "specialist" : "specialists"} →
             </span>
           </a>

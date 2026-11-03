@@ -48,7 +48,7 @@ export default function Home() {
                 href={clinic.googleRating.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full border border-line-strong bg-white/90 px-2.5 py-0.5 text-xs font-semibold text-charcoal hover:border-brand hover:text-brand transition-all hover:bg-white shrink-0"
+                className="inline-flex items-center gap-1.5 rounded-full border border-brand/25 bg-white/80 backdrop-blur-xs px-2.5 py-0.5 text-xs font-semibold text-charcoal hover:border-brand hover:text-brand transition-all hover:bg-white shrink-0"
                 aria-label={`Rated ${clinic.googleRating.score} out of 5 on Google with ${clinic.googleRating.count} reviews`}
               >
                 <GoogleIcon className="size-3.5 shrink-0" />
@@ -57,8 +57,9 @@ export default function Home() {
                 <span className="text-muted tabular-nums lining-nums">({clinic.googleRating.count} reviews)</span>
               </a>
             </div>
-            <h1 className="rise rise-2 mt-4 max-w-2xl text-balance text-[2.5rem] font-normal leading-[1.02] tracking-[-0.025em] sm:text-[4.25rem] sm:leading-[0.97] lg:text-[5rem]">
-              Find the day <em className="text-brand">your doctor</em> is in.
+            <h1 className="rise rise-2 mt-4 max-w-2xl text-balance font-normal tracking-[-0.025em] text-[2.5rem] leading-[1.08] sm:text-[4.25rem] sm:leading-[0.97] lg:text-[5rem]">
+              Find the day <br className="sm:hidden" />
+              <em className="text-brand whitespace-nowrap">your doctor</em> is in.
             </h1>
             <p className="rise rise-3 mt-4 sm:mt-5 max-w-lg text-base leading-relaxed text-charcoal sm:text-xl">
               {doctors.length} visiting specialists, one clinic in Sopore. See who sits today, then book on WhatsApp.
@@ -66,15 +67,15 @@ export default function Home() {
             <div className="rise rise-3 mt-6 sm:mt-7 flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
               <Link
                 href="/book"
-                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark transition-colors"
+                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark transition-all shadow-xs active:scale-[0.99]"
               >
                 Book a visit
               </Link>
               <a
                 href={`tel:${clinic.phone}`}
-                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-6 text-base font-bold hover:bg-ink hover:text-white transition-colors"
+                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink bg-white/40 backdrop-blur-xs px-6 text-base font-bold text-ink hover:bg-ink hover:text-white transition-all active:scale-[0.99]"
               >
-                <PhoneIcon className="size-4" />
+                <PhoneIcon className="size-4 shrink-0" />
                 Call {clinic.phoneDisplay}
               </a>
             </div>
