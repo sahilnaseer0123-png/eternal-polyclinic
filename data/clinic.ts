@@ -95,6 +95,15 @@ export const clinic = {
     `📞 Reception Helpline: 97977 96909\n` +
     `💬 WhatsApp Desk: 94190 55528`
   )}`,
+  /** Pre-filled WhatsApp message for patients requesting lab or diagnostic test reports without traveling back */
+  reportRequestUrl: `https://wa.me/919419055528?text=${encodeURIComponent(
+    `*Report Request | Eternal Polyclinic*\n` +
+    `Hello, I would like to receive my lab / scan report on WhatsApp.\n\n` +
+    `• Patient Name: \n` +
+    `• Bill or Token No: \n` +
+    `• Test Name: \n\n` +
+    `(Attaching a photo of my clinic receipt)`
+  )}`,
   /** Google verified ratings & reviews */
   googleRating: {
     score: "4.9",

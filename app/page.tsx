@@ -11,7 +11,7 @@ import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import { WhatsAppPreview } from "@/components/WhatsAppPreview";
 import { EmergencyNote } from "@/components/EmergencyNote";
-import { CheckIcon, GoogleIcon, MapPinIcon, PhoneIcon, ServiceIcon, WhatsAppIcon } from "@/components/Icons";
+import { CheckIcon, GoogleIcon, MapPinIcon, PhoneIcon, ReportIcon, ServiceIcon, WhatsAppIcon } from "@/components/Icons";
 
 // Every page names its own address for search engines (alternates.canonical); this is "/".
 export const metadata: Metadata = { alternates: { canonical: "/" } };
@@ -182,6 +182,40 @@ export default function Home() {
               </li>
             ))}
           </ul>
+
+          {/* Quick Reports WhatsApp prompt */}
+          <div className="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-brand-line/70 bg-brand-tint/60 p-5">
+            <div className="flex items-start sm:items-center gap-3.5">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand text-white shadow-subtle">
+                <ReportIcon className="size-5" />
+              </span>
+              <div>
+                <strong className="block text-base font-bold text-ink">
+                  Collect Your Reports on WhatsApp
+                </strong>
+                <p className="text-sm text-muted">
+                  No need to travel back to Sopore. Send your Bill or Token number to receive your digital PDF report.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5 shrink-0">
+              <a
+                href={clinic.reportRequestUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-4 text-sm font-bold text-white shadow-subtle hover:bg-[#20ba59] active:translate-y-0.5 transition-all"
+              >
+                <WhatsAppIcon className="size-4 shrink-0" />
+                <span>Get Report</span>
+              </a>
+              <Link
+                href="/services"
+                className="inline-flex min-h-10 items-center justify-center rounded-xl border border-line-strong bg-white px-4 text-sm font-bold text-ink hover:text-brand hover:border-brand transition-colors"
+              >
+                Learn More
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 

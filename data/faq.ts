@@ -38,6 +38,10 @@ export const faqs: Faq[] = [
     answer: `Yes. The clinic has ${serviceList} in-house. Call ${clinic.phoneDisplay} to ask about timings.`,
   },
   {
+    question: "Can I collect my lab or scan reports on WhatsApp?",
+    answer: `Yes! There is no need to travel back to Sopore just to collect paper sheets. Message our official WhatsApp desk (${clinic.whatsappDisplay}) with your Patient Name and Bill or Token number, and reception will send your signed digital PDF report directly to your chat once ready.`,
+  },
+  {
     question: "What should I bring?",
     answer: "Old prescriptions, any test reports, and a list of the medicines you take now.",
   },

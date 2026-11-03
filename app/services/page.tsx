@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { clinic, services } from "@/data/clinic";
 import { PageIntro } from "@/components/SiteChrome";
 import { ServiceIcon } from "@/components/Icons";
+import { ReportCollectionSection } from "@/components/ReportCollectionSection";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/services" },
@@ -45,6 +46,12 @@ export default function ServicesPage() {
             </li>
           ))}
         </ul>
+
+        {/* Digital Lab & Scan Reports on WhatsApp */}
+        <div className="mt-8">
+          <ReportCollectionSection />
+        </div>
+
         <p className="mt-6 text-base text-muted">
           For timings and test prices,{" "}
           <a href={`tel:${clinic.phone}`} className="font-semibold text-brand underline">

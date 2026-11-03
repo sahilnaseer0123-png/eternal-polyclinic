@@ -116,6 +116,17 @@ export function ShieldCheckIcon({ className = "size-5" }: IconProps) {
   );
 }
 
+/** Medical Report / Lab result document */
+export function ReportIcon({ className = "size-5" }: IconProps) {
+  return (
+    <svg {...base} className={className}>
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <path d="M14 2v6h6" />
+      <path d="M16 13H8M16 17H8M10 9H8" />
+    </svg>
+  );
+}
+
 /** Multi-story hospital building with medical cross */
 export function HospitalIcon({ className = "size-5" }: IconProps) {
   return (

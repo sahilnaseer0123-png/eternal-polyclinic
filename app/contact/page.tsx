@@ -5,6 +5,7 @@ import { PageIntro } from "@/components/SiteChrome";
 import { ChatIcon, ClockIcon, MapPinIcon, PhoneIcon, WhatsAppIcon } from "@/components/Icons";
 import { EmergencyNote } from "@/components/EmergencyNote";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
+import { ReportCollectionSection } from "@/components/ReportCollectionSection";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
@@ -152,6 +153,9 @@ export default function ContactPage() {
             </p>
           </div>
         </div>
+
+        {/* Digital Lab & Scan Reports on WhatsApp */}
+        <ReportCollectionSection className="mt-8" />
       </section>
     </>
   );
