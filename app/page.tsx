@@ -34,81 +34,89 @@ export default function Home() {
 
       {/* Hero: Crisp white architectural canvas with diagonal 3D DNA sculpture */}
       <section className="relative overflow-hidden bg-white">
-        <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-6 px-5 pt-6 pb-10 sm:px-8 sm:pt-10 sm:pb-14 min-[72rem]:grid min-[72rem]:min-h-[630px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-18 xl:min-h-[660px] xl:grid-cols-[minmax(0,1fr)_350px]">
+        <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-3.5 px-5 pt-4 pb-6 sm:gap-6 sm:px-8 sm:pt-10 sm:pb-14 min-[72rem]:grid min-[72rem]:min-h-[630px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-18 xl:min-h-[660px] xl:grid-cols-[minmax(0,1fr)_350px]">
           {/* 1. Top-Left Content Block */}
-          <div className="relative z-10 flex min-w-0 flex-col items-start gap-4 sm:gap-5 min-[72rem]:max-w-[35rem] min-[72rem]:pt-3 min-[72rem]:pb-20 xl:max-w-[38rem]">
-            {/* Location & Google Rating */}
-            <div className="rise flex flex-wrap items-center gap-2 sm:gap-2.5">
-              <p className="eyebrow text-[#3E504B] shrink-0">Opposite SDH Hospital, Sopore</p>
-              <span className="text-[#D4DCD8] hidden sm:inline" aria-hidden="true">·</span>
+          <div className="relative z-10 flex min-w-0 flex-col items-start gap-3 sm:gap-5 min-[72rem]:max-w-[35rem] min-[72rem]:pt-3 min-[72rem]:pb-20 xl:max-w-[38rem]">
+            {/* Location & Google Rating (single crisp horizontal line across all widths) */}
+            <div className="rise flex w-full flex-nowrap items-center justify-between gap-2 min-[430px]:w-auto min-[430px]:justify-start sm:gap-2.5">
+              <p className="eyebrow text-[#3E504B] text-[10.5px] tracking-[0.09em] min-[400px]:text-[11px] sm:text-xs sm:tracking-[0.14em] truncate">
+                <span className="min-[420px]:hidden">Opp. SDH Hospital, Sopore</span>
+                <span className="hidden min-[420px]:inline">Opposite SDH Hospital, Sopore</span>
+              </p>
+              <span className="text-[#D4DCD8] hidden min-[430px]:inline" aria-hidden="true">·</span>
               <a
                 href={clinic.googleRating.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full border border-[#E4EAE6] bg-[#F7F9F7] px-2.5 py-0.5 text-xs font-semibold text-charcoal hover:border-[#C5D8CD] hover:bg-[#EFF5EE] transition-all shrink-0"
+                className="inline-flex items-center gap-1 sm:gap-1.5 rounded-full border border-[#E4EAE6] bg-[#F7F9F7] px-2 py-0.5 sm:px-2.5 text-[11px] sm:text-xs font-semibold text-charcoal hover:border-[#C5D8CD] hover:bg-[#EFF5EE] transition-all shrink-0"
                 aria-label={`Rated ${clinic.googleRating.score} out of 5 on Google with ${clinic.googleRating.count} reviews`}
               >
-                <GoogleIcon className="size-3.5 shrink-0" />
+                <GoogleIcon className="size-3 sm:size-3.5 shrink-0" />
                 <span className="font-bold text-ink tabular-nums lining-nums">{clinic.googleRating.score}</span>
-                <span className="text-[#F59E0B] text-xs leading-none tracking-tighter" aria-hidden="true">★★★★★</span>
+                <span className="text-[#F59E0B] text-[11px] sm:text-xs leading-none tracking-tighter" aria-hidden="true">
+                  <span className="min-[420px]:hidden">★</span>
+                  <span className="hidden min-[420px]:inline">★★★★★</span>
+                </span>
                 <span className="text-muted tabular-nums lining-nums">({clinic.googleRating.count})</span>
               </a>
             </div>
 
             {/* Clean Modern Two-Line Sans Headline */}
-            <h1 className="rise rise-2 max-w-full font-sans font-semibold tracking-[-0.035em] text-[#171D1B] text-[clamp(1.85rem,7.5vw,2.5rem)] leading-[1.08] sm:text-[2.85rem] min-[72rem]:text-[2.95rem] xl:text-[3.3rem]">
+            <h1 className="rise rise-2 max-w-full font-sans font-semibold tracking-[-0.035em] text-[#171D1B] text-[clamp(1.78rem,7.8vw,2.3rem)] leading-[1.07] sm:text-[2.85rem] sm:leading-[1.08] min-[72rem]:text-[2.95rem] xl:text-[3.3rem]">
               The patient comes
               <span className="block">before everything else.</span>
             </h1>
 
             {/* Concise Subtext */}
-            <p className="rise rise-3 max-w-[24rem] text-[0.95rem] leading-relaxed text-[#586560] sm:text-[1rem]">
+            <p className="rise rise-3 max-w-[24rem] text-[0.9rem] leading-[1.48] text-[#586560] sm:text-[1rem] sm:leading-relaxed">
               Visiting specialists, one clinic in Sopore. See who sits today, then book on WhatsApp.
             </p>
 
-            {/* Primary & Secondary CTAs */}
-            <div className="rise rise-3 flex flex-col sm:flex-row gap-3 w-full sm:w-auto pt-0.5">
+            {/* Primary & Secondary CTAs (balanced side-by-side pair on mobile & desktop) */}
+            <div className="rise rise-3 grid w-full grid-cols-[1fr_1.16fr] gap-2.5 pt-0.5 sm:flex sm:w-auto sm:flex-row sm:gap-3">
               <Link
                 href="/book"
-                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center rounded-xl bg-[#202624] px-6 text-[0.95rem] font-semibold text-white hover:bg-brand transition-all active:scale-[0.99]"
+                className="inline-flex min-h-11 sm:min-h-12 items-center justify-center rounded-xl bg-[#202624] px-3.5 sm:px-6 text-[0.875rem] sm:text-[0.95rem] font-semibold text-white hover:bg-brand transition-all active:scale-[0.99] whitespace-nowrap"
               >
                 Book a visit
               </Link>
               <a
                 href={`tel:${clinic.phone}`}
-                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-[#D5DDD9] bg-white/95 px-5 text-[0.95rem] font-semibold text-[#171D1B] hover:border-[#202624] hover:bg-[#F7F9F8] transition-all active:scale-[0.99]"
+                className="inline-flex min-h-11 sm:min-h-12 items-center justify-center gap-1.5 sm:gap-2 rounded-xl border border-[#D5DDD9] bg-white/95 px-3 sm:px-5 text-[0.84rem] min-[390px]:text-[0.875rem] sm:text-[0.95rem] font-semibold text-[#171D1B] tabular-nums lining-nums hover:border-[#202624] hover:bg-[#F7F9F8] transition-all active:scale-[0.99] whitespace-nowrap"
               >
-                <PhoneIcon className="size-4 shrink-0 text-brand" />
-                Call {clinic.phoneDisplay}
+                <PhoneIcon className="size-3.5 sm:size-4 shrink-0 text-brand" />
+                <span>Call {clinic.phoneDisplay}</span>
               </a>
             </div>
 
-            {/* Subtle Trust Row (constrained width on desktop so bottom-center corridor stays open for DNA) */}
-            <ul className="flex flex-wrap gap-x-4 gap-y-1.5 pt-1 text-xs sm:text-[0.8125rem] font-medium text-[#52605B] min-[72rem]:max-w-[21rem]">
+            {/* Subtle Trust Row */}
+            <ul className="flex flex-wrap gap-x-3.5 gap-y-1 pt-0.5 text-[11.5px] sm:text-[0.8125rem] font-medium text-[#52605B] min-[72rem]:max-w-[21rem]">
               {facts.map((f) => (
                 <li key={f} className="flex items-center gap-1.5">
-                  <CheckIcon className="size-3.5 shrink-0 text-brand" />
+                  <CheckIcon className="size-3 sm:size-3.5 shrink-0 text-brand" />
                   <span>{f}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* 2. Centerpiece 3D Sculptural DNA Helix */}
-          <div className="pointer-events-none relative z-0 -mx-5 my-1 aspect-[1376/768] w-[calc(100%+2.5rem)] select-none sm:-mx-8 sm:w-[calc(100%+4rem)] min-[72rem]:absolute min-[72rem]:left-[27%] min-[72rem]:top-[-3%] min-[72rem]:mx-0 min-[72rem]:my-0 min-[72rem]:w-[67%] min-[72rem]:-rotate-[16deg] xl:left-[28%] xl:top-[-4%] xl:w-[65%]">
-            <picture>
-              <source media="(min-width: 640px)" srcSet="/photos/dna-helix-1376.webp" />
-              <img
-                src="/photos/dna-helix-800.webp"
-                alt=""
-                aria-hidden="true"
-                width={1376}
-                height={768}
-                fetchPriority="high"
-                decoding="async"
-                className="h-full w-full object-contain min-[72rem]:[mask-image:linear-gradient(90deg,transparent_0%,black_12%,black_90%,transparent_100%)]"
-              />
-            </picture>
+          {/* 2. Centerpiece 3D Sculptural DNA Helix (softly feathered on all 4 unrotated container edges on mobile/tablet, diagonal sweep on desktop) */}
+          <div className="pointer-events-none relative z-0 -mx-5 -my-1.5 h-[152px] min-[390px]:h-[168px] w-[calc(100%+2.5rem)] select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_8%,black_92%,transparent_100%)] sm:-mx-8 sm:my-0 sm:h-[250px] sm:w-[calc(100%+4rem)] md:h-[280px] min-[72rem]:absolute min-[72rem]:left-[27%] min-[72rem]:top-[-3%] min-[72rem]:mx-0 min-[72rem]:h-auto min-[72rem]:aspect-[1376/768] min-[72rem]:w-[67%] min-[72rem]:overflow-visible min-[72rem]:-rotate-[16deg] min-[72rem]:[mask-image:linear-gradient(90deg,transparent_0%,black_12%,black_90%,transparent_100%)] xl:left-[28%] xl:top-[-4%] xl:w-[65%]">
+            <div className="h-full w-full [mask-image:linear-gradient(to_bottom,transparent_0%,black_18%,black_82%,transparent_100%)] min-[72rem]:[mask-image:none]">
+              <picture>
+                <source media="(min-width: 640px)" srcSet="/photos/dna-helix-1376.webp" />
+                <img
+                  src="/photos/dna-helix-800.webp"
+                  alt=""
+                  aria-hidden="true"
+                  width={1376}
+                  height={768}
+                  fetchPriority="high"
+                  decoding="async"
+                  className="h-full w-full scale-[1.12] -rotate-[6deg] object-cover sm:scale-[1.06] sm:-rotate-[4deg] min-[72rem]:scale-100 min-[72rem]:rotate-0 min-[72rem]:object-contain"
+                />
+              </picture>
+            </div>
           </div>
 
           {/* 3. Right-Side Compact Appointment & Live Clinic Cards */}
