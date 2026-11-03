@@ -20,7 +20,7 @@ export function ClinicStatusTicker({ className = "" }: { className?: string }) {
   if (minute === null) {
     return (
       <div
-        className={`inline-flex max-w-full items-center gap-2 rounded-full border border-brand/25 bg-white/80 backdrop-blur-xs px-3 py-1.5 text-xs text-charcoal shadow-xs whitespace-nowrap ${className}`}
+        className={`inline-flex max-w-full items-center gap-2 rounded-full border border-brand/20 bg-brand/10 px-3 py-1.5 text-xs text-charcoal shadow-xs whitespace-nowrap ${className}`}
       >
         <span className="flex items-center gap-1.5 font-bold text-brand shrink-0">
           <span className="size-2 rounded-full bg-brand animate-pulse" />
@@ -82,7 +82,7 @@ export function ClinicStatusTicker({ className = "" }: { className?: string }) {
 
   return (
     <div
-      className={`inline-flex max-w-full items-center gap-2 rounded-full border border-brand/25 bg-white/80 backdrop-blur-xs px-3.5 py-1.5 text-xs text-charcoal shadow-xs backdrop-blur-xs transition-all hover:border-brand/50 whitespace-nowrap ${className}`}
+      className={`inline-flex max-w-full items-center gap-2 rounded-full border border-brand/25 bg-brand/10 px-3.5 py-1.5 text-xs text-charcoal shadow-xs transition-all hover:border-brand/50 whitespace-nowrap ${className}`}
     >
       {/* Clinic Open / Closed Status Dot & Text */}
       <div className="flex items-center gap-1.5 shrink-0">

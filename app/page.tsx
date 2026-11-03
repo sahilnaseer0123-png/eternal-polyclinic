@@ -48,7 +48,7 @@ export default function Home() {
                 href={clinic.googleRating.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full border border-brand/25 bg-white/80 backdrop-blur-xs px-2.5 py-0.5 text-xs font-semibold text-charcoal hover:border-brand hover:text-brand transition-all hover:bg-white shrink-0"
+                className="inline-flex items-center gap-1.5 rounded-full border border-brand/25 bg-brand/10 px-2.5 py-0.5 text-xs font-semibold text-charcoal hover:border-brand hover:text-brand transition-all shrink-0"
                 aria-label={`Rated ${clinic.googleRating.score} out of 5 on Google with ${clinic.googleRating.count} reviews`}
               >
                 <GoogleIcon className="size-3.5 shrink-0" />
@@ -73,7 +73,7 @@ export default function Home() {
               </Link>
               <a
                 href={`tel:${clinic.phone}`}
-                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink bg-white/40 backdrop-blur-xs px-6 text-base font-bold text-ink hover:bg-ink hover:text-white transition-all active:scale-[0.99]"
+                className="inline-flex min-h-12 w-full sm:w-auto items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink bg-brand/5 px-6 text-base font-bold text-ink hover:bg-ink hover:text-white transition-all active:scale-[0.99]"
               >
                 <PhoneIcon className="size-4 shrink-0" />
                 Call {clinic.phoneDisplay}

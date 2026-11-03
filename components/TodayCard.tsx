@@ -11,22 +11,22 @@ import { useClinicMinute } from "./useClinicMinute";
 
 const MAX_ROWS = 4;
 const shell =
-  "rounded-3xl p-5 sm:p-7 min-h-[17rem] scroll-mt-24 w-full min-w-0 max-w-full border border-brand/20 bg-white/75 backdrop-blur-md shadow-xs lg:bg-white lg:border-line";
+  "rounded-3xl p-5 sm:p-7 min-h-[17rem] scroll-mt-24 w-full min-w-0 max-w-full border border-brand/20 bg-brand/5 lg:bg-white lg:border-line";
 
 export function TodayCardSkeleton() {
   return (
     <div className={shell} aria-busy="true" aria-label="Loading clinic schedule">
-      <div className="h-3 w-40 animate-pulse rounded bg-stone" />
-      <div className="mt-4 divide-y divide-line">
+      <div className="h-3 w-40 animate-pulse rounded bg-brand/15" />
+      <div className="mt-4 divide-y divide-brand/15">
         {[1, 2, 3].map((i) => (
           <div key={i} className="flex items-start gap-4 py-3.5">
             <div className="w-24 shrink-0 space-y-1.5 pt-0.5">
-              <div className="h-4 w-16 animate-pulse rounded bg-stone" />
-              <div className="h-3 w-12 animate-pulse rounded bg-stone" />
+              <div className="h-4 w-16 animate-pulse rounded bg-brand/15" />
+              <div className="h-3 w-12 animate-pulse rounded bg-brand/15" />
             </div>
             <div className="min-w-0 flex-1 space-y-1.5">
-              <div className="h-5 w-40 animate-pulse rounded bg-stone" />
-              <div className="h-3.5 w-24 animate-pulse rounded bg-stone" />
+              <div className="h-5 w-40 animate-pulse rounded bg-brand/15" />
+              <div className="h-3.5 w-24 animate-pulse rounded bg-brand/15" />
             </div>
           </div>
         ))}
@@ -72,7 +72,7 @@ export function TodayCard() {
         {next.length > 0 && (
           <a
             href="#days"
-            className="mt-5 flex flex-wrap gap-2 sm:gap-0 min-h-13 items-center justify-between rounded-2xl bg-white/80 border border-brand/20 px-4 sm:px-5 py-3 font-semibold text-ink hover:bg-white transition-all shadow-2xs"
+            className="mt-5 flex flex-wrap gap-2 sm:gap-0 min-h-13 items-center justify-between rounded-2xl bg-brand/10 border border-brand/20 px-4 sm:px-5 py-3 font-semibold text-ink hover:bg-brand/15 transition-all shadow-2xs"
           >
             <span>
               Next: <span className="font-display text-lg sm:text-xl font-medium">{nextName}</span>
@@ -90,7 +90,7 @@ export function TodayCard() {
   return (
     <div id="today" className={shell}>
       <p className="eyebrow text-muted">In the clinic today · {DAY_NAMES[weekday]}</p>
-      <ul className="mt-3 divide-y divide-line">
+      <ul className="mt-3 divide-y divide-brand/15 lg:divide-line">
         {shown.map(({ doctor, session }) => {
           const status = sessionStatus(session, now);
           return (
@@ -109,7 +109,7 @@ export function TodayCard() {
                 {status !== "upcoming" && (
                   <span
                     className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${
-                      status === "in" ? "bg-brand text-white" : "bg-sand text-muted"
+                      status === "in" ? "bg-brand text-white" : "bg-brand/15 text-brand lg:bg-sand lg:text-muted"
                     }`}
                   >
                     {status === "in" ? "In now" : "Finished"}
