@@ -4,22 +4,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { clinic, doctors, services } from "@/data/clinic";
-import { formatTime } from "@/lib/schedule";
 import { DayPicker } from "@/components/DayPicker";
 import { HeroRightColumn } from "@/components/HeroRightColumn";
 import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import { WhatsAppPreview } from "@/components/WhatsAppPreview";
 import { EmergencyNote } from "@/components/EmergencyNote";
-import { CheckIcon, GoogleIcon, MapPinIcon, PhoneIcon, ReportIcon, ServiceIcon, WhatsAppIcon } from "@/components/Icons";
+import { GoogleIcon, MapPinIcon, PhoneIcon, ReportIcon, ServiceIcon, WhatsAppIcon } from "@/components/Icons";
 
 // Every page names its own address for search engines (alternates.canonical); this is "/".
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
-const hours = `${formatTime(clinic.hours.open)} – ${formatTime(clinic.hours.close)}`;
 const byAppointment = doctors.filter((d) => d.opd.length === 0);
-
-const facts = ["No registration charge", "No account needed", `Open daily, ${hours}`];
 
 const steps = [
   { n: "1", title: "Pick a day", text: "See which specialists sit on the day that suits you." },
@@ -37,50 +33,29 @@ export default function Home() {
         <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-3.5 px-5 pt-4 pb-6 sm:gap-6 sm:px-8 sm:pt-10 sm:pb-14 min-[72rem]:grid min-[72rem]:min-h-[630px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-18 xl:min-h-[660px] xl:grid-cols-[minmax(0,1fr)_350px]">
           {/* 1. Top-Left Content Block */}
           <div className="relative z-10 flex min-w-0 flex-col items-start gap-3 sm:gap-5 min-[72rem]:max-w-[35rem] min-[72rem]:pt-3 min-[72rem]:pb-20 xl:max-w-[38rem]">
-            {/* Location & Google Rating (single crisp horizontal line across all widths) */}
-            <div className="rise flex w-full flex-nowrap items-center justify-between gap-2 min-[430px]:w-auto min-[430px]:justify-start sm:gap-2.5">
-              <p className="eyebrow text-[#3E504B] text-[10.5px] tracking-[0.09em] min-[400px]:text-[11px] sm:text-xs sm:tracking-[0.14em] truncate">
-                <span className="min-[420px]:hidden">Opp. SDH Hospital, Sopore</span>
-                <span className="hidden min-[420px]:inline">Opposite SDH Hospital, Sopore</span>
-              </p>
-              <span className="text-[#D4DCD8] hidden min-[430px]:inline" aria-hidden="true">·</span>
+            {/* Google Rating Pill */}
+            <div className="rise flex items-center">
               <a
                 href={clinic.googleRating.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 sm:gap-1.5 rounded-full border border-[#E4EAE6] bg-[#F7F9F7] px-2 py-0.5 sm:px-2.5 text-[11px] sm:text-xs font-semibold text-charcoal hover:border-[#C5D8CD] hover:bg-[#EFF5EE] transition-all shrink-0"
+                className="inline-flex items-center gap-1 sm:gap-1.5 rounded-full border border-[#E4EAE6] bg-[#F7F9F7] px-2.5 py-0.5 text-[11px] sm:text-xs font-semibold text-charcoal hover:border-[#C5D8CD] hover:bg-[#EFF5EE] transition-all shrink-0"
                 aria-label={`Rated ${clinic.googleRating.score} out of 5 on Google with ${clinic.googleRating.count} reviews`}
               >
                 <GoogleIcon className="size-3 sm:size-3.5 shrink-0" />
                 <span className="font-bold text-ink tabular-nums lining-nums">{clinic.googleRating.score}</span>
                 <span className="text-[#F59E0B] text-[11px] sm:text-xs leading-none tracking-tighter" aria-hidden="true">
-                  <span className="min-[420px]:hidden">★</span>
-                  <span className="hidden min-[420px]:inline">★★★★★</span>
+                  ★★★★★
                 </span>
                 <span className="text-muted tabular-nums lining-nums">({clinic.googleRating.count})</span>
               </a>
             </div>
 
             {/* Clean Modern Two-Line Sans Headline */}
-            <h1 className="rise rise-2 max-w-full font-sans font-semibold tracking-[-0.035em] text-[#171D1B] text-[clamp(1.78rem,7.8vw,2.3rem)] leading-[1.07] sm:text-[2.85rem] sm:leading-[1.08] min-[72rem]:text-[2.95rem] xl:text-[3.3rem]">
+            <h1 className="rise rise-2 max-w-full font-sans font-semibold tracking-[-0.035em] text-[#171D1B] text-[clamp(1.85rem,8vw,2.4rem)] leading-[1.07] sm:text-[2.95rem] sm:leading-[1.07] min-[72rem]:text-[3.1rem] xl:text-[3.45rem]">
               The patient comes
               <span className="block">before everything else.</span>
             </h1>
-
-            {/* Concise Subtext */}
-            <p className="rise rise-3 max-w-[24rem] text-[0.9rem] leading-[1.48] text-[#586560] sm:text-[1rem] sm:leading-relaxed">
-              Visiting specialists, one clinic in Sopore. See who sits today, then book on WhatsApp.
-            </p>
-
-            {/* Subtle Trust Row */}
-            <ul className="rise rise-3 flex flex-wrap gap-x-3.5 gap-y-1 pt-0.5 text-[11.5px] sm:text-[0.8125rem] font-medium text-[#52605B] min-[72rem]:max-w-[21rem]">
-              {facts.map((f) => (
-                <li key={f} className="flex items-center gap-1.5">
-                  <CheckIcon className="size-3 sm:size-3.5 shrink-0 text-brand" />
-                  <span>{f}</span>
-                </li>
-              ))}
-            </ul>
           </div>
 
           {/* 2. Centerpiece 3D Sculptural DNA Helix (softly feathered on all 4 unrotated container edges on mobile/tablet, diagonal sweep on desktop) */}

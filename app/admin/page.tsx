@@ -301,25 +301,25 @@ export default function AdminPage() {
   const allRecordedDates = Object.keys(dateGroups).sort((a, b) => b.localeCompare(a));
 
   // ---------------------------------------------------------------------------
-  // ELEGANT RECEPTION ACCESS SCREEN (SWISS MEDICAL MINIMALIST)
+  // ELEGANT ADMIN ACCESS SCREEN (MINIMALIST CLINICAL)
   // ---------------------------------------------------------------------------
   if (!mounted || !isAuthenticated) {
     return (
-      <div className="flex-1 flex flex-col justify-center px-4 py-16 sm:py-20 text-[#142B3B]">
-        <div className="w-full max-w-[420px] mx-auto bg-white border border-[#E2E4DC] rounded-2xl p-8 sm:p-9 shadow-xs">
+      <div className="flex-1 flex flex-col justify-center px-4 py-16 sm:py-20 text-ink bg-ground">
+        <div className="w-full max-w-[420px] mx-auto bg-white border border-line rounded-3xl p-8 sm:p-9 shadow-xs">
           {/* Top Medical Stethoscope Badge */}
-          <div className="size-11 rounded-xl bg-[#F2F7F6] border border-[#C4DBD8] flex items-center justify-center mb-5 text-[#397C78]">
-            <StethoscopeIcon className="size-5 text-[#397C78]" />
+          <div className="size-11 rounded-xl bg-brand-tint ring-1 ring-brand-line/80 flex items-center justify-center mb-5 text-ink">
+            <StethoscopeIcon className="size-5 text-ink" />
           </div>
 
-          <p className="font-semibold text-xs tracking-wider uppercase text-[#858D91] mb-1.5 font-sans">
+          <p className="eyebrow mb-1.5">
             Eternal Polyclinic · Sopore
           </p>
-          <h1 className="font-bold text-2xl tracking-tight text-[#142B3B] mb-2 font-display">
-            Reception Desk Portal
+          <h1 className="font-semibold text-2xl tracking-tight text-ink mb-2 font-display">
+            Admin &amp; Reception Portal
           </h1>
-          <p className="text-[#647077] text-xs sm:text-sm mb-6 leading-relaxed">
-            Enter reception security PIN to access the live OPD queue, walk-in register, and delay radar.
+          <p className="text-muted text-xs sm:text-sm mb-6 leading-relaxed">
+            Enter admin security PIN to access the live OPD queue, walk-in register, and delay radar.
           </p>
 
           <form
@@ -332,9 +332,9 @@ export default function AdminPage() {
           >
             <label
               htmlFor="clinic-admin-pass"
-              className="block font-semibold text-xs uppercase tracking-wider mb-2 text-[#252C30]"
+              className="block font-semibold text-xs uppercase tracking-wider mb-2 text-charcoal"
             >
-              Reception Desk PIN
+              Admin Security PIN
             </label>
             <input
               id="clinic-admin-pass"
@@ -348,25 +348,25 @@ export default function AdminPage() {
                 setPinInput(e.target.value);
                 setPinError("");
               }}
-              className="w-full text-sm p-3 border border-[#E2E4DC] rounded-xl bg-white text-[#142B3B] outline-none mb-3 transition-colors focus:border-[#397C78] focus:ring-1 focus:ring-[#397C78]"
+              className="w-full text-sm p-3 border border-line rounded-xl bg-ground text-ink outline-none mb-3 transition-colors focus:bg-white focus:border-brand focus:ring-1 focus:ring-brand"
             />
 
             {pinError && (
-              <div className="mb-3 text-xs font-semibold text-[#A62828]">
+              <div className="mb-3 text-xs font-semibold text-emergency">
                 {pinError}
               </div>
             )}
 
             <button
               type="submit"
-              className="w-full font-semibold text-sm rounded-xl py-3 px-5 bg-[#397C78] text-white hover:bg-[#2A5D5A] cursor-pointer transition-all active:scale-[0.99] shadow-2xs mb-4"
+              className="w-full font-semibold text-sm rounded-xl py-3 px-5 bg-brand text-white hover:bg-brand-dark cursor-pointer transition-all active:scale-[0.99] shadow-2xs mb-4"
             >
-              Access Reception Desk →
+              Unlock Admin Portal →
             </button>
           </form>
 
-          <div className="border-t border-[#E2E4DC] pt-4 flex items-center justify-between text-xs text-[#858D91]">
-            <Link href="/" className="hover:text-[#397C78] transition-colors underline">
+          <div className="border-t border-line pt-4 flex items-center justify-between text-xs text-muted">
+            <Link href="/" className="text-charcoal font-medium hover:text-ink transition-colors underline decoration-line-strong hover:decoration-ink">
               ← Back to Website
             </Link>
             <span>Default PIN: 1234</span>
@@ -384,7 +384,7 @@ export default function AdminPage() {
   const ownerWaUrl = `https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(ownerReportText)}`;
 
   return (
-    <div className="min-w-0 w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6 font-sans bg-[#F7F7F3]">
+    <div className="min-w-0 w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6 font-sans bg-ground">
       {/* Hidden file input for JSON restore */}
       <input
         ref={restoreFileInputRef}
@@ -397,28 +397,28 @@ export default function AdminPage() {
       {/* Screen View (hidden on print) */}
       <div className="no-print flex flex-col gap-6">
         {/* Top Header Bar */}
-        <header className="rounded-2xl p-5 bg-white border border-[#E2E4DC] text-[#142B3B] shadow-2xs flex flex-wrap items-center justify-between gap-4">
+        <header className="rounded-3xl p-5 bg-white border border-line text-ink shadow-2xs flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
-            <div className="size-11 rounded-xl bg-[#F2F7F6] border border-[#C4DBD8] text-[#397C78] flex items-center justify-center font-bold">
-              <StethoscopeIcon className="size-5 text-[#397C78]" />
+            <div className="size-11 rounded-xl bg-brand-tint ring-1 ring-brand-line/80 text-ink flex items-center justify-center font-bold">
+              <StethoscopeIcon className="size-5 text-ink" />
             </div>
             <div>
-              <div className="flex items-center gap-2.5">
-                <h1 className="text-lg sm:text-xl font-bold tracking-tight text-[#142B3B] font-display">
-                  Reception Management Portal
+              <div className="flex flex-wrap items-center gap-2.5">
+                <h1 className="text-lg sm:text-xl font-semibold tracking-tight text-ink font-display">
+                  Admin &amp; Reception Portal
                 </h1>
                 {/* Cross-Device Sync Badge */}
                 <button
                   type="button"
                   onClick={handleManualSync}
                   title="Click to manually sync cross-device"
-                  className="inline-flex items-center gap-1.5 rounded-full bg-[#F2F7F6] border border-[#C4DBD8] text-[#397C78] text-[11px] px-2.5 py-0.5 font-semibold hover:bg-slate-100 transition-all"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-brand-tint/70 border border-brand-line text-ink text-[11px] px-2.5 py-0.5 font-semibold hover:bg-brand-tint transition-all"
                 >
-                  <span className={`size-1.5 rounded-full bg-[#397C78] ${isSyncing ? "animate-spin" : "animate-pulse"}`} />
+                  <span className={`size-1.5 rounded-full bg-[#22A05B] ${isSyncing ? "animate-spin" : "animate-pulse"}`} />
                   <span>{isSyncing ? "Syncing..." : `Sync: ${lastSyncDisplay}`}</span>
                 </button>
               </div>
-              <p className="text-xs text-[#647077] mt-0.5">
+              <p className="text-xs text-muted mt-0.5">
                 {clinic.name} · Opposite SDH Hospital, Sopore
               </p>
             </div>
@@ -426,9 +426,9 @@ export default function AdminPage() {
 
           <div className="flex items-center gap-2.5">
             {/* Live Clock Badge */}
-            <div className="hidden sm:flex flex-col text-right px-3 py-1.5 rounded-lg bg-[#F7F7F3] border border-[#E2E4DC] font-mono">
-              <span className="text-[10px] text-[#858D91] uppercase font-sans font-bold">Kashmir Time</span>
-              <span className="text-xs font-bold text-[#142B3B]">{fromMinutes(clock.minutes)} IST</span>
+            <div className="hidden sm:flex flex-col text-right px-3 py-1.5 rounded-xl bg-ground border border-line font-mono">
+              <span className="text-[10px] text-muted uppercase font-sans font-bold">Kashmir Time</span>
+              <span className="text-xs font-bold text-ink">{fromMinutes(clock.minutes)} IST</span>
             </div>
 
             {/* Quick Walk-in Button */}
@@ -438,7 +438,7 @@ export default function AdminPage() {
                 setShowWalkInModal(true);
                 setWalkInDocId(doctorFilter !== "all" ? doctorFilter : allDoctors[0]?.id || "");
               }}
-              className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-lg bg-[#397C78] px-4 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-[#2A5D5A] shadow-2xs transition-all active:scale-95"
+              className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-brand px-4 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-brand-dark shadow-2xs transition-all active:scale-95"
             >
               <span>+ Add Walk-In Patient</span>
             </button>
@@ -448,7 +448,7 @@ export default function AdminPage() {
               type="button"
               onClick={handleLogout}
               title="Lock Tablet"
-              className="min-h-10 px-3 rounded-lg bg-white hover:bg-[#F7F7F3] text-xs font-semibold text-[#647077] transition-all border border-[#E2E4DC]"
+              className="min-h-10 px-3.5 rounded-xl bg-white hover:bg-ground text-xs font-semibold text-charcoal transition-all border border-line-strong"
             >
               Lock Console
             </button>
@@ -457,28 +457,32 @@ export default function AdminPage() {
 
         {/* Broadcast Toast Notification */}
         {broadcastToast && (
-          <div className="rounded-xl bg-[#397C78] text-white font-semibold text-xs sm:text-sm px-4 py-3 shadow-2xs flex items-center justify-between animate-fade-in border border-[#C4DBD8]">
+          <div className="rounded-2xl bg-brand text-white font-semibold text-xs sm:text-sm px-4 py-3 shadow-xs flex items-center justify-between animate-fade-in border border-night-line">
             <span className="flex items-center gap-2">
-              <span>✓</span> {broadcastToast}
+              <span className="text-mint">✓</span> {broadcastToast}
             </span>
-            <button type="button" onClick={() => setBroadcastToast("")} className="text-white hover:underline text-xs">
+            <button type="button" onClick={() => setBroadcastToast("")} className="text-mint hover:underline text-xs">
               Dismiss
             </button>
           </div>
         )}
 
         {/* Tab Navigation Segmented Bar */}
-        <nav className="flex gap-1.5 p-1 rounded-xl bg-[#E9E9E3] border border-[#E2E4DC] overflow-x-auto text-xs font-semibold">
+        <nav className="flex gap-1.5 p-1.5 rounded-2xl bg-sand border border-line overflow-x-auto text-xs font-semibold">
           <button
             type="button"
             onClick={() => setActiveTab("opd")}
-            className={`min-h-9 px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
-              activeTab === "opd" ? "bg-white text-[#142B3B] shadow-2xs font-bold" : "text-[#647077] hover:text-[#142B3B]"
+            className={`min-h-9 px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
+              activeTab === "opd" ? "bg-brand text-white shadow-2xs font-semibold" : "text-muted hover:text-ink hover:bg-white/60"
             }`}
           >
             OPD Patient Queue
             {countWaiting > 0 && (
-              <span className="rounded-full bg-[#F2F7F6] border border-[#C4DBD8] text-[#397C78] text-[10px] px-1.5 py-0.2 font-bold">
+              <span className={`rounded-full text-[10px] px-1.5 py-0.2 font-bold ${
+                activeTab === "opd"
+                  ? "bg-brand-tint text-ink"
+                  : "bg-brand-tint border border-brand-line text-ink"
+              }`}>
                 {countWaiting}
               </span>
             )}
@@ -487,8 +491,8 @@ export default function AdminPage() {
           <button
             type="button"
             onClick={() => setActiveTab("radar")}
-            className={`min-h-9 px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
-              activeTab === "radar" ? "bg-white text-[#142B3B] shadow-2xs font-bold" : "text-[#647077] hover:text-[#142B3B]"
+            className={`min-h-9 px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
+              activeTab === "radar" ? "bg-brand text-white shadow-2xs font-semibold" : "text-muted hover:text-ink hover:bg-white/60"
             }`}
           >
             Doctor Delay Radar
@@ -497,8 +501,8 @@ export default function AdminPage() {
           <button
             type="button"
             onClick={() => setActiveTab("doctors")}
-            className={`min-h-9 px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
-              activeTab === "doctors" ? "bg-white text-[#142B3B] shadow-2xs font-bold" : "text-[#647077] hover:text-[#142B3B]"
+            className={`min-h-9 px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
+              activeTab === "doctors" ? "bg-brand text-white shadow-2xs font-semibold" : "text-muted hover:text-ink hover:bg-white/60"
             }`}
           >
             Doctor Timings &amp; Overrides
@@ -507,8 +511,8 @@ export default function AdminPage() {
           <button
             type="button"
             onClick={() => setActiveTab("backups")}
-            className={`min-h-9 px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
-              activeTab === "backups" ? "bg-white text-[#142B3B] shadow-2xs font-bold" : "text-[#647077] hover:text-[#142B3B]"
+            className={`min-h-9 px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
+              activeTab === "backups" ? "bg-brand text-white shadow-2xs font-semibold" : "text-muted hover:text-ink hover:bg-white/60"
             }`}
           >
             Backups &amp; Owner Reports
@@ -517,8 +521,8 @@ export default function AdminPage() {
           <button
             type="button"
             onClick={() => setActiveTab("search")}
-            className={`min-h-9 px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 shrink-0 ${
-              activeTab === "search" ? "bg-white text-[#142B3B] shadow-2xs font-bold" : "text-[#647077] hover:text-[#142B3B]"
+            className={`min-h-9 px-3.5 py-1.5 rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
+              activeTab === "search" ? "bg-brand text-white shadow-2xs font-semibold" : "text-muted hover:text-ink hover:bg-white/60"
             }`}
           >
             Patient Search
@@ -531,10 +535,10 @@ export default function AdminPage() {
         {activeTab === "opd" && (
           <div className="flex flex-col gap-6 animate-fade-in">
             {/* Filter Controls Bar */}
-            <div className="card rounded-3xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 border border-line shadow-xs">
+            <div className="card rounded-3xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 border border-line shadow-2xs">
               <div className="flex flex-wrap items-center gap-3">
                 <div className="flex flex-col">
-                  <label htmlFor="date-select" className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                  <label htmlFor="date-select" className="text-[11px] font-bold uppercase tracking-wider text-muted mb-1">
                     OPD Date
                   </label>
                   <input
@@ -542,7 +546,7 @@ export default function AdminPage() {
                     type="date"
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
-                    className="min-h-11 rounded-xl border border-line px-3 py-1 text-sm font-bold bg-slate-50 focus:border-brand outline-none"
+                    className="min-h-11 rounded-xl border border-line px-3 py-1 text-sm font-semibold text-ink bg-ground focus:bg-white focus:border-brand outline-none"
                   />
                 </div>
 
@@ -550,8 +554,8 @@ export default function AdminPage() {
                   <button
                     type="button"
                     onClick={() => setSelectedDate(todayKey)}
-                    className={`min-h-10 px-3.5 rounded-xl text-xs font-bold transition-all ${
-                      selectedDate === todayKey ? "bg-brand text-white shadow-sm" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    className={`min-h-10 px-3.5 rounded-xl text-xs font-semibold transition-all ${
+                      selectedDate === todayKey ? "bg-brand text-white shadow-2xs" : "bg-sand text-charcoal hover:bg-brand-tint"
                     }`}
                   >
                     Today
@@ -559,14 +563,14 @@ export default function AdminPage() {
                 </div>
 
                 <div className="flex flex-col min-w-48">
-                  <label htmlFor="doc-select" className="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                  <label htmlFor="doc-select" className="text-[11px] font-bold uppercase tracking-wider text-muted mb-1">
                     Filter by Doctor
                   </label>
                   <select
                     id="doc-select"
                     value={doctorFilter}
                     onChange={(e) => setDoctorFilter(e.target.value)}
-                    className="min-h-11 rounded-xl border border-line px-3 py-1 text-sm font-bold bg-slate-50 focus:border-brand outline-none"
+                    className="min-h-11 rounded-xl border border-line px-3 py-1 text-sm font-semibold text-ink bg-ground focus:bg-white focus:border-brand outline-none"
                   >
                     <option value="all">All Specialists ({allDoctors.length})</option>
                     {allDoctors.map((d) => (
@@ -584,7 +588,7 @@ export default function AdminPage() {
                   type="button"
                   onClick={() => downloadCsv(selectedDate)}
                   title="Download Excel spreadsheet of this day"
-                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3.5 py-2 text-xs font-bold text-emerald-800 hover:bg-emerald-100 shadow-xs"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-brand-line bg-brand-tint/75 px-3.5 py-2 text-xs font-semibold text-ink hover:bg-brand-tint shadow-2xs transition-colors"
                 >
                   📊 Export to Excel
                 </button>
@@ -598,7 +602,7 @@ export default function AdminPage() {
                       ? "Send All Doctors Daily Summary to Clinic Owner on WhatsApp"
                       : `Send ${currentDoctorObj?.name || "Doctor"} Daily Summary to Clinic Owner on WhatsApp`
                   }
-                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-[#25D366] px-3.5 py-2 text-xs font-bold text-white hover:bg-[#20ba59] shadow-xs"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl bg-[#25D366] px-3.5 py-2 text-xs font-semibold text-white hover:bg-[#20ba59] shadow-2xs"
                 >
                   <WhatsAppIcon className="size-4" />
                   <span>
@@ -611,7 +615,7 @@ export default function AdminPage() {
                 <button
                   type="button"
                   onClick={() => window.print()}
-                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-line bg-white px-3.5 py-2 text-xs font-bold text-slate-800 hover:bg-slate-50 shadow-xs"
+                  className="inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-line-strong bg-white px-3.5 py-2 text-xs font-semibold text-ink hover:bg-ground shadow-2xs transition-colors"
                 >
                   🖨️ Print Sheet
                 </button>
@@ -620,65 +624,65 @@ export default function AdminPage() {
 
             {/* KPI Metric Cards */}
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-              <div className="card rounded-3xl p-4 sm:p-5 border border-line/90 bg-white shadow-xs">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Total Booked</span>
-                <p className="text-3xl font-black text-ink mt-1 font-display">{filteredAppointments.length}</p>
+              <div className="card rounded-3xl p-4 sm:p-5 border border-line bg-white shadow-2xs">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-muted">Total Booked</span>
+                <p className="text-3xl font-semibold tracking-tight text-ink mt-1 font-display tabular-nums">{filteredAppointments.length}</p>
                 <div className="text-xs text-muted mt-1 flex flex-wrap gap-1">
-                  <span className="font-semibold text-slate-700">{filteredAppointments.filter((a) => a.type === "online").length} Online</span>
+                  <span className="font-semibold text-ink">{filteredAppointments.filter((a) => a.type === "online").length} Online</span>
                   <span>·</span>
-                  <span className="font-semibold text-teal-700">{filteredAppointments.filter((a) => a.type === "walk_in").length} Walk-in</span>
+                  <span className="font-semibold text-charcoal">{filteredAppointments.filter((a) => a.type === "walk_in").length} Walk-in</span>
                   {countCancelled > 0 && <span>· {countCancelled} Cancelled</span>}
                 </div>
               </div>
 
-              <div className="card rounded-3xl p-4 sm:p-5 border border-amber-200 bg-amber-50/40 shadow-xs">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-amber-800 flex items-center gap-1.5">
+              <div className="card rounded-3xl p-4 sm:p-5 border border-line bg-white shadow-2xs">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-charcoal flex items-center gap-1.5">
                   <span className="size-2 rounded-full bg-amber-400 animate-pulse" />
                   Waiting in Lounge
                 </span>
-                <p className="text-3xl font-black text-amber-900 mt-1 font-display">{countWaiting}</p>
-                <span className="text-xs text-amber-700">Ready for consultation</span>
+                <p className="text-3xl font-semibold tracking-tight text-ink mt-1 font-display tabular-nums">{countWaiting}</p>
+                <span className="text-xs text-muted">Ready for consultation</span>
               </div>
 
-              <div className="card rounded-3xl p-4 sm:p-5 border border-purple-200 bg-purple-50/40 shadow-xs">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-purple-800 flex items-center gap-1.5">
-                  <span className="size-2 rounded-full bg-purple-500" />
+              <div className="card rounded-3xl p-4 sm:p-5 border border-night-line bg-brand text-white shadow-2xs">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-mint flex items-center gap-1.5">
+                  <span className="size-2 rounded-full bg-[#DFF5CA]" />
                   In Cabin
                 </span>
-                <p className="text-3xl font-black text-purple-900 mt-1 font-display">{countInConsult}</p>
-                <span className="text-xs text-purple-700">With the doctor now</span>
+                <p className="text-3xl font-semibold tracking-tight text-white mt-1 font-display tabular-nums">{countInConsult}</p>
+                <span className="text-xs text-night-muted">With the doctor now</span>
               </div>
 
-              <div className="card rounded-3xl p-4 sm:p-5 border border-emerald-200 bg-emerald-50/40 shadow-xs">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-800 flex items-center gap-1.5">
-                  <span className="size-2 rounded-full bg-emerald-500" />
+              <div className="card rounded-3xl p-4 sm:p-5 border border-brand-line bg-brand-tint/45 shadow-2xs">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-ink flex items-center gap-1.5">
+                  <span className="size-2 rounded-full bg-[#22A05B]" />
                   Completed
                 </span>
-                <p className="text-3xl font-black text-emerald-900 mt-1 font-display">{countCompleted}</p>
-                <span className="text-xs text-emerald-700">Consultation finished</span>
+                <p className="text-3xl font-semibold tracking-tight text-ink mt-1 font-display tabular-nums">{countCompleted}</p>
+                <span className="text-xs text-charcoal">Consultation finished</span>
               </div>
             </div>
 
             {/* Patient Queue Cards */}
             {filteredAppointments.length === 0 ? (
-              <div className="card rounded-3xl p-12 text-center border-2 border-dashed border-slate-200 bg-slate-50/50">
-                <div className="size-16 rounded-3xl bg-slate-200/60 text-slate-400 flex items-center justify-center mx-auto mb-3">
-                  <StethoscopeIcon className="size-8" />
+              <div className="card rounded-3xl p-12 text-center border border-dashed border-line-strong bg-white">
+                <div className="size-14 rounded-2xl bg-brand-tint ring-1 ring-brand-line/80 text-ink flex items-center justify-center mx-auto mb-3.5">
+                  <StethoscopeIcon className="size-7" />
                 </div>
-                <p className="text-lg font-bold text-slate-700 font-display">No patients scheduled yet for this date.</p>
-                <p className="text-xs text-muted mt-1 max-w-md mx-auto">
-                  When patients book online or you register walk-ins via the <strong>&quot;➕ Add Walk-In&quot;</strong> button, they will appear in this live queue.
+                <p className="text-lg font-semibold text-ink font-display">No patients scheduled yet for this date.</p>
+                <p className="text-xs text-muted mt-1 max-w-md mx-auto leading-relaxed">
+                  When patients book online or you register walk-ins via the <strong className="text-ink">&quot;+ Add Walk-In Patient&quot;</strong> button, they will appear in this live queue.
                 </p>
               </div>
             ) : (
               <div className="flex flex-col gap-3.5">
                 {filteredAppointments.map((apt) => {
                   const statusColors: Record<AppointmentStatus, string> = {
-                    confirmed: "bg-amber-100 text-amber-900 border-amber-300",
-                    arrived: "bg-sky-100 text-sky-900 border-sky-300",
-                    in_consultation: "bg-purple-100 text-purple-900 border-purple-300",
-                    completed: "bg-emerald-100 text-emerald-900 border-emerald-300",
-                    cancelled: "bg-rose-100 text-rose-900 border-rose-300",
+                    confirmed: "bg-amber-50 text-amber-900 border-amber-200",
+                    arrived: "bg-sand text-ink border-line-strong",
+                    in_consultation: "bg-brand text-mint border-brand",
+                    completed: "bg-brand-tint text-ink border-brand-line",
+                    cancelled: "bg-rose-50 text-rose-900 border-rose-200",
                   };
 
                   const callMsg = `Hello ${apt.patientName}, your token #${apt.token} for ${apt.doctorName} at Eternal Polyclinic, Sopore is now being called. Please proceed to Consultation Cabin.`;
@@ -689,31 +693,31 @@ export default function AdminPage() {
                       key={apt.token}
                       className={`card rounded-3xl p-4 sm:p-5 border transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-4 ${
                         apt.status === "in_consultation"
-                          ? "border-purple-400/80 bg-purple-50/30 ring-2 ring-purple-300/60 shadow-md"
-                          : "border-line bg-white hover:border-slate-300 shadow-xs"
+                          ? "border-brand-line bg-brand-tint/25 ring-2 ring-brand-line/70 shadow-sm"
+                          : "border-line bg-white hover:border-line-strong shadow-2xs"
                       }`}
                     >
                       {/* Left Block: Token Stub, Name, Address & Info */}
                       <div className="flex items-start gap-3 sm:gap-4 min-w-0">
                         {/* Token Badge Stub */}
-                        <div className="flex flex-col items-center justify-center rounded-2xl bg-slate-950 text-glow px-3 py-2 font-mono font-bold shrink-0 min-w-28 text-center shadow-xs border border-slate-800">
-                          <span className="text-[10px] uppercase tracking-wider text-slate-400">Token</span>
-                          <span className="text-base sm:text-lg font-black tracking-wider text-glow">{apt.token}</span>
-                          <span className="text-[11px] text-slate-300 mt-0.5">{formatTime(apt.time)}</span>
+                        <div className="flex flex-col items-center justify-center rounded-2xl bg-brand text-mint px-3 py-2 font-mono font-bold shrink-0 min-w-28 text-center shadow-2xs border border-night-line">
+                          <span className="text-[10px] uppercase tracking-wider text-night-muted">Token</span>
+                          <span className="text-base sm:text-lg font-bold tracking-wider text-mint">{apt.token}</span>
+                          <span className="text-[11px] text-white/80 mt-0.5">{formatTime(apt.time)}</span>
                         </div>
 
                         {/* Patient Identity Block with prominent Village/Town Address */}
                         <div className="flex flex-col min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="text-lg font-black text-ink font-display">{apt.patientName}</span>
+                            <span className="text-lg font-semibold text-ink font-display">{apt.patientName}</span>
 
                             {/* Prominent Village / Town Address to avoid same-name confusion */}
                             {apt.patientAddress ? (
-                              <span className="inline-flex items-center gap-1 rounded-lg bg-teal-50 border border-teal-200 text-teal-800 px-2.5 py-0.5 text-xs font-bold">
+                              <span className="inline-flex items-center gap-1 rounded-lg bg-brand-tint/80 border border-brand-line text-ink px-2.5 py-0.5 text-xs font-semibold">
                                 <span>📍</span> {apt.patientAddress}
                               </span>
                             ) : (
-                              <span className="inline-flex items-center gap-1 rounded-lg bg-slate-100 text-slate-500 px-2 py-0.5 text-xs italic">
+                              <span className="inline-flex items-center gap-1 rounded-lg bg-ground text-muted px-2 py-0.5 text-xs italic border border-line">
                                 Area not added
                               </span>
                             )}
@@ -722,8 +726,8 @@ export default function AdminPage() {
                             <span
                               className={`rounded-md px-2 py-0.5 text-[10px] font-bold uppercase border ${
                                 apt.type === "walk_in"
-                                  ? "bg-teal-50 text-teal-800 border-teal-200"
-                                  : "bg-indigo-50 text-indigo-700 border-indigo-200"
+                                  ? "bg-ground text-charcoal border-line-strong"
+                                  : "bg-brand-tint text-ink border-brand-line"
                               }`}
                             >
                               {apt.type === "walk_in" ? "Walk-In" : "Online"}
@@ -731,20 +735,20 @@ export default function AdminPage() {
                           </div>
 
                           <div className="text-xs text-muted mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
-                            <span className="font-semibold text-slate-700">🩺 {apt.doctorName} ({apt.speciality})</span>
+                            <span className="font-semibold text-charcoal">🩺 {apt.doctorName} ({apt.speciality})</span>
                             <span>·</span>
-                            <span className="font-mono text-slate-600">📱 +91 {apt.patientPhone}</span>
+                            <span className="font-mono text-muted">📱 +91 {apt.patientPhone}</span>
                           </div>
                         </div>
                       </div>
 
                       {/* Right Block: Live Workflow Controls */}
-                      <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-line/60 lg:border-t-0 lg:pt-0">
+                      <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-line lg:border-t-0 lg:pt-0">
                         {/* Status Dropdown */}
                         <select
                           value={apt.status}
                           onChange={(e) => updateAppointmentStatus(apt.token, e.target.value as AppointmentStatus)}
-                          className={`min-h-11 rounded-xl px-3 py-1.5 text-xs font-bold border outline-none cursor-pointer ${statusColors[apt.status]}`}
+                          className={`min-h-11 rounded-xl px-3 py-1.5 text-xs font-semibold border outline-none cursor-pointer ${statusColors[apt.status]}`}
                         >
                           <option value="confirmed">⏳ Confirmed (Waiting)</option>
                           <option value="arrived">🚶 Arrived in Clinic</option>
@@ -759,7 +763,7 @@ export default function AdminPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           title="Message Patient on WhatsApp"
-                          className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#20ba59] shadow-xs transition-all active:scale-95"
+                          className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-[#25D366] px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-[#20ba59] shadow-2xs transition-all active:scale-95"
                         >
                           <WhatsAppIcon className="size-4" />
                           <span>Call In</span>
@@ -769,7 +773,7 @@ export default function AdminPage() {
                         <a
                           href={`tel:+91${apt.patientPhone}`}
                           title="Call Mobile Number"
-                          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-100"
+                          className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-ground px-3 py-1.5 text-xs font-semibold text-ink hover:bg-sand transition-colors"
                         >
                           <PhoneIcon className="size-4" />
                         </a>
@@ -783,7 +787,7 @@ export default function AdminPage() {
                             }
                           }}
                           title="Remove Token"
-                          className="min-h-11 rounded-xl px-2.5 py-1.5 text-xs text-slate-400 hover:text-emergency hover:bg-rose-50 transition-colors"
+                          className="min-h-11 rounded-xl px-2.5 py-1.5 text-xs text-muted hover:text-emergency hover:bg-rose-50 transition-colors"
                         >
                           ✕
                         </button>
@@ -801,9 +805,10 @@ export default function AdminPage() {
         {/* ===================================================================== */}
         {activeTab === "radar" && (
           <div className="flex flex-col gap-6 animate-fade-in">
-            <div className="rounded-3xl p-6 bg-gradient-to-r from-teal-950 via-ink to-slate-950 text-white shadow-xl border border-teal-500/20">
-              <h2 className="text-xl font-black text-glow font-display">Live OPD Delay & Arrival Radar</h2>
-              <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
+            <div className="rounded-3xl p-6 bg-brand text-white shadow-sm border border-night-line">
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-mint mb-1">Real-Time Status</p>
+              <h2 className="text-xl font-semibold text-white font-display">Live OPD Delay &amp; Arrival Radar</h2>
+              <p className="text-xs sm:text-sm text-night-muted mt-1.5 max-w-3xl leading-relaxed">
                 When a visiting specialist from Srinagar is travelling, delayed in surgery, or arrives at the clinic,
                 update their status here. The website homepage immediately displays a live alert badge, and you can copy a 1-tap WhatsApp broadcast.
               </p>
@@ -815,24 +820,24 @@ export default function AdminPage() {
                 const broadcastMsg = doctorDelayBroadcastText(doc.name ?? doc.speciality, live, dateLabel(selectedDate));
 
                 return (
-                  <div key={doc.id} className="card rounded-3xl p-5 sm:p-6 border border-line flex flex-col justify-between gap-4 bg-white shadow-xs">
+                  <div key={doc.id} className="card rounded-3xl p-5 sm:p-6 border border-line flex flex-col justify-between gap-4 bg-white shadow-2xs">
                     <div>
                       <div className="flex items-start justify-between gap-3 border-b border-line pb-3">
                         <div>
-                          <h3 className="text-lg font-black text-ink font-display">{doc.name ?? doc.speciality}</h3>
-                          <p className="text-xs text-brand font-bold">{doc.speciality} · {doc.degree}</p>
+                          <h3 className="text-lg font-semibold text-ink font-display">{doc.name ?? doc.speciality}</h3>
+                          <p className="text-xs text-muted font-medium mt-0.5">{doc.speciality} · {doc.degree}</p>
                         </div>
 
                         {/* Status Badge */}
                         <span
-                          className={`rounded-xl px-3 py-1 text-xs font-bold uppercase tracking-wider ${
+                          className={`rounded-xl px-3 py-1 text-xs font-semibold uppercase tracking-wider ${
                             live.state === "in_clinic"
-                              ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                              ? "bg-brand-tint text-ink border border-brand-line"
                               : live.state === "delayed"
-                              ? "bg-amber-100 text-amber-800 border border-amber-300"
+                              ? "bg-amber-50 text-amber-900 border border-amber-200"
                               : live.state === "cancelled"
-                              ? "bg-rose-100 text-rose-800 border border-rose-300"
-                              : "bg-slate-100 text-slate-700 border border-slate-200"
+                              ? "bg-rose-50 text-rose-900 border border-rose-200"
+                              : "bg-ground text-charcoal border border-line"
                           }`}
                         >
                           {live.state === "in_clinic"
@@ -847,13 +852,13 @@ export default function AdminPage() {
 
                       {/* State Switcher */}
                       <div className="flex flex-col gap-2 mt-4">
-                        <label className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Live Doctor Status</label>
+                        <label className="text-[11px] font-bold uppercase tracking-wider text-muted">Live Doctor Status</label>
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                           <button
                             type="button"
                             onClick={() => updateDoctorRadar(doc.id, "scheduled")}
-                            className={`min-h-11 rounded-xl text-xs font-bold border transition-all ${
-                              live.state === "scheduled" ? "bg-slate-900 text-white shadow-sm" : "border-line bg-white hover:bg-slate-50 text-slate-700"
+                            className={`min-h-11 rounded-xl text-xs font-semibold border transition-all ${
+                              live.state === "scheduled" ? "bg-brand text-white border-brand shadow-2xs" : "border-line bg-white hover:bg-ground text-charcoal"
                             }`}
                           >
                             Scheduled
@@ -862,8 +867,8 @@ export default function AdminPage() {
                           <button
                             type="button"
                             onClick={() => updateDoctorRadar(doc.id, "in_clinic")}
-                            className={`min-h-11 rounded-xl text-xs font-bold border transition-all ${
-                              live.state === "in_clinic" ? "bg-emerald-600 text-white shadow-sm" : "border-line bg-white hover:bg-emerald-50 text-emerald-800"
+                            className={`min-h-11 rounded-xl text-xs font-semibold border transition-all ${
+                              live.state === "in_clinic" ? "bg-brand-tint text-ink border-brand-line shadow-2xs font-bold" : "border-line bg-white hover:bg-brand-tint/40 text-ink"
                             }`}
                           >
                             🟢 In Clinic
@@ -872,8 +877,8 @@ export default function AdminPage() {
                           <button
                             type="button"
                             onClick={() => updateDoctorRadar(doc.id, "delayed", live.delayMinutes || 30)}
-                            className={`min-h-11 rounded-xl text-xs font-bold border transition-all ${
-                              live.state === "delayed" ? "bg-amber-500 text-white shadow-sm" : "border-line bg-white hover:bg-amber-50 text-amber-800"
+                            className={`min-h-11 rounded-xl text-xs font-semibold border transition-all ${
+                              live.state === "delayed" ? "bg-amber-500 text-white border-amber-500 shadow-2xs" : "border-line bg-white hover:bg-amber-50 text-amber-900"
                             }`}
                           >
                             🟡 Delayed
@@ -882,8 +887,8 @@ export default function AdminPage() {
                           <button
                             type="button"
                             onClick={() => updateDoctorRadar(doc.id, "cancelled")}
-                            className={`min-h-11 rounded-xl text-xs font-bold border transition-all ${
-                              live.state === "cancelled" ? "bg-rose-600 text-white shadow-sm" : "border-line bg-white hover:bg-rose-50 text-rose-800"
+                            className={`min-h-11 rounded-xl text-xs font-semibold border transition-all ${
+                              live.state === "cancelled" ? "bg-rose-600 text-white border-rose-600 shadow-2xs" : "border-line bg-white hover:bg-rose-50 text-rose-800"
                             }`}
                           >
                             🔴 Cancelled
@@ -893,19 +898,19 @@ export default function AdminPage() {
 
                       {/* Delay Configuration */}
                       {live.state === "delayed" && (
-                        <div className="flex flex-col gap-2.5 rounded-2xl bg-amber-50/80 p-4 border border-amber-200 mt-3">
+                        <div className="flex flex-col gap-2.5 rounded-2xl bg-amber-50/70 p-4 border border-amber-200 mt-3">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold text-amber-900">Estimated Delay:</span>
+                            <span className="text-xs font-semibold text-amber-900">Estimated Delay:</span>
                             <div className="flex gap-1">
                               {[15, 30, 45, 60, 90].map((min) => (
                                 <button
                                   key={min}
                                   type="button"
                                   onClick={() => updateDoctorRadar(doc.id, "delayed", min)}
-                                  className={`px-2 py-1 rounded-lg text-xs font-bold transition-all ${
+                                  className={`px-2 py-1 rounded-lg text-xs font-semibold transition-all ${
                                     (live.delayMinutes ?? 30) === min
                                       ? "bg-amber-600 text-white"
-                                      : "bg-white text-amber-800 border border-amber-300 hover:bg-amber-100"
+                                      : "bg-white text-amber-900 border border-amber-300 hover:bg-amber-100"
                                   }`}
                                 >
                                   {min}m
@@ -919,7 +924,7 @@ export default function AdminPage() {
                             placeholder="Reason (e.g. Traffic near Sangrama / SKIMS surgery)"
                             value={live.note ?? ""}
                             onChange={(e) => updateDoctorRadar(doc.id, "delayed", live.delayMinutes, e.target.value)}
-                            className="min-h-10 rounded-xl border border-amber-300 bg-white px-3 text-xs"
+                            className="min-h-10 rounded-xl border border-amber-300 bg-white px-3 text-xs text-ink outline-none"
                           />
                         </div>
                       )}
@@ -927,18 +932,18 @@ export default function AdminPage() {
 
                     {/* Broadcast WhatsApp Preview & Copy */}
                     {broadcastMsg && (
-                      <div className="flex flex-col gap-2 border-t border-line/80 pt-3 mt-2">
+                      <div className="flex flex-col gap-2 border-t border-line pt-3 mt-2">
                         <div className="flex items-center justify-between">
-                          <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">WhatsApp Broadcast Notice:</span>
+                          <span className="text-[11px] font-bold text-muted uppercase tracking-wider">WhatsApp Broadcast Notice:</span>
                           <button
                             type="button"
                             onClick={() => copyBroadcast(broadcastMsg)}
-                            className="inline-flex items-center gap-1 text-xs font-bold text-brand hover:underline"
+                            className="inline-flex items-center gap-1 text-xs font-semibold text-ink underline decoration-brand-line hover:decoration-ink"
                           >
                             📋 Copy Message
                           </button>
                         </div>
-                        <pre className="whitespace-pre-wrap rounded-xl bg-slate-50 p-3 text-[11px] text-slate-700 border border-slate-200 font-sans leading-relaxed">
+                        <pre className="whitespace-pre-wrap rounded-xl bg-ground p-3 text-[11px] text-charcoal border border-line font-sans leading-relaxed">
                           {broadcastMsg}
                         </pre>
                       </div>
@@ -955,9 +960,9 @@ export default function AdminPage() {
         {/* ===================================================================== */}
         {activeTab === "doctors" && (
           <div className="flex flex-col gap-6 animate-fade-in">
-            <div className="flex flex-wrap items-center justify-between gap-4 card rounded-3xl p-5 border border-line shadow-xs">
+            <div className="flex flex-wrap items-center justify-between gap-4 card rounded-3xl p-5 border border-line shadow-2xs">
               <div>
-                <h2 className="text-xl font-bold text-ink font-display">OPD Days & Timings Management</h2>
+                <h2 className="text-xl font-semibold text-ink font-display">OPD Days &amp; Timings Management</h2>
                 <p className="text-xs text-muted mt-0.5">
                   Update doctor sitting days, mark doctors on leave, or register a new visiting specialist.
                 </p>
@@ -966,9 +971,9 @@ export default function AdminPage() {
               <button
                 type="button"
                 onClick={() => setShowNewDocModal(true)}
-                className="inline-flex min-h-11 items-center gap-2 rounded-2xl bg-brand px-5 text-sm font-bold text-white hover:bg-brand-dark shadow-md shadow-brand/20 transition-all"
+                className="inline-flex min-h-11 items-center gap-2 rounded-2xl bg-brand px-5 text-sm font-semibold text-white hover:bg-brand-dark shadow-2xs transition-all"
               >
-                ➕ Register New Specialist
+                + Register New Specialist
               </button>
             </div>
 
@@ -977,37 +982,37 @@ export default function AdminPage() {
                 const isOnLeave = doc.availability?.toLowerCase().includes("leave");
 
                 return (
-                  <div key={doc.id} className="card rounded-3xl p-5 border border-line flex flex-col justify-between gap-4 shadow-xs">
+                  <div key={doc.id} className="card rounded-3xl p-5 border border-line flex flex-col justify-between gap-4 shadow-2xs">
                     <div>
                       <div className="flex items-start justify-between gap-2">
                         <div>
-                          <h3 className="text-lg font-black text-ink font-display">{doc.name ?? doc.speciality}</h3>
-                          <p className="text-xs text-brand font-bold">{doc.speciality} · {doc.degree}</p>
+                          <h3 className="text-lg font-semibold text-ink font-display">{doc.name ?? doc.speciality}</h3>
+                          <p className="text-xs text-muted font-medium mt-0.5">{doc.speciality} · {doc.degree}</p>
                         </div>
 
                         {isOnLeave ? (
-                          <span className="rounded-lg bg-rose-100 text-rose-800 text-xs px-2.5 py-0.5 font-bold border border-rose-200">
+                          <span className="rounded-lg bg-rose-50 text-rose-800 text-xs px-2.5 py-0.5 font-semibold border border-rose-200">
                             On Leave
                           </span>
                         ) : (
-                          <span className="rounded-lg bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 font-bold border border-emerald-200">
+                          <span className="rounded-lg bg-brand-tint text-ink text-xs px-2.5 py-0.5 font-semibold border border-brand-line">
                             Active OPD
                           </span>
                         )}
                       </div>
 
                       {/* OPD Sessions */}
-                      <div className="mt-3 flex flex-col gap-1.5 text-xs text-slate-700">
-                        <span className="font-bold text-slate-500 uppercase text-[10px] tracking-wider">Sitting Schedule:</span>
+                      <div className="mt-3 flex flex-col gap-1.5 text-xs text-charcoal">
+                        <span className="font-bold text-muted uppercase text-[10px] tracking-wider">Sitting Schedule:</span>
                         {doc.opd.length > 0 ? (
                           doc.opd.map((s, idx) => (
-                            <div key={idx} className="flex justify-between items-center rounded-xl bg-slate-50 px-3 py-1.5 border border-slate-100">
-                              <span className="font-bold text-slate-800">{DAY_NAMES[s.day]}</span>
-                              <span className="font-semibold text-slate-600">{formatTime(s.start)} – {formatTime(s.end)}</span>
+                            <div key={idx} className="flex justify-between items-center rounded-xl bg-ground px-3 py-1.5 border border-line">
+                              <span className="font-semibold text-ink">{DAY_NAMES[s.day]}</span>
+                              <span className="font-medium text-muted">{formatTime(s.start)} – {formatTime(s.end)}</span>
                             </div>
                           ))
                         ) : (
-                          <p className="text-slate-400 italic">No scheduled weekly OPD. By appointment.</p>
+                          <p className="text-muted italic">No scheduled weekly OPD. By appointment.</p>
                         )}
                       </div>
                     </div>
@@ -1023,8 +1028,8 @@ export default function AdminPage() {
                           }}
                           className={`min-h-9 px-3 rounded-lg text-xs font-semibold transition-all ${
                             isOnLeave
-                              ? "bg-emerald-700 text-white hover:bg-emerald-800"
-                              : "bg-[#F7F7F3] text-[#A62828] border border-[#E2E4DC] hover:bg-rose-50"
+                              ? "bg-brand-tint text-ink border border-brand-line hover:bg-[#D1EFB5]"
+                              : "bg-ground text-emergency border border-line hover:bg-rose-50"
                           }`}
                         >
                           {isOnLeave ? "End Leave (Active)" : "Mark On Leave"}
@@ -1041,7 +1046,7 @@ export default function AdminPage() {
                               setTimeout(() => setBroadcastToast(""), 3500);
                             }
                           }}
-                          className="min-h-9 px-2.5 rounded-lg text-xs font-semibold text-[#858D91] hover:text-[#A62828] hover:bg-rose-50 transition-colors"
+                          className="min-h-9 px-2.5 rounded-lg text-xs font-semibold text-muted hover:text-emergency hover:bg-rose-50 transition-colors"
                           title="Remove doctor from active roster"
                         >
                           Remove
@@ -1051,7 +1056,7 @@ export default function AdminPage() {
                       <Link
                         href={`/book?doctor=${doc.id}`}
                         target="_blank"
-                        className="text-xs text-[#397C78] font-semibold hover:underline"
+                        className="text-xs text-ink font-semibold underline decoration-brand-line hover:decoration-ink"
                       >
                         Preview Booking →
                       </Link>
@@ -1069,13 +1074,13 @@ export default function AdminPage() {
         {activeTab === "backups" && (
           <div className="flex flex-col gap-6 animate-fade-in">
             {/* Owner Daily Report Card */}
-            <div className="card rounded-3xl p-6 border-2 border-emerald-500/30 bg-gradient-to-r from-emerald-950 via-slate-900 to-ink text-white shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-5">
-              <div className="space-y-1">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-300">
+            <div className="rounded-3xl p-6 border border-night-line bg-brand text-white shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+              <div className="space-y-1.5">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-mint">
                   <WhatsAppIcon className="size-3.5" /> 1-Tap WhatsApp to Owner
                 </span>
-                <h3 className="text-xl font-black font-display text-white">Daily OPD Summary for Clinic Owner</h3>
-                <p className="text-xs text-slate-300 max-w-xl">
+                <h3 className="text-xl font-semibold font-display text-white">Daily OPD Summary for Clinic Owner</h3>
+                <p className="text-xs text-night-muted max-w-xl leading-relaxed">
                   Send today&apos;s total patient counts, completed visits, and doctor breakdowns directly to the owner&apos;s WhatsApp with one tap at closing time.
                 </p>
               </div>
@@ -1084,7 +1089,7 @@ export default function AdminPage() {
                 href={ownerWaUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-13 items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-6 text-sm font-black text-white hover:bg-[#20ba59] shadow-lg shadow-emerald-500/30 transition-all shrink-0 active:scale-95"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-6 text-sm font-semibold text-white hover:bg-[#20ba59] shadow-sm transition-all shrink-0 active:scale-95"
               >
                 <WhatsAppIcon className="size-5" />
                 <span>
@@ -1098,11 +1103,11 @@ export default function AdminPage() {
             {/* Quick Actions Grid: Excel & JSON */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Full JSON Backup */}
-              <div className="card rounded-3xl p-5 border border-line shadow-xs flex flex-col justify-between gap-4 bg-white">
+              <div className="card rounded-3xl p-5 border border-line shadow-2xs flex flex-col justify-between gap-4 bg-white">
                 <div>
                   <div className="flex items-center gap-2.5">
                     <span className="text-2xl">💾</span>
-                    <h4 className="text-base font-black text-ink font-display">Full Clinic JSON Database Backup</h4>
+                    <h4 className="text-base font-semibold text-ink font-display">Full Clinic JSON Database Backup</h4>
                   </div>
                   <p className="text-xs text-muted mt-2 leading-relaxed">
                     Downloads an encrypted complete backup file of all appointments, walk-ins, doctor schedule overrides, and custom specialists.
@@ -1113,7 +1118,7 @@ export default function AdminPage() {
                   <button
                     type="button"
                     onClick={downloadFullJsonBackup}
-                    className="flex-1 min-h-11 rounded-xl bg-ink text-white text-xs font-bold hover:bg-slate-800 transition-all shadow-xs"
+                    className="flex-1 min-h-11 rounded-xl bg-brand text-white text-xs font-semibold hover:bg-brand-dark transition-all shadow-2xs"
                   >
                     📥 Download Backup File (.json)
                   </button>
@@ -1121,7 +1126,7 @@ export default function AdminPage() {
                   <button
                     type="button"
                     onClick={() => restoreFileInputRef.current?.click()}
-                    className="min-h-11 px-4 rounded-xl border border-line bg-slate-50 text-slate-700 text-xs font-bold hover:bg-slate-100 transition-all"
+                    className="min-h-11 px-4 rounded-xl border border-line bg-ground text-charcoal text-xs font-semibold hover:bg-sand transition-all"
                   >
                     🔄 Restore Backup
                   </button>
@@ -1129,17 +1134,17 @@ export default function AdminPage() {
               </div>
 
               {/* Cross-Device Cloud Sync */}
-              <div className="card rounded-3xl p-5 border border-line shadow-xs flex flex-col justify-between gap-4 bg-white">
+              <div className="card rounded-3xl p-5 border border-line shadow-2xs flex flex-col justify-between gap-4 bg-white">
                 <div>
                   <div className="flex items-center gap-2.5">
                     <span className="text-2xl">🛰️</span>
-                    <h4 className="text-base font-black text-ink font-display">Cross-Device Live Sync Status</h4>
+                    <h4 className="text-base font-semibold text-ink font-display">Cross-Device Live Sync Status</h4>
                   </div>
                   <p className="text-xs text-muted mt-2 leading-relaxed">
                     Synchronizes real-time appointments across all clinic tablets, receptionist phones, and patient booking channels.
                   </p>
-                  <p className="text-xs font-bold text-brand mt-1">
-                    Last Synced: {lastSyncDisplay}
+                  <p className="text-xs font-semibold text-ink mt-1.5">
+                    Last Synced: <span className="text-charcoal">{lastSyncDisplay}</span>
                   </p>
                 </div>
 
@@ -1147,7 +1152,7 @@ export default function AdminPage() {
                   <button
                     type="button"
                     onClick={handleManualSync}
-                    className="w-full min-h-11 rounded-xl bg-teal-600 text-white text-xs font-bold hover:bg-teal-700 transition-all shadow-xs"
+                    className="w-full min-h-11 rounded-xl bg-brand-tint border border-brand-line text-ink text-xs font-semibold hover:bg-[#D1EFB5] transition-all shadow-2xs"
                   >
                     🔄 Force Cloud Sync Now
                   </button>
@@ -1156,16 +1161,16 @@ export default function AdminPage() {
             </div>
 
             {/* Daily Archive Table */}
-            <div className="card rounded-3xl p-5 border border-line shadow-xs flex flex-col gap-4 bg-white">
+            <div className="card rounded-3xl p-5 border border-line shadow-2xs flex flex-col gap-4 bg-white">
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
                 <div>
-                  <h4 className="text-base font-black text-ink font-display">Historical OPD Records by Date</h4>
+                  <h4 className="text-base font-semibold text-ink font-display">Historical OPD Records by Date</h4>
                   <p className="text-xs text-muted">Download past days into individual Excel / CSV sheets.</p>
                 </div>
                 <button
                   type="button"
                   onClick={() => downloadCsv()}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-brand hover:underline"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-ink underline decoration-brand-line hover:decoration-ink"
                 >
                   📥 Export Complete All-Time CSV
                 </button>
@@ -1183,7 +1188,7 @@ export default function AdminPage() {
                       <div key={dateKey} className="py-3 flex flex-wrap items-center justify-between gap-3">
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-sm text-ink">{dateLabel(dateKey)}</span>
+                            <span className="font-semibold text-sm text-ink">{dateLabel(dateKey)}</span>
                             <span className="text-xs text-muted font-mono">({dateKey})</span>
                           </div>
                           <p className="text-xs text-muted mt-0.5">
@@ -1195,7 +1200,7 @@ export default function AdminPage() {
                           <button
                             type="button"
                             onClick={() => downloadCsv(dateKey)}
-                            className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-emerald-300 bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-800 hover:bg-emerald-100"
+                            className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-brand-line bg-brand-tint/75 px-3 py-1.5 text-xs font-semibold text-ink hover:bg-brand-tint transition-colors"
                           >
                             📊 Download Excel (.csv)
                           </button>
@@ -1214,19 +1219,19 @@ export default function AdminPage() {
         {/* ===================================================================== */}
         {activeTab === "search" && (
           <div className="flex flex-col gap-6 animate-fade-in">
-            <div className="card rounded-3xl p-5 border border-line shadow-xs flex flex-col gap-3">
-              <label htmlFor="search-input" className="text-lg font-bold text-ink font-display">
+            <div className="card rounded-3xl p-5 border border-line shadow-2xs flex flex-col gap-3">
+              <label htmlFor="search-input" className="text-lg font-semibold text-ink font-display">
                 Find Patient Record by Name, Village/Area, Phone, or Token
               </label>
-              <div className="flex items-center gap-3 rounded-2xl border border-line px-4 bg-slate-50 focus-within:border-brand focus-within:bg-white transition-all">
-                <SearchIcon className="size-5 text-slate-400" />
+              <div className="flex items-center gap-3 rounded-2xl border border-line px-4 bg-ground focus-within:border-brand focus-within:bg-white transition-all">
+                <SearchIcon className="size-5 text-muted" />
                 <input
                   id="search-input"
                   type="text"
                   placeholder="e.g. Ghulam Mohammad, Tarzoo, Dangerpora, 97977... or EP-AK..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full min-h-13 bg-transparent text-base outline-none font-medium"
+                  className="w-full min-h-13 bg-transparent text-base text-ink outline-none font-medium"
                 />
               </div>
             </div>
@@ -1247,24 +1252,24 @@ export default function AdminPage() {
                     <div key={a.token} className="card rounded-3xl p-4 sm:p-5 border border-line flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                       <div>
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-mono font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded-md text-xs">{a.token}</span>
-                          <span className="font-black text-ink text-base">{a.patientName}</span>
+                          <span className="font-mono font-bold text-mint bg-brand px-2.5 py-0.5 rounded-md text-xs">{a.token}</span>
+                          <span className="font-semibold text-ink text-base">{a.patientName}</span>
                           {a.patientAddress && (
-                            <span className="inline-flex items-center gap-1 rounded-md bg-teal-50 border border-teal-200 text-teal-800 px-2 py-0.5 text-xs font-bold">
+                            <span className="inline-flex items-center gap-1 rounded-md bg-brand-tint border border-brand-line text-ink px-2 py-0.5 text-xs font-semibold">
                               📍 {a.patientAddress}
                             </span>
                           )}
                           <span className="text-xs text-muted font-mono">(+91 {a.patientPhone})</span>
                         </div>
                         <p className="text-xs text-muted mt-1">
-                          {a.doctorName} ({a.speciality}) · {dateLabel(a.date)} at {formatTime(a.time)} · Status: <strong>{a.status}</strong>
+                          {a.doctorName} ({a.speciality}) · {dateLabel(a.date)} at {formatTime(a.time)} · Status: <strong className="text-ink">{a.status}</strong>
                         </p>
                       </div>
 
                       <div className="flex items-center gap-2">
                         <a
                           href={`tel:+91${a.patientPhone}`}
-                          className="min-h-10 px-3.5 rounded-xl bg-brand text-white text-xs font-bold inline-flex items-center gap-1.5"
+                          className="min-h-10 px-3.5 rounded-xl bg-brand hover:bg-brand-dark text-white text-xs font-semibold inline-flex items-center gap-1.5"
                         >
                           <PhoneIcon className="size-3.5" /> Call
                         </a>
@@ -1281,24 +1286,24 @@ export default function AdminPage() {
       {/* 1-TAP WALK-IN PATIENT ENTRY MODAL (WITH VILLAGE / ADDRESS FIELD)        */}
       {/* ======================================================================= */}
       {showWalkInModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm animate-fade-in">
-          <div className="card w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border border-white/20 flex flex-col gap-5 max-h-[90vh] overflow-y-auto bg-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-night/70 p-4 backdrop-blur-sm animate-fade-in">
+          <div className="card w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border border-line flex flex-col gap-5 max-h-[90vh] overflow-y-auto bg-white">
             <div className="flex items-start justify-between border-b border-line pb-3">
               <div>
-                <h3 className="text-xl font-black text-ink font-display">Register Walk-in Patient</h3>
+                <h3 className="text-xl font-semibold text-ink font-display">Register Walk-in Patient</h3>
                 <p className="text-xs text-muted">Locks the slot instantly to prevent double-booking.</p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowWalkInModal(false)}
-                className="size-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-600 hover:bg-slate-200"
+                className="size-8 rounded-full bg-ground flex items-center justify-center font-bold text-charcoal hover:bg-sand"
               >
                 ✕
               </button>
             </div>
 
             {walkInError && (
-              <p className="rounded-xl bg-rose-50 p-3 text-xs font-bold text-rose-800 border border-rose-200">
+              <p className="rounded-xl bg-rose-50 p-3 text-xs font-semibold text-rose-800 border border-rose-200">
                 {walkInError}
               </p>
             )}
@@ -1306,7 +1311,7 @@ export default function AdminPage() {
             <div className="flex flex-col gap-4">
               {/* Doctor */}
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="walkin-doc" className="text-xs font-bold uppercase tracking-wider text-slate-500">Consultant Specialist</label>
+                <label htmlFor="walkin-doc" className="text-xs font-bold uppercase tracking-wider text-muted">Consultant Specialist</label>
                 <select
                   id="walkin-doc"
                   value={walkInDocId}
@@ -1314,7 +1319,7 @@ export default function AdminPage() {
                     setWalkInDocId(e.target.value);
                     setWalkInTime("");
                   }}
-                  className="min-h-12 rounded-xl border border-line px-3 text-sm sm:text-base font-bold bg-slate-50"
+                  className="min-h-12 rounded-xl border border-line px-3 text-sm sm:text-base font-semibold text-ink bg-ground focus:bg-white focus:border-brand outline-none"
                 >
                   <option value="">Select Doctor</option>
                   {allDoctors.map((d) => (
@@ -1328,7 +1333,7 @@ export default function AdminPage() {
               {/* Time Slots */}
               {walkInDocId && (
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <label className="text-xs font-bold uppercase tracking-wider text-muted">
                     Select Available Slot ({dateLabel(selectedDate)})
                   </label>
                   {(() => {
@@ -1338,7 +1343,7 @@ export default function AdminPage() {
                     const taken = getBookedSlots(doc.id, selectedDate);
 
                     return (
-                      <div className="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto p-1 border border-line rounded-xl bg-slate-50">
+                      <div className="grid grid-cols-3 gap-2 max-h-40 overflow-y-auto p-1.5 border border-line rounded-xl bg-ground">
                         {slots.map((s) => {
                           const isOccupied = taken.includes(s);
                           return (
@@ -1347,12 +1352,12 @@ export default function AdminPage() {
                               type="button"
                               disabled={isOccupied}
                               onClick={() => setWalkInTime(s)}
-                              className={`min-h-10 rounded-lg text-xs font-bold border transition-all ${
+                              className={`min-h-10 rounded-lg text-xs font-semibold border transition-all ${
                                 isOccupied
-                                  ? "bg-slate-200 text-slate-400 border-slate-200 cursor-not-allowed line-through"
+                                  ? "bg-sand text-muted/60 border-line cursor-not-allowed line-through"
                                   : walkInTime === s
-                                  ? "bg-brand text-white border-brand shadow-xs"
-                                  : "bg-white text-slate-800 border-line hover:border-slate-400"
+                                  ? "bg-brand text-white border-brand shadow-2xs"
+                                  : "bg-white text-ink border-line hover:border-line-strong"
                               }`}
                             >
                               {formatTime(s)}
@@ -1367,24 +1372,24 @@ export default function AdminPage() {
 
               {/* Patient Name */}
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="walkin-name" className="text-xs font-bold uppercase tracking-wider text-slate-500">Patient Full Name</label>
+                <label htmlFor="walkin-name" className="text-xs font-bold uppercase tracking-wider text-muted">Patient Full Name</label>
                 <input
                   id="walkin-name"
                   type="text"
                   placeholder="e.g. Ghulam Mohammad"
                   value={walkInName}
                   onChange={(e) => setWalkInName(e.target.value)}
-                  className="min-h-12 rounded-xl border border-line px-4 text-base font-semibold"
+                  className="min-h-12 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-4 text-base font-medium text-ink"
                 />
               </div>
 
               {/* Patient Village / Address (Crucial for disambiguating identical names) */}
               <div className="flex flex-col gap-1.5">
                 <div className="flex justify-between items-baseline">
-                  <label htmlFor="walkin-address" className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  <label htmlFor="walkin-address" className="text-xs font-bold uppercase tracking-wider text-muted">
                     Village / Town / Address
                   </label>
-                  <span className="text-[11px] text-brand font-bold">Prevents same-name confusion</span>
+                  <span className="text-[11px] text-charcoal font-semibold">Prevents same-name confusion</span>
                 </div>
                 <input
                   id="walkin-address"
@@ -1392,15 +1397,15 @@ export default function AdminPage() {
                   placeholder="e.g. Tarzoo, Dangerpora, Sangrama, Sopore"
                   value={walkInAddress}
                   onChange={(e) => setWalkInAddress(e.target.value)}
-                  className="min-h-12 rounded-xl border border-line px-4 text-base font-semibold focus:border-brand"
+                  className="min-h-12 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-4 text-base font-medium text-ink"
                 />
               </div>
 
               {/* Patient Phone */}
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="walkin-phone" className="text-xs font-bold uppercase tracking-wider text-slate-500">Mobile Number (10 Digits)</label>
-                <div className="flex rounded-xl border border-line overflow-hidden">
-                  <span className="bg-slate-100 px-3.5 py-3 text-sm font-bold text-slate-600 border-r border-line">+91</span>
+                <label htmlFor="walkin-phone" className="text-xs font-bold uppercase tracking-wider text-muted">Mobile Number (10 Digits)</label>
+                <div className="flex rounded-xl border border-line overflow-hidden bg-ground focus-within:bg-white focus-within:border-brand">
+                  <span className="bg-sand px-3.5 py-3 text-sm font-semibold text-charcoal border-r border-line">+91</span>
                   <input
                     id="walkin-phone"
                     type="tel"
@@ -1408,7 +1413,7 @@ export default function AdminPage() {
                     placeholder="10-digit number"
                     value={walkInPhone}
                     onChange={(e) => setWalkInPhone(e.target.value)}
-                    className="flex-1 px-4 min-h-12 text-base font-semibold outline-none"
+                    className="flex-1 bg-transparent px-4 min-h-12 text-base font-medium text-ink outline-none"
                   />
                 </div>
               </div>
@@ -1418,14 +1423,14 @@ export default function AdminPage() {
               <button
                 type="button"
                 onClick={() => setShowWalkInModal(false)}
-                className="flex-1 min-h-12 rounded-2xl border border-line text-slate-700 font-bold hover:bg-slate-100"
+                className="flex-1 min-h-12 rounded-2xl border border-line text-charcoal font-semibold hover:bg-ground"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleAddWalkIn}
-                className="flex-1 min-h-12 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black hover:brightness-110 shadow-lg shadow-emerald-600/20"
+                className="flex-1 min-h-12 rounded-2xl bg-brand text-white font-semibold hover:bg-brand-dark shadow-2xs transition-colors"
               >
                 Issue Token Slip
               </button>
@@ -1438,38 +1443,38 @@ export default function AdminPage() {
       {/* WALK-IN SUCCESS TOKEN SLIP POPUP                                       */}
       {/* ======================================================================= */}
       {walkInSuccessSlip && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm animate-fade-in">
-          <div className="card w-full max-w-md rounded-3xl p-6 shadow-2xl border-2 border-emerald-500 flex flex-col gap-4 text-center bg-white">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-night/70 p-4 backdrop-blur-sm animate-fade-in">
+          <div className="card w-full max-w-md rounded-3xl p-6 shadow-2xl border-2 border-brand-line flex flex-col gap-4 text-center bg-white">
             <span className="text-4xl">🎟️</span>
             <div>
-              <span className="text-xs font-bold uppercase text-emerald-700">Official Token Slip Issued</span>
-              <h3 className="text-3xl font-black font-mono tracking-wider text-ink mt-1 font-display">
+              <span className="inline-block rounded-full bg-brand-tint border border-brand-line px-3 py-0.5 text-xs font-semibold uppercase text-ink">Official Token Slip Issued</span>
+              <h3 className="text-3xl font-bold font-mono tracking-wider text-ink mt-2 font-display">
                 {walkInSuccessSlip.token}
               </h3>
             </div>
 
-            <div className="rounded-2xl bg-slate-50 p-4 text-left text-xs space-y-1.5 border border-line">
-              <p><strong>Patient:</strong> {walkInSuccessSlip.patientName}</p>
+            <div className="rounded-2xl bg-ground p-4 text-left text-xs space-y-1.5 border border-line text-charcoal">
+              <p><strong className="text-ink">Patient:</strong> {walkInSuccessSlip.patientName}</p>
               {walkInSuccessSlip.patientAddress && (
-                <p className="text-teal-800 font-bold"><strong>Village / Area:</strong> 📍 {walkInSuccessSlip.patientAddress}</p>
+                <p className="text-ink font-semibold"><strong>Village / Area:</strong> 📍 {walkInSuccessSlip.patientAddress}</p>
               )}
-              <p><strong>Doctor:</strong> {walkInSuccessSlip.doctorName}</p>
-              <p><strong>Slot:</strong> {formatTime(walkInSuccessSlip.time)}</p>
-              <p><strong>Date:</strong> {dateLabel(walkInSuccessSlip.date)}</p>
+              <p><strong className="text-ink">Doctor:</strong> {walkInSuccessSlip.doctorName}</p>
+              <p><strong className="text-ink">Slot:</strong> {formatTime(walkInSuccessSlip.time)}</p>
+              <p><strong className="text-ink">Date:</strong> {dateLabel(walkInSuccessSlip.date)}</p>
             </div>
 
             <div className="flex gap-2.5">
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="flex-1 min-h-12 rounded-2xl bg-ink text-white font-bold text-xs hover:bg-slate-800"
+                className="flex-1 min-h-12 rounded-2xl bg-brand text-white font-semibold text-xs hover:bg-brand-dark"
               >
                 🖨️ Print Slip
               </button>
               <button
                 type="button"
                 onClick={() => setWalkInSuccessSlip(null)}
-                className="flex-1 min-h-12 rounded-2xl border border-line text-slate-800 font-bold text-xs hover:bg-slate-100"
+                className="flex-1 min-h-12 rounded-2xl border border-line text-ink font-semibold text-xs hover:bg-ground"
               >
                 Done
               </button>
@@ -1482,17 +1487,17 @@ export default function AdminPage() {
       {/* REGISTER NEW SPECIALIST MODAL                                          */}
       {/* ======================================================================= */}
       {showNewDocModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-sm animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-night/70 p-4 backdrop-blur-sm animate-fade-in">
           <div className="card w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl border border-line flex flex-col gap-4 bg-white">
             <div className="flex items-start justify-between border-b border-line pb-3">
               <div>
-                <h3 className="text-xl font-bold text-ink font-display">Add Visiting Specialist</h3>
+                <h3 className="text-xl font-semibold text-ink font-display">Add Visiting Specialist</h3>
                 <p className="text-xs text-muted">Register doctor details and sitting schedule.</p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowNewDocModal(false)}
-                className="size-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-600"
+                className="size-8 rounded-full bg-ground flex items-center justify-center font-bold text-charcoal hover:bg-sand"
               >
                 ✕
               </button>
@@ -1500,49 +1505,49 @@ export default function AdminPage() {
 
             <div className="flex flex-col gap-3">
               <div>
-                <label htmlFor="new-doc-name" className="text-xs font-bold uppercase text-slate-500">Doctor Full Name</label>
+                <label htmlFor="new-doc-name" className="text-xs font-bold uppercase text-muted">Doctor Full Name</label>
                 <input
                   id="new-doc-name"
                   type="text"
                   placeholder="e.g. Dr. Shabir Ahmad"
                   value={newDocName}
                   onChange={(e) => setNewDocName(e.target.value)}
-                  className="w-full min-h-11 rounded-xl border border-line px-3 text-sm font-semibold"
+                  className="w-full min-h-11 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-3 text-sm font-medium text-ink mt-1"
                 />
               </div>
 
               <div>
-                <label htmlFor="new-doc-spec" className="text-xs font-bold uppercase text-slate-500">Speciality</label>
+                <label htmlFor="new-doc-spec" className="text-xs font-bold uppercase text-muted">Speciality</label>
                 <input
                   id="new-doc-spec"
                   type="text"
                   placeholder="e.g. Orthopedics & Joint Replacement"
                   value={newDocSpec}
                   onChange={(e) => setNewDocSpec(e.target.value)}
-                  className="w-full min-h-11 rounded-xl border border-line px-3 text-sm font-semibold"
+                  className="w-full min-h-11 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-3 text-sm font-medium text-ink mt-1"
                 />
               </div>
 
               <div>
-                <label htmlFor="new-doc-degree" className="text-xs font-bold uppercase text-slate-500">Degree & Credentials</label>
+                <label htmlFor="new-doc-degree" className="text-xs font-bold uppercase text-muted">Degree &amp; Credentials</label>
                 <input
                   id="new-doc-degree"
                   type="text"
                   placeholder="e.g. MBBS, MS Ortho, Former SKIMS"
                   value={newDocDegree}
                   onChange={(e) => setNewDocDegree(e.target.value)}
-                  className="w-full min-h-11 rounded-xl border border-line px-3 text-sm font-semibold"
+                  className="w-full min-h-11 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-3 text-sm font-medium text-ink mt-1"
                 />
               </div>
 
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label htmlFor="new-doc-day" className="text-xs font-bold uppercase text-slate-500">OPD Day</label>
+                  <label htmlFor="new-doc-day" className="text-xs font-bold uppercase text-muted">OPD Day</label>
                   <select
                     id="new-doc-day"
                     value={newDocDay}
                     onChange={(e) => setNewDocDay(Number(e.target.value))}
-                    className="w-full min-h-11 rounded-xl border border-line px-2 text-xs font-semibold"
+                    className="w-full min-h-11 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-2 text-xs font-semibold text-ink mt-1"
                   >
                     {DAY_NAMES.map((name, i) => (
                       <option key={i} value={i}>
@@ -1553,24 +1558,24 @@ export default function AdminPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="new-doc-start" className="text-xs font-bold uppercase text-slate-500">Start Time</label>
+                  <label htmlFor="new-doc-start" className="text-xs font-bold uppercase text-muted">Start Time</label>
                   <input
                     id="new-doc-start"
                     type="time"
                     value={newDocStart}
                     onChange={(e) => setNewDocStart(e.target.value)}
-                    className="w-full min-h-11 rounded-xl border border-line px-2 text-xs font-semibold"
+                    className="w-full min-h-11 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-2 text-xs font-semibold text-ink mt-1"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="new-doc-end" className="text-xs font-bold uppercase text-slate-500">End Time</label>
+                  <label htmlFor="new-doc-end" className="text-xs font-bold uppercase text-muted">End Time</label>
                   <input
                     id="new-doc-end"
                     type="time"
                     value={newDocEnd}
                     onChange={(e) => setNewDocEnd(e.target.value)}
-                    className="w-full min-h-11 rounded-xl border border-line px-2 text-xs font-semibold"
+                    className="w-full min-h-11 rounded-xl border border-line bg-ground focus:bg-white focus:border-brand outline-none px-2 text-xs font-semibold text-ink mt-1"
                   />
                 </div>
               </div>
@@ -1580,14 +1585,14 @@ export default function AdminPage() {
               <button
                 type="button"
                 onClick={() => setShowNewDocModal(false)}
-                className="flex-1 min-h-11 rounded-2xl border border-line text-slate-700 font-bold text-sm"
+                className="flex-1 min-h-11 rounded-2xl border border-line text-charcoal font-semibold text-sm hover:bg-ground"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleSaveNewDoctor}
-                className="flex-1 min-h-11 rounded-2xl bg-brand text-white font-bold text-sm hover:bg-brand-dark"
+                className="flex-1 min-h-11 rounded-2xl bg-brand text-white font-semibold text-sm hover:bg-brand-dark"
               >
                 Save Doctor
               </button>
