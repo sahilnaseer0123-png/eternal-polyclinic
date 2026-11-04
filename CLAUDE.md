@@ -10,7 +10,7 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 
 - Next.js 16 (App Router), TypeScript, Tailwind CSS v4. Hosting (23 Oct 2026): Cloudflare Pages, free plan (Vercel's free plan
   forbids business sites; Pro is ~₹2,000/month). The site is a static export (`output: "export"` → `out/`): every page is a
-  ready-made file, so there is no server code. Cloudflare builds `main` on every push (preset "Next.js (Static HTML Export)",
+  ready-made file; the only server code is Pages Functions (below). Cloudflare builds `main` on every push (preset "Next.js (Static HTML Export)",
   build `npx next build`, output `out`). Live at `clinic.siteUrl` (https://eternal-polyclinic.pages.dev).
 - Deploys stop silently if Cloudflare loses access to this repo (yellow "disconnected" banner in the Pages project).
   Fix: GitHub → Settings → Applications → Cloudflare Workers and Pages → Configure → Repository access must list
@@ -62,7 +62,7 @@ in under 60 seconds with no account. Reception confirms every request by phone.
   Page links shared by header, More sheet and footer live in `components/nav.ts` (a plain module: server and client can import it).
   Header (`SiteHeader`), footer and WhatsApp button (`SiteChrome`), and the phone/tablet bottom tab bar (`TabBar`: Home,
   Doctors, Book, More sheet) are mounted in `app/layout.tsx`.
-- Design v3 "day-first" (2 Nov 2026, branch `redesign-v3`): light cream header, mist hero with a live `TodayCard`, night `#0B1917` footer only, cream ground, deep teal `brand`, mint on night, Fraunces headings (italic accent phrase) + Plus Jakarta Sans, 1px-border cards, no shadows, 12-14px radius buttons. Home = `components/DayPicker.tsx` (seven days, who sits; default day = today in clinic time, computed in the browser). The fake reviews page and its components were deleted (rule 7). The Booking form is the WhatsApp request again (no token slip). `/admin` and its PIN were left as they were, at the owner's request; bookings no longer feed it. Inner pages inherit the new tokens; the older description below is superseded where it conflicts.
+- Design v3 "day-first" (2 Nov 2026, branch `redesign-v3`): light cream header, mist hero with a live `TodayCard`, night `#0B1917` footer only, cream ground, deep teal `brand`, mint on night, Fraunces headings (italic accent phrase) + Plus Jakarta Sans, 1px-border cards, no shadows, 12-14px radius buttons. Home = `components/DayPicker.tsx` (seven days, who sits; default day = today in clinic time, computed in the browser). The fake reviews page and its components were deleted (rule 7). The Booking form is the WhatsApp request again (no token slip). `/admin`: see Dashboard above (staff logins replace the PIN once the owner account exists). Inner pages inherit the new tokens; the older description below is superseded where it conflicts.
 - Design C (chosen 23 Oct 2026, mockups on the design canvas): ground `#f4f6f5`, white `card` surfaces (a utility in
   globals.css; pair with `rounded-3xl`) without borders, pill buttons, ink (`bg-ink`) for primary actions and the Today card,
   `glow` for teal text on ink. Doctors show `DoctorMark` (initial, or speciality icon) until real photos arrive.
