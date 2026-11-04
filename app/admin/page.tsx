@@ -200,6 +200,8 @@ export default function AdminPage() {
 
   // Change PIN state
   const [newPinValue, setNewPinValue] = useState<string>("");
+  const [pinSaveState, setPinSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [pinSaveMessage, setPinSaveMessage] = useState<string>("");
 
   async function verifyPin(pin: string) {
     setIsSubmittingPin(true);
@@ -216,26 +218,34 @@ export default function AdminPage() {
     }
   }
 
-  async function handleUpdatePin() {
+  async function handleUpdatePin(e?: React.FormEvent) {
+    e?.preventDefault();
     const trimmed = newPinValue.trim();
     if (trimmed.length < 4) {
-      setBroadcastToast("PIN must be at least 4 characters.");
-      setTimeout(() => setBroadcastToast(""), 3500);
+      setPinSaveState("error");
+      setPinSaveMessage("PIN must be at least 4 characters.");
       return;
     }
+    setPinSaveState("saving");
+    setPinSaveMessage("");
     const res = await updateAdminPortalPin(trimmed);
     if (!res.ok) {
-      setBroadcastToast(res.error || "Could not update PIN.");
-      setTimeout(() => setBroadcastToast(""), 3500);
+      setPinSaveState("error");
+      setPinSaveMessage(res.error || "Could not update PIN. Please try again.");
       return;
     }
     setNewPinValue("");
-    setBroadcastToast(
+    const msg =
       res.mode === "cloud"
-        ? "Cloud security PIN updated across all clinic devices."
-        : "Admin security PIN updated on this device.",
-    );
-    setTimeout(() => setBroadcastToast(""), 4000);
+        ? "New security PIN saved and synced across all clinic devices."
+        : "New security PIN saved on this device.";
+    setPinSaveState("saved");
+    setPinSaveMessage(msg);
+    setBroadcastToast(msg);
+    setTimeout(() => setBroadcastToast(""), 4500);
+    setTimeout(() => {
+      setPinSaveState((prev) => (prev === "saved" ? "idle" : prev));
+    }, 6000);
   }
 
   async function handleLogout() {
@@ -675,11 +685,12 @@ export default function AdminPage() {
         <div className="bg-white">
           <section className="rounded-t-[2rem] sm:rounded-t-[2.75rem] border-t border-line/80 bg-ground">
             <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-8 pb-24 sm:px-6 sm:py-10 sm:pb-16">
-              {/* Broadcast / Action Toast */}
+              {/* Floating Broadcast / Action Toast (always visible regardless of scroll position) */}
               {broadcastToast && (
                 <div
                   role="status"
-                  className="fade-in flex items-center justify-between gap-4 rounded-2xl bg-brand px-5 py-3.5 text-sm font-semibold text-white"
+                  aria-live="polite"
+                  className="fade-in fixed inset-x-4 bottom-20 z-50 flex items-center justify-between gap-4 rounded-2xl bg-brand px-5 py-3.5 text-sm font-semibold text-white shadow-elevated ring-1 ring-white/15 sm:inset-x-auto sm:right-6 sm:max-w-md lg:bottom-6"
                 >
                   <span className="flex items-center gap-2.5">
                     <span className="inline-flex size-6 shrink-0 items-center justify-center rounded-lg bg-mint text-ink">
@@ -690,7 +701,7 @@ export default function AdminPage() {
                   <button
                     type="button"
                     onClick={() => setBroadcastToast("")}
-                    className="text-xs font-bold uppercase tracking-wider text-mint hover:underline cursor-pointer"
+                    className="text-xs font-bold uppercase tracking-wider text-mint hover:underline cursor-pointer shrink-0"
                   >
                     Dismiss
                   </button>
@@ -1513,23 +1524,64 @@ export default function AdminPage() {
                         </p>
                       </div>
 
-                      <div className="flex gap-2 border-t border-line pt-4">
-                        <input
-                          type="password"
-                          aria-label="New admin PIN"
-                          placeholder="New PIN (4+ chars)"
-                          value={newPinValue}
-                          onChange={(e) => setNewPinValue(e.target.value)}
-                          className="min-h-11 min-w-0 flex-1 rounded-xl border border-line-strong bg-white px-3 text-sm text-ink outline-none focus:border-brand"
-                        />
-                        <button
-                          type="button"
-                          onClick={handleUpdatePin}
-                          className="min-h-11 shrink-0 rounded-xl bg-brand px-4 text-xs sm:text-sm font-semibold text-white hover:bg-brand-dark transition-colors cursor-pointer"
-                        >
-                          Save PIN
-                        </button>
-                      </div>
+                      <form onSubmit={handleUpdatePin} className="flex flex-col gap-2.5 border-t border-line pt-4">
+                        <div className="flex gap-2">
+                          <input
+                            type="password"
+                            aria-label="New admin PIN"
+                            placeholder="New PIN (4+ chars)"
+                            value={newPinValue}
+                            onChange={(e) => {
+                              setNewPinValue(e.target.value);
+                              if (pinSaveState !== "idle") {
+                                setPinSaveState("idle");
+                                setPinSaveMessage("");
+                              }
+                            }}
+                            className="min-h-11 min-w-0 flex-1 rounded-xl border border-line-strong bg-white px-3 text-sm text-ink outline-none focus:border-brand"
+                          />
+                          <button
+                            type="submit"
+                            disabled={pinSaveState === "saving"}
+                            className={`inline-flex min-h-11 shrink-0 items-center justify-center gap-1.5 rounded-xl px-4 text-xs sm:text-sm font-semibold transition-all cursor-pointer disabled:opacity-60 ${
+                              pinSaveState === "saved"
+                                ? "bg-brand-tint text-ink ring-1 ring-brand-line"
+                                : "bg-brand text-white hover:bg-brand-dark"
+                            }`}
+                          >
+                            {pinSaveState === "saving" ? (
+                              <>
+                                <RefreshIcon className="size-3.5 animate-spin" />
+                                <span>Saving…</span>
+                              </>
+                            ) : pinSaveState === "saved" ? (
+                              <>
+                                <CheckIcon className="size-3.5 text-[#177A44]" />
+                                <span>PIN Saved</span>
+                              </>
+                            ) : (
+                              <span>Save PIN</span>
+                            )}
+                          </button>
+                        </div>
+
+                        {pinSaveState === "saved" && pinSaveMessage && (
+                          <p
+                            role="status"
+                            aria-live="polite"
+                            className="flex items-center gap-2 rounded-xl border border-brand-line bg-brand-tint/70 px-3 py-2 text-xs font-semibold text-ink"
+                          >
+                            <CheckIcon className="size-3.5 shrink-0 text-[#177A44]" />
+                            <span>{pinSaveMessage}</span>
+                          </p>
+                        )}
+
+                        {pinSaveState === "error" && pinSaveMessage && (
+                          <p role="alert" className="text-xs font-semibold text-emergency">
+                            {pinSaveMessage}
+                          </p>
+                        )}
+                      </form>
                     </div>
                   </div>
 
