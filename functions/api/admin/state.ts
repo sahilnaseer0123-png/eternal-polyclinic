@@ -10,6 +10,7 @@ import {
   type CfPagesContext,
   type CloudMutation,
 } from "../../_lib/clinic-store";
+import { sendBookingConfirmationWhatsApp } from "../../_lib/whatsapp";
 
 export async function onRequestGet(context: CfPagesContext): Promise<Response> {
   const driver = resolveStorageDriver(context.env);
@@ -57,6 +58,16 @@ export async function onRequestPost(context: CfPagesContext): Promise<Response> 
 
   if (!mutation || typeof mutation.op !== "string") {
     return jsonResponse({ ok: false, error: "Missing mutation op" }, 400);
+  }
+
+  if (mutation.op === "upsert_appointment" && mutation.appointment && !mutation.appointment.whatsappSent) {
+    const waRes = await sendBookingConfirmationWhatsApp(mutation.appointment, context.env);
+    if (waRes.sent) {
+      mutation = {
+        op: "upsert_appointment",
+        appointment: { ...mutation.appointment, whatsappSent: true },
+      };
+    }
   }
 
   const nextState = await applyCloudMutation(driver, mutation);

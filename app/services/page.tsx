@@ -7,7 +7,7 @@ import { ReportCollectionSection } from "@/components/ReportCollectionSection";
 export const metadata: Metadata = {
   alternates: { canonical: "/services" },
   title: "Tests and services",
-  description: `${services.map((s) => s.name).join(", ")} at ${clinic.name}, Sopore.`,
+  description: `${services.map((s) => s.name).join(", ")} at ${clinic.name}, Sopore, for patients across Baramulla, Bandipora, Kupwara and North Kashmir.`,
 };
 
 export default function ServicesPage() {

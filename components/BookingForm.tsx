@@ -1,20 +1,23 @@
 "use client";
 
-// Booking request (design v3): doctor, day, time, details. Nothing is saved: the request opens in WhatsApp
-// addressed to the clinic (lib/booking.ts) and reception calls the patient to confirm. The form never claims
-// the visit is confirmed, because only reception can do that.
+// Instant on-website booking (design v4): doctor, day, time, details -> POST /api/book locks the slot,
+// issues an EP-... token slip on screen and triggers an automatic WhatsApp confirmation from the clinic.
+// A "Find My Token" tab lets patients look up / cancel by mobile number. No medical reason is ever asked.
 
 import { useRef, useState } from "react";
 import { clinic } from "@/data/clinic";
-import { bookingMessage, validateBooking, whatsappLink, type BookingErrors } from "@/lib/booking";
+import { type BookingErrors, validateBooking } from "@/lib/booking";
 import {
-  deleteAppointment,
-  generateToken,
+  cancelOnlineBooking,
+  confirmationTicketText,
   isDoctorOnLeave,
-  saveAppointment,
+  lookupBookingsByPhone,
+  submitOnlineBooking,
   useActiveDoctors,
   useBookedSlots,
   useDoctorStatuses,
+  type Appointment,
+  type LookupAppointment,
 } from "@/lib/appointments";
 import {
   addDays,
@@ -26,7 +29,7 @@ import {
   timeSlots,
   weekdayOf,
 } from "@/lib/schedule";
-import { PhoneIcon, WhatsAppIcon } from "./Icons";
+import { CheckIcon, PhoneIcon, PrinterIcon, WhatsAppIcon } from "./Icons";
 import { DoctorMark } from "./DoctorMark";
 
 const SHORT_DAY = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -52,6 +55,7 @@ function FieldError({ id, message }: { id: string; message?: string }) {
 export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; initialDoctorId?: string }) {
   const activeDoctors = useActiveDoctors();
   const statuses = useDoctorStatuses();
+  const [tab, setTab] = useState<"book" | "find">("book");
   const [nowAt, setNowAt] = useState(nowMs);
   const now = new Date(nowAt);
   const [doctorId, setDoctorId] = useState(initialDoctorId);
@@ -60,9 +64,12 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [website, setWebsite] = useState(""); // honeypot
   const [errors, setErrors] = useState<BookingErrors>({});
-  const [sentLink, setSentLink] = useState<string | null>(null);
-  const [bookedToken, setBookedToken] = useState<string | null>(null);
+  const [formMessage, setFormMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [confirmed, setConfirmed] = useState<{ apt: Appointment; whatsappSent: boolean } | null>(null);
+  const [cancelling, setCancelling] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
 
   const doctor = activeDoctors.find((d) => d.id === doctorId);
@@ -78,107 +85,128 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
     setDate("");
     setTime("");
     setErrors({});
+    setFormMessage("");
   }
 
-  function submit() {
+  async function submit() {
+    if (submitting) return;
     const current = new Date();
     setNowAt(current.getTime());
+    setFormMessage("");
     const result = validateBooking({ doctorId, date, time, name, phone, address }, activeDoctors, current);
     if (!result.ok) {
       setErrors(result.errors);
       formRef.current?.querySelector<HTMLElement>("[role=alert]")?.scrollIntoView({ block: "center" });
       return;
     }
-    const isAdminSession =
-      typeof window !== "undefined" && window.sessionStorage?.getItem("ep_reception_auth") === "true";
-
-    if (isAdminSession) {
-      const token = generateToken(result.data.date, doctor!.id, false);
-      setBookedToken(token);
-      try {
-        saveAppointment({
-          token,
-          doctorId: doctor!.id,
-          doctorName: doctor!.name ?? doctor!.speciality,
-          speciality: doctor!.speciality,
-          date: result.data.date,
-          time: result.data.time,
-          patientName: result.data.name.trim(),
-          patientPhone: result.data.phone,
-          patientAddress: result.data.address?.trim() || undefined,
-          type: "online",
-          status: "confirmed",
-          createdAt: current.getTime(),
-        });
-      } catch {
-        // Local storage protected or unavailable
-      }
-    } else {
-      setBookedToken(null);
+    setSubmitting(true);
+    const res = await submitOnlineBooking({ ...result.data, website });
+    setSubmitting(false);
+    if (res.ok) {
+      setErrors({});
+      setConfirmed({ apt: res.appointment, whatsappSent: res.whatsappSent });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
     }
-
-    const link = whatsappLink(clinic.whatsapp, bookingMessage(result.data, doctor!, clinic.name));
-    setErrors({});
-    setSentLink(link);
-    window.open(link, "_blank", "noopener");
+    if (res.status === 409) setTime("");
+    setErrors(res.errors);
+    setFormMessage(res.message ?? "");
+    formRef.current?.querySelector<HTMLElement>("[role=alert]")?.scrollIntoView({ block: "center" });
   }
 
-  if (sentLink && doctor) {
+  async function cancelConfirmed() {
+    if (!confirmed) return;
+    setCancelling(true);
+    const res = await cancelOnlineBooking(confirmed.apt.token, confirmed.apt.patientPhone);
+    setCancelling(false);
+    if (!res.ok) {
+      setFormMessage(res.error ?? "Could not cancel.");
+      return;
+    }
+    setConfirmed(null);
+    setTime("");
+    setFormMessage("Your previous slot was released. Pick a new time below.");
+  }
+
+  const tabs = (
+    <div role="tablist" aria-label="Booking options" className="no-print grid grid-cols-2 gap-1.5 rounded-2xl bg-sand p-1.5">
+      {(
+        [
+          ["book", "Book Appointment"],
+          ["find", "Find My Token"],
+        ] as const
+      ).map(([id, text]) => (
+        <button
+          key={id}
+          role="tab"
+          type="button"
+          aria-selected={tab === id}
+          onClick={() => setTab(id)}
+          className={`min-h-11 rounded-xl text-base font-bold transition-colors ${
+            tab === id ? "bg-brand text-white" : "text-ink hover:bg-white"
+          }`}
+        >
+          {text}
+        </button>
+      ))}
+    </div>
+  );
+
+  if (tab === "find") {
     return (
-      <div className="card rounded-3xl p-6 sm:p-9" aria-live="polite">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="eyebrow text-brand">Almost done</p>
-          {bookedToken && (
-            <span className="rounded-full bg-brand-tint border border-brand-line/60 px-3 py-0.5 text-xs font-bold text-brand tabular-nums lining-nums">
-              Token: #{bookedToken}
-            </span>
-          )}
-        </div>
-        <h2 className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] sm:text-5xl">
-          Press <em className="inline-block rounded-xl bg-brand-tint px-2.5 py-0.5 text-ink">Send</em> in WhatsApp
-        </h2>
-        <p className="mt-4 text-base text-muted">
-          Your request for {doctor.name ?? doctor.speciality} on {dateLabel(date)} at {formatTime(time)} is written and
-          waiting in WhatsApp. It reaches the clinic only after you press Send there. Reception then calls you to
-          confirm. Until that call, the time is not booked.
-        </p>
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-          <a
-            href={sentLink}
-            target="_blank"
-            rel="noopener noreferrer"
+      <div className="card flex min-w-0 flex-col gap-6 rounded-3xl p-5 sm:p-9">
+        {tabs}
+        <FindMyToken />
+      </div>
+    );
+  }
+
+  if (confirmed) {
+    const apt = confirmed.apt;
+    const waCopy = `https://wa.me/?text=${encodeURIComponent(confirmationTicketText(apt))}`;
+    return (
+      <div className="flex min-w-0 flex-col gap-4" aria-live="polite">
+        <div className="no-print">{tabs}</div>
+        <TokenSlip apt={apt} whatsappSent={confirmed.whatsappSent} />
+        {formMessage && (
+          <p role="alert" className="no-print text-sm font-semibold text-emergency">
+            {formMessage}
+          </p>
+        )}
+        <div className="no-print flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <button
+            type="button"
+            onClick={() => window.print()}
             className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark"
           >
-            <WhatsAppIcon className="size-4" />
-            Open WhatsApp again
-          </a>
+            <PrinterIcon className="size-4" />
+            Print / Save PDF slip
+          </button>
           <a
-            href={`tel:${clinic.phone}`}
+            href={waCopy}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-6 text-base font-bold hover:bg-ink hover:text-white"
           >
-            <PhoneIcon className="size-4" />
-            Call {clinic.phoneDisplay}
+            <WhatsAppIcon className="size-4" />
+            Save copy to WhatsApp
           </a>
+          <button
+            type="button"
+            disabled={cancelling}
+            onClick={cancelConfirmed}
+            className="inline-flex min-h-12 items-center justify-center rounded-xl px-4 text-base font-semibold text-brand underline disabled:opacity-60"
+          >
+            {cancelling ? "Releasing slot…" : "Cancel / change slot"}
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={() => {
-            if (bookedToken) {
-              deleteAppointment(bookedToken);
-              setBookedToken(null);
-            }
-            setSentLink(null);
-          }}
-          className="mt-5 min-h-11 text-base font-semibold text-brand underline"
-        >
-          Change the request
-        </button>
       </div>
     );
   }
 
   return (
     <div ref={formRef} className="card flex min-w-0 flex-col gap-8 rounded-3xl p-5 sm:p-9">
+      {tabs}
       <div className="flex items-center justify-between">
         <p className="eyebrow text-muted">Step {step} of 2</p>
         <div className="flex gap-1.5 w-28" aria-hidden="true">
@@ -391,25 +419,256 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
                 className={input}
               />
             </div>
+            <div aria-hidden="true" className="sr-only">
+              <label htmlFor="bk-website">Leave this field empty</label>
+              <input
+                id="bk-website"
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+              />
+            </div>
             <p className="text-sm text-muted">
-              We never ask the reason for your visit. The message names your doctor only, and it stays in your WhatsApp
-              chat.
+              We never ask the reason for your visit. Your confirmation message on WhatsApp names your doctor only.
             </p>
           </fieldset>
 
           <div>
+            {formMessage && (
+              <p role="alert" className="mb-3 text-sm font-semibold text-emergency">
+                {formMessage}
+              </p>
+            )}
             <button
               type="button"
               onClick={submit}
-              className="inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark"
+              disabled={submitting}
+              className="inline-flex min-h-13 w-full items-center justify-center gap-2 rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark disabled:opacity-60"
             >
-              <WhatsAppIcon className="size-4" />
-              Send request on WhatsApp
+              <CheckIcon className="size-4" />
+              {submitting ? "Confirming slot…" : "Confirm Appointment"}
             </button>
-            <p className="mt-3 text-center text-sm text-muted">Reception will call you to confirm.</p>
+            <p className="mt-3 text-center text-sm text-muted">
+              Your slot is locked instantly and a confirmation is sent to your WhatsApp.
+            </p>
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+function TokenSlip({ apt, whatsappSent }: { apt: Appointment; whatsappSent?: boolean }) {
+  return (
+    <div className="appointment-slip card rounded-3xl p-6 sm:p-9">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-line bg-brand-tint px-3 py-1 text-xs font-bold uppercase tracking-wider text-ink">
+          <CheckIcon className="size-3.5" /> Appointment Confirmed
+        </span>
+        <span className="font-display text-xl font-semibold tabular-nums lining-nums">Token #{apt.token}</span>
+      </div>
+      <h2 className="mt-4 text-[1.75rem] font-semibold leading-tight tracking-[-0.03em] sm:text-4xl">
+        {apt.doctorName}
+      </h2>
+      <p className="mt-1 text-lg font-semibold text-charcoal tabular-nums lining-nums">
+        {dateLabel(apt.date)} · {formatTime(apt.time)}
+      </p>
+      <dl className="mt-5 grid gap-2 rounded-2xl border border-line bg-ground p-4 text-base sm:grid-cols-2">
+        <div>
+          <dt className="text-sm text-muted">Patient</dt>
+          <dd className="font-semibold">{apt.patientName}</dd>
+        </div>
+        <div>
+          <dt className="text-sm text-muted">Mobile</dt>
+          <dd className="font-semibold tabular-nums lining-nums">+91 {apt.patientPhone}</dd>
+        </div>
+        {apt.patientAddress && (
+          <div>
+            <dt className="text-sm text-muted">Village / area</dt>
+            <dd className="font-semibold">{apt.patientAddress}</dd>
+          </div>
+        )}
+        <div className="sm:col-span-2">
+          <dt className="text-sm text-muted">Clinic</dt>
+          <dd className="font-semibold">
+            {clinic.name}, {clinic.address}
+          </dd>
+        </div>
+      </dl>
+      <p className="mt-4 text-base text-charcoal">
+        Arrive 10–15 minutes early and show this token at reception. Pay the consultation fee at reception. Helpline:{" "}
+        {clinic.phoneDisplay}.
+      </p>
+      <p className="no-print mt-3 text-sm font-semibold text-ink">
+        {whatsappSent
+          ? `✓ Confirmation message sent to your WhatsApp (+91 ${apt.patientPhone}).`
+          : "Keep this slip safe: screenshot it, print it, or use Find My Token with your mobile number."}
+      </p>
+    </div>
+  );
+}
+
+function FindMyToken() {
+  const [phone, setPhone] = useState("");
+  const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [results, setResults] = useState<LookupAppointment[] | null>(null);
+  const [printing, setPrinting] = useState<string | null>(null);
+
+  async function search(e?: React.FormEvent) {
+    e?.preventDefault();
+    setError("");
+    if (!/^\d{10}$/.test(phone.replace(/\D/g, "").slice(-10))) {
+      setError("Enter the 10-digit mobile number used while booking.");
+      return;
+    }
+    setLoading(true);
+    const res = await lookupBookingsByPhone(phone, token);
+    setLoading(false);
+    if (!res.ok) {
+      setError(res.error);
+      setResults(null);
+      return;
+    }
+    setResults(res.appointments);
+  }
+
+  async function cancel(a: Appointment) {
+    if (!window.confirm(`Cancel token ${a.token} with ${a.doctorName}?`)) return;
+    const res = await cancelOnlineBooking(a.token, a.patientPhone);
+    if (!res.ok) {
+      setError(res.error ?? "Could not cancel.");
+      return;
+    }
+    setResults((r) => r?.map((x) => (x.token === a.token ? { ...x, status: "cancelled" } : x)) ?? null);
+  }
+
+  const printed = results?.find((r) => r.token === printing);
+
+  return (
+    <div className="flex flex-col gap-5">
+      <form onSubmit={search} className="no-print flex flex-col gap-4">
+        <h2 className="font-display text-2xl font-medium tracking-tight sm:text-3xl">Find my token</h2>
+        <div>
+          <label htmlFor="ft-phone" className="mb-1.5 block text-sm font-bold">
+            Mobile number
+          </label>
+          <input
+            id="ft-phone"
+            type="tel"
+            inputMode="numeric"
+            autoComplete="tel-national"
+            placeholder="10-digit mobile number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className={input}
+          />
+        </div>
+        <div>
+          <label htmlFor="ft-token" className="mb-1.5 block text-sm font-bold">
+            Token no. <span className="font-medium text-muted">(optional)</span>
+          </label>
+          <input
+            id="ft-token"
+            type="text"
+            placeholder="EP-AK1031-01"
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            className={input}
+          />
+        </div>
+        {error && (
+          <p role="alert" className="text-sm font-semibold text-emergency">
+            {error}
+          </p>
+        )}
+        <button
+          type="submit"
+          disabled={loading}
+          className="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark disabled:opacity-60"
+        >
+          {loading ? "Searching…" : "Find my appointments"}
+        </button>
+      </form>
+
+      {results && results.length === 0 && (
+        <p className="no-print rounded-2xl bg-sand p-4 text-base text-charcoal">
+          No bookings found for this number. Call {clinic.phoneDisplay} if you need help.
+        </p>
+      )}
+
+      {printed && (
+        <div className="hidden print:block">
+          <TokenSlip apt={printed} />
+        </div>
+      )}
+
+      <ul className="no-print flex flex-col gap-3">
+        {results?.map((a) => {
+          const live = a.doctorLiveStatus;
+          return (
+            <li key={a.token} className="rounded-2xl border border-line-strong p-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-display text-lg font-semibold tabular-nums lining-nums">#{a.token}</span>
+                <span className="rounded-full bg-sand px-2.5 py-0.5 text-xs font-bold capitalize">
+                  {a.status.replace("_", " ")}
+                </span>
+                {live?.state === "in_clinic" && (
+                  <span className="rounded-full border border-brand-line bg-brand-tint px-2.5 py-0.5 text-xs font-bold">
+                    Doctor In Clinic
+                  </span>
+                )}
+                {live?.state === "delayed" && (
+                  <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-800">
+                    Delayed ~{live.delayMinutes ?? 30}m
+                  </span>
+                )}
+                {live?.state === "cancelled" && (
+                  <span className="rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-800">
+                    OPD Cancelled
+                  </span>
+                )}
+              </div>
+              <p className="mt-1.5 text-base">
+                {a.doctorName} · {dateLabel(a.date)} · {formatTime(a.time)}
+              </p>
+              {a.status !== "cancelled" && a.status !== "completed" && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPrinting(a.token);
+                      setTimeout(() => window.print(), 50);
+                    }}
+                    className="inline-flex min-h-11 items-center gap-2 rounded-xl border-[1.5px] border-ink px-4 text-base font-bold hover:bg-ink hover:text-white"
+                  >
+                    <PrinterIcon className="size-4" /> Print slip
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => cancel(a)}
+                    className="min-h-11 rounded-xl px-4 text-base font-semibold text-emergency underline"
+                  >
+                    Cancel booking
+                  </button>
+                </div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+      <p className="no-print text-sm text-muted">
+        Need help? Call{" "}
+        <a href={`tel:${clinic.phone}`} className="inline-flex items-center gap-1 font-bold text-brand underline">
+          <PhoneIcon className="size-3.5" />
+          {clinic.phoneDisplay}
+        </a>
+        .
+      </p>
     </div>
   );
 }

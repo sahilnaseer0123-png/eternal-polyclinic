@@ -10,17 +10,19 @@ import { PhoneIcon, ShieldCheckIcon, WhatsAppIcon } from "@/components/Icons";
 export const metadata: Metadata = {
   alternates: { canonical: "/book" },
   title: "Book a visit",
-  description: `Schedule a consultation slot with visiting specialists at ${clinic.name}, Opposite SDH Hospital, Sopore. Send your request on WhatsApp; reception confirms by phone.`,
+  description: `Schedule a consultation slot with visiting specialists at ${clinic.name}, Opposite SDH Hospital, Sopore. Your slot is confirmed instantly online with a digital token, and a confirmation goes to your WhatsApp.`,
 };
 
 export default function BookPage() {
   return (
     <>
-      <PageIntro title="Book a visit">
-        Pick a doctor, a day and a time. Your request opens in WhatsApp, and reception calls you to confirm.
+      <div className="no-print">
+        <PageIntro title="Book a visit">
+        Pick a doctor, a day and a time. Your slot is confirmed instantly and your token is sent to your WhatsApp.
       </PageIntro>
+      </div>
 
-      <div className="mx-auto max-w-6xl px-5 pb-4 sm:px-6">
+      <div className="no-print mx-auto max-w-6xl px-5 pb-4 sm:px-6">
         <EmergencyNote />
       </div>
 
@@ -29,14 +31,14 @@ export default function BookPage() {
           <BookingSection />
         </Suspense>
 
-        <div className="flex flex-col gap-5">
+        <div className="no-print flex flex-col gap-5">
           <div className="card rounded-3xl p-6">
             <h2 className="font-display text-2xl font-medium tracking-tight">How it works</h2>
             <ol className="mt-4 flex flex-col gap-4 text-base text-charcoal">
               {[
                 ["Choose", "a doctor, a day and a time."],
-                ["Send", "the request on WhatsApp. It only reaches the clinic when you press Send."],
-                ["Wait for our call.", "Reception phones you to confirm. The time is booked only after that."],
+                ["Confirm.", "Your slot is locked instantly and you get a digital token slip."],
+                ["Check WhatsApp.", "We message your confirmation. Lost it? Use Find My Token with your mobile number."],
               ].map(([bold, rest], i) => (
                 <li key={bold} className="flex items-start gap-3">
                   <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-tint font-display text-lg font-medium text-brand tabular-nums lining-nums">
@@ -56,7 +58,7 @@ export default function BookPage() {
               <span className="eyebrow">Your privacy</span>
             </div>
             <p className="mt-2 text-base text-charcoal">
-              This website saves nothing. Your request goes into your own WhatsApp chat with the clinic, and it stays there.{" "}
+              We save only your token, name, mobile number, optional area, doctor and slot in the clinic&apos;s PIN-protected register, to hold your slot and send your WhatsApp confirmation. We never ask why you are visiting, and public pages never show anyone&apos;s details.{" "}
               <Link href="/privacy" className="font-semibold text-brand underline">
                 Read the privacy notice
               </Link>

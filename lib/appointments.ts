@@ -4,6 +4,7 @@
 
 import { useSyncExternalStore } from "react";
 import { doctors as defaultDoctors, type Doctor, type OpdSession } from "@/data/clinic";
+import { normalizePhone, type BookingErrors, type BookingRequest } from "./booking";
 import { clinicClock, formatTime, dateLabel } from "./schedule";
 
 export type AppointmentStatus = "confirmed" | "arrived" | "in_consultation" | "completed" | "cancelled";
@@ -22,6 +23,7 @@ export type Appointment = {
   status: AppointmentStatus;
   createdAt: number;
   notes?: string;
+  whatsappSent?: boolean;
 };
 
 export type DoctorLiveState = "scheduled" | "in_clinic" | "delayed" | "cancelled";
@@ -49,12 +51,15 @@ export type PublicBookedSlot = {
   time: string;
 };
 
+export type WhatsAppChannelStatus = "meta_cloud_api" | "twilio" | "webhook" | "unconfigured";
+
 export type CloudConnectionState = {
   checked: boolean;
   configured: boolean;
   authenticated: boolean;
   storageDriver: "d1" | "kv" | "none";
   usingDefaultPin: boolean;
+  whatsappChannel: WhatsAppChannelStatus;
   lastSyncedAt: number | null;
 };
 
@@ -84,6 +89,7 @@ let cloudStatusSnapshot: CloudConnectionState = {
   authenticated: false,
   storageDriver: "none",
   usingDefaultPin: false,
+  whatsappChannel: "unconfigured",
   lastSyncedAt: null,
 };
 
@@ -315,6 +321,7 @@ export async function checkCloudAdminSession(): Promise<CloudConnectionState> {
       authenticated?: boolean;
       storageDriver?: "d1" | "kv" | "none";
       usingDefaultPin?: boolean;
+      whatsappChannel?: WhatsAppChannelStatus;
     };
     cloudStatusSnapshot = {
       ...cloudStatusSnapshot,
@@ -323,6 +330,7 @@ export async function checkCloudAdminSession(): Promise<CloudConnectionState> {
       authenticated: Boolean(data.authenticated),
       storageDriver: data.storageDriver ?? "none",
       usingDefaultPin: Boolean(data.usingDefaultPin),
+      whatsappChannel: data.whatsappChannel ?? "unconfigured",
     };
     notifyChange("ep:cloud_status_updated");
 
@@ -567,6 +575,130 @@ export function generateToken(
   return `EP-${docCode}${dateCode}-${String(nextNumber).padStart(2, "0")}${suffix}`;
 }
 
+
+// ---------------------------------------------------------------------------
+// Public on-website booking client (POST/GET/DELETE /api/book)
+// ---------------------------------------------------------------------------
+
+export type OnlineBookingResult =
+  | { ok: true; appointment: Appointment; whatsappSent: boolean; alreadyBooked?: boolean }
+  | { ok: false; errors: BookingErrors; message?: string; status: number };
+
+export async function submitOnlineBooking(payload: BookingRequest & { website?: string }): Promise<OnlineBookingResult> {
+  try {
+    const res = await fetch("/api/book", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (res.status === 404 || res.status === 503) return localBookingFallback(payload);
+    const data = (await res.json()) as {
+      ok?: boolean;
+      appointment?: Appointment;
+      alreadyBooked?: boolean;
+      whatsapp?: { sent?: boolean };
+      errors?: BookingErrors;
+      error?: string;
+    };
+    if (res.ok && data.ok && data.appointment) {
+      void refreshPublicLiveState(true);
+      return {
+        ok: true,
+        appointment: data.appointment,
+        whatsappSent: Boolean(data.whatsapp?.sent),
+        alreadyBooked: data.alreadyBooked,
+      };
+    }
+    if (res.status === 409) void refreshPublicLiveState(true);
+    return { ok: false, errors: data.errors ?? {}, message: data.error, status: res.status };
+  } catch {
+    return {
+      ok: false,
+      errors: {},
+      message: "Could not reach the booking server. Check your internet or call reception.",
+      status: 0,
+    };
+  }
+}
+
+function localBookingFallback(payload: BookingRequest): OnlineBookingResult {
+  // Local `next dev` (no Pages Functions): keep the flow working on this device only.
+  const doctor = getActiveDoctors().find((d) => d.id === payload.doctorId);
+  if (!doctor) return { ok: false, errors: { doctorId: "Please choose a doctor." }, status: 422 };
+  if (isSlotBooked(doctor.id, payload.date, payload.time)) {
+    return { ok: false, errors: { time: "That time slot is already booked. Please pick another." }, status: 409 };
+  }
+  const appointment: Appointment = {
+    token: generateToken(payload.date, doctor.id, false),
+    doctorId: doctor.id,
+    doctorName: doctor.name ?? doctor.speciality,
+    speciality: doctor.speciality,
+    date: payload.date,
+    time: payload.time,
+    patientName: payload.name.trim(),
+    patientPhone: normalizePhone(payload.phone),
+    patientAddress: payload.address?.trim() || undefined,
+    type: "online",
+    status: "confirmed",
+    createdAt: Date.now(),
+  };
+  saveAppointment(appointment);
+  return { ok: true, appointment, whatsappSent: false };
+}
+
+export type LookupAppointment = Appointment & { doctorLiveStatus?: DoctorLiveStatus | null };
+
+export async function lookupBookingsByPhone(
+  phone: string,
+  token?: string,
+): Promise<{ ok: true; appointments: LookupAppointment[] } | { ok: false; error: string }> {
+  const clean = normalizePhone(phone);
+  try {
+    const qs = new URLSearchParams({ phone: clean });
+    if (token?.trim()) qs.set("token", token.trim());
+    const res = await fetch(`/api/book?${qs.toString()}`, { cache: "no-store" });
+    if (res.status === 404 || res.status === 503) {
+      const t = token?.trim().toUpperCase();
+      return {
+        ok: true,
+        appointments: getAllAppointments().filter(
+          (a) => a.patientPhone === clean && (!t || a.token.toUpperCase() === t),
+        ),
+      };
+    }
+    const data = (await res.json()) as { ok?: boolean; appointments?: LookupAppointment[]; error?: string };
+    if (!res.ok || !data.ok) return { ok: false, error: data.error ?? "Could not look up your token." };
+    return { ok: true, appointments: data.appointments ?? [] };
+  } catch {
+    return { ok: false, error: "Could not reach the server. Please try again or call reception." };
+  }
+}
+
+export async function cancelOnlineBooking(token: string, phone: string): Promise<{ ok: boolean; error?: string }> {
+  const clean = normalizePhone(phone);
+  try {
+    const res = await fetch("/api/book", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, phone: clean }),
+    });
+    if (res.status === 404 && !(await res.clone().json().catch(() => null))?.error) {
+      updateAppointmentStatus(token, "cancelled");
+      return { ok: true };
+    }
+    if (res.status === 503) {
+      updateAppointmentStatus(token, "cancelled");
+      return { ok: true };
+    }
+    const data = (await res.json()) as { ok?: boolean; error?: string };
+    if (!res.ok || !data.ok) return { ok: false, error: data.error ?? "Could not cancel. Please call reception." };
+    void refreshPublicLiveState(true);
+    return { ok: true };
+  } catch {
+    return { ok: false, error: "Could not reach the server. Please call reception." };
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Doctor Live Status & Delay Radar
 // ---------------------------------------------------------------------------
@@ -768,7 +900,6 @@ export function confirmationTicketText(apt: Appointment): string {
     apt.patientAddress ? `📍 *Area/Village:* ${apt.patientAddress}` : null,
     `📱 *Mobile:* ${apt.patientPhone}`,
     `🩺 *Consultant:* ${apt.doctorName}`,
-    `🔬 *Speciality:* ${apt.speciality}`,
     `📅 *Date:* ${apt.date}`,
     `⏰ *Slot Time:* ${formatTime(apt.time)}`,
     `──────────────────────────`,
@@ -1296,6 +1427,7 @@ const serverCloudStatus: CloudConnectionState = {
   authenticated: false,
   storageDriver: "none",
   usingDefaultPin: false,
+  whatsappChannel: "unconfigured",
   lastSyncedAt: null,
 };
 

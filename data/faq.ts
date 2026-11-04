@@ -22,12 +22,12 @@ export const faqs: Faq[] = [
   {
     question: "Do I need an account to book?",
     answer:
-      "No. Choose a doctor, a day and a time, add your name and mobile number, and send the request on WhatsApp. Reception calls you to confirm the slot.",
+      "No. Choose a doctor, a day and a time, add your name and mobile number, and tap Confirm Appointment. Your slot is locked instantly, you get a digital token slip on screen, and a confirmation is sent to your WhatsApp. Lost the slip? Use Find My Token with your mobile number.",
   },
   {
     question: "Will anyone know why I'm visiting?",
     answer:
-      "The website only asks for your name, mobile number, and optional village/area, and saves nothing in your browser. The booking message names your doctor, never the speciality or the reason for your visit. Like any WhatsApp message, it stays in your chat, so delete it if others use your phone.",
+      "The website only asks for your name, mobile number, and optional village/area, never the reason for your visit. Your booking is kept in the clinic's PIN-protected register only to hold your slot. The WhatsApp confirmation names your doctor, never the speciality, but like any WhatsApp message it stays in your chat, so delete it if others use your phone.",
   },
   {
     question: "How much does a consultation cost?",

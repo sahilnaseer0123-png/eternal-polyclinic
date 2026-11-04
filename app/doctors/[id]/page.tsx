@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: PageProps<"/doctors/[id]">): 
   return {
     alternates: { canonical: `/doctors/${doctor.id}` },
     title: doctor.name ? `${doctor.name}, ${doctor.speciality}` : doctor.speciality,
-    description: `${title(doctor)} at ${clinic.name}, Sopore. ${days ? `Sits on ${days}.` : (doctor.availability ? `${doctor.availability}.` : `Call ${clinic.phoneDisplay} to confirm timings.`)}`,
+    description: `${title(doctor)} at ${clinic.name}, Sopore (North Kashmir). ${days ? `Sits on ${days}.` : (doctor.availability ? `${doctor.availability}.` : `Call ${clinic.phoneDisplay} to confirm timings.`)}`,
   };
 }
 
@@ -155,7 +155,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
                   />
                 </p>
                 <p className="mt-1 text-xs text-muted">
-                  Book online to reserve your slot; reception calls you to confirm your token.
+                  Book online: your slot and token are confirmed instantly on WhatsApp.
                 </p>
               </div>
             )}

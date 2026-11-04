@@ -1,7 +1,7 @@
 // Shared storage, authentication, and conflict-free state engine for Cloudflare Pages Functions.
 // Supports BOTH Cloudflare D1 (`EP_DB`) and Cloudflare Workers KV (`EP_KV`) out of the box with zero external npm dependencies.
 
-import type { Doctor, OpdSession } from "../../data/clinic";
+import { doctors as defaultDoctors, type Doctor, type OpdSession } from "../../data/clinic";
 import type {
   Appointment,
   AppointmentStatus,
@@ -35,11 +35,22 @@ export interface CloudEnv {
   EP_KV?: CfKVNamespace;
   ADMIN_PIN?: string;
   SESSION_SECRET?: string;
+  // Optional instant outbound WhatsApp Business API credentials
+  WHATSAPP_ACCESS_TOKEN?: string;
+  WHATSAPP_PHONE_NUMBER_ID?: string;
+  WHATSAPP_TEMPLATE_NAME?: string;
+  WHATSAPP_TEMPLATE_LANG?: string;
+  TWILIO_ACCOUNT_SID?: string;
+  TWILIO_AUTH_TOKEN?: string;
+  TWILIO_WHATSAPP_FROM?: string;
+  WHATSAPP_WEBHOOK_URL?: string;
+  WHATSAPP_WEBHOOK_SECRET?: string;
 }
 
 export interface CfPagesContext {
   request: Request;
   env: CloudEnv;
+  waitUntil?: (promise: Promise<unknown>) => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -546,6 +557,24 @@ export async function applyCloudMutation(
   }
 
   return writeClinicState(driver, state);
+}
+
+/** Resolves the live list of active doctors on the server (merging built-in doctors + overrides + custom doctors) */
+export function buildActiveDoctorsFromState(state: CloudClinicState): Doctor[] {
+  const mergedDefaults = defaultDoctors
+    .filter((doc) => !state.overrides[doc.id]?.deactivated)
+    .map((doc) => {
+      const ov = state.overrides[doc.id];
+      if (!ov) return doc;
+      return {
+        ...doc,
+        opd: ov.customOpd ?? doc.opd,
+        availability: ov.onLeave
+          ? `On Leave${ov.leaveUntil ? ` until ${ov.leaveUntil}` : ""}`
+          : doc.availability,
+      };
+    });
+  return [...mergedDefaults, ...state.customDoctors];
 }
 
 /** Builds a strictly anonymized public payload (ZERO patient names, phone numbers, addresses, or tokens) */

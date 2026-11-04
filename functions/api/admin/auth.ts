@@ -12,15 +12,18 @@ import {
   verifyRequestSession,
   type CfPagesContext,
 } from "../../_lib/clinic-store";
+import { getConfiguredWhatsAppChannel } from "../../_lib/whatsapp";
 
 export async function onRequestGet(context: CfPagesContext): Promise<Response> {
   const driver = resolveStorageDriver(context.env);
+  const whatsappChannel = getConfiguredWhatsAppChannel(context.env);
   if (!driver) {
     return jsonResponse({
       configured: false,
       authenticated: false,
       storageDriver: "none",
       usingDefaultPin: false,
+      whatsappChannel,
     });
   }
 
@@ -32,6 +35,7 @@ export async function onRequestGet(context: CfPagesContext): Promise<Response> {
     authenticated,
     storageDriver: driver.kind,
     usingDefaultPin,
+    whatsappChannel,
   });
 }
 

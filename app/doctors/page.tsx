@@ -9,7 +9,7 @@ import { PageIntro } from "@/components/SiteChrome";
 export const metadata: Metadata = {
   alternates: { canonical: "/doctors" },
   title: "Our doctors and OPD schedule",
-  description: `Specialists at ${clinic.name}, Sopore, the days they sit, and how to book.`,
+  description: `Specialists at ${clinic.name}, Sopore, the days they sit, and how to book online. Serving Baramulla, Bandipora, Kupwara and North Kashmir.`,
 };
 
 export default function DoctorsPage() {

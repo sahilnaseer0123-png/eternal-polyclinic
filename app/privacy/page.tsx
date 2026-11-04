@@ -25,8 +25,7 @@ export default function PrivacyPage() {
             <section>
               <h2>In short</h2>
               <p>
-                To book, you share your name, mobile number, the doctor, and the day and time you want. You send this to
-                us yourself on WhatsApp. We use it only to arrange your appointment. We never ask why you are visiting.
+                To book, you share your name, mobile number, the doctor, and the day and time you want. You enter this on our booking page, and we send your confirmation to your WhatsApp. We use it only to arrange your appointment. We never ask why you are visiting.
               </p>
             </section>
 
@@ -53,17 +52,11 @@ export default function PrivacyPage() {
               <li>The doctor you chose, and the day and time you want</li>
             </ul>
             <p className="mt-3">
-              The online booking form does not store these on the website. When you press &quot;Send request on
-              WhatsApp&quot;, they are put into a WhatsApp message on your own phone. We receive them only if you press
-              Send in WhatsApp. Nothing is saved in your browser. Once sent, the message stays in the WhatsApp chat on
-              your phone and on the clinic&apos;s phone, like any WhatsApp message; you can delete it from your side at
-              any time.
-            </p>
-            <p className="mt-3">
-              When reception confirms your appointment by phone or registers you as a walk-in at the clinic desk, staff
-              record your token number, name, mobile number, optional area, doctor, and slot time in our PIN-protected
-              clinic register (hosted on Cloudflare) to manage the day&apos;s OPD queue and mark booked time slots as
-              unavailable. Public pages never show any patient&apos;s name, number, or token.
+              When you press &quot;Confirm Appointment&quot;, we store your token number, name, mobile number, optional area,
+              doctor, and slot time in our PIN-protected clinic register (hosted on Cloudflare). This holds your slot,
+              lets reception manage the day&apos;s OPD queue, lets you look up or cancel your token with your mobile
+              number, and lets us send your confirmation on WhatsApp. Nothing is saved in your browser. Reception also
+              records the same details when you register as a walk-in at the desk. Public pages never show any patient&apos;s name, number, or token.
             </p>
           </section>
 
@@ -80,7 +73,7 @@ export default function PrivacyPage() {
           <section>
             <h2>How we use your details</h2>
             <p>
-              Only to arrange and confirm your appointment, which usually means calling you on the number you gave. We
+              Only to arrange and confirm your appointment, which means sending your WhatsApp confirmation and, if the doctor is delayed or unavailable, calling you on the number you gave. We
               do not sell your details or use them for advertising.
             </p>
           </section>
@@ -89,7 +82,7 @@ export default function PrivacyPage() {
             <h2>Other services involved</h2>
             <ul>
               <li>
-                <strong>WhatsApp</strong> carries your booking message, under WhatsApp&apos;s own privacy policy.
+                <strong>WhatsApp</strong> carries your booking confirmation message, under WhatsApp&apos;s own privacy policy.
               </li>
               <li>
                 <strong>Cloudflare</strong> hosts this website. It handles basic technical data, such as IP addresses, to

@@ -22,6 +22,9 @@ const SPECIALTY: Record<DoctorCategory, string[]> = {
 /** In-house tests that are medical tests in schema.org terms. The pharmacy isn't one, so it's left out. */
 const TESTS = new Set(["ultrasound", "pediatric-echo", "adult-echo", "uroflowmetry", "lab"]);
 
+/** Towns and districts patients travel from, for local search ("doctor in Baramulla"). */
+export const AREAS_SERVED = ["Sopore", "Baramulla", "Bandipora", "Kupwara", "Handwara", "Rafiabad", "North Kashmir"];
+
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 export const doctorUrl = (d: Doctor) => `${clinic.siteUrl}/doctors/${d.id}`;
@@ -46,6 +49,7 @@ export function clinicSchema() {
     },
     geo: { "@type": "GeoCoordinates", latitude: clinic.location.lat, longitude: clinic.location.lng },
     hasMap: clinic.mapUrl,
+    areaServed: AREAS_SERVED.map((name) => ({ "@type": "AdministrativeArea", name })),
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: clinic.googleRating.score,
@@ -66,7 +70,7 @@ export function clinicSchema() {
       .map((s) => ({ "@type": "MedicalTest", name: s.name, description: s.description })),
     potentialAction: {
       "@type": "ReserveAction",
-      name: "Request an appointment",
+      name: "Book an appointment",
       target: { "@type": "EntryPoint", urlTemplate: `${clinic.siteUrl}/book` },
     },
   };
@@ -81,7 +85,8 @@ export function doctorSchema(d: Doctor) {
     "@id": `${doctorUrl(d)}#physician`,
     name: d.name,
     url: doctorUrl(d),
-    description: `${d.speciality} (${d.degree}) at ${clinic.name}, Sopore.`,
+    description: `${d.speciality} (${d.degree}) at ${clinic.name}, Sopore. Serving patients from Baramulla, Bandipora, Kupwara, Handwara and North Kashmir.`,
+    areaServed: AREAS_SERVED.map((name) => ({ "@type": "AdministrativeArea", name })),
     medicalSpecialty: SPECIALTY[d.category],
     knowsAbout: d.concerns,
     practicesAt: { "@id": CLINIC_ID },

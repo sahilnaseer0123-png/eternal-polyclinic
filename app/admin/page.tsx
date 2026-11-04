@@ -48,6 +48,7 @@ import {
   type DoctorLiveState,
 } from "@/lib/appointments";
 import { DoctorMark } from "@/components/DoctorMark";
+import { CounterQrPoster } from "@/components/CounterQrPoster";
 import {
   CalendarCheckIcon,
   CheckIcon,
@@ -153,6 +154,18 @@ export default function AdminPage() {
   const [walkInPhone, setWalkInPhone] = useState<string>("");
   const [walkInError, setWalkInError] = useState<string>("");
   const [walkInSuccessSlip, setWalkInSuccessSlip] = useState<Appointment | null>(null);
+
+  // Print mode: false = OPD sheet / walk-in slip, true = counter QR poster
+  const [posterPrint, setPosterPrint] = useState<boolean>(false);
+  function printPoster() {
+    setPosterPrint(true);
+    const reset = () => {
+      setPosterPrint(false);
+      window.removeEventListener("afterprint", reset);
+    };
+    window.addEventListener("afterprint", reset);
+    setTimeout(() => window.print(), 250);
+  }
 
   // Broadcast copy toast
   const [broadcastToast, setBroadcastToast] = useState<string>("");
@@ -900,7 +913,7 @@ export default function AdminPage() {
                         No patients scheduled for {dateLabel(selectedDate)}
                       </h2>
                       <p className="mx-auto mt-2 max-w-md text-sm sm:text-base text-muted leading-relaxed">
-                        Online bookings confirmed at reception and walk-ins added with{" "}
+                        Online bookings made on the website (instantly confirmed) and walk-ins added with{" "}
                         <strong className="font-semibold text-ink">Add Walk-In</strong> appear here in slot order.
                       </p>
                     </div>
@@ -967,6 +980,11 @@ export default function AdminPage() {
                                   >
                                     {apt.type === "walk_in" ? "Walk-In" : "Online"}
                                   </span>
+                                  {apt.whatsappSent && (
+                                    <span className="rounded-full border border-brand-line bg-white px-2.5 py-0.5 text-[11px] font-bold text-ink">
+                                      ✓ WA Sent
+                                    </span>
+                                  )}
                                 </div>
 
                                 <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted">
@@ -1585,6 +1603,62 @@ export default function AdminPage() {
                     </div>
                   </div>
 
+                  {/* WhatsApp auto-confirmation status + counter QR poster */}
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div className="card rounded-3xl p-6">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="flex size-12 items-center justify-center rounded-xl bg-brand-tint text-ink ring-1 ring-brand-line/60">
+                          <WhatsAppIcon className="size-6" />
+                        </span>
+                        <span
+                          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-bold ${
+                            cloudStatus.whatsappChannel !== "unconfigured"
+                              ? "border-brand-line bg-brand-tint text-ink"
+                              : "border-amber-200 bg-amber-50 text-amber-900"
+                          }`}
+                        >
+                          {cloudStatus.whatsappChannel === "meta_cloud_api"
+                            ? "Meta Cloud API active"
+                            : cloudStatus.whatsappChannel === "twilio"
+                              ? "Twilio active"
+                              : cloudStatus.whatsappChannel === "webhook"
+                                ? "Gateway webhook active"
+                                : "Awaiting API credentials"}
+                        </span>
+                      </div>
+                      <h3 className="mt-4 font-display text-xl font-medium tracking-tight text-ink">
+                        Automatic WhatsApp confirmation
+                      </h3>
+                      <p className="mt-1.5 text-sm text-muted leading-relaxed">
+                        {cloudStatus.whatsappChannel !== "unconfigured"
+                          ? "Every online booking and walk-in token is sent to the patient's WhatsApp automatically. Rows marked ✓ WA Sent were delivered to the gateway."
+                          : "Bookings are confirmed on screen, but automatic WhatsApp messages need a WhatsApp Business API token (Meta Cloud API, Twilio or a gateway webhook) added to Cloudflare secrets."}
+                      </p>
+                    </div>
+
+                    <div className="card rounded-3xl p-6 flex flex-col justify-between gap-5">
+                      <div>
+                        <span className="flex size-12 items-center justify-center rounded-xl bg-brand-tint text-ink ring-1 ring-brand-line/60">
+                          <PrinterIcon className="size-6" />
+                        </span>
+                        <h3 className="mt-4 font-display text-xl font-medium tracking-tight text-ink">
+                          Counter QR poster
+                        </h3>
+                        <p className="mt-1.5 text-sm text-muted leading-relaxed">
+                          Print an A4 poster with QR codes for online booking and for collecting lab &amp; scan reports on WhatsApp.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={printPoster}
+                        className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-dark transition-colors cursor-pointer"
+                      >
+                        <PrinterIcon className="size-4 shrink-0" />
+                        <span>Print Counter QR Poster</span>
+                      </button>
+                    </div>
+                  </div>
+
                   {/* Historical OPD Records by Date */}
                   <div className="card rounded-3xl p-6 flex flex-col gap-4">
                     <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
@@ -2138,7 +2212,9 @@ export default function AdminPage() {
       {/* DEDICATED PRINT LAYOUT: TOKEN SLIP OR DAILY OPD REGISTER SHEET          */}
       {/* ======================================================================= */}
       <div className="print-only hidden text-black">
-        {walkInSuccessSlip ? (
+        {posterPrint ? (
+          <CounterQrPoster />
+        ) : walkInSuccessSlip ? (
           <div className="appointment-slip text-left">
             <div className="border-b-2 border-black pb-3 mb-4 flex items-start justify-between gap-4">
               <div>
