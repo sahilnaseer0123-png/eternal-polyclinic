@@ -25,7 +25,7 @@ import { onRequestPost as webhookPost } from "@/functions/api/whatsapp/webhook";
 import { onRequestPost as bookPost } from "@/functions/api/book";
 import { createTestD1, fakeWhatsApp, tinyPdf } from "./helpers/d1";
 
-const BASE = "https://eternal-polyclinic.pages.dev";
+const BASE = "https://eternalpolyclinic.com";
 const META = { WHATSAPP_ACCESS_TOKEN: "test-token", WHATSAPP_PHONE_NUMBER_ID: "1234567890", WHATSAPP_TEMPLATE_APPOINTMENT: "appointment_confirmation", WHATSAPP_TEMPLATE_LAB_REPORT: "lab_report_ready", WHATSAPP_APP_SECRET: "app-secret", WHATSAPP_VERIFY_TOKEN: "verify" };
 
 function makeEnv(extra: Partial<CloudEnv> = {}): CloudEnv {
@@ -292,7 +292,7 @@ test("lab report: upload → Ready sends the actual PDF + secure link once; pati
     const bodyParams = msg.template.components.find((c) => c.type === "body")!.parameters;
     assert.equal(bodyParams[0].text, "Fatima Bano");
     const link = bodyParams[1].text!;
-    assert.match(link, /^https:\/\/eternal-polyclinic\.pages\.dev\/report\/#[A-Za-z0-9_-]{32}$/);
+    assert.match(link, /^https:\/\/eternalpolyclinic\.com\/report\/#[A-Za-z0-9_-]{32}$/);
 
     // Clicking Ready again doesn't send twice
     const twice = await (await reportPatch(ctx(env, `/api/staff/lab-reports/${id}`, { method: "PATCH", cookie: lab, body: json({ status: "ready" }) }, { id }))).json();

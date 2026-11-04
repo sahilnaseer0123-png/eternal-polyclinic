@@ -16,7 +16,7 @@ Edit `data/clinic.ts`. Doctors, OPD days, services, hours, phone and fee are all
 
 ## Share a booking link for one doctor
 
-`https://eternal-polyclinic.pages.dev/book?doctor=akash` opens the booking form with Dr. Akash chosen.
+`https://eternalpolyclinic.com/book?doctor=akash` opens the booking form with Dr. Akash chosen.
 
 ## Logo files
 

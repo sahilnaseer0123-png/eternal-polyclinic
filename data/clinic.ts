@@ -58,7 +58,7 @@ export type Doctor = {
 export const clinic = {
   name: "Eternal Polyclinic",
   /** The live address. Cloudflare Pages project "eternal-polyclinic". */
-  siteUrl: "https://eternal-polyclinic.pages.dev",
+  siteUrl: "https://eternalpolyclinic.com",
   founder: "Naseer Ah Lone",
   address: "1st Floor, Lone Complex, Opposite SDH Hospital, Sopore",
   /** Main clinic phone line and pharmacy desk */

@@ -56,7 +56,7 @@ in the dashboard and can be retried afterwards.
    Wait for both to show **Approved** (usually minutes to a day).
 
 5. **Delivery tracking** (sent → delivered → read): in the app's **WhatsApp → Configuration → Webhook**:
-   - Callback URL: `https://eternal-polyclinic.pages.dev/api/whatsapp/webhook`
+   - Callback URL: `https://eternalpolyclinic.com/api/whatsapp/webhook`
    - Verify token: any long random text you choose (same as `WHATSAPP_VERIFY_TOKEN` below)
    - Subscribe to the **messages** field.
    - App secret: **App settings → Basic → App secret** (for `WHATSAPP_APP_SECRET`).

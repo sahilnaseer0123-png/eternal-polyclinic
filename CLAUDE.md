@@ -11,7 +11,8 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 - Next.js 16 (App Router), TypeScript, Tailwind CSS v4. Hosting (23 Oct 2026): Cloudflare Pages, free plan (Vercel's free plan
   forbids business sites; Pro is ~₹2,000/month). The site is a static export (`output: "export"` → `out/`): every page is a
   ready-made file; the only server code is Pages Functions (below). Cloudflare builds `main` on every push (preset "Next.js (Static HTML Export)",
-  build `npx next build`, output `out`). Live at `clinic.siteUrl` (https://eternal-polyclinic.pages.dev).
+  build `npx next build`, output `out`). Live at `clinic.siteUrl` (https://eternalpolyclinic.com, bought on Cloudflare 4 Nov 2026, attached as a Pages custom domain;
+  https://eternal-polyclinic.pages.dev still serves the same site). Change the address ONLY in `data/clinic.ts`.
 - Deploys stop silently if Cloudflare loses access to this repo (yellow "disconnected" banner in the Pages project).
   Fix: GitHub → Settings → Applications → Cloudflare Workers and Pages → Configure → Repository access must list
   BOTH tamyiz and eternal-polyclinic → Save. (Happened 23 Oct 2026.)
