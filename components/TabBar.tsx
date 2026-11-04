@@ -21,8 +21,7 @@ export function TabBar() {
   const [open, setOpen] = useState(false);
   const moreActive =
     NAV.some((n) => n.href === pathname && n.href !== "/doctors") ||
-    pathname === "/privacy" ||
-    pathname === "/admin";
+    pathname === "/privacy";
   const tabClass = (on: boolean) =>
     `flex min-h-14 flex-col items-center justify-center gap-0.5 text-xs font-semibold ${on ? "text-ink" : "text-muted"}`;
 
@@ -57,7 +56,7 @@ export function TabBar() {
             className="sheet-in fixed inset-x-3 bottom-[4.75rem] z-50 rounded-2xl bg-white p-3 shadow-elevated border border-line"
           >
             <ul className="space-y-1">
-              {[...NAV.filter((n) => n.href !== "/doctors"), { href: "/privacy", label: "Privacy notice" }, { href: "/admin", label: "Admin" }].map((item) => (
+              {[...NAV.filter((n) => n.href !== "/doctors"), { href: "/privacy", label: "Privacy notice" }].map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}

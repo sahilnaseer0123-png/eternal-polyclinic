@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { clinic, doctors } from "@/data/clinic";
 import { DAY_NAMES, formatTime, opdSummary } from "@/lib/schedule";
 import { DoctorMark } from "@/components/DoctorMark";
+import { DoctorLiveBadge } from "@/components/DoctorLiveBadge";
 import { ShareButton } from "@/components/ShareButton";
 import { NextAvailable } from "@/components/NextAvailable";
 import { EmergencyNote } from "@/components/EmergencyNote";
@@ -75,6 +76,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
               <span className="inline-flex items-center rounded-full bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
                 No registration fee
               </span>
+              <DoctorLiveBadge doctorId={doctor.id} />
             </div>
 
             <h1 className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] [overflow-wrap:anywhere] sm:text-5xl text-ink font-display">

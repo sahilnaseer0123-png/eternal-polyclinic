@@ -6,7 +6,7 @@ import { RevealOnScroll } from "@/components/RevealOnScroll";
 import { clinicSchema, jsonLd } from "@/lib/structured-data";
 import "./globals.css";
 
-const description = `Book a specialist at ${clinic.name}, ${clinic.address}. Dermatology, psychiatry, general medicine, neurosurgery, ultrasound, echo, lab and pharmacy.`;
+const description = `Book a visiting specialist at ${clinic.name}, ${clinic.address}. Cardiology, neurology, neurosurgery, urology, pediatrics, gynaecology, dermatology, psychiatry, ultrasound, echo, lab and pharmacy.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(clinic.siteUrl),

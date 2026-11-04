@@ -179,6 +179,54 @@ export const services: Service[] = [
   },
 ];
 
+/** Direct WhatsApp and telephone actions for each in-house test or desk, derived from clinic numbers above. */
+export function serviceActions(service: Service): {
+  whatsappUrl: string;
+  whatsappLabel: string;
+  phoneHref: string;
+  phoneLabel: string;
+} {
+  if (service.id === "lab") {
+    const labWa = clinic.labTechPhone.replace(/^\+/, "");
+    const text =
+      `*Lab Test Inquiry | ${clinic.name}*\n` +
+      `Hello, I would like to ask about a diagnostic lab test.\n\n` +
+      `• Patient Name: \n` +
+      `• Test Name: `;
+    return {
+      whatsappUrl: `https://wa.me/${labWa}?text=${encodeURIComponent(text)}`,
+      whatsappLabel: "Ask Lab on WhatsApp",
+      phoneHref: `tel:${clinic.labTechPhone}`,
+      phoneLabel: `Call ${clinic.labTechPhoneDisplay}`,
+    };
+  }
+
+  if (service.id === "pharmacy") {
+    const text =
+      `*Pharmacy Inquiry | ${clinic.name}*\n` +
+      `Hello, I would like to check medicine availability at the pharmacy.\n\n` +
+      `• Medicine / Prescription: `;
+    return {
+      whatsappUrl: `https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(text)}`,
+      whatsappLabel: "Check on WhatsApp",
+      phoneHref: `tel:${clinic.pharmacyPhone}`,
+      phoneLabel: `Call ${clinic.pharmacyPhoneDisplay}`,
+    };
+  }
+
+  const text =
+    `*Scan / Test Booking | ${clinic.name}*\n` +
+    `Hello, I would like to confirm timings and book a slot for *${service.name}*.\n\n` +
+    `• Patient Name: \n` +
+    `• Preferred Day: `;
+  return {
+    whatsappUrl: `https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(text)}`,
+    whatsappLabel: "Book on WhatsApp",
+    phoneHref: `tel:${clinic.phone}`,
+    phoneLabel: `Call ${clinic.phoneDisplay}`,
+  };
+}
+
 export const categories: { id: DoctorCategory; label: string }[] = [
   { id: "skin", label: "Skin & hair" },
   { id: "mind", label: "Mind" },

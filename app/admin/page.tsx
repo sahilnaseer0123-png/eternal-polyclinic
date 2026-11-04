@@ -17,27 +17,31 @@ import {
   timeSlots,
 } from "@/lib/schedule";
 import {
+  checkCloudAdminSession,
   deleteAppointment,
   doctorDelayBroadcastText,
   downloadCsv,
   downloadFullJsonBackup,
   formatDailyOwnerSummary,
   generateToken,
-  getAdminPin,
   getBookedSlots,
   getDoctorLiveStatus,
   getLastSyncTime,
+  loginAdminPortal,
+  logoutAdminPortal,
+  pullFromCloud,
   pushToCloud,
   removeCustomDoctor,
   restoreFromJsonBackup,
   saveAppointment,
   saveCustomDoctor,
-  setAdminPin,
   setDoctorLiveStatus,
   setDoctorOverride,
+  updateAdminPortalPin,
   updateAppointmentStatus,
   useActiveDoctors,
   useAppointments,
+  useCloudSyncStatus,
   useDoctorStatuses,
   type Appointment,
   type AppointmentStatus,
@@ -74,15 +78,49 @@ const fieldInput =
 
 export default function AdminPage() {
   const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    try {
-      return typeof window !== "undefined" && window.sessionStorage?.getItem("ep_reception_auth") === "true";
-    } catch {
-      return false;
-    }
-  });
+  const cloudStatus = useCloudSyncStatus();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState<boolean>(true);
+  const [isSubmittingPin, setIsSubmittingPin] = useState<boolean>(false);
   const [pinInput, setPinInput] = useState<string>("");
   const [pinError, setPinError] = useState<string>("");
+
+  // Verify cloud session cookie on mount (falls back to sessionStorage only in local unconfigured mode)
+  useEffect(() => {
+    let active = true;
+    checkCloudAdminSession().then((status) => {
+      if (!active) return;
+      if (status.configured) {
+        setIsAuthenticated(status.authenticated);
+      } else {
+        try {
+          setIsAuthenticated(window.sessionStorage?.getItem("ep_reception_auth") === "true");
+        } catch {
+          setIsAuthenticated(false);
+        }
+      }
+      setIsCheckingAuth(false);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  // Poll cloud state every 20s and on window focus while console is unlocked
+  useEffect(() => {
+    if (!isAuthenticated || !cloudStatus.configured) return;
+    const poll = () => {
+      if (document.visibilityState === "visible") {
+        void pullFromCloud();
+      }
+    };
+    const interval = setInterval(poll, 20_000);
+    window.addEventListener("focus", poll);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("focus", poll);
+    };
+  }, [isAuthenticated, cloudStatus.configured]);
 
   // Navigation tabs
   const [activeTab, setActiveTab] = useState<"opd" | "radar" | "doctors" | "backups" | "search">("opd");
@@ -139,11 +177,16 @@ export default function AdminPage() {
   async function handleManualSync() {
     setIsSyncing(true);
     await pushToCloud();
+    await pullFromCloud();
     setTimeout(() => {
       setIsSyncing(false);
-      setBroadcastToast("Local sync complete across open browser tabs on this device.");
+      setBroadcastToast(
+        cloudStatus.configured
+          ? `Synced live with Cloudflare (${cloudStatus.storageDriver.toUpperCase()}). All devices updated.`
+          : "Local sync complete across open browser tabs on this device.",
+      );
       setTimeout(() => setBroadcastToast(""), 4000);
-    }, 500);
+    }, 350);
   }
 
   // New Doctor Modal
@@ -158,33 +201,45 @@ export default function AdminPage() {
   // Change PIN state
   const [newPinValue, setNewPinValue] = useState<string>("");
 
-  function verifyPin(pin: string) {
-    const activePin = getAdminPin();
-    if (pin === activePin) {
-      sessionStorage.setItem("ep_reception_auth", "true");
+  async function verifyPin(pin: string) {
+    setIsSubmittingPin(true);
+    setPinError("");
+    const res = await loginAdminPortal(pin);
+    setIsSubmittingPin(false);
+    if (res.ok) {
       setIsAuthenticated(true);
+      setPinInput("");
       setPinError("");
     } else {
-      setPinError("Incorrect PIN. Please try again.");
+      setPinError(res.error || "Incorrect PIN. Please try again.");
       setTimeout(() => setPinInput(""), 600);
     }
   }
 
-  function handleUpdatePin() {
+  async function handleUpdatePin() {
     const trimmed = newPinValue.trim();
     if (trimmed.length < 4) {
       setBroadcastToast("PIN must be at least 4 characters.");
       setTimeout(() => setBroadcastToast(""), 3500);
       return;
     }
-    setAdminPin(trimmed);
+    const res = await updateAdminPortalPin(trimmed);
+    if (!res.ok) {
+      setBroadcastToast(res.error || "Could not update PIN.");
+      setTimeout(() => setBroadcastToast(""), 3500);
+      return;
+    }
     setNewPinValue("");
-    setBroadcastToast("Admin security PIN updated on this device.");
-    setTimeout(() => setBroadcastToast(""), 3500);
+    setBroadcastToast(
+      res.mode === "cloud"
+        ? "Cloud security PIN updated across all clinic devices."
+        : "Admin security PIN updated on this device.",
+    );
+    setTimeout(() => setBroadcastToast(""), 4000);
   }
 
-  function handleLogout() {
-    sessionStorage.removeItem("ep_reception_auth");
+  async function handleLogout() {
+    await logoutAdminPortal();
     setIsAuthenticated(false);
     setPinInput("");
   }
@@ -420,9 +475,10 @@ export default function AdminPage() {
                   <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center">
                     <button
                       type="submit"
-                      className="group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-xl bg-brand px-6 text-base font-semibold text-white hover:bg-brand-dark transition-all cursor-pointer"
+                      disabled={isCheckingAuth || isSubmittingPin}
+                      className="group inline-flex min-h-12 items-center justify-center gap-2.5 rounded-xl bg-brand px-6 text-base font-semibold text-white hover:bg-brand-dark disabled:opacity-60 transition-all cursor-pointer"
                     >
-                      <span>Unlock Console</span>
+                      <span>{isSubmittingPin ? "Verifying…" : isCheckingAuth ? "Checking session…" : "Unlock Console"}</span>
                       <span className="inline-flex size-6 items-center justify-center rounded-lg bg-mint text-ink transition-transform duration-200 group-hover:translate-x-0.5">
                         <span aria-hidden="true" className="text-xs font-bold leading-none">
                           →
@@ -548,12 +604,31 @@ export default function AdminPage() {
                 <button
                   type="button"
                   onClick={handleManualSync}
-                  title="Sync open tabs on this device"
+                  title={
+                    cloudStatus.configured
+                      ? `Connected to Cloudflare ${cloudStatus.storageDriver.toUpperCase()} — click to sync now`
+                      : "Local device mode — attach EP_KV or EP_DB in Cloudflare Pages to enable cross-device cloud sync"
+                  }
                   className="inline-flex items-center gap-1.5 rounded-full border border-brand-line bg-brand-tint/65 px-3 py-1 text-xs font-semibold text-ink hover:bg-brand-tint transition-colors cursor-pointer"
                 >
                   <RefreshIcon className={`size-3.5 ${isSyncing ? "animate-spin" : ""}`} />
-                  <span>{isSyncing ? "Syncing tabs…" : `Synced · ${lastSyncDisplay}`}</span>
+                  <span>
+                    {isSyncing
+                      ? "Syncing…"
+                      : cloudStatus.configured
+                        ? `Cloud Live (${cloudStatus.storageDriver.toUpperCase()}) · ${lastSyncDisplay}`
+                        : `Local Mode · ${lastSyncDisplay}`}
+                  </span>
                 </button>
+                {cloudStatus.usingDefaultPin && (
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("backups")}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-amber-50 px-3 py-1 text-xs font-bold text-amber-900 hover:bg-amber-100 transition-colors cursor-pointer"
+                  >
+                    <span>Set Custom PIN →</span>
+                  </button>
+                )}
               </div>
 
               <h1 className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
@@ -1360,21 +1435,53 @@ export default function AdminPage() {
                       </div>
                     </div>
 
-                    {/* Local Browser Tab Sync */}
+                    {/* Cloudflare Cross-Device Sync */}
                     <div className="card rounded-3xl p-6 flex flex-col justify-between gap-5">
                       <div>
-                        <span className="flex size-12 items-center justify-center rounded-xl bg-brand-tint text-ink ring-1 ring-brand-line/60">
-                          <RefreshIcon className="size-6" />
-                        </span>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="flex size-12 items-center justify-center rounded-xl bg-brand-tint text-ink ring-1 ring-brand-line/60">
+                            <RefreshIcon className="size-6" />
+                          </span>
+                          <span
+                            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold ${
+                              cloudStatus.configured
+                                ? "bg-brand-tint border border-brand-line text-ink"
+                                : "bg-sand border border-line text-charcoal"
+                            }`}
+                          >
+                            <span
+                              className={`size-1.5 rounded-full ${
+                                cloudStatus.configured ? "bg-[#22A05B]" : "bg-amber-500"
+                              }`}
+                              aria-hidden="true"
+                            />
+                            {cloudStatus.configured
+                              ? `Cloudflare ${cloudStatus.storageDriver.toUpperCase()} Live`
+                              : "Local Device Mode"}
+                          </span>
+                        </div>
                         <h3 className="mt-4 font-display text-xl font-medium tracking-tight text-ink">
-                          Live browser tab sync
+                          Cross-device cloud sync
                         </h3>
                         <p className="mt-1.5 text-sm text-muted leading-relaxed">
-                          Broadcasts queue changes across open browser tabs on this reception computer or tablet. Last synced:{" "}
-                          <strong className="font-semibold text-ink tabular-nums lining-nums">
-                            {lastSyncDisplay}
-                          </strong>
-                          .
+                          {cloudStatus.configured ? (
+                            <>
+                              Live OPD tokens, booked slots, and doctor delay alerts sync automatically across reception tablets, the owner&rsquo;s phone, and public pages. Last synced:{" "}
+                              <strong className="font-semibold text-ink tabular-nums lining-nums">
+                                {lastSyncDisplay}
+                              </strong>
+                              .
+                            </>
+                          ) : (
+                            <>
+                              Currently saving on this device only. To activate live multi-device sync, open{" "}
+                              <strong className="font-semibold text-ink">
+                                Cloudflare Pages → Settings → Bindings
+                              </strong>{" "}
+                              and attach a KV namespace named <code className="rounded bg-sand px-1.5 py-0.5 text-xs font-bold text-ink">EP_KV</code>{" "}
+                              (or D1 database <code className="rounded bg-sand px-1.5 py-0.5 text-xs font-bold text-ink">EP_DB</code>).
+                            </>
+                          )}
                         </p>
                       </div>
 
@@ -1385,7 +1492,7 @@ export default function AdminPage() {
                           className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border border-brand-line bg-brand-tint/80 px-4 text-xs sm:text-sm font-semibold text-ink hover:bg-brand-tint transition-colors cursor-pointer"
                         >
                           <RefreshIcon className={`size-4 shrink-0 ${isSyncing ? "animate-spin" : ""}`} />
-                          <span>Broadcast Local Sync</span>
+                          <span>{cloudStatus.configured ? "Sync Cloud Now" : "Broadcast Local Sync"}</span>
                         </button>
                       </div>
                     </div>
@@ -1400,7 +1507,9 @@ export default function AdminPage() {
                           Admin security PIN
                         </h3>
                         <p className="mt-1.5 text-sm text-muted leading-relaxed">
-                          Update the staff PIN required to unlock this reception console on this device.
+                          {cloudStatus.configured
+                            ? "Updates the encrypted server-verified PIN across all reception tablets and phones."
+                            : "Update the staff PIN required to unlock this reception console on this device."}
                         </p>
                       </div>
 

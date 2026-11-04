@@ -1,0 +1,8 @@
+# Cloudflare Pages + Functions configuration for Eternal Polyclinic
+name = "eternal-polyclinic"
+pages_build_output_dir = "out"
+compatibility_date = "2026-11-01"
+
+[[kv_namespaces]]
+binding = "EP_KV"
+id = "41f693747ec648f78550f26b91f385b7"

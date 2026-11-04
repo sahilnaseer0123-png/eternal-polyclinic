@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: `How ${clinic.name} handles the details you share when you book an appointment.`,
 };
 
-const LAST_UPDATED = "3 November 2026";
+const LAST_UPDATED = "4 November 2026";
 
 export default function PrivacyPage() {
   const tel = `tel:${clinic.phone}`;
@@ -53,10 +53,17 @@ export default function PrivacyPage() {
               <li>The doctor you chose, and the day and time you want</li>
             </ul>
             <p className="mt-3">
-              The website does not store these. When you press &quot;Send request on WhatsApp&quot;, they are put into a
-              WhatsApp message on your own phone. We receive them only if you press Send in WhatsApp. Nothing is saved
-              in your browser. Once sent, the message stays in the WhatsApp chat on your phone and on the clinic&apos;s
-              phone, like any WhatsApp message; you can delete it from your side at any time.
+              The online booking form does not store these on the website. When you press &quot;Send request on
+              WhatsApp&quot;, they are put into a WhatsApp message on your own phone. We receive them only if you press
+              Send in WhatsApp. Nothing is saved in your browser. Once sent, the message stays in the WhatsApp chat on
+              your phone and on the clinic&apos;s phone, like any WhatsApp message; you can delete it from your side at
+              any time.
+            </p>
+            <p className="mt-3">
+              When reception confirms your appointment by phone or registers you as a walk-in at the clinic desk, staff
+              record your token number, name, mobile number, optional area, doctor, and slot time in our PIN-protected
+              clinic register (hosted on Cloudflare) to manage the day&apos;s OPD queue and mark booked time slots as
+              unavailable. Public pages never show any patient&apos;s name, number, or token.
             </p>
           </section>
 

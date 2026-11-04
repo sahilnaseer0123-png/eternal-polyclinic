@@ -45,15 +45,6 @@ export function SiteHeader() {
               </Link>
             );
           })}
-          <Link
-            href="/admin"
-            aria-current={pathname === "/admin" ? "page" : undefined}
-            className={`inline-flex min-h-10 items-center rounded-xl px-3 text-xs font-bold uppercase tracking-wider transition-colors ${
-              pathname === "/admin" ? "bg-brand-tint text-ink" : "text-muted hover:bg-ground hover:text-ink"
-            }`}
-          >
-            Admin
-          </Link>
           <a
             href={`tel:${clinic.phone}`}
             aria-label={`Call the clinic, ${clinic.phoneDisplay}`}

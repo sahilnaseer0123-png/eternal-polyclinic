@@ -13,7 +13,8 @@ import {
   isDoctorOnLeave,
   saveAppointment,
   useActiveDoctors,
-  useAppointments,
+  useBookedSlots,
+  useDoctorStatuses,
 } from "@/lib/appointments";
 import {
   addDays,
@@ -50,7 +51,7 @@ function FieldError({ id, message }: { id: string; message?: string }) {
 
 export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; initialDoctorId?: string }) {
   const activeDoctors = useActiveDoctors();
-  const appointments = useAppointments();
+  const statuses = useDoctorStatuses();
   const [nowAt, setNowAt] = useState(nowMs);
   const now = new Date(nowAt);
   const [doctorId, setDoctorId] = useState(initialDoctorId);
@@ -66,14 +67,10 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
 
   const doctor = activeDoctors.find((d) => d.id === doctorId);
   const onLeave = doctor ? isDoctorOnLeave(doctor) : false;
+  const liveStatus = doctor ? statuses[doctor.id] : undefined;
   const dates = doctor && !onLeave ? nextOpdDates(doctor, now, 4) : [];
   const slots = doctor && date && !onLeave ? timeSlots(doctor, date, now) : [];
-  const bookedSlots =
-    doctor && date
-      ? appointments
-          .filter((a) => a.doctorId === doctor.id && a.date === date && a.status !== "cancelled")
-          .map((a) => a.time)
-      : [];
+  const bookedSlots = useBookedSlots(doctor?.id ?? "", date);
   const step = !doctor ? 1 : 2;
 
   function chooseDoctor(id: string) {
@@ -218,7 +215,25 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
         <div className="flex items-center gap-3.5 rounded-2xl border border-line bg-ground p-3.5">
           <DoctorMark doctor={doctor} className="size-12 rounded-full text-lg" />
           <div className="min-w-0 flex-1">
-            <p className="font-display text-xl font-medium leading-tight">{doctor.name ?? doctor.speciality}</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <p className="font-display text-xl font-medium leading-tight">{doctor.name ?? doctor.speciality}</p>
+              {liveStatus?.state === "in_clinic" && (
+                <span className="inline-flex items-center gap-1 rounded-full bg-brand-tint border border-brand-line px-2.5 py-0.5 text-xs font-bold text-ink">
+                  <span className="size-1.5 rounded-full bg-[#22A05B]" aria-hidden="true" />
+                  In Clinic Now
+                </span>
+              )}
+              {liveStatus?.state === "delayed" && (
+                <span className="inline-block rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-xs font-bold text-amber-800">
+                  Delayed ~{liveStatus.delayMinutes ?? 30}m
+                </span>
+              )}
+              {liveStatus?.state === "cancelled" && (
+                <span className="inline-block rounded-full bg-red-50 border border-red-200 px-2.5 py-0.5 text-xs font-bold text-red-800">
+                  Today&rsquo;s OPD Cancelled
+                </span>
+              )}
+            </div>
             <p className="text-sm text-muted">
               {onLeave ? doctor.availability : (opdSummary(doctor) ?? doctor.speciality)}
             </p>
