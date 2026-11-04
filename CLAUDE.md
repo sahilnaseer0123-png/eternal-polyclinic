@@ -46,8 +46,10 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 - `lib/schedule.ts`: who's in today, next OPD dates, time slots, display helpers. Pure functions that take `now`.
 - `lib/booking.ts`: booking validation against the real schedule, and the WhatsApp message.
 - `data/faq.ts`: FAQ answers; they pull the fee, phone and services from `clinic.ts`.
-- Map: the clinic isn't listed on Google Maps and a search for its name finds a DIFFERENT clinic. Directions and the map
-  use the clinic's exact coordinates (`clinic.location`, the Old Municipal Office building). Never link to a name search.
+- Map: the clinic's Google listing (place id 0x38e109006455f87d:0x84dfd5924d4faf10, formerly "ETERNAL Diagnostic centre") was
+  claimed by sahilnaseer0123@gmail.com on 5 Nov 2026 and renamed "Eternal Polyclinic" (verification pending). A name search
+  can still find a DIFFERENT clinic, so directions and the map keep using `clinic.location` coordinates. Never link to a name search.
+- Google Search Console: domain property eternalpolyclinic.com, verified by a TXT record in Cloudflare DNS (keep it); sitemap submitted 4 Nov 2026.
 - Dashboard `/admin` (`app/admin/page.tsx`): picks by sign-in state. Owner/reception get `components/admin/ReceptionDesk.tsx`
   (the old desk) with staff sections: Patients, Appointments, Lab Reports, Doctors (schedule editor), Specialists &
   Availability, WhatsApp, Statistics, Owner Reports, Find Token, Staff. Lab gets a lab-only console. Panels in `components/admin/`.
