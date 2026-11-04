@@ -51,7 +51,7 @@ export function CounterQrPoster() {
       <div className="mt-4 grid grid-cols-2 gap-5">
         <QrCard
           title="Book a Specialist Online"
-          hint="Pick your doctor and time. Get your token instantly on WhatsApp."
+          hint={clinic.whatsappAutoConfirm ? "Pick your doctor and time. Get your token instantly on WhatsApp." : "Pick your doctor and time. Get your token instantly on screen."}
           url={`${clinic.siteUrl}/book`}
         />
         <QrCard

@@ -131,7 +131,9 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
                   />
                 </p>
                 <p className="mt-1 text-xs text-muted">
-                  Book online: your slot and token are confirmed instantly on WhatsApp.
+                  {clinic.whatsappAutoConfirm
+                    ? "Book online: your slot and token are confirmed instantly on WhatsApp."
+                    : "Book online: your slot and token are confirmed instantly on screen."}
                 </p>
               </div>
             )}

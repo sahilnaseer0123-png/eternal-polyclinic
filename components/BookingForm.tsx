@@ -432,7 +432,8 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
               />
             </div>
             <p className="text-sm text-muted">
-              We never ask the reason for your visit. Your confirmation message on WhatsApp names your doctor only.
+              We never ask the reason for your visit.
+              {clinic.whatsappAutoConfirm ? " Your confirmation message on WhatsApp names your doctor only." : ""}
             </p>
           </fieldset>
 
@@ -452,7 +453,9 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
               {submitting ? "Confirming slot…" : "Confirm Appointment"}
             </button>
             <p className="mt-3 text-center text-sm text-muted">
-              Your slot is locked instantly and a confirmation is sent to your WhatsApp.
+              {clinic.whatsappAutoConfirm
+                ? "Your slot is locked instantly and a confirmation is sent to your WhatsApp."
+                : "Your slot is locked instantly and your token appears on screen. Take a screenshot."}
             </p>
           </div>
         </>
@@ -499,7 +502,7 @@ function TokenSlip({ apt, whatsappSent }: { apt: Appointment; whatsappSent?: boo
         </div>
       </dl>
       <p className="mt-4 text-base text-charcoal">
-        Arrive 10–15 minutes early and show this token at reception. Pay the consultation fee at reception. Helpline:{" "}
+        Arrive 10–15 minutes early and show this token at reception. Pay the consultation fee at reception. Questions? Call{" "}
         {clinic.phoneDisplay}.
       </p>
       <p className="no-print mt-3 text-sm font-semibold text-ink">

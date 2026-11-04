@@ -10,7 +10,7 @@ import { PhoneIcon, ShieldCheckIcon, WhatsAppIcon } from "@/components/Icons";
 export const metadata: Metadata = {
   alternates: { canonical: "/book" },
   title: "Book a visit",
-  description: `Schedule a consultation slot with visiting specialists at ${clinic.name}, Opposite SDH Hospital, Sopore. Your slot is confirmed instantly online with a digital token, and a confirmation goes to your WhatsApp.`,
+  description: `Schedule a consultation slot with visiting specialists at ${clinic.name}, Opposite SDH Hospital, Sopore. Your slot is confirmed instantly online with a digital token${clinic.whatsappAutoConfirm ? ", and a confirmation goes to your WhatsApp" : ""}.`,
 };
 
 export default function BookPage() {
@@ -18,7 +18,8 @@ export default function BookPage() {
     <>
       <div className="no-print">
         <PageIntro title="Book a visit">
-        Pick a doctor, a day and a time. Your slot is confirmed instantly and your token is sent to your WhatsApp.
+        Pick a doctor, a day and a time. Your slot is confirmed instantly and your token appears on screen
+        {clinic.whatsappAutoConfirm ? " and on your WhatsApp" : ""}.
       </PageIntro>
       </div>
 
@@ -38,7 +39,9 @@ export default function BookPage() {
               {[
                 ["Choose", "a doctor, a day and a time."],
                 ["Confirm.", "Your slot is locked instantly and you get a digital token slip."],
-                ["Check WhatsApp.", "We message your confirmation. Lost it? Use Find My Token with your mobile number."],
+                clinic.whatsappAutoConfirm
+                  ? ["Check WhatsApp.", "We message your confirmation. Lost it? Use Find My Token with your mobile number."]
+                  : ["Keep your token.", "Screenshot or print it. Lost it? Use Find My Token with your mobile number."],
               ].map(([bold, rest], i) => (
                 <li key={bold} className="flex items-start gap-3">
                   <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-tint font-display text-lg font-medium text-brand tabular-nums lining-nums">
@@ -58,7 +61,7 @@ export default function BookPage() {
               <span className="eyebrow">Your privacy</span>
             </div>
             <p className="mt-2 text-base text-charcoal">
-              We save only your token, name, mobile number, optional area, doctor and slot in the clinic&apos;s PIN-protected register, to hold your slot and send your WhatsApp confirmation. We never ask why you are visiting, and public pages never show anyone&apos;s details.{" "}
+              We save only your token, name, mobile number, optional area, doctor and slot in the clinic&apos;s PIN-protected register, to hold your slot{clinic.whatsappAutoConfirm ? " and send your WhatsApp confirmation" : ""}. We never ask why you are visiting, and public pages never show anyone&apos;s details.{" "}
               <Link href="/privacy" className="font-semibold text-brand underline">
                 Read the privacy notice
               </Link>

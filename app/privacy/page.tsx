@@ -25,7 +25,7 @@ export default function PrivacyPage() {
             <section>
               <h2>In short</h2>
               <p>
-                To book, you share your name, mobile number, the doctor, and the day and time you want. You enter this on our booking page, and we send your confirmation to your WhatsApp. We use it only to arrange your appointment. We never ask why you are visiting.
+                To book, you share your name, mobile number, the doctor, and the day and time you want. You enter this on our booking page and get your token on screen (and, once that service is switched on, a confirmation on WhatsApp). We use it only to arrange your appointment. We never ask why you are visiting.
               </p>
             </section>
 
@@ -55,7 +55,7 @@ export default function PrivacyPage() {
               When you press &quot;Confirm Appointment&quot;, we store your token number, name, mobile number, optional area,
               doctor, and slot time in our clinic register (hosted on Cloudflare, open only to signed-in clinic staff). This holds your slot,
               lets reception manage the day&apos;s OPD queue, lets you look up or cancel your token with your mobile
-              number, and lets us send your confirmation on WhatsApp. Nothing is saved in your browser. Reception also
+              number, and lets us send your confirmation on WhatsApp once that service is switched on. Nothing is saved in your browser. Reception also
               records the same details when you register as a walk-in at the desk. Public pages never show any patient&apos;s name, number, or token.
             </p>
           </section>

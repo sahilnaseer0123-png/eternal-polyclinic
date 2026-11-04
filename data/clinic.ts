@@ -57,6 +57,12 @@ export type Doctor = {
 
 export const clinic = {
   name: "Eternal Polyclinic",
+  /**
+   * Switch ON only after the WhatsApp Business API is connected and a test message has arrived
+   * (docs/whatsapp-setup.md). While false, no page promises an automatic WhatsApp confirmation:
+   * patients are told to keep the on-screen token instead. Booking itself works either way.
+   */
+  whatsappAutoConfirm: false,
   /** The live address. Cloudflare Pages project "eternal-polyclinic". */
   siteUrl: "https://eternalpolyclinic.com",
   founder: "Naseer Ah Lone",

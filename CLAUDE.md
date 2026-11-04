@@ -37,6 +37,8 @@ in under 60 seconds with no account. Reception confirms every request by phone.
     the mobile; locks after 8 wrong tries). `functions/api/report/view.ts`.
   - Patient matching: same 10-digit mobile AND same name key = same patient (family members share phones). IDs `EPP-00042`.
   - Message wording lives in `lib/messages.ts` (approved 4 Nov 2026): confirmation, lab report, owner summary (no helpline).
+  - `clinic.whatsappAutoConfirm` (data/clinic.ts) is FALSE until the WhatsApp API is live and tested: while false, public pages
+    promise only the on-screen token, never a WhatsApp message (5 Nov 2026, to avoid bad reviews). Flip to true after setup.
 - Validation: zod. Tests: `npm test` (node test runner via tsx, files in `tests/`; `tests/helpers/d1.ts` runs D1 on Node's
   built-in SQLite, so Node 22+). Run them before every push.
 
