@@ -53,10 +53,31 @@ export default function PrivacyPage() {
             </ul>
             <p className="mt-3">
               When you press &quot;Confirm Appointment&quot;, we store your token number, name, mobile number, optional area,
-              doctor, and slot time in our PIN-protected clinic register (hosted on Cloudflare). This holds your slot,
+              doctor, and slot time in our clinic register (hosted on Cloudflare, open only to signed-in clinic staff). This holds your slot,
               lets reception manage the day&apos;s OPD queue, lets you look up or cancel your token with your mobile
               number, and lets us send your confirmation on WhatsApp. Nothing is saved in your browser. Reception also
               records the same details when you register as a walk-in at the desk. Public pages never show any patient&apos;s name, number, or token.
+            </p>
+          </section>
+
+          <section>
+            <h2>Your patient record</h2>
+            <p>
+              So we don&apos;t register you twice, the clinic keeps one patient record per person with a patient ID (like
+              EPP-00042): your name, mobile number, optional area, the date you first registered, your past appointments
+              (doctor, date and time), and the lab tests we did for you. It never holds the reason for your visit. Only
+              clinic staff with their own login can see it, and lab staff see only what they need for lab reports.
+            </p>
+          </section>
+
+          <section>
+            <h2>Lab reports</h2>
+            <p>
+              When your lab report is ready, our lab staff upload the PDF and we send it to your WhatsApp, to the mobile
+              number you confirmed at the clinic, together with a private link to view or download it again on this
+              website. The link only opens after you enter the last 4 digits of that mobile number, works for{" "}
+              30 days, and locks after repeated wrong tries. Report files are stored privately on Cloudflare; there is no
+              public address for them. To send the PDF, a copy passes through our WhatsApp Business provider (Meta).
             </p>
           </section>
 
@@ -73,7 +94,7 @@ export default function PrivacyPage() {
           <section>
             <h2>How we use your details</h2>
             <p>
-              Only to arrange and confirm your appointment, which means sending your WhatsApp confirmation and, if the doctor is delayed or unavailable, calling you on the number you gave. We
+              Only to arrange and confirm your appointment and deliver your lab reports, which means sending your WhatsApp confirmation and reports and, if the doctor is delayed or unavailable, calling you on the number you gave. We
               do not sell your details or use them for advertising.
             </p>
           </section>
@@ -82,7 +103,8 @@ export default function PrivacyPage() {
             <h2>Other services involved</h2>
             <ul>
               <li>
-                <strong>WhatsApp</strong> carries your booking confirmation message, under WhatsApp&apos;s own privacy policy.
+                <strong>WhatsApp</strong> (WhatsApp Business by Meta) carries your booking confirmation and your lab report,
+                under WhatsApp&apos;s own privacy policy.
               </li>
               <li>
                 <strong>Cloudflare</strong> hosts this website. It handles basic technical data, such as IP addresses, to

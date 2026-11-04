@@ -15,7 +15,8 @@ import {
   resolveStorageDriver,
   type CfPagesContext,
 } from "../_lib/clinic-store";
-import { sendBookingConfirmationWhatsApp } from "../_lib/whatsapp";
+import { afterAppointmentSaved } from "../_lib/notify";
+import { setAppointmentRecordStatus } from "../_lib/patients";
 
 type PublicBookingBody = {
   doctorId?: string;
@@ -51,7 +52,7 @@ export async function onRequestPost(context: CfPagesContext): Promise<Response> 
   const now = new Date();
   const todayKey = clinicTodayKey(now);
   const state = await readClinicState(driver, now);
-  const activeDoctors = buildActiveDoctorsFromState(state);
+  const activeDoctors = buildActiveDoctorsFromState(state, now);
 
   const validation = validateBooking(
     {
@@ -165,7 +166,13 @@ export async function onRequestPost(context: CfPagesContext): Promise<Response> 
     createdAt: now.getTime(),
   };
 
-  const waResult = await sendBookingConfirmationWhatsApp(appointment, context.env);
+  // Links the booking to the patient record and sends the WhatsApp confirmation once (logged in Notifications).
+  let waResult: { sent: boolean; channel: string; error?: string };
+  try {
+    waResult = await afterAppointmentSaved(context.env, appointment);
+  } catch (err) {
+    waResult = { sent: false, channel: "error", error: err instanceof Error ? err.message : "Notification error" };
+  }
   if (waResult.sent) {
     appointment.whatsappSent = true;
   }
@@ -252,6 +259,9 @@ export async function onRequestDelete(context: CfPagesContext): Promise<Response
     { op: "update_appointment_status", token: target.token, status: "cancelled" },
     now,
   );
+  if (context.env.EP_SQL) {
+    await setAppointmentRecordStatus(context.env.EP_SQL, target.token, "cancelled").catch(() => undefined);
+  }
 
   return jsonResponse({ ok: true, cancelledToken: target.token });
 }

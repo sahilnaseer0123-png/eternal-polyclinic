@@ -51,7 +51,7 @@ test("token generator formats date and doctor prefix correctly", () => {
   assert.equal(generateToken("2026-10-31", "akash", true, existing), "EP-AK1031-04-W");
 });
 
-test("confirmationTicketText includes critical details, village address and helpline", () => {
+test("confirmationTicketText uses the approved format: name, doctor, date, time/token; no helpline or address", () => {
   const apt: Appointment = {
     token: "EP-AK1031-01",
     doctorId: "akash",
@@ -71,9 +71,16 @@ test("confirmationTicketText includes critical details, village address and help
   assert.ok(text.includes("EP-AK1031-01"));
   assert.ok(text.includes("Dr. Akash Bashir"));
   assert.ok(text.includes("Tariq Ahmad"));
-  assert.ok(text.includes("Tarzoo, Sopore"));
-  assert.ok(text.includes("97977 96909"));
-  assert.ok(text.includes("Lone Complex"));
+  assert.ok(text.startsWith("*ETERNAL POLYCLINIC*"));
+  assert.ok(text.includes("Hello Tariq Ahmad,"));
+  assert.ok(text.includes("Your appointment at Eternal Polyclinic has been successfully booked."));
+  assert.ok(text.includes("Doctor: Dr. Akash Bashir"));
+  assert.ok(text.includes("Appointment Date: Sat, 31 Oct 2026"));
+  assert.ok(text.includes("Appointment Time/Token: 3:30 pm · Token EP-AK1031-01"));
+  assert.ok(text.includes("Thank you for choosing Eternal Polyclinic."));
+  assert.ok(!text.includes("Dermatologist"), "never names the speciality (rule 4)");
+  assert.ok(!/helpline/i.test(text));
+  assert.ok(!text.includes("Lone Complex"));
 });
 
 test("doctorDelayBroadcastText formats delayed announcement correctly", () => {
@@ -96,15 +103,26 @@ test("exportToCsv and formatDailyOwnerSummary generate expected formats for sing
   assert.ok(csv.includes("Token No"));
   assert.ok(csv.includes("Village / Town"));
 
-  // Default / All doctors consolidated report
+  // Default / All doctors consolidated report (approved format, no helpline)
   const summaryAll = formatDailyOwnerSummary("2026-10-31", "all");
-  assert.ok(summaryAll.includes("ETERNAL POLYCLINIC — ALL DOCTORS OPD REPORT"));
-  assert.ok(summaryAll.includes("Lone Complex, Opposite SDH, Sopore"));
-  assert.ok(summaryAll.includes("Registration Channel"));
+  assert.ok(summaryAll.startsWith("*ETERNAL POLYCLINIC*"));
+  for (const heading of ["*DAILY ACTIVITY SUMMARY*", "*PATIENT STATISTICS*", "*LAB REPORTS*", "*DAILY OVERVIEW*"]) {
+    assert.ok(summaryAll.includes(heading), heading);
+  }
+  assert.ok(summaryAll.includes("Date: Sat, 31 Oct 2026"));
+  assert.ok(!/helpline/i.test(summaryAll), "Helpline No. removed");
+  assert.ok(!summaryAll.includes("97977"));
+  assert.ok(summaryAll.includes("- Reports Uploaded: —"), "lab lines show a dash, not an invented 0, without the database");
+
+  // With database figures the lab numbers are filled in
+  const withDb = formatDailyOwnerSummary("2026-10-31", "all", { reportsUploaded: 4, reportsDelivered: 3, failedDeliveries: 1, newRegistrations: 2 });
+  assert.ok(withDb.includes("- Reports Uploaded: 4"));
+  assert.ok(withDb.includes("- Failed Deliveries: 1"));
+  assert.ok(withDb.includes("- New Registrations: 2"));
 
   // Doctor-specific report
   const summaryDoctor = formatDailyOwnerSummary("2026-10-31", "akash");
-  assert.ok(summaryDoctor.includes("ETERNAL POLYCLINIC — OPD REPORT"));
-  assert.ok(summaryDoctor.includes("97977 96909"));
+  assert.ok(summaryDoctor.includes("*DAILY ACTIVITY SUMMARY*"));
+  assert.ok(!/helpline/i.test(summaryDoctor));
 });
 

@@ -494,7 +494,7 @@ function TokenSlip({ apt, whatsappSent }: { apt: Appointment; whatsappSent?: boo
         <div className="sm:col-span-2">
           <dt className="text-sm text-muted">Clinic</dt>
           <dd className="font-semibold">
-            {clinic.name}, {clinic.address}
+            {clinic.name}, Sopore
           </dd>
         </div>
       </dl>

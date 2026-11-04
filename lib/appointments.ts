@@ -3,9 +3,9 @@
 // Reception tablets & owner phones sync full OPD state via /api/admin/state with localStorage offline fallback.
 
 import { useSyncExternalStore } from "react";
-import { doctors as defaultDoctors, type Doctor, type OpdSession } from "@/data/clinic";
+import { doctors as defaultDoctors, type Doctor } from "@/data/clinic";
 import { normalizePhone, type BookingErrors, type BookingRequest } from "./booking";
-import { clinicClock, formatTime, dateLabel } from "./schedule";
+import { clinicClock, formatTime } from "./schedule";
 
 export type AppointmentStatus = "confirmed" | "arrived" | "in_consultation" | "completed" | "cancelled";
 
@@ -36,14 +36,9 @@ export type DoctorLiveStatus = {
   updatedAt?: number;
 };
 
-export type DoctorOverride = {
-  onLeave?: boolean;
-  deactivated?: boolean;
-  leaveUntil?: string; // "YYYY-MM-DD"
-  customOpd?: OpdSession[];
-  customFee?: string;
-  notes?: string;
-};
+import { mergeActiveDoctors, type DoctorOverride } from "./doctor-overrides";
+import { appointmentConfirmationText, ownerSummaryText, type OwnerSummaryStats } from "./messages";
+export type { DoctorOverride };
 
 export type PublicBookedSlot = {
   doctorId: string;
@@ -846,22 +841,7 @@ export function isDoctorOnLeave(doctor: Doctor): boolean {
 
 /** Returns all active doctors including customized OPD schedules & custom added doctors */
 export function getActiveDoctors(): Doctor[] {
-  const overrides = getDoctorOverrides();
-  const custom = getCustomDoctors();
-  const mergedDefaults = defaultDoctors
-    .filter((doc) => !overrides[doc.id]?.deactivated)
-    .map((doc) => {
-      const ov = overrides[doc.id];
-      if (!ov) return doc;
-      return {
-        ...doc,
-        opd: ov.customOpd ?? doc.opd,
-        availability: ov.onLeave
-          ? `On Leave${ov.leaveUntil ? ` until ${ov.leaveUntil}` : ""}`
-          : doc.availability,
-      };
-    });
-  return [...mergedDefaults, ...custom];
+  return mergeActiveDoctors(defaultDoctors, getDoctorOverrides(), getCustomDoctors(), clinicClock(new Date()).dateKey);
 }
 
 // ---------------------------------------------------------------------------
@@ -889,26 +869,15 @@ export function setAdminPin(pin: string): void {
 // Ticket / Broadcast Text Formatters
 // ---------------------------------------------------------------------------
 
-/** Formats a patient-facing ticket for WhatsApp or text message */
+/** Patient-facing confirmation for WhatsApp (same approved wording the server sends automatically). */
 export function confirmationTicketText(apt: Appointment): string {
-  return [
-    `🏥 *ETERNAL POLYCLINIC, SOPORE*`,
-    `*OPD Appointment Confirmation Slip*`,
-    `──────────────────────────`,
-    `🎟️ *Token No:* ${apt.token}`,
-    `👤 *Patient:* ${apt.patientName}`,
-    apt.patientAddress ? `📍 *Area/Village:* ${apt.patientAddress}` : null,
-    `📱 *Mobile:* ${apt.patientPhone}`,
-    `🩺 *Consultant:* ${apt.doctorName}`,
-    `📅 *Date:* ${apt.date}`,
-    `⏰ *Slot Time:* ${formatTime(apt.time)}`,
-    `──────────────────────────`,
-    `📍 *Location:* 1st Floor, Lone Complex, Opposite SDH Hospital, Sopore`,
-    `ℹ️ *Note:* Please arrive 10-15 minutes before your slot time and present this token slip at reception. Consultation fee is payable directly at reception.`,
-    `📞 *Reception Helpline:* 97977 96909`,
-  ]
-    .filter(Boolean)
-    .join("\n");
+  return appointmentConfirmationText({
+    patientName: apt.patientName,
+    doctorName: apt.doctorName,
+    date: apt.date,
+    time: apt.time,
+    token: apt.token,
+  });
 }
 
 /** Formats an announcement message when a doctor is delayed or cancelled */
@@ -1200,77 +1169,59 @@ export function restoreFromJsonBackup(jsonString: string): { success: boolean; m
   }
 }
 
-/** Formats a clean end-of-day summary message to send to clinic owner via WhatsApp. */
-export function formatDailyOwnerSummary(selectedDate: string, doctorIdFilter: string = "all"): string {
-  const allDateApts = getAllAppointments().filter((a) => a.date === selectedDate);
-  const filtered = doctorIdFilter === "all"
-    ? allDateApts
-    : allDateApts.filter((a) => a.doctorId === doctorIdFilter);
+/** Appointment figures for one clinic date (and optionally one doctor), for the owner's daily summary. */
+export function appointmentSummaryStats(
+  appointments: Appointment[],
+  selectedDate: string,
+  doctorIdFilter: string = "all",
+): Pick<OwnerSummaryStats, "totalPatients" | "appointmentsBooked" | "completedAppointments" | "pendingAppointments" | "cancelledAppointments" | "doctors" | "walkIns" | "online"> {
+  const filtered = appointments.filter(
+    (a) => a.date === selectedDate && (doctorIdFilter === "all" || a.doctorId === doctorIdFilter),
+  );
+  const live = filtered.filter((a) => a.status !== "cancelled");
+  const doctorsMap = new Map<string, { name: string; booked: number; done: number }>();
+  for (const a of live) {
+    const d = doctorsMap.get(a.doctorId) ?? { name: a.doctorName, booked: 0, done: 0 };
+    d.booked += 1;
+    if (a.status === "completed") d.done += 1;
+    doctorsMap.set(a.doctorId, d);
+  }
+  return {
+    totalPatients: new Set(live.map((a) => `${a.patientPhone}|${a.patientName.trim().toLowerCase()}`)).size,
+    appointmentsBooked: live.length,
+    completedAppointments: live.filter((a) => a.status === "completed").length,
+    pendingAppointments: live.filter((a) => a.status !== "completed").length,
+    cancelledAppointments: filtered.length - live.length,
+    doctors: Array.from(doctorsMap.values()),
+    walkIns: live.filter((a) => a.type === "walk_in").length,
+    online: live.filter((a) => a.type === "online").length,
+  };
+}
 
-  const completed = filtered.filter((a) => a.status === "completed").length;
-  const waiting = filtered.filter((a) => a.status === "confirmed" || a.status === "arrived").length;
-  const inConsult = filtered.filter((a) => a.status === "in_consultation").length;
-  const cancelled = filtered.filter((a) => a.status === "cancelled").length;
-  const walkIns = filtered.filter((a) => a.type === "walk_in").length;
-  const online = filtered.filter((a) => a.type === "online").length;
-
-  type DocStat = { name: string; speciality: string; total: number; done: number; waiting: number; cancelled: number };
-  const doctorStatsMap: Record<string, DocStat> = {};
-
-  filtered.forEach((a) => {
-    if (!doctorStatsMap[a.doctorId]) {
-      doctorStatsMap[a.doctorId] = {
-        name: a.doctorName,
-        speciality: a.speciality,
-        total: 0,
-        done: 0,
-        waiting: 0,
-        cancelled: 0,
-      };
-    }
-    const stat = doctorStatsMap[a.doctorId];
-    stat.total += 1;
-    if (a.status === "completed") stat.done += 1;
-    else if (a.status === "confirmed" || a.status === "arrived" || a.status === "in_consultation") stat.waiting += 1;
-    else if (a.status === "cancelled") stat.cancelled += 1;
+/**
+ * Owner's end-of-day WhatsApp summary (format approved 4 Nov 2026; no helpline line).
+ * Lab and registration figures come from the database via /api/staff/summary; pass them in `fromDatabase`.
+ * Without them (database not connected) those lines show "—" rather than an invented 0.
+ */
+export function formatDailyOwnerSummary(
+  selectedDate: string,
+  doctorIdFilter: string = "all",
+  fromDatabase?: Partial<OwnerSummaryStats>,
+): string {
+  const apt = appointmentSummaryStats(getAllAppointments(), selectedDate, doctorIdFilter);
+  return ownerSummaryText({
+    date: selectedDate,
+    newRegistrations: 0,
+    reportsUploaded: 0,
+    reportsPending: 0,
+    reportsDelivered: 0,
+    failedDeliveries: 0,
+    labUnavailable: !fromDatabase,
+    ...apt,
+    ...(fromDatabase ?? {}),
+    // Per-doctor view always uses the register's own counts for that doctor
+    ...(doctorIdFilter !== "all" ? apt : {}),
   });
-
-  const docEntries = Object.values(doctorStatsMap);
-
-  const doctorSections = docEntries.map((d, index) => {
-    return [
-      `🩺 *${index + 1}. ${d.name}* (${d.speciality})`,
-      `   • Total Booked: *${d.total}* (✅ Done: ${d.done}${d.waiting > 0 ? `, ⏳ Waiting: ${d.waiting}` : ""}${d.cancelled > 0 ? `, ❌ Cancelled: ${d.cancelled}` : ""})`,
-    ].join("\n");
-  }).join("\n\n");
-
-  const reportHeaderTitle = doctorIdFilter === "all"
-    ? `📊 *ETERNAL POLYCLINIC — ALL DOCTORS OPD REPORT*`
-    : `📊 *ETERNAL POLYCLINIC — OPD REPORT (${filtered[0]?.doctorName || "Doctor"})*`;
-
-  return [
-    reportHeaderTitle,
-    `──────────────────────────`,
-    `📅 *Date:* ${dateLabel(selectedDate)} (${selectedDate})`,
-    `📍 *Location:* Lone Complex, Opposite SDH, Sopore`,
-    ``,
-    `👥 *Clinic Total Patients:* ${filtered.length}`,
-    `✅ *Total Consultations Done:* ${completed}`,
-    waiting > 0 ? `⏳ *Total In Lounge / Waiting:* ${waiting}` : null,
-    inConsult > 0 ? `🚪 *Currently In Cabin:* ${inConsult}` : null,
-    cancelled > 0 ? `❌ *Total Cancelled / No-Show:* ${cancelled}` : null,
-    ``,
-    `📈 *Registration Channel:*`,
-    `• Walk-Ins (Reception Desk): ${walkIns}`,
-    `• Online Patient Self-Service: ${online}`,
-    ``,
-    docEntries.length > 0 ? `📋 *Doctor-by-Doctor Breakdown (${docEntries.length} Doctor${docEntries.length > 1 ? "s" : ""}):*\n\n${doctorSections}\n` : `ℹ️ No appointments recorded for this filter.`,
-    `──────────────────────────`,
-    `📱 *Helpline:* 97977 96909`,
-    `Generated by Reception Tablet Suite · ${new Date().toLocaleTimeString("en-IN", { timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit" })} IST`,
-  ]
-    .filter(Boolean)
-    .join("\n");
 }
 
 // ---------------------------------------------------------------------------
@@ -1403,7 +1354,7 @@ let cachedActiveDoctors: Doctor[] = defaultDoctors;
 let lastDoctorSignal = "";
 function getActiveDoctorsSnapshot(): Doctor[] {
   if (typeof window === "undefined") return defaultDoctors;
-  const sig = `${window.localStorage.getItem(STORAGE_KEYS.DOCTOR_OVERRIDES) || ""}|${window.localStorage.getItem(STORAGE_KEYS.CUSTOM_DOCTORS) || ""}|v${liveCloudVersion}`;
+  const sig = `${window.localStorage.getItem(STORAGE_KEYS.DOCTOR_OVERRIDES) || ""}|${window.localStorage.getItem(STORAGE_KEYS.CUSTOM_DOCTORS) || ""}|v${liveCloudVersion}|${clinicClock(new Date()).dateKey}`;
   if (sig === lastDoctorSignal) return cachedActiveDoctors;
   lastDoctorSignal = sig;
   cachedActiveDoctors = getActiveDoctors();

@@ -46,7 +46,6 @@ export function CounterQrPoster() {
     <div className="mx-auto max-w-3xl p-6 text-black">
       <div className="border-b-2 border-black pb-3 text-center">
         <h2 className="text-3xl font-bold">{clinic.name}</h2>
-        <p className="text-sm">{clinic.address}</p>
       </div>
       <p className="mt-4 text-center text-lg font-semibold">Scan with your phone camera</p>
       <div className="mt-4 grid grid-cols-2 gap-5">

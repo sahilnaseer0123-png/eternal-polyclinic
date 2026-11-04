@@ -1,7 +1,9 @@
 // Shared storage, authentication, and conflict-free state engine for Cloudflare Pages Functions.
 // Supports BOTH Cloudflare D1 (`EP_DB`) and Cloudflare Workers KV (`EP_KV`) out of the box with zero external npm dependencies.
 
-import { doctors as defaultDoctors, type Doctor, type OpdSession } from "../../data/clinic";
+import { doctors as defaultDoctors, type Doctor } from "../../data/clinic";
+import { mergeActiveDoctors, sanitizeOpd } from "../../lib/doctor-overrides";
+import type { SqlDatabase } from "./db";
 import type {
   Appointment,
   AppointmentStatus,
@@ -15,7 +17,8 @@ import type {
 
 export interface CfKVNamespace {
   get(key: string): Promise<string | null>;
-  put(key: string, value: string): Promise<void>;
+  get(key: string, type: "arrayBuffer"): Promise<ArrayBuffer | null>;
+  put(key: string, value: string | ArrayBuffer, options?: { metadata?: Record<string, unknown> }): Promise<void>;
   delete(key: string): Promise<void>;
 }
 
@@ -33,13 +36,25 @@ export interface CfD1Database {
 export interface CloudEnv {
   EP_DB?: CfD1Database;
   EP_KV?: CfKVNamespace;
+  /** Clinic records database (patients, lab reports, staff, notifications). See functions/_lib/db.ts. */
+  EP_SQL?: SqlDatabase;
+  /** Days a patient's secure report link stays valid (default 30). */
+  REPORT_LINK_DAYS?: string;
   ADMIN_PIN?: string;
   SESSION_SECRET?: string;
   // Optional instant outbound WhatsApp Business API credentials
   WHATSAPP_ACCESS_TOKEN?: string;
   WHATSAPP_PHONE_NUMBER_ID?: string;
-  WHATSAPP_TEMPLATE_NAME?: string;
+  /** Meta template names (approved in WhatsApp Manager). See docs/whatsapp-setup.md. */
+  WHATSAPP_TEMPLATE_APPOINTMENT?: string;
+  WHATSAPP_TEMPLATE_LAB_REPORT?: string;
   WHATSAPP_TEMPLATE_LANG?: string;
+  /** Meta webhook: verify token you choose, and the app secret used to sign delivery updates. */
+  WHATSAPP_VERIFY_TOKEN?: string;
+  WHATSAPP_APP_SECRET?: string;
+  /** Twilio Content API template SIDs (needed for business-initiated messages on Twilio). */
+  TWILIO_CONTENT_SID_APPOINTMENT?: string;
+  TWILIO_CONTENT_SID_LAB_REPORT?: string;
   TWILIO_ACCOUNT_SID?: string;
   TWILIO_AUTH_TOKEN?: string;
   TWILIO_WHATSAPP_FROM?: string;
@@ -50,6 +65,7 @@ export interface CloudEnv {
 export interface CfPagesContext {
   request: Request;
   env: CloudEnv;
+  params?: Record<string, string | string[]>;
   waitUntil?: (promise: Promise<unknown>) => void;
 }
 
@@ -114,15 +130,21 @@ export function resolveStorageDriver(env: CloudEnv): KeyValueDriver | null {
   return null;
 }
 
-/** In-memory KV mock for unit tests */
+/** In-memory KV mock for unit tests (strings and binary values, like Workers KV). */
 export function createMemoryKV(): CfKVNamespace {
-  const map = new Map<string, string>();
+  const map = new Map<string, string | ArrayBuffer>();
+  async function get(key: string): Promise<string | null>;
+  async function get(key: string, type: "arrayBuffer"): Promise<ArrayBuffer | null>;
+  async function get(key: string, type?: "arrayBuffer"): Promise<string | ArrayBuffer | null> {
+    const v = map.get(key);
+    if (v === undefined) return null;
+    if (type === "arrayBuffer") return typeof v === "string" ? (new TextEncoder().encode(v).buffer as ArrayBuffer) : v.slice(0);
+    return typeof v === "string" ? v : new TextDecoder().decode(v);
+  }
   return {
-    async get(key: string) {
-      return map.get(key) ?? null;
-    },
-    async put(key: string, value: string) {
-      map.set(key, value);
+    get,
+    async put(key: string, value: string | ArrayBuffer) {
+      map.set(key, typeof value === "string" ? value : value.slice(0));
     },
     async delete(key: string) {
       map.delete(key);
@@ -181,24 +203,24 @@ type StoredPinRecord = {
   updatedAt: number;
 };
 
-function toHex(bytes: Uint8Array): string {
+export function toHex(bytes: Uint8Array): string {
   return Array.from(bytes)
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 }
 
-function randomHex(byteLength = 32): string {
+export function randomHex(byteLength = 32): string {
   const bytes = new Uint8Array(byteLength);
   crypto.getRandomValues(bytes);
   return toHex(bytes);
 }
 
-async function sha256Hex(input: string): Promise<string> {
+export async function sha256Hex(input: string): Promise<string> {
   const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(input));
   return toHex(new Uint8Array(digest));
 }
 
-async function hmacSha256Hex(secret: string, message: string): Promise<string> {
+export async function hmacSha256Hex(secret: string, message: string): Promise<string> {
   const key = await crypto.subtle.importKey(
     "raw",
     new TextEncoder().encode(secret),
@@ -222,7 +244,7 @@ export function constantTimeEqual(a: string, b: string): boolean {
   return diff === 0;
 }
 
-async function getSigningSecret(driver: KeyValueDriver, env: CloudEnv): Promise<string> {
+export async function getSigningSecret(driver: KeyValueDriver, env: CloudEnv): Promise<string> {
   if (env.SESSION_SECRET && env.SESSION_SECRET.length >= 16) {
     return env.SESSION_SECRET;
   }
@@ -302,7 +324,7 @@ export function clearSessionCookie(isHttps: boolean): string {
   return `${SESSION_COOKIE_NAME}=; HttpOnly;${secureAttr} SameSite=Strict; Path=/; Max-Age=0`;
 }
 
-function parseCookie(header: string | null, name: string): string | null {
+export function parseCookie(header: string | null, name: string): string | null {
   if (!header) return null;
   const parts = header.split(";");
   for (const part of parts) {
@@ -483,11 +505,15 @@ export async function applyCloudMutation(
     }
 
     case "set_doctor_override": {
+      // Only this doctor's entry changes; other doctors and every appointment are left alone.
       const prev = state.overrides[mutation.doctorId] ?? {};
-      const nextOv: DoctorOverride = { ...prev, ...mutation.override };
-      // Normalize customOpd if passed
-      if (mutation.override.customOpd) {
-        nextOv.customOpd = mutation.override.customOpd as OpdSession[];
+      const nextOv: DoctorOverride = { ...prev, ...mutation.override, updatedAt: Date.now() };
+      if ("customOpd" in mutation.override) {
+        // null = back to the built-in schedule; an array replaces the old days entirely (no duplicates)
+        nextOv.customOpd = mutation.override.customOpd === null ? null : sanitizeOpd(mutation.override.customOpd);
+      }
+      for (const k of ["leaveFrom", "leaveUntil"] as const) {
+        if (k in mutation.override && !mutation.override[k]) nextOv[k] = null;
       }
       state.overrides[mutation.doctorId] = nextOv;
       break;
@@ -559,22 +585,9 @@ export async function applyCloudMutation(
   return writeClinicState(driver, state);
 }
 
-/** Resolves the live list of active doctors on the server (merging built-in doctors + overrides + custom doctors) */
-export function buildActiveDoctorsFromState(state: CloudClinicState): Doctor[] {
-  const mergedDefaults = defaultDoctors
-    .filter((doc) => !state.overrides[doc.id]?.deactivated)
-    .map((doc) => {
-      const ov = state.overrides[doc.id];
-      if (!ov) return doc;
-      return {
-        ...doc,
-        opd: ov.customOpd ?? doc.opd,
-        availability: ov.onLeave
-          ? `On Leave${ov.leaveUntil ? ` until ${ov.leaveUntil}` : ""}`
-          : doc.availability,
-      };
-    });
-  return [...mergedDefaults, ...state.customDoctors];
+/** Resolves the live list of active doctors on the server (same rule as the browser: lib/doctor-overrides.ts) */
+export function buildActiveDoctorsFromState(state: CloudClinicState, now: Date = new Date()): Doctor[] {
+  return mergeActiveDoctors(defaultDoctors, state.overrides, state.customDoctors, clinicTodayKey(now));
 }
 
 /** Builds a strictly anonymized public payload (ZERO patient names, phone numbers, addresses, or tokens) */

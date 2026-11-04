@@ -23,8 +23,7 @@ export function SiteHeader() {
               {clinic.name}
             </span>
             <span className="block text-xs font-medium text-muted">
-              <span className="sm:hidden">Sopore, Kashmir</span>
-              <span className="hidden sm:inline">Opposite SDH Hospital, Sopore</span>
+              Sopore, Kashmir
             </span>
           </span>
         </Link>

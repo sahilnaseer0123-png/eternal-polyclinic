@@ -16,10 +16,28 @@ in under 60 seconds with no account. Reception confirms every request by phone.
   Fix: GitHub → Settings → Applications → Cloudflare Workers and Pages → Configure → Repository access must list
   BOTH tamyiz and eternal-polyclinic → Save. (Happened 23 Oct 2026.)
 - Font: Plus Jakarta Sans, self-hosted via `@fontsource-variable/plus-jakarta-sans`
-- V1 sends booking requests to the clinic on WhatsApp (`lib/booking.ts`); nothing is stored, on the server or the patient's phone.
-  Decision (23 Oct 2026): NO database and NO reception view for now. Reception works from WhatsApp.
-  Revisit only if bookings get busy. If ever added: Supabase (Mumbai region), keys in environment variables, never in the repo (it is public). A database means server code, so it would need Cloudflare Workers/Functions or a move back to a server host: decide then.
-- Validation: zod. Tests: `npm test` (node test runner via tsx, files in `tests/`). Run them before every push.
+- Server code: Cloudflare Pages Functions in `functions/` (the 23 Oct "no database" decision is superseded).
+  - OPD register (appointments, doctor live status, overrides, custom doctors): one JSON blob in KV `EP_KV`
+    (`functions/_lib/clinic-store.ts`). Online booking `functions/api/book.ts`, staff `functions/api/admin/state.ts`.
+  - Clinic records (4 Nov 2026): Cloudflare D1 bound as **`EP_SQL`** (`functions/_lib/db.ts`, tables made on first use):
+    staff, patients, appointments (mirror of the KV register linked to patients), lab_reports, report_links,
+    notifications + notification_events, audit_log. NEVER bind D1 as `EP_DB`: clinic-store switches the whole register
+    to `EP_DB` and the KV appointments would vanish. Setup: `docs/clinic-records-setup.md`. Without `EP_SQL` the site
+    runs as before (PIN desk) and the new sections show "Setup needed".
+  - Lab PDFs: private KV keys `lab-pdf:*` (10 MB max, validated). Never a public URL. R2 would need a card on file.
+  - Staff logins (`functions/_lib/staff-auth.ts`): owner / reception / lab, PBKDF2 passwords, signed session cookie tied
+    to session_version. The old shared PIN works only until the first owner account exists, then it is off for good.
+  - WhatsApp (`functions/_lib/whatsapp.ts`, `notify.ts`): Meta Cloud API (recommended), Twilio or a gateway. Every message
+    is a `notifications` row with a unique idempotency key: confirmation once per token (`appt:<token>`), lab report once
+    per release (`lab-auto:<id>:<ready_at>`), manual resends get their own rows; retry only for Failed. Old/past
+    appointments are recorded but never messaged. Lab PDFs go only to a VERIFIED mobile (staff confirmed it in person).
+    Delivery webhooks: `/api/whatsapp/webhook` (Meta, signed) and `/api/whatsapp/twilio-status`. Setup: `docs/whatsapp-setup.md`.
+  - Patient report link: `/report/#<token>` (token in the fragment, only its hash stored; 30 days; needs last 4 digits of
+    the mobile; locks after 8 wrong tries). `functions/api/report/view.ts`.
+  - Patient matching: same 10-digit mobile AND same name key = same patient (family members share phones). IDs `EPP-00042`.
+  - Message wording lives in `lib/messages.ts` (approved 4 Nov 2026): confirmation, lab report, owner summary (no helpline).
+- Validation: zod. Tests: `npm test` (node test runner via tsx, files in `tests/`; `tests/helpers/d1.ts` runs D1 on Node's
+  built-in SQLite, so Node 22+). Run them before every push.
 
 ## Where things live
 
@@ -29,6 +47,12 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 - `data/faq.ts`: FAQ answers; they pull the fee, phone and services from `clinic.ts`.
 - Map: the clinic isn't listed on Google Maps and a search for its name finds a DIFFERENT clinic. Directions and the map
   use the clinic's exact coordinates (`clinic.location`, the Old Municipal Office building). Never link to a name search.
+- Dashboard `/admin` (`app/admin/page.tsx`): picks by sign-in state. Owner/reception get `components/admin/ReceptionDesk.tsx`
+  (the old desk) with staff sections: Patients, Appointments, Lab Reports, Doctors (schedule editor), Specialists &
+  Availability, WhatsApp, Statistics, Owner Reports, Find Token, Staff. Lab gets a lab-only console. Panels in `components/admin/`.
+- Doctor schedule changes: one rule for browser and server, `lib/doctor-overrides.ts` (customOpd replaces days, leave has
+  from/until and ends by itself). Public pages read it live (`DoctorSittings`, `ByAppointmentSection`, DayPicker, booking).
+  Changing a schedule never edits booked appointments; the editor lists the ones that no longer fit.
 - `components/`: page sections. `WhosInToday`, `BookingSection`, `WeeklySchedule` and `DirectoryFromLink` (reads `?type=`/`?q=`)
   run in the visitor's browser (`useClinicMinute` / `useSearchParams`); the prebuilt pages hold placeholders sized like the
   real thing (no layout jump; keep it that way). `useSearchParams` users sit inside `<Suspense>`.
@@ -94,6 +118,8 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 6. One brand colour (teal `brand`). Specialities are told apart by name and icon, not colour.
 7. No invented facts: no fake reviews, stats or promises. Missing info stays as a visible TODO.
 8. Small steps: one feature at a time, check it in the browser, then commit.
+9. The full address appears only where people look for it: Contact page, home "Visit us", footer, the FAQ "where" answer,
+   privacy notice and page metadata (4 Nov 2026). Not in the header, doctor pages, token slips, posters or WhatsApp texts.
 
 ## Build order
 
@@ -101,7 +127,7 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 4. Clinic data ✓ (two doctors still need names and OPD days)
 5. Layout: hero, Who's in today, doctor cards ✓
 6. Booking form: doctor → OPD day → time → name and phone, WhatsApp link ✓
-7. Reception view at `/admin`: dropped for now (see Stack). Don't build it unless asked.
+7. Reception view at `/admin` ✓ (OPD register, then staff accounts, patients, lab reports, WhatsApp log, statistics: 4 Nov 2026).
 8. Weekly schedule, FAQ, Visit us with map, floating WhatsApp ✓
 9. Polish ✓: /privacy notice, favicon + apple icon, Open Graph, schema.org MedicalClinic, robots + sitemap.
    Audit baseline (23 Oct 2026, rechecked on the Cloudflare static build): axe 0 violations on all pages; Lighthouse mobile 92–100 (noisy run to run),

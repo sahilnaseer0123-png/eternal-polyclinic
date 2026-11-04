@@ -5,13 +5,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { clinic, doctors } from "@/data/clinic";
-import { DAY_NAMES, formatTime, opdSummary } from "@/lib/schedule";
+import { opdSummary } from "@/lib/schedule";
+import { DoctorSittings } from "@/components/DoctorSittings";
 import { DoctorMark } from "@/components/DoctorMark";
 import { DoctorLiveBadge } from "@/components/DoctorLiveBadge";
 import { ShareButton } from "@/components/ShareButton";
 import { NextAvailable } from "@/components/NextAvailable";
 import { EmergencyNote } from "@/components/EmergencyNote";
-import { CalendarIcon, CategoryIcon, CheckIcon, ChevronRightIcon, HospitalIcon, PhoneIcon } from "@/components/Icons";
+import { CategoryIcon, CheckIcon, ChevronRightIcon, HospitalIcon, PhoneIcon } from "@/components/Icons";
 import { doctorBreadcrumbs, doctorSchema, jsonLd } from "@/lib/structured-data";
 
 export function generateStaticParams() {
@@ -107,32 +108,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
               Sits at the clinic
             </h2>
 
-            {doctor.opd.length > 0 ? (
-              <ul className="mt-3 flex flex-col divide-y divide-line">
-                {doctor.opd.map((s) => (
-                  <li key={`${s.day}-${s.start}`} className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3">
-                    <span className="flex items-center gap-2 font-display text-xl font-medium tracking-tight">
-                      <CalendarIcon className="size-4 shrink-0 text-brand" />
-                      {s.recurrence === "first-of-month"
-                        ? `1st ${DAY_NAMES[s.day]} of month`
-                        : s.recurrence === "alternate"
-                          ? `Alternate ${DAY_NAMES[s.day]}s`
-                          : `${DAY_NAMES[s.day]}s`}
-                    </span>
-                    <span className="text-base font-semibold text-charcoal tabular-nums lining-nums">
-                      {formatTime(s.start)} – {formatTime(s.end)}
-                    </span>
-                    {s.recurrence === "alternate" && (
-                      <span className="w-full text-sm text-muted">Call reception to confirm which Friday.</span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="mt-4 text-base text-charcoal leading-relaxed">
-                {doctor.availability ?? "Consultation by prior appointment. Please call reception and we will arrange your slot."}
-              </p>
-            )}
+            <DoctorSittings doctor={doctor} />
 
             {doctor.opd.length > 0 && (
               <div className="mt-4 rounded-2xl bg-ground border border-line p-4">
@@ -160,7 +136,6 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
               </div>
             )}
 
-            <p className="mt-3 text-sm text-muted">{clinic.address}</p>
           </div>
 
           <div className="grid gap-2.5 pt-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
