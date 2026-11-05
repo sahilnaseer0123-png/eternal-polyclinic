@@ -6,3 +6,10 @@ compatibility_date = "2026-11-01"
 [[kv_namespaces]]
 binding = "EP_KV"
 id = "41f693747ec648f78550f26b91f385b7"
+
+# Clinic records: staff, patients, lab reports, notifications (functions/_lib/db.ts).
+# MUST stay named EP_SQL, never EP_DB (EP_DB would replace the KV OPD register).
+[[d1_databases]]
+binding = "EP_SQL"
+database_name = "eternal-polyclinic-records"
+database_id = "fd7ca3d2-11b3-4103-9007-d6390d699cac"
