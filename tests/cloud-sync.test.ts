@@ -19,7 +19,7 @@ function extractCookieValue(setCookieHeader: string | null): string {
 
 test("GET /api/live reports unconfigured cleanly when no KV/D1 binding is attached", async () => {
   const res = await getLive({
-    request: new Request("https://eternal-polyclinic.pages.dev/api/live"),
+    request: new Request("https://eternalpolyclinic.com/api/live"),
     env: {},
   });
   assert.equal(res.status, 200);
@@ -33,7 +33,7 @@ test("Admin auth rejects bad PIN, issues signed cookie on valid PIN, and rotates
 
   // Wrong PIN rejected
   const badRes = await postAuth({
-    request: new Request("https://eternal-polyclinic.pages.dev/api/admin/auth", {
+    request: new Request("https://eternalpolyclinic.com/api/admin/auth", {
       method: "POST",
       body: JSON.stringify({ action: "login", pin: "1234" }),
     }),
@@ -43,7 +43,7 @@ test("Admin auth rejects bad PIN, issues signed cookie on valid PIN, and rotates
 
   // Correct env ADMIN_PIN accepted
   const okRes = await postAuth({
-    request: new Request("https://eternal-polyclinic.pages.dev/api/admin/auth", {
+    request: new Request("https://eternalpolyclinic.com/api/admin/auth", {
       method: "POST",
       body: JSON.stringify({ action: "login", pin: "9876" }),
     }),
@@ -55,7 +55,7 @@ test("Admin auth rejects bad PIN, issues signed cookie on valid PIN, and rotates
 
   // Verify session is recognized
   const checkRes = await getAuth({
-    request: new Request("https://eternal-polyclinic.pages.dev/api/admin/auth", {
+    request: new Request("https://eternalpolyclinic.com/api/admin/auth", {
       headers: { Cookie: cookie },
     }),
     env,
@@ -66,7 +66,7 @@ test("Admin auth rejects bad PIN, issues signed cookie on valid PIN, and rotates
 
   // Rotate PIN from admin console
   const rotateRes = await postAuth({
-    request: new Request("https://eternal-polyclinic.pages.dev/api/admin/auth", {
+    request: new Request("https://eternalpolyclinic.com/api/admin/auth", {
       method: "POST",
       headers: { Cookie: cookie },
       body: JSON.stringify({ action: "change_pin", newPin: "552800" }),
@@ -77,7 +77,7 @@ test("Admin auth rejects bad PIN, issues signed cookie on valid PIN, and rotates
 
   // Old PIN no longer works
   const oldPinAttempt = await postAuth({
-    request: new Request("https://eternal-polyclinic.pages.dev/api/admin/auth", {
+    request: new Request("https://eternalpolyclinic.com/api/admin/auth", {
       method: "POST",
       body: JSON.stringify({ action: "login", pin: "9876" }),
     }),
@@ -87,7 +87,7 @@ test("Admin auth rejects bad PIN, issues signed cookie on valid PIN, and rotates
 
   // New PIN works
   const newPinAttempt = await postAuth({
-    request: new Request("https://eternal-polyclinic.pages.dev/api/admin/auth", {
+    request: new Request("https://eternalpolyclinic.com/api/admin/auth", {
       method: "POST",
       body: JSON.stringify({ action: "login", pin: "552800" }),
     }),
@@ -102,14 +102,14 @@ test("/api/admin/state enforces auth, syncs without resurrecting deleted tokens,
 
   // Unauthenticated access blocked
   const unauth = await getState({
-    request: new Request("https://eternal-polyclinic.pages.dev/api/admin/state"),
+    request: new Request("https://eternalpolyclinic.com/api/admin/state"),
     env,
   });
   assert.equal(unauth.status, 401);
 
   // Login to get session cookie
   const loginRes = await postAuth({
-    request: new Request("https://eternal-polyclinic.pages.dev/api/admin/auth", {
+    request: new Request("https://eternalpolyclinic.com/api/admin/auth", {
       method: "POST",
       body: JSON.stringify({ action: "login", pin: "7788" }),
     }),
@@ -134,7 +134,7 @@ test("/api/admin/state enforces auth, syncs without resurrecting deleted tokens,
   };
 
   await postState({
-    request: new Request("https://eternal-polyclinic.pages.dev/api/admin/state", {
+    request: new Request("https://eternalpolyclinic.com/api/admin/state", {
       method: "POST",
       headers: { Cookie: cookie },
       body: JSON.stringify({ op: "upsert_appointment", appointment: apt1 }),
@@ -143,7 +143,7 @@ test("/api/admin/state enforces auth, syncs without resurrecting deleted tokens,
   });
 
   await postState({
-    request: new Request("https://eternal-polyclinic.pages.dev/api/admin/state", {
+    request: new Request("https://eternalpolyclinic.com/api/admin/state", {
       method: "POST",
       headers: { Cookie: cookie },
       body: JSON.stringify({
@@ -157,7 +157,7 @@ test("/api/admin/state enforces auth, syncs without resurrecting deleted tokens,
 
   // Public /api/live shows delay + locked slot, ZERO patient PII
   const liveRes = await getLive({
-    request: new Request("https://eternal-polyclinic.pages.dev/api/live"),
+    request: new Request("https://eternalpolyclinic.com/api/live"),
     env,
   });
   const liveRaw = await liveRes.text();
@@ -171,7 +171,7 @@ test("/api/admin/state enforces auth, syncs without resurrecting deleted tokens,
 
   // Delete token on Tablet A, then sync_merge stale list from Phone B -> deleted token stays deleted
   await postState({
-    request: new Request("https://eternal-polyclinic.pages.dev/api/admin/state", {
+    request: new Request("https://eternalpolyclinic.com/api/admin/state", {
       method: "POST",
       headers: { Cookie: cookie },
       body: JSON.stringify({ op: "delete_appointment", token: apt1.token }),
@@ -180,7 +180,7 @@ test("/api/admin/state enforces auth, syncs without resurrecting deleted tokens,
   });
 
   const mergeRes = await postState({
-    request: new Request("https://eternal-polyclinic.pages.dev/api/admin/state", {
+    request: new Request("https://eternalpolyclinic.com/api/admin/state", {
       method: "POST",
       headers: { Cookie: cookie },
       body: JSON.stringify({ op: "sync_merge", appointments: [apt1] }),

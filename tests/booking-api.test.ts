@@ -6,7 +6,7 @@ import { createMemoryKV, type CloudEnv } from "@/functions/_lib/clinic-store";
 import { buildPatientConfirmationMessage } from "@/functions/_lib/whatsapp";
 import { onRequestDelete, onRequestGet, onRequestPost } from "@/functions/api/book";
 
-const URL_BASE = "https://eternal-polyclinic.pages.dev/api/book";
+const URL_BASE = "https://eternalpolyclinic.com/api/book";
 
 function pickSlots() {
   const now = new Date();
