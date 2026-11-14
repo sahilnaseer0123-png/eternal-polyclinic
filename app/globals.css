@@ -170,6 +170,66 @@ body {
   background-size: 24px 24px;
 }
 
+/* Isometric Clinical & Live ECG Hero Illustration */
+.ep-il .ln {
+  stroke: var(--color-ink);
+  stroke-width: 1.35;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: #ffffff;
+  vector-effect: non-scaling-stroke;
+}
+
+.ep-il .ln.card {
+  fill: var(--color-ground);
+}
+
+.ep-il .ln.open {
+  fill: none;
+}
+
+.ep-il .ln.thin {
+  stroke-width: 0.95;
+  stroke-opacity: 0.48;
+}
+
+.ep-il .ln.faint {
+  stroke-width: 0.85;
+  stroke-opacity: 0.16;
+}
+
+.ep-il .ln.flow {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 1.25;
+  stroke-opacity: 0.48;
+  stroke-dasharray: 0.03 0.04;
+}
+
+.ep-il .ln.hot {
+  fill: #dbeafe;
+  stroke: var(--color-accent);
+  stroke-width: 1.5;
+}
+
+.ep-il .ln.accent {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2.15;
+}
+
+.ep-il .ln.ecg-base {
+  fill: none;
+  stroke: var(--color-line-strong);
+  stroke-width: 1.6;
+}
+
+.ep-il .ln.ecg-pulse {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 2.3;
+}
+
 /* Scroll-aware floating WhatsApp step-aside while reading schedules */
 .ep-wa-float {
   transition:
@@ -240,73 +300,81 @@ body {
     transform: translateY(6px) scale(0.95);
   }
 
-  /* 3D DNA Sculpture Motion & Sapphire Bioluminescent Aura */
-  @keyframes ep-dna-float {
-    0%, 100% {
-      transform: translate3d(-10px, 8px, 0) rotate(-1.6deg) scale(1);
+  /* Calm vertical levitation on clinical slips + continuous traveling ECG pulse (zero rotation wobble) */
+  @keyframes ep-hero-settle {
+    from {
+      transform: translate3d(0, 8px, 0);
     }
-    33% {
-      transform: translate3d(8px, -10px, 0) rotate(1.2deg) scale(1.035);
-    }
-    66% {
-      transform: translate3d(12px, 4px, 0) rotate(-0.6deg) scale(1.015);
-    }
-  }
-
-  @keyframes ep-dna-wave {
-    0%, 100% {
-      transform: scale(1.02) rotate(0deg);
-    }
-    50% {
-      transform: scale(1.065) rotate(1.8deg);
-    }
-  }
-
-  @keyframes ep-dna-aura {
-    0%, 100% {
-      transform: translate3d(-6%, 4%, 0) scale(0.95);
-      opacity: 0.65;
-    }
-    50% {
-      transform: translate3d(6%, -5%, 0) scale(1.08);
-      opacity: 0.95;
-    }
-  }
-
-  @keyframes ep-dna-stream {
     to {
-      stroke-dashoffset: -240;
+      transform: translate3d(0, 0, 0);
     }
   }
 
-  .ep-dna-parallax {
-    transform: translate3d(var(--dna-tx, 0px), var(--dna-ty, 0px), 0) rotate(var(--dna-rot, 0deg));
-    transition: transform 0.12s linear;
+  @keyframes ep-slip-float {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, -4.5px, 0);
+    }
+  }
+
+  @keyframes ep-ecg-sweep {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: -1;
+    }
+  }
+
+  .ep-hero-art {
+    animation: ep-hero-settle 0.65s var(--mo-ease) 0.04s backwards;
+  }
+
+  .ep-il-hero .il-float {
+    animation: ep-slip-float 4.6s ease-in-out calc(var(--f, 0) * -0.58s) infinite;
     will-change: transform;
   }
 
-  .ep-dna-floater {
-    animation: ep-dna-float 6.5s ease-in-out infinite;
-    will-change: transform;
-  }
-
-  .ep-dna-img-motion {
-    animation: ep-dna-wave 4.8s ease-in-out infinite;
-    filter: drop-shadow(0 16px 28px rgba(29, 78, 216, 0.14));
-  }
-
-  .ep-dna-aura-glow {
-    animation: ep-dna-aura 5.5s ease-in-out infinite;
-  }
-
-  .ep-dna-stream-line {
-    stroke-dasharray: 18 22;
-    animation: ep-dna-stream 5.5s linear infinite;
+  .ep-il-hero .ln.ecg-pulse {
+    stroke-dasharray: 0.24 0.76;
+    animation: ep-ecg-sweep 2.8s linear infinite;
   }
 }
 
-/* Desktop SVG stroke draw for medical icons on scroll entry */
+/* Desktop SVG stroke draw for hero clinical illustration and scroll-entry medical icons */
 @media (prefers-reduced-motion: no-preference) and (min-width: 900px) and (hover: hover) and (pointer: fine) {
+  @keyframes ep-hero-draw {
+    from {
+      stroke-dashoffset: 1;
+      fill-opacity: 0;
+    }
+    to {
+      stroke-dashoffset: 0;
+      fill-opacity: 1;
+    }
+  }
+
+  @keyframes ep-flow-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .ep-il-hero .ln:not(.flow):not(.ecg-pulse) {
+    stroke-dasharray: 1;
+    animation: ep-hero-draw 0.85s var(--mo-ease) calc(120ms + var(--d, 0) * 8ms) backwards;
+  }
+
+  .ep-il-hero .ln.flow {
+    animation: ep-flow-in 0.55s ease-out calc(260ms + var(--d, 0) * 8ms) backwards;
+  }
+
   html.reveal-ready [data-draw]:not(.is-visible) svg :is(path, rect, circle, polyline):not([fill="currentColor"]) {
     stroke-dasharray: 120;
     stroke-dashoffset: 120;

@@ -7,6 +7,7 @@ import { clinic, services } from "@/data/clinic";
 import { DayPicker } from "@/components/DayPicker";
 import { ByAppointmentSection } from "@/components/ByAppointmentSection";
 import { HeroRightColumn } from "@/components/HeroRightColumn";
+import { HeroClinicalArt } from "@/components/HeroClinicalArt";
 import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import { EmergencyNote } from "@/components/EmergencyNote";
@@ -105,57 +106,12 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 2. Centerpiece 3D Sculptural DNA Helix (16:9 WebP + JPG fallback < 200KB) */}
-          <div className="ep-dna-parallax pointer-events-none relative z-0 -mx-5 my-auto flex min-h-[142px] max-h-[265px] min-[390px]:min-h-[168px] min-[390px]:max-h-[285px] min-[420px]:min-h-[195px] min-[420px]:max-h-[315px] flex-1 items-center w-[calc(100%+2.5rem)] select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_9%,black_91%,transparent_100%)] sm:block sm:flex-none sm:min-h-0 sm:max-h-none sm:-mx-8 sm:my-0 sm:h-[195px] sm:w-[calc(100%+4rem)] md:h-[215px] min-[72rem]:absolute min-[72rem]:left-[33%] min-[72rem]:top-[-2%] min-[72rem]:mx-0 min-[72rem]:h-auto min-[72rem]:aspect-video min-[72rem]:w-[61%] min-[72rem]:overflow-visible min-[72rem]:-rotate-[16deg] min-[72rem]:[mask-image:linear-gradient(90deg,transparent_0%,black_14%,black_90%,transparent_100%)] xl:left-[34%] xl:top-[-3%] xl:w-[59%]">
-            <div className="relative flex h-full w-full items-center justify-center [mask-image:linear-gradient(to_bottom,transparent_0%,black_18%,black_82%,transparent_100%)] sm:block min-[72rem]:[mask-image:none]">
-              {/* Sapphire-cyan bioluminescent aura behind DNA helix */}
-              <div
-                aria-hidden="true"
-                className="ep-dna-aura-glow pointer-events-none absolute inset-[8%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.22)_0%,rgba(56,189,248,0.12)_45%,transparent_72%)] blur-2xl"
-              />
-              {/* Animated helical molecular pulse streams */}
-              <svg
-                viewBox="0 0 800 450"
-                fill="none"
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 z-10 h-full w-full opacity-75 mix-blend-multiply"
-              >
-                <path
-                  d="M-20 315 C 140 215, 250 345, 410 225 C 565 110, 670 245, 830 135"
-                  stroke="#2563EB"
-                  strokeWidth="2.2"
-                  strokeOpacity="0.45"
-                  strokeLinecap="round"
-                  className="ep-dna-stream-line"
-                />
-                <path
-                  d="M-20 145 C 145 250, 260 115, 415 235 C 570 355, 675 190, 830 295"
-                  stroke="#0EA5E9"
-                  strokeWidth="2"
-                  strokeOpacity="0.42"
-                  strokeLinecap="round"
-                  className="ep-dna-stream-line"
-                  style={{ animationDelay: "-2.7s" }}
-                />
-                <circle cx="215" cy="245" r="4" fill="#1D4ED8" fillOpacity="0.4" />
-                <circle cx="412" cy="230" r="4.5" fill="#0EA5E9" fillOpacity="0.5" />
-                <circle cx="620" cy="210" r="4" fill="#1D4ED8" fillOpacity="0.4" />
-              </svg>
-              <picture className="ep-dna-floater relative z-0 block h-full w-full">
-                <source type="image/webp" media="(min-width: 640px)" srcSet="/photos/dna-helix-1920.webp" />
-                <source type="image/webp" srcSet="/photos/dna-helix-800.webp" />
-                <img
-                  src="/photos/dna-helix-1920.jpg"
-                  alt=""
-                  aria-hidden="true"
-                  width={1920}
-                  height={1080}
-                  fetchPriority="high"
-                  decoding="async"
-                  className="ep-dna-img-motion h-full w-full scale-[1.18] -rotate-[7deg] object-cover sm:scale-[1.06] sm:-rotate-[4deg] min-[72rem]:scale-100 min-[72rem]:rotate-0 min-[72rem]:object-contain"
-                />
-              </picture>
-            </div>
+          {/* 2. Centerpiece Isometric Clinical & Live ECG Vector Illustration */}
+          <div
+            data-hero-art=""
+            className="ep-hero-art pointer-events-none relative z-0 mx-auto my-3 flex w-full max-w-[34rem] items-center justify-center select-none sm:my-4 min-[72rem]:absolute min-[72rem]:left-[34%] min-[72rem]:top-[3%] min-[72rem]:mx-0 min-[72rem]:my-0 min-[72rem]:max-w-none min-[72rem]:w-[58%] xl:left-[35%] xl:top-[2%] xl:w-[56%]"
+          >
+            <HeroClinicalArt />
           </div>
 
           {/* 3. Right-Side Compact Appointment & Live Clinic Cards */}
