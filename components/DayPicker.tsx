@@ -71,9 +71,9 @@ export function DayPicker() {
       <div className="mx-auto max-w-6xl px-5 py-8 sm:px-6 sm:py-20">
         <div className="reveal">
           <p className="eyebrow text-muted">Visiting specialists</p>
-          <h2 id="days-title" className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
+          <h2 id="days-title" className="mt-3 whitespace-nowrap text-[1.375rem] min-[360px]:text-[1.5rem] min-[390px]:text-[1.6875rem] font-semibold leading-[1.12] tracking-[-0.035em] text-ink sm:text-5xl">
             Who sits on{" "}
-            <em key={selected} className="ep-mark inline-block rounded-xl px-2.5 py-0.5 ring-1 ring-brand-line/70">
+            <em key={selected} className="ep-mark inline-block rounded-xl px-2 py-0.5 ring-1 ring-brand-line/70 sm:px-2.5">
               {dayName}
             </em>
           </h2>
