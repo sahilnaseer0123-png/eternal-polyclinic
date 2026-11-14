@@ -91,19 +91,19 @@ export function HeroRightColumn() {
       {/* Mobile (< 640px): Full-screen balanced twin-panel live clinic + studio stethoscope card */}
       <div className="sm:hidden">
         <div className="flex items-stretch gap-2.5 min-[390px]:gap-3">
-          <div className="flex min-h-[120px] min-[390px]:min-h-[132px] min-w-0 flex-1 flex-col justify-between rounded-2xl border border-[#E5EBE7] bg-[#F5F7F5] p-3 min-[390px]:p-3.5">
+          <div className="flex min-h-[120px] min-[390px]:min-h-[132px] min-w-0 flex-1 flex-col justify-between rounded-2xl border border-line bg-ground p-3 min-[390px]:p-3.5">
             <div className="flex items-center justify-between gap-1.5 min-w-0">
-              <p className="flex items-center gap-1.5 font-sans text-[10.5px] min-[390px]:text-[11px] font-bold uppercase tracking-[0.09em] text-[#171D1B] whitespace-nowrap truncate">
-                <SparkleCross className="size-3 text-brand shrink-0" />
+              <p className="flex items-center gap-1.5 font-sans text-[10.5px] min-[390px]:text-[11px] font-bold uppercase tracking-[0.09em] text-ink whitespace-nowrap truncate">
+                <SparkleCross className="size-3 text-accent shrink-0" />
                 <span className="min-[440px]:hidden">{statusHeadingCompact}</span>
                 <span className="hidden min-[440px]:inline">{statusHeading}</span>
               </p>
-              <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-[#3B4B45] ring-1 ring-[#E2EAE4] shrink-0 whitespace-nowrap">
+              <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-charcoal ring-1 ring-line shrink-0 whitespace-nowrap">
                 <span className="size-1.5 rounded-full bg-[#22A05B]" aria-hidden="true" />
                 {openBadge}
               </span>
             </div>
-            <p className="mt-2 text-[12px] min-[390px]:text-[12.5px] leading-[1.45] text-[#4A5853]">
+            <p className="mt-2 text-[12px] min-[390px]:text-[12.5px] leading-[1.45] text-muted">
               {statusCopy}
             </p>
           </div>
@@ -111,7 +111,7 @@ export function HeroRightColumn() {
           <Link
             href="/book"
             aria-label="Book an appointment"
-            className="group relative w-[96px] min-[385px]:w-[112px] min-[420px]:w-[124px] shrink-0 overflow-hidden rounded-2xl border border-[#E5EBE7] bg-[#E8EFECE6]"
+            className="group relative w-[96px] min-[385px]:w-[112px] min-[420px]:w-[124px] shrink-0 overflow-hidden rounded-2xl border border-line bg-sand"
           >
             <img
               src="/photos/stethoscope-card.webp"
@@ -123,24 +123,24 @@ export function HeroRightColumn() {
               decoding="async"
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
-            <span className="absolute right-2 top-2 inline-flex size-6.5 items-center justify-center rounded-lg bg-brand-tint/95 text-brand shadow-2xs ring-1 ring-brand-line/80">
+            <span className="absolute right-2 top-2 inline-flex size-6.5 items-center justify-center rounded-lg bg-brand-tint/95 text-accent shadow-2xs ring-1 ring-brand-line/80">
               <ArrowUpRight className="size-3" />
             </span>
-            <span className="absolute bottom-2 left-2 rounded-md bg-white/92 backdrop-blur-xs px-2 py-0.5 text-[10.5px] font-semibold tracking-[-0.01em] text-[#171D1B] ring-1 ring-black/6">
+            <span className="absolute bottom-2 left-2 rounded-md bg-white/92 backdrop-blur-xs px-2 py-0.5 text-[10.5px] font-semibold tracking-[-0.01em] text-ink ring-1 ring-black/6">
               Book
             </span>
           </Link>
         </div>
 
-        <div className="mt-2.5 min-[390px]:mt-3 flex items-center justify-between gap-2 border-t border-[#EDF1EE] pt-1.5 px-0.5">
+        <div className="mt-2.5 min-[390px]:mt-3 flex items-center justify-between gap-2 border-t border-line pt-1.5 px-0.5">
           <a
             href="#days"
-            className="group inline-flex min-h-10 items-center gap-1.5 text-[12.5px] min-[390px]:text-[13px] font-semibold text-[#171D1B] hover:text-brand transition-colors shrink-0"
+            className="group inline-flex min-h-10 items-center gap-1.5 text-[12.5px] min-[390px]:text-[13px] font-semibold text-ink hover:text-accent transition-colors shrink-0"
           >
-            <span className="underline decoration-[#CBD5D0] underline-offset-4 group-hover:decoration-brand">
+            <span className="underline decoration-line-strong underline-offset-4 group-hover:decoration-brand-dark">
               See schedule
             </span>
-            <span className="btn-arrow inline-flex size-5.5 items-center justify-center rounded-md bg-brand-tint text-brand ring-1 ring-brand-line">
+            <span className="btn-arrow inline-flex size-5.5 items-center justify-center rounded-md bg-brand-tint text-accent ring-1 ring-brand-line">
               <ArrowUpRight className="size-3" />
             </span>
           </a>
@@ -149,7 +149,7 @@ export function HeroRightColumn() {
             href={clinic.reportRequestUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-10 items-center gap-1 text-[12px] min-[390px]:text-[12.5px] font-semibold text-[#52605B] hover:text-brand transition-colors tabular-nums lining-nums shrink-0"
+            className="inline-flex min-h-10 items-center gap-1 text-[12px] min-[390px]:text-[12.5px] font-semibold text-muted hover:text-accent transition-colors tabular-nums lining-nums shrink-0"
           >
             <span>Lab reports ({clinic.labTechPhoneDisplay})</span>
             <span aria-hidden="true">↗</span>
@@ -157,31 +157,31 @@ export function HeroRightColumn() {
         </div>
       </div>
 
-      {/* Tablet & Desktop (>= 640px): Two-block Healist right column */}
+      {/* Tablet & Desktop (>= 640px): Two-block right column */}
       <div className="hidden sm:grid sm:grid-cols-2 sm:gap-5 min-[72rem]:grid-cols-1 min-[72rem]:gap-6 w-full">
-        {/* 1. Split Appointment Card (matches Healist's right-side appointment card) */}
+        {/* 1. Split Appointment Card */}
         <Link
           href="/book"
           className="group flex items-stretch gap-2.5 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
         >
-          <div className="flex min-h-[126px] flex-1 flex-col justify-between rounded-2xl border border-[#E7ECE8] bg-[#F5F7F5] p-4 transition-colors group-hover:border-[#D2DFD6] group-hover:bg-[#EEF3EE]">
+          <div className="flex min-h-[126px] flex-1 flex-col justify-between rounded-2xl border border-line bg-ground p-4 transition-colors group-hover:border-brand-line group-hover:bg-brand-tint/50">
             <div className="flex items-center justify-between gap-2">
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#4A5954]">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted">
                 <span className="size-1.5 rounded-full bg-[#22A05B]" aria-hidden="true" />
                 {openBadge}
               </span>
-              <span className="btn-arrow inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-brand-tint text-brand ring-1 ring-brand-line transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+              <span className="btn-arrow inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-brand-tint text-accent ring-1 ring-brand-line transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                 <ArrowUpRight className="size-3.5" />
               </span>
             </div>
-            <span className="block font-sans text-[0.95rem] font-semibold leading-[1.22] tracking-[-0.015em] text-[#171D1B]">
+            <span className="block font-sans text-[0.95rem] font-semibold leading-[1.22] tracking-[-0.015em] text-ink">
               Book an
               <br />
               appointment
             </span>
           </div>
 
-          <div className="relative w-[112px] sm:w-[118px] shrink-0 overflow-hidden rounded-2xl border border-[#E7ECE8] bg-[#E8EFECE6]">
+          <div className="relative w-[112px] sm:w-[118px] shrink-0 overflow-hidden rounded-2xl border border-line bg-sand">
             <img
               src="/photos/stethoscope-card.webp"
               alt="Clinical care at Eternal Polyclinic"
@@ -195,13 +195,13 @@ export function HeroRightColumn() {
         </Link>
 
         {/* 2. Compact Today's OPD & Digital Lab Reports Info Block */}
-        <div className="flex flex-col justify-between rounded-2xl border border-[#ECEFEA] bg-[#FAFBFA] p-4 min-[72rem]:border-0 min-[72rem]:bg-transparent min-[72rem]:p-0">
+        <div className="flex flex-col justify-between rounded-2xl border border-line bg-ground/60 p-4 min-[72rem]:border-0 min-[72rem]:bg-transparent min-[72rem]:p-0">
           <div>
-            <p className="flex items-center gap-1.5 font-sans text-xs font-bold uppercase tracking-[0.11em] text-[#171D1B]">
-              <SparkleCross className="size-3.5 text-brand shrink-0" />
+            <p className="flex items-center gap-1.5 font-sans text-xs font-bold uppercase tracking-[0.11em] text-ink">
+              <SparkleCross className="size-3.5 text-accent shrink-0" />
               <span>{statusHeading}</span>
             </p>
-            <p className="mt-2 text-[0.85rem] leading-[1.55] text-[#55635E]">
+            <p className="mt-2 text-[0.85rem] leading-[1.55] text-muted">
               {statusCopy}
             </p>
           </div>
@@ -209,12 +209,12 @@ export function HeroRightColumn() {
           <div className="mt-3.5 flex flex-wrap items-center gap-4">
             <a
               href="#days"
-              className="group inline-flex items-center gap-2 text-[0.85rem] font-semibold text-[#171D1B] hover:text-brand transition-colors"
+              className="group inline-flex items-center gap-2 text-[0.85rem] font-semibold text-ink hover:text-accent transition-colors"
             >
-              <span className="underline decoration-[#CBD5D0] underline-offset-4 group-hover:decoration-brand">
+              <span className="underline decoration-line-strong underline-offset-4 group-hover:decoration-brand-dark">
                 See schedule
               </span>
-              <span className="btn-arrow inline-flex size-6 items-center justify-center rounded-md bg-brand-tint text-brand ring-1 ring-brand-line transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+              <span className="btn-arrow inline-flex size-6 items-center justify-center rounded-md bg-brand-tint text-accent ring-1 ring-brand-line transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                 <ArrowUpRight className="size-3" />
               </span>
             </a>
@@ -223,7 +223,7 @@ export function HeroRightColumn() {
               href={clinic.reportRequestUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-[#55635E] hover:text-brand transition-colors"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-muted hover:text-accent transition-colors"
             >
               <span>Lab reports ({clinic.labTechPhoneDisplay})</span>
               <span aria-hidden="true">↗</span>

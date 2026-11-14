@@ -43,7 +43,7 @@ export function ByAppointmentSection() {
                           {d.name ?? d.speciality}
                         </Link>
                       </h3>
-                      <p className="font-semibold text-brand">{d.speciality}</p>
+                      <p className="font-semibold text-accent">{d.speciality}</p>
                       <p className="text-[15px] text-muted">{d.credentials ?? d.degree}</p>
                     </div>
                     <div className="mt-5 pt-3.5 border-t border-line/70 flex items-center justify-between">

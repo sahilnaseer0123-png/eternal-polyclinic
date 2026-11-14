@@ -152,7 +152,7 @@ export function DayPicker() {
                           {doctor.name ?? doctor.speciality}
                         </Link>
                       </h3>
-                      <p className="text-base font-semibold text-brand">{doctor.speciality}</p>
+                      <p className="text-base font-semibold text-accent">{doctor.speciality}</p>
                       <p className="text-[15px] text-muted">{doctor.credentials ?? doctor.degree}</p>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {note && (

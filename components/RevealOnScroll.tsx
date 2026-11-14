@@ -124,7 +124,7 @@ function setupHeroDots() {
     const y0 = Math.max(0, Math.floor((pointer.y - REACH) / GAP));
     const y1 = Math.min(Math.ceil(h / GAP), Math.ceil((pointer.y + REACH) / GAP));
 
-    ctx.fillStyle = "#0D7A6F";
+    ctx.fillStyle = "#1D4ED8";
     for (let gy = y0; gy < y1; gy += 1) {
       for (let gx = x0; gx < x1; gx += 1) {
         const x = gx * GAP + GAP / 2;
@@ -200,6 +200,73 @@ function setupScrollState() {
   };
 }
 
+function setupDnaParallax() {
+  if (REDUCED()) return () => {};
+  const target = document.querySelector<HTMLElement>(".ep-dna-parallax");
+  if (!target) return () => {};
+  const host = target.closest("section");
+
+  let scrollTy = 0;
+  let scrollRot = 0;
+  let ptrTx = 0;
+  let ptrTy = 0;
+  let ptrRot = 0;
+  let raf = 0;
+
+  const commit = () => {
+    raf = 0;
+    target.style.setProperty("--dna-tx", `${ptrTx.toFixed(1)}px`);
+    target.style.setProperty("--dna-ty", `${(scrollTy + ptrTy).toFixed(1)}px`);
+    target.style.setProperty("--dna-rot", `${(scrollRot + ptrRot).toFixed(2)}deg`);
+  };
+
+  const schedule = () => {
+    if (!raf) raf = requestAnimationFrame(commit);
+  };
+
+  const onScroll = () => {
+    const progress = Math.min(1, Math.max(0, window.scrollY / 420));
+    scrollTy = progress * -22;
+    scrollRot = progress * 3.2;
+    schedule();
+  };
+
+  const onMove = (e: PointerEvent) => {
+    if (!host) return;
+    const r = host.getBoundingClientRect();
+    const nx = (e.clientX - r.left) / (r.width || 1) - 0.5;
+    const ny = (e.clientY - r.top) / (r.height || 1) - 0.5;
+    ptrTx = nx * 28;
+    ptrTy = ny * 20;
+    ptrRot = nx * 4;
+    schedule();
+  };
+
+  const onLeave = () => {
+    ptrTx = 0;
+    ptrTy = 0;
+    ptrRot = 0;
+    schedule();
+  };
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  if (host && FINE_POINTER()) {
+    host.addEventListener("pointermove", onMove, { passive: true });
+    host.addEventListener("pointerleave", onLeave);
+  }
+
+  return () => {
+    cancelAnimationFrame(raf);
+    window.removeEventListener("scroll", onScroll);
+    if (host) {
+      host.removeEventListener("pointermove", onMove);
+      host.removeEventListener("pointerleave", onLeave);
+    }
+  };
+}
+
 export function RevealOnScroll() {
   const pathname = usePathname();
 
@@ -209,12 +276,14 @@ export function RevealOnScroll() {
     const stopCountUps = runCountUps();
     const stopDots = setupHeroDots();
     const stopScroll = setupScrollState();
+    const stopDna = setupDnaParallax();
 
     return () => {
       stopReveals();
       stopCountUps();
       stopDots();
       stopScroll();
+      stopDna();
       timers.forEach((id) => window.clearTimeout(id));
     };
   }, [pathname]);

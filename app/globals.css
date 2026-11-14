@@ -1,37 +1,38 @@
 @import "tailwindcss";
 @import "@fontsource-variable/plus-jakarta-sans";
 
-/* Design v4 "Minimalist Clinical / Healist" (Nov 2026):
-   Crisp pure white, cool clinical sage-mist (#F6F8F6), sleek obsidian-charcoal (#1D2321),
-   pastel mint-lime accents (#DFF5CA), and geometric Plus Jakarta Sans throughout. */
+/* Design v4 "Minimalist Clinical / Obsidian + Sapphire":
+   Crisp pure white, cool porcelain ground (#F5F7FA), sleek obsidian-midnight (#0F172A),
+   clinical sapphire highlights (#1D4ED8 / #EFF6FF), and geometric Plus Jakarta Sans throughout. */
 @theme {
   --font-sans: "Plus Jakarta Sans Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-display: "Plus Jakarta Sans Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
-  --color-brand: #0D7A6F;          /* deep clinical teal: primary buttons, active states, links */
-  --color-brand-dark: #095C53;     /* darker clinical teal hover */
-  --color-brand-tint: #E4F5F2;     /* crisp clinical mint-teal wash: icon tiles, pills, highlights */
-  --color-brand-line: #B5E2DA;     /* clinical teal ring/border */
+  --color-brand: #0F172A;          /* sleek obsidian-midnight primary buttons & active states */
+  --color-brand-dark: #1D4ED8;     /* electric clinical sapphire hover & active highlight */
+  --color-accent: #1D4ED8;         /* clinical sapphire blue for doctor specialities, links & icons */
+  --color-brand-tint: #EFF6FF;     /* crisp ice-sapphire wash: icon tiles, pills, highlight wipes */
+  --color-brand-line: #BFDBFE;     /* sapphire ring/border */
 
-  --color-night: #101816;          /* deep architectural obsidian-teal footer */
-  --color-night-line: #1E2D29;
-  --color-night-muted: #98ADA7;
-  --color-mint: #5EEAD4;           /* luminous aqua-mint accent on dark night surfaces */
-  --color-glow: #5EEAD4;
+  --color-night: #0B1120;          /* deep midnight obsidian footer */
+  --color-night-line: #1E293B;
+  --color-night-muted: #94A3B8;
+  --color-mint: #38BDF8;           /* luminous sky-sapphire accent on dark surfaces & CTA arrow badge */
+  --color-glow: #38BDF8;
 
-  --color-ground: #F4F7F6;         /* crisp porcelain-mist ground (TAMYIZ off-white counterpart) */
-  --color-sand: #EAEFEC;           /* soft secondary bands */
-  --color-stone: #DCE5E0;
-  --color-ink: #0F1715;            /* near-black architectural ink */
-  --color-charcoal: #263330;
-  --color-muted: #4D5E59;          /* WCAG AA compliant muted copy */
-  --color-line: #DFE7E3;           /* crisp cool card border */
-  --color-line-strong: #C5D3CD;
+  --color-ground: #F5F7FA;         /* crisp cool alabaster/porcelain ground (zero green cast) */
+  --color-sand: #EDF1F7;           /* soft cool secondary bands */
+  --color-stone: #E2E8F0;
+  --color-ink: #0B1120;            /* crisp midnight-black ink */
+  --color-charcoal: #1E293B;
+  --color-muted: #475569;          /* WCAG AA muted slate copy */
+  --color-line: #E2E8F0;           /* crisp cool card border */
+  --color-line-strong: #CBD5E1;
   --color-emergency: #B91C1C;
 
   --shadow-subtle: none;
   --shadow-card: none;
-  --shadow-elevated: 0 10px 28px -12px rgba(15, 23, 21, 0.18);
+  --shadow-elevated: 0 12px 30px -10px rgba(29, 78, 216, 0.22);
 }
 
 :root {
@@ -154,17 +155,18 @@ body {
 .ep-mark {
   position: relative;
   display: inline-block;
-  padding: 0.04em 0.3em;
-  border-radius: 0.4rem;
-  background-image: linear-gradient(90deg, var(--color-brand-tint), var(--color-brand-tint));
+  padding: 0.02em 0.32em;
+  border-radius: 0.42rem;
+  background-image: linear-gradient(120deg, #DBEAFE 0%, #EFF6FF 100%);
   background-repeat: no-repeat;
   background-position: 0 50%;
-  background-size: 100% 88%;
-  color: var(--color-ink);
+  background-size: 100% 90%;
+  color: var(--color-brand-dark);
+  box-shadow: inset 0 -2px 0 rgba(29, 78, 216, 0.22);
 }
 
 .ep-hero-dot-bg {
-  background-image: radial-gradient(rgba(13, 122, 111, 0.14) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(29, 78, 216, 0.13) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
@@ -236,6 +238,70 @@ body {
   body.is-scrolling .ep-wa-float {
     opacity: 0.55;
     transform: translateY(6px) scale(0.95);
+  }
+
+  /* 3D DNA Sculpture Motion & Sapphire Bioluminescent Aura */
+  @keyframes ep-dna-float {
+    0%, 100% {
+      transform: translate3d(-10px, 8px, 0) rotate(-1.6deg) scale(1);
+    }
+    33% {
+      transform: translate3d(8px, -10px, 0) rotate(1.2deg) scale(1.035);
+    }
+    66% {
+      transform: translate3d(12px, 4px, 0) rotate(-0.6deg) scale(1.015);
+    }
+  }
+
+  @keyframes ep-dna-wave {
+    0%, 100% {
+      transform: scale(1.02) rotate(0deg);
+    }
+    50% {
+      transform: scale(1.065) rotate(1.8deg);
+    }
+  }
+
+  @keyframes ep-dna-aura {
+    0%, 100% {
+      transform: translate3d(-6%, 4%, 0) scale(0.95);
+      opacity: 0.65;
+    }
+    50% {
+      transform: translate3d(6%, -5%, 0) scale(1.08);
+      opacity: 0.95;
+    }
+  }
+
+  @keyframes ep-dna-stream {
+    to {
+      stroke-dashoffset: -240;
+    }
+  }
+
+  .ep-dna-parallax {
+    transform: translate3d(var(--dna-tx, 0px), var(--dna-ty, 0px), 0) rotate(var(--dna-rot, 0deg));
+    transition: transform 0.12s linear;
+    will-change: transform;
+  }
+
+  .ep-dna-floater {
+    animation: ep-dna-float 6.5s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .ep-dna-img-motion {
+    animation: ep-dna-wave 4.8s ease-in-out infinite;
+    filter: drop-shadow(0 16px 28px rgba(29, 78, 216, 0.14));
+  }
+
+  .ep-dna-aura-glow {
+    animation: ep-dna-aura 5.5s ease-in-out infinite;
+  }
+
+  .ep-dna-stream-line {
+    stroke-dasharray: 18 22;
+    animation: ep-dna-stream 5.5s linear infinite;
   }
 }
 

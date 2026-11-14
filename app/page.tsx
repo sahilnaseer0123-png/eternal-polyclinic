@@ -93,7 +93,7 @@ export default function Home() {
                   key={lines.join(" ")}
                   className="flex flex-col items-start gap-1.5 rounded-xl border border-line bg-ground/95 p-2 sm:p-2.5 backdrop-blur-2xs"
                 >
-                  <span className="flex size-8 min-[390px]:size-9 sm:size-10 items-center justify-center rounded-lg bg-brand-tint text-brand ring-1 ring-brand-line/80">
+                  <span className="flex size-8 min-[390px]:size-9 sm:size-10 items-center justify-center rounded-lg bg-brand-tint text-accent ring-1 ring-brand-line/80">
                     <Icon className="size-4 min-[390px]:size-4.5 sm:size-5" />
                   </span>
                   <span className="text-[11px] min-[390px]:text-[12px] sm:text-[12.5px] font-semibold leading-[1.2] tracking-[-0.01em] text-charcoal">
@@ -106,9 +106,42 @@ export default function Home() {
           </div>
 
           {/* 2. Centerpiece 3D Sculptural DNA Helix (16:9 WebP + JPG fallback < 200KB) */}
-          <div className="pointer-events-none relative z-0 -mx-5 my-auto flex min-h-[142px] max-h-[265px] min-[390px]:min-h-[168px] min-[390px]:max-h-[285px] min-[420px]:min-h-[195px] min-[420px]:max-h-[315px] flex-1 items-center w-[calc(100%+2.5rem)] select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_9%,black_91%,transparent_100%)] sm:block sm:flex-none sm:min-h-0 sm:max-h-none sm:-mx-8 sm:my-0 sm:h-[195px] sm:w-[calc(100%+4rem)] md:h-[215px] min-[72rem]:absolute min-[72rem]:left-[33%] min-[72rem]:top-[-2%] min-[72rem]:mx-0 min-[72rem]:h-auto min-[72rem]:aspect-video min-[72rem]:w-[61%] min-[72rem]:overflow-visible min-[72rem]:-rotate-[16deg] min-[72rem]:[mask-image:linear-gradient(90deg,transparent_0%,black_14%,black_90%,transparent_100%)] xl:left-[34%] xl:top-[-3%] xl:w-[59%]">
-            <div className="flex h-full w-full items-center justify-center [mask-image:linear-gradient(to_bottom,transparent_0%,black_18%,black_82%,transparent_100%)] sm:block min-[72rem]:[mask-image:none]">
-              <picture className="block h-full w-full">
+          <div className="ep-dna-parallax pointer-events-none relative z-0 -mx-5 my-auto flex min-h-[142px] max-h-[265px] min-[390px]:min-h-[168px] min-[390px]:max-h-[285px] min-[420px]:min-h-[195px] min-[420px]:max-h-[315px] flex-1 items-center w-[calc(100%+2.5rem)] select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent_0%,black_9%,black_91%,transparent_100%)] sm:block sm:flex-none sm:min-h-0 sm:max-h-none sm:-mx-8 sm:my-0 sm:h-[195px] sm:w-[calc(100%+4rem)] md:h-[215px] min-[72rem]:absolute min-[72rem]:left-[33%] min-[72rem]:top-[-2%] min-[72rem]:mx-0 min-[72rem]:h-auto min-[72rem]:aspect-video min-[72rem]:w-[61%] min-[72rem]:overflow-visible min-[72rem]:-rotate-[16deg] min-[72rem]:[mask-image:linear-gradient(90deg,transparent_0%,black_14%,black_90%,transparent_100%)] xl:left-[34%] xl:top-[-3%] xl:w-[59%]">
+            <div className="relative flex h-full w-full items-center justify-center [mask-image:linear-gradient(to_bottom,transparent_0%,black_18%,black_82%,transparent_100%)] sm:block min-[72rem]:[mask-image:none]">
+              {/* Sapphire-cyan bioluminescent aura behind DNA helix */}
+              <div
+                aria-hidden="true"
+                className="ep-dna-aura-glow pointer-events-none absolute inset-[8%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.22)_0%,rgba(56,189,248,0.12)_45%,transparent_72%)] blur-2xl"
+              />
+              {/* Animated helical molecular pulse streams */}
+              <svg
+                viewBox="0 0 800 450"
+                fill="none"
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 z-10 h-full w-full opacity-75 mix-blend-multiply"
+              >
+                <path
+                  d="M-20 315 C 140 215, 250 345, 410 225 C 565 110, 670 245, 830 135"
+                  stroke="#2563EB"
+                  strokeWidth="2.2"
+                  strokeOpacity="0.45"
+                  strokeLinecap="round"
+                  className="ep-dna-stream-line"
+                />
+                <path
+                  d="M-20 145 C 145 250, 260 115, 415 235 C 570 355, 675 190, 830 295"
+                  stroke="#0EA5E9"
+                  strokeWidth="2"
+                  strokeOpacity="0.42"
+                  strokeLinecap="round"
+                  className="ep-dna-stream-line"
+                  style={{ animationDelay: "-2.7s" }}
+                />
+                <circle cx="215" cy="245" r="4" fill="#1D4ED8" fillOpacity="0.4" />
+                <circle cx="412" cy="230" r="4.5" fill="#0EA5E9" fillOpacity="0.5" />
+                <circle cx="620" cy="210" r="4" fill="#1D4ED8" fillOpacity="0.4" />
+              </svg>
+              <picture className="ep-dna-floater relative z-0 block h-full w-full">
                 <source type="image/webp" media="(min-width: 640px)" srcSet="/photos/dna-helix-1920.webp" />
                 <source type="image/webp" srcSet="/photos/dna-helix-800.webp" />
                 <img
@@ -119,7 +152,7 @@ export default function Home() {
                   height={1080}
                   fetchPriority="high"
                   decoding="async"
-                  className="h-full w-full scale-[1.18] -rotate-[7deg] object-cover sm:scale-[1.06] sm:-rotate-[4deg] min-[72rem]:scale-100 min-[72rem]:rotate-0 min-[72rem]:object-contain"
+                  className="ep-dna-img-motion h-full w-full scale-[1.18] -rotate-[7deg] object-cover sm:scale-[1.06] sm:-rotate-[4deg] min-[72rem]:scale-100 min-[72rem]:rotate-0 min-[72rem]:object-contain"
                 />
               </picture>
             </div>
@@ -153,7 +186,7 @@ export default function Home() {
                   href={`/services#${s.id}`}
                   className="card card-hover flex h-full items-start gap-4 rounded-2xl p-5"
                 >
-                  <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand ring-1 ring-brand-line/70">
+                  <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-accent ring-1 ring-brand-line/80">
                     <ServiceIcon id={s.id} />
                   </span>
                   <span>
@@ -168,7 +201,7 @@ export default function Home() {
           {/* Quick Reports WhatsApp prompt */}
           <div className="reveal mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-line bg-ground p-5">
             <div className="flex items-start sm:items-center gap-3.5">
-              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-brand ring-1 ring-brand-line/70">
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-accent ring-1 ring-brand-line/80">
                 <ReportIcon className="size-5" />
               </span>
               <div>
