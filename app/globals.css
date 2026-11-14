@@ -1,40 +1,52 @@
 @import "tailwindcss";
-@import "@fontsource-variable/plus-jakarta-sans";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/newsreader";
 
-/* Design v4 "Minimalist Clinical / Healist" (Nov 2026):
-   Crisp pure white, cool clinical sage-mist (#F6F8F6), sleek obsidian-charcoal (#1D2321),
-   pastel mint-lime accents (#DFF5CA), and geometric Plus Jakarta Sans throughout. */
+/* Design v5 "Aveniq" (14 Nov 2026), after the reference the owner chose:
+   white ground with a cool blue-grey cast, deep navy ink, one teal-blue brand colour,
+   serif headlines (Newsreader) over Inter, squared buttons and cards, boxed uppercase labels,
+   thin 1px borders and dotted-grid panels. */
 @theme {
-  --font-sans: "Plus Jakarta Sans Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Plus Jakarta Sans Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Newsreader Variable", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
 
-  --color-brand: #1D2321;          /* sleek obsidian charcoal: primary buttons, active states, dark bands */
-  --color-brand-dark: #2C3632;     /* button hover */
-  --color-brand-tint: #DFF5CA;     /* pastel mint-lime: icon tiles, category pills, active badges */
-  --color-brand-line: #CBE8B0;     /* mint-lime ring/border */
+  /* Squared corners everywhere: the rounded-* utilities read these. */
+  --radius-xs: 2px;
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --radius-lg: 4px;
+  --radius-xl: 4px;
+  --radius-2xl: 6px;
+  --radius-3xl: 8px;
+  --radius-4xl: 8px;
 
-  --color-night: #151A18;          /* deep architectural charcoal footer */
-  --color-night-line: #262F2B;
-  --color-night-muted: #9BA8A2;
-  --color-mint: #DFF5CA;           /* mint-lime accent on dark charcoal */
-  --color-glow: #DFF5CA;
+  --color-brand: #0D415C;          /* deep teal-blue: primary buttons, links, active states */
+  --color-brand-dark: #021623;     /* button hover */
+  --color-brand-tint: #E3EEF3;     /* pale blue: icon tiles, chips, active badges */
+  --color-brand-line: #BCD3DD;     /* pale blue ring/border */
 
-  --color-ground: #F6F8F6;         /* cool clinical sage-mist ground */
-  --color-sand: #EDF2EE;           /* soft sage secondary bands */
-  --color-stone: #E2E9E4;
-  --color-ink: #171D1B;            /* crisp architectural charcoal ink */
-  --color-charcoal: #2E3935;
-  --color-muted: #52605B;          /* WCAG AA compliant muted copy */
-  --color-line: #E5EAE6;           /* crisp cool card border */
-  --color-line-strong: #CFD8D2;
+  --color-night: #021623;          /* deep navy footer and dark bands */
+  --color-night-line: #173546;
+  --color-night-muted: #9DB4BE;
+  --color-mint: #AFCFD9;           /* light blue accent on navy */
+  --color-glow: #AFCFD9;
+
+  --color-ground: #F7F8F9;         /* page ground */
+  --color-sand: #EEF2F4;           /* secondary bands */
+  --color-stone: #E1E7EA;
+  --color-ink: #021623;            /* navy ink */
+  --color-charcoal: #263C47;
+  --color-muted: #4A616C;          /* body copy on white: above 4.5:1 */
+  --color-line: #E1E6E9;           /* card border */
+  --color-line-strong: #C5CFD4;
   --color-emergency: #B91C1C;
 
   --shadow-subtle: none;
   --shadow-card: none;
-  --shadow-elevated: 0 10px 28px -12px rgba(20, 32, 30, 0.18);
+  --shadow-elevated: 0 10px 28px -12px rgba(2, 22, 35, 0.22);
 }
 
-/* Cards: white, 1px border, no shadow. Pair with rounded-2xl / rounded-3xl. */
+/* Cards: white, 1px border, no shadow. */
 @utility card {
   background-color: #ffffff;
   border: 1px solid var(--color-line);
@@ -51,10 +63,30 @@
 /* Small uppercase label above headings and groups. */
 @utility eyebrow {
   font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.6875rem;
+  font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+/* Dotted-grid panel ground (hero, dark bands, empty states). */
+@utility dot-grid {
+  background-image: radial-gradient(circle, var(--color-line-strong) 1px, transparent 1.2px);
+  background-size: 16px 16px;
+}
+@utility dot-grid-night {
+  background-image: radial-gradient(circle, rgba(175, 207, 217, 0.22) 1px, transparent 1.2px);
+  background-size: 16px 16px;
+}
+
+/* Section labels (a <p class="eyebrow"> above a heading) are boxed tags, as in the reference. */
+p.eyebrow {
+  width: fit-content;
+  border: 1px solid currentColor;
+  border-color: color-mix(in srgb, currentColor 28%, transparent);
+  border-radius: 2px;
+  padding: 0.3rem 0.55rem;
+  line-height: 1.2;
 }
 
 /* Body text is 16px on phones (18px felt oversized there) and 18px from tablets up.
@@ -224,8 +256,6 @@ body {
   h3 {
     font-family: var(--font-display);
     font-optical-sizing: auto;
-    font-weight: 600;
-    letter-spacing: -0.03em;
   }
   h1 em,
   h2 em,
@@ -240,11 +270,29 @@ body {
   }
 }
 
+/* Headlines are set in the serif at a regular weight, whatever weight utility the markup carries
+   (unlayered on purpose: it must win over font-semibold / font-bold on h1-h3). */
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 450;
+  letter-spacing: -0.022em;
+}
+
+/* Small uppercase headings (footer columns, table and group labels) stay in the sans. */
+:is(h1, h2, h3):is(.uppercase, .eyebrow) {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
 /* A clear focus ring for keyboard users, everywhere. In the base layer so `outline-none` on an input whose
    box draws its own rounded ring (focus-within) still wins; otherwise a square ring shows inside the pill. */
 @layer base {
   :focus-visible {
-    outline: 3px solid var(--color-ink);
+    outline: 2px solid var(--color-brand);
     outline-offset: 2px;
   }
 }
@@ -331,7 +379,7 @@ body {
   .appointment-slip {
     box-shadow: none !important;
     border: 2px solid #000000 !important;
-    border-radius: 12px !important;
+    border-radius: 4px !important;
     padding: 24px !important;
     max-width: 650px !important;
     margin: 0 auto !important;

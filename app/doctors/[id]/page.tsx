@@ -50,15 +50,15 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
       <div className="mt-3 grid items-start gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-8">
         {/* Who */}
         <section className="rise card flex flex-col gap-4 rounded-3xl p-5 sm:flex-row sm:items-start sm:gap-6 sm:p-8">
-          <DoctorMark doctor={doctor} className="size-20 shrink-0 rounded-full text-4xl sm:size-28 sm:text-5xl lg:size-24 lg:text-4xl" />
+          <DoctorMark doctor={doctor} className="size-20 shrink-0 rounded-md text-4xl sm:size-28 sm:text-5xl lg:size-24 lg:text-4xl" />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-full bg-brand-tint px-3 py-1 text-xs font-semibold text-brand">
+              <span className="inline-flex items-center gap-1 rounded-md bg-brand-tint px-3 py-1 text-xs font-semibold text-brand">
                 <CategoryIcon category={doctor.category} className="size-3.5" />
                 {doctor.categoryLabel}
               </span>
               {doctor.opd.length > 0 && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-brand/10 border border-brand/20 px-3 py-1 text-xs font-bold text-brand">
+                <span className="inline-flex items-center gap-1.5 rounded-md bg-brand/10 border border-brand/20 px-3 py-1 text-xs font-bold text-brand">
                   <span className="size-1.5 rounded-full bg-brand animate-pulse" />
                   <NextAvailable
                     doctorId={doctor.id}
@@ -70,11 +70,11 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
                 </span>
               )}
               {doctor.experienceYears && (
-                <span className="inline-flex items-center rounded-full bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
+                <span className="inline-flex items-center rounded-md bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
                   {doctor.experienceYears}+ Yrs Exp.
                 </span>
               )}
-              <span className="inline-flex items-center rounded-full bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
+              <span className="inline-flex items-center rounded-md bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
                 No registration fee
               </span>
               <DoctorLiveBadge doctorId={doctor.id} />
@@ -117,7 +117,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
                     <span className="size-2 rounded-full bg-[#22A05B] animate-pulse" />
                     Next Available Sitting
                   </p>
-                  <span className="rounded-full bg-brand-tint px-2.5 py-0.5 text-[11px] font-bold text-ink ring-1 ring-brand-line/70">
+                  <span className="rounded-md bg-brand-tint px-2.5 py-0.5 text-[11px] font-bold text-ink ring-1 ring-brand-line/70">
                     Live Schedule
                   </span>
                 </div>
@@ -209,7 +209,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
         <p className="mt-1 text-sm text-muted">Common symptoms, evaluations, and clinical conditions treated</p>
         <ul className="mt-4 flex flex-wrap gap-2">
           {doctor.concerns.map((c) => (
-            <li key={c} className="card card-hover rounded-full px-4 py-2 text-sm font-medium text-charcoal">
+            <li key={c} className="card card-hover rounded-md px-4 py-2 text-sm font-medium text-charcoal">
               {c}
             </li>
           ))}
@@ -232,7 +232,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
           {others.map((d) => (
             <li key={d.id}>
               <Link href={`/doctors/${d.id}`} className="card card-hover flex items-center gap-3.5 rounded-2xl p-4 group">
-                <DoctorMark doctor={d} className="size-12 rounded-full text-xl" />
+                <DoctorMark doctor={d} className="size-12 rounded-md text-xl" />
                 <span className="flex min-w-0 flex-1 flex-col leading-snug">
                   <span className="font-display text-lg font-medium text-ink group-hover:text-brand transition-colors truncate">{title(d)}</span>
                   <span className="text-xs text-muted truncate">{d.name ? d.speciality : "Specialist Consultant"}</span>

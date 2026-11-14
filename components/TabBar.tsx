@@ -98,7 +98,7 @@ export function TabBar() {
           const on = pathname === href || (href !== "/" && Boolean(pathname?.startsWith(href)));
           return (
             <Link key={href} href={href} aria-current={on ? "page" : undefined} className={tabClass(on)}>
-              <span className={`inline-flex items-center justify-center rounded-full px-3 py-0.5 transition-colors ${on ? "bg-brand-tint text-ink" : ""}`}>
+              <span className={`inline-flex items-center justify-center rounded-md px-3 py-0.5 transition-colors ${on ? "bg-brand-tint text-ink" : ""}`}>
                 <Icon className="size-5.5" />
               </span>
               {label}
@@ -112,7 +112,7 @@ export function TabBar() {
           onClick={() => setOpen((o) => !o)}
           className={tabClass(open || moreActive)}
         >
-          <span className={`inline-flex items-center justify-center rounded-full px-3 py-0.5 transition-colors ${open || moreActive ? "bg-brand-tint text-ink" : ""}`}>
+          <span className={`inline-flex items-center justify-center rounded-md px-3 py-0.5 transition-colors ${open || moreActive ? "bg-brand-tint text-ink" : ""}`}>
             {open ? <CloseIcon className="size-5.5" /> : <MenuIcon className="size-5.5" />}
           </span>
           More

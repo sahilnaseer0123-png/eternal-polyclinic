@@ -63,7 +63,7 @@ function LabConsole({ staff }: { staff: StaffSession }) {
             <p className="eyebrow text-muted">Lab desk</p>
             <h1 className="mt-2 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
               Lab{" "}
-              <em className="inline-block rounded-xl bg-brand-tint px-2.5 py-0.5 text-ink ring-1 ring-brand-line/70">reports</em>
+              <em className="text-brand">reports</em>
             </h1>
             <p className="mt-2 text-sm font-semibold text-charcoal">
               Signed in as {staff.displayName} · {ROLE_LABEL[staff.role]}
@@ -82,7 +82,7 @@ function LabConsole({ staff }: { staff: StaffSession }) {
           </button>
         </div>
       </section>
-      <section className="rounded-t-[2rem] sm:rounded-t-[2.75rem] border-t border-line/80 bg-ground">
+      <section className="rounded-t-none sm:rounded-t-none border-t border-line/80 bg-ground">
         <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-8 pb-24 sm:px-6 sm:py-10 sm:pb-16">
           <nav aria-label="Lab sections" className="flex gap-2 overflow-x-auto pb-1">
             {tabs.map(({ id, label, Icon }) => (
@@ -91,7 +91,7 @@ function LabConsole({ staff }: { staff: StaffSession }) {
                 type="button"
                 aria-pressed={tab === id}
                 onClick={() => setTab(id)}
-                className={`inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 text-sm sm:text-base font-semibold transition-colors cursor-pointer ${
+                className={`inline-flex min-h-11 shrink-0 items-center gap-2 rounded-md px-4 text-sm sm:text-base font-semibold transition-colors cursor-pointer ${
                   tab === id ? "bg-ink text-white" : "card text-charcoal hover:border-line-strong hover:text-ink"
                 }`}
               >

@@ -484,7 +484,7 @@ export function ReceptionDesk({
             <p className="eyebrow text-muted">Authorized Staff Console</p>
             <h1 className="mt-2.5 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
               Reception &amp;{" "}
-              <em className="inline-block rounded-xl bg-brand-tint px-2.5 py-0.5 text-ink ring-1 ring-brand-line/70">
+              <em className="text-brand">
                 admin portal
               </em>
             </h1>
@@ -495,7 +495,7 @@ export function ReceptionDesk({
         </section>
 
         <div className="bg-white">
-          <section className="rounded-t-[2rem] sm:rounded-t-[2.75rem] border-t border-line/80 bg-ground">
+          <section className="rounded-t-none sm:rounded-t-none border-t border-line/80 bg-ground">
             <div className="mx-auto grid max-w-6xl gap-6 px-5 py-8 pb-24 sm:px-6 sm:py-12 sm:pb-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
               {/* Unlock Form Card */}
               <div className="card rounded-3xl p-6 sm:p-9">
@@ -701,7 +701,7 @@ export function ReceptionDesk({
             <div>
               {/* Status Pills Row */}
               <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-ground px-3 py-1 text-xs font-semibold text-charcoal tabular-nums lining-nums">
+                <span className="inline-flex items-center gap-1.5 rounded-md border border-line bg-ground px-3 py-1 text-xs font-semibold text-charcoal tabular-nums lining-nums">
                   <ClockIcon className="size-3.5 text-ink" />
                   <span>{fromMinutes(clock.minutes)} IST</span>
                 </span>
@@ -714,7 +714,7 @@ export function ReceptionDesk({
                       ? `Connected to Cloudflare ${cloudStatus.storageDriver.toUpperCase()} — click to sync now`
                       : "Local device mode — attach EP_KV or EP_DB in Cloudflare Pages to enable cross-device cloud sync"
                   }
-                  className="inline-flex items-center gap-1.5 rounded-full border border-brand-line bg-brand-tint/65 px-3 py-1 text-xs font-semibold text-ink hover:bg-brand-tint transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-md border border-brand-line bg-brand-tint/65 px-3 py-1 text-xs font-semibold text-ink hover:bg-brand-tint transition-colors cursor-pointer"
                 >
                   <RefreshIcon className={`size-3.5 ${isSyncing ? "animate-spin" : ""}`} />
                   <span>
@@ -729,7 +729,7 @@ export function ReceptionDesk({
                   <button
                     type="button"
                     onClick={() => setActiveTab("backups")}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-amber-50 px-3 py-1 text-xs font-bold text-amber-900 hover:bg-amber-100 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 rounded-md border border-amber-300 bg-amber-50 px-3 py-1 text-xs font-bold text-amber-900 hover:bg-amber-100 transition-colors cursor-pointer"
                   >
                     <span>Set Custom PIN →</span>
                   </button>
@@ -738,7 +738,7 @@ export function ReceptionDesk({
 
               <h1 className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
                 {staff ? "Clinic" : "Reception"} &amp;{" "}
-                <em className="inline-block rounded-xl bg-brand-tint px-2.5 py-0.5 text-ink ring-1 ring-brand-line/70">
+                <em className="text-brand">
                   {staff ? "dashboard" : "OPD desk"}
                 </em>
               </h1>
@@ -783,7 +783,7 @@ export function ReceptionDesk({
 
         {/* Rounded-Top Sage-Mist Workspace Band (matches DayPicker on Homepage) */}
         <div className="bg-white">
-          <section className="rounded-t-[2rem] sm:rounded-t-[2.75rem] border-t border-line/80 bg-ground">
+          <section className="rounded-t-none sm:rounded-t-none border-t border-line/80 bg-ground">
             <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-8 pb-24 sm:px-6 sm:py-10 sm:pb-16">
               {/* Floating Broadcast / Action Toast (always visible regardless of scroll position) */}
               {broadcastToast && (
@@ -821,7 +821,7 @@ export function ReceptionDesk({
                       type="button"
                       aria-pressed={on}
                       onClick={() => setActiveTab(id)}
-                      className={`inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 text-sm sm:text-base font-semibold transition-colors cursor-pointer ${
+                      className={`inline-flex min-h-11 shrink-0 items-center gap-2 rounded-md px-4 text-sm sm:text-base font-semibold transition-colors cursor-pointer ${
                         on ? "bg-ink text-white" : "card text-charcoal hover:border-line-strong hover:text-ink"
                       }`}
                     >
@@ -829,7 +829,7 @@ export function ReceptionDesk({
                       <span>{label}</span>
                       {badge !== undefined && badge > 0 && (
                         <span
-                          className={`rounded-full px-2 py-0.5 text-xs font-bold tabular-nums lining-nums ${
+                          className={`rounded-md px-2 py-0.5 text-xs font-bold tabular-nums lining-nums ${
                             on ? "bg-mint text-ink" : "bg-brand-tint text-ink ring-1 ring-brand-line/70"
                           }`}
                         >
@@ -1057,18 +1057,18 @@ export function ReceptionDesk({
                                   </h3>
 
                                   {apt.patientAddress ? (
-                                    <span className="inline-flex items-center gap-1 rounded-full border border-brand-line bg-brand-tint/75 px-2.5 py-0.5 text-xs font-semibold text-ink">
+                                    <span className="inline-flex items-center gap-1 rounded-md border border-brand-line bg-brand-tint/75 px-2.5 py-0.5 text-xs font-semibold text-ink">
                                       <MapPinIcon className="size-3 shrink-0" />
                                       <span>{apt.patientAddress}</span>
                                     </span>
                                   ) : (
-                                    <span className="inline-flex items-center rounded-full border border-line bg-ground px-2.5 py-0.5 text-xs text-muted">
+                                    <span className="inline-flex items-center rounded-md border border-line bg-ground px-2.5 py-0.5 text-xs text-muted">
                                       Area not added
                                     </span>
                                   )}
 
                                   <span
-                                    className={`rounded-full border px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider ${
+                                    className={`rounded-md border px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider ${
                                       apt.type === "walk_in"
                                         ? "border-line-strong bg-ground text-charcoal"
                                         : "border-brand-line bg-brand-tint text-ink"
@@ -1077,7 +1077,7 @@ export function ReceptionDesk({
                                     {apt.type === "walk_in" ? "Walk-In" : "Online"}
                                   </span>
                                   {apt.whatsappSent && (
-                                    <span className="rounded-full border border-brand-line bg-white px-2.5 py-0.5 text-[11px] font-bold text-ink">
+                                    <span className="rounded-md border border-brand-line bg-white px-2.5 py-0.5 text-[11px] font-bold text-ink">
                                       ✓ WA Sent
                                     </span>
                                   )}
@@ -1163,7 +1163,7 @@ export function ReceptionDesk({
               {/* ================================================================= */}
               {activeTab === "radar" && (
                 <div className="fade-in flex flex-col gap-6">
-                  <div className="rounded-3xl border border-night-line bg-brand p-6 sm:p-8 text-white">
+                  <div className="dot-grid-night rounded-3xl border border-night-line bg-brand p-6 sm:p-8 text-white">
                     <p className="eyebrow text-mint">Real-Time Website Banner</p>
                     <h2 className="mt-2 font-display text-2xl sm:text-3xl font-semibold tracking-tight text-white">
                       Live OPD arrival &amp; delay radar
@@ -1201,7 +1201,7 @@ export function ReceptionDesk({
                               </div>
 
                               <span
-                                className={`inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wider ${
+                                className={`inline-flex shrink-0 items-center gap-1.5 rounded-md border px-3 py-1 text-xs font-bold uppercase tracking-wider ${
                                   live.state === "in_clinic"
                                     ? "border-brand-line bg-brand-tint text-ink"
                                     : live.state === "delayed"
@@ -1403,11 +1403,11 @@ export function ReceptionDesk({
                               </div>
 
                               {isOnLeave ? (
-                                <span className="shrink-0 rounded-full border border-rose-200 bg-rose-50 px-3 py-0.5 text-xs font-bold text-rose-900">
+                                <span className="shrink-0 rounded-md border border-rose-200 bg-rose-50 px-3 py-0.5 text-xs font-bold text-rose-900">
                                   On Leave
                                 </span>
                               ) : (
-                                <span className="shrink-0 rounded-full border border-brand-line bg-brand-tint px-3 py-0.5 text-xs font-bold text-ink">
+                                <span className="shrink-0 rounded-md border border-brand-line bg-brand-tint px-3 py-0.5 text-xs font-bold text-ink">
                                   Active OPD
                                 </span>
                               )}
@@ -1447,7 +1447,7 @@ export function ReceptionDesk({
                                 }}
                                 className={`min-h-10 rounded-xl border px-3.5 text-xs sm:text-sm font-semibold transition-colors cursor-pointer ${
                                   isOnLeave
-                                    ? "border-brand-line bg-brand-tint text-ink hover:bg-[#D1EFB5]"
+                                    ? "border-brand-line bg-brand-tint text-ink hover:bg-[#D3E4EC]"
                                     : "border-line-strong bg-white text-charcoal hover:border-rose-300 hover:bg-rose-50 hover:text-emergency"
                                 }`}
                               >
@@ -1533,7 +1533,7 @@ export function ReceptionDesk({
                       href={ownerWaUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-mint px-6 text-sm sm:text-base font-bold text-ink hover:bg-[#D1EFB5] transition-colors"
+                      className="inline-flex min-h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-mint px-6 text-sm sm:text-base font-bold text-ink hover:bg-[#D3E4EC] transition-colors"
                     >
                       <WhatsAppIcon className="size-5 shrink-0" />
                       <span>
@@ -1589,7 +1589,7 @@ export function ReceptionDesk({
                             <RefreshIcon className="size-6" />
                           </span>
                           <span
-                            className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold ${
+                            className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-bold ${
                               cloudStatus.configured
                                 ? "bg-brand-tint border border-brand-line text-ink"
                                 : "bg-sand border border-line text-charcoal"
@@ -1730,7 +1730,7 @@ export function ReceptionDesk({
                           <WhatsAppIcon className="size-6" />
                         </span>
                         <span
-                          className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-bold ${
+                          className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-bold ${
                             cloudStatus.whatsappChannel !== "unconfigured"
                               ? "border-brand-line bg-brand-tint text-ink"
                               : "border-amber-200 bg-amber-50 text-amber-900"
@@ -1884,7 +1884,7 @@ export function ReceptionDesk({
                                 </span>
                                 <span className="font-display text-lg font-medium text-ink">{a.patientName}</span>
                                 {a.patientAddress && (
-                                  <span className="inline-flex items-center gap-1 rounded-full border border-brand-line bg-brand-tint/75 px-2.5 py-0.5 text-xs font-semibold text-ink">
+                                  <span className="inline-flex items-center gap-1 rounded-md border border-brand-line bg-brand-tint/75 px-2.5 py-0.5 text-xs font-semibold text-ink">
                                     <MapPinIcon className="size-3 shrink-0" />
                                     <span>{a.patientAddress}</span>
                                   </span>
@@ -1950,7 +1950,7 @@ export function ReceptionDesk({
                 type="button"
                 onClick={() => setShowWalkInModal(false)}
                 aria-label="Close modal"
-                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-ground text-charcoal hover:bg-sand cursor-pointer"
+                className="flex size-9 shrink-0 items-center justify-center rounded-md bg-ground text-charcoal hover:bg-sand cursor-pointer"
               >
                 <CloseIcon className="size-4" />
               </button>
@@ -2133,7 +2133,7 @@ export function ReceptionDesk({
             </span>
 
             <div>
-              <span className="inline-block rounded-full border border-brand-line bg-brand-tint px-3 py-0.5 text-xs font-bold uppercase tracking-wider text-ink">
+              <span className="inline-block rounded-md border border-brand-line bg-brand-tint px-3 py-0.5 text-xs font-bold uppercase tracking-wider text-ink">
                 Official Token Issued
               </span>
               <h2
@@ -2221,7 +2221,7 @@ export function ReceptionDesk({
                 type="button"
                 onClick={() => setShowNewDocModal(false)}
                 aria-label="Close modal"
-                className="flex size-9 shrink-0 items-center justify-center rounded-full bg-ground text-charcoal hover:bg-sand cursor-pointer"
+                className="flex size-9 shrink-0 items-center justify-center rounded-md bg-ground text-charcoal hover:bg-sand cursor-pointer"
               >
                 <CloseIcon className="size-4" />
               </button>

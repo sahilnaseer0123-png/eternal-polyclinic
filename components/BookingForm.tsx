@@ -227,7 +227,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
                 onClick={() => chooseDoctor(d.id)}
                 className="flex min-h-16 items-center gap-3 rounded-2xl border border-line-strong bg-white p-3 text-left hover:border-brand"
               >
-                <DoctorMark doctor={d} className="size-11 rounded-full text-base" />
+                <DoctorMark doctor={d} className="size-11 rounded-md text-base" />
                 <span className="min-w-0 flex-1">
                   <span className="block font-display text-lg font-medium leading-tight">{d.name ?? d.speciality}</span>
                   <span className="block text-sm text-muted">
@@ -241,23 +241,23 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
         </fieldset>
       ) : (
         <div className="flex items-center gap-3.5 rounded-2xl border border-line bg-ground p-3.5">
-          <DoctorMark doctor={doctor} className="size-12 rounded-full text-lg" />
+          <DoctorMark doctor={doctor} className="size-12 rounded-md text-lg" />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <p className="font-display text-xl font-medium leading-tight">{doctor.name ?? doctor.speciality}</p>
               {liveStatus?.state === "in_clinic" && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-brand-tint border border-brand-line px-2.5 py-0.5 text-xs font-bold text-ink">
+                <span className="inline-flex items-center gap-1 rounded-md bg-brand-tint border border-brand-line px-2.5 py-0.5 text-xs font-bold text-ink">
                   <span className="size-1.5 rounded-full bg-[#22A05B]" aria-hidden="true" />
                   In Clinic Now
                 </span>
               )}
               {liveStatus?.state === "delayed" && (
-                <span className="inline-block rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-xs font-bold text-amber-800">
+                <span className="inline-block rounded-md bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-xs font-bold text-amber-800">
                   Delayed ~{liveStatus.delayMinutes ?? 30}m
                 </span>
               )}
               {liveStatus?.state === "cancelled" && (
-                <span className="inline-block rounded-full bg-red-50 border border-red-200 px-2.5 py-0.5 text-xs font-bold text-red-800">
+                <span className="inline-block rounded-md bg-red-50 border border-red-200 px-2.5 py-0.5 text-xs font-bold text-red-800">
                   Today&rsquo;s OPD Cancelled
                 </span>
               )}
@@ -468,7 +468,7 @@ function TokenSlip({ apt, whatsappSent }: { apt: Appointment; whatsappSent?: boo
   return (
     <div className="appointment-slip card rounded-3xl p-6 sm:p-9">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-line bg-brand-tint px-3 py-1 text-xs font-bold uppercase tracking-wider text-ink">
+        <span className="inline-flex items-center gap-1.5 rounded-md border border-brand-line bg-brand-tint px-3 py-1 text-xs font-bold uppercase tracking-wider text-ink">
           <CheckIcon className="size-3.5" /> Appointment Confirmed
         </span>
         <span className="font-display text-xl font-semibold tabular-nums lining-nums">Token #{apt.token}</span>
@@ -617,21 +617,21 @@ function FindMyToken() {
             <li key={a.token} className="rounded-2xl border border-line-strong p-4">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-display text-lg font-semibold tabular-nums lining-nums">#{a.token}</span>
-                <span className="rounded-full bg-sand px-2.5 py-0.5 text-xs font-bold capitalize">
+                <span className="rounded-md bg-sand px-2.5 py-0.5 text-xs font-bold capitalize">
                   {a.status.replace("_", " ")}
                 </span>
                 {live?.state === "in_clinic" && (
-                  <span className="rounded-full border border-brand-line bg-brand-tint px-2.5 py-0.5 text-xs font-bold">
+                  <span className="rounded-md border border-brand-line bg-brand-tint px-2.5 py-0.5 text-xs font-bold">
                     Doctor In Clinic
                   </span>
                 )}
                 {live?.state === "delayed" && (
-                  <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-800">
+                  <span className="rounded-md border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-800">
                     Delayed ~{live.delayMinutes ?? 30}m
                   </span>
                 )}
                 {live?.state === "cancelled" && (
-                  <span className="rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-800">
+                  <span className="rounded-md border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-800">
                     OPD Cancelled
                   </span>
                 )}

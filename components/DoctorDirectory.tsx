@@ -102,7 +102,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
               type="button"
               aria-pressed={on}
               onClick={() => choose(o.id)}
-              className={`min-h-11 shrink-0 rounded-full px-3.5 sm:px-4 font-semibold text-sm sm:text-base ${
+              className={`min-h-11 shrink-0 rounded-md px-3.5 sm:px-4 font-semibold text-sm sm:text-base ${
                 on ? "bg-ink text-white" : "card hover:text-brand"
               }`}
             >
@@ -138,20 +138,20 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                     />
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center justify-between gap-1.5">
-                        <span className="inline-block rounded-full bg-brand-tint border border-brand-line px-2 py-0.5 text-sm font-semibold text-brand">
+                        <span className="inline-block rounded-md bg-brand-tint border border-brand-line px-2 py-0.5 text-sm font-semibold text-brand">
                           {doctor.categoryLabel}
                         </span>
                         {onLeave ? (
-                          <span className="inline-block rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-xs font-bold text-amber-800">
+                          <span className="inline-block rounded-md bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-xs font-bold text-amber-800">
                             On Leave
                           </span>
                         ) : live?.state === "in_clinic" ? (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-brand-tint border border-brand-line px-2.5 py-0.5 text-xs font-bold text-ink">
+                          <span className="inline-flex items-center gap-1 rounded-md bg-brand-tint border border-brand-line px-2.5 py-0.5 text-xs font-bold text-ink">
                             <span className="size-1.5 rounded-full bg-[#22A05B]" aria-hidden="true" />
                             In Clinic
                           </span>
                         ) : live?.state === "delayed" ? (
-                          <span className="inline-block rounded-full bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-xs font-bold text-amber-800">
+                          <span className="inline-block rounded-md bg-amber-50 border border-amber-200 px-2.5 py-0.5 text-xs font-bold text-amber-800">
                             Delayed ~{live.delayMinutes ?? 30}m
                           </span>
                         ) : null}
@@ -238,7 +238,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                       {doctor.concerns.slice(0, 3).map((c) => (
                         <span
                           key={c}
-                          className="inline-flex items-center rounded-full border border-line bg-white px-2 py-0.5 text-sm text-ink"
+                          className="inline-flex items-center rounded-md border border-line bg-white px-2 py-0.5 text-sm text-ink"
                         >
                           {c}
                         </span>

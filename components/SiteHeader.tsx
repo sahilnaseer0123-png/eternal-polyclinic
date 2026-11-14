@@ -19,7 +19,7 @@ export function SiteHeader() {
         <Link href="/" className="group flex min-h-11 items-center gap-2.5 sm:gap-3 min-w-0">
           <Logo className="size-10 shrink-0" />
           <span className="leading-tight">
-            <span className="block font-display text-lg font-semibold tracking-tight group-hover:text-brand">
+            <span className="block font-display text-xl tracking-tight group-hover:text-brand">
               {clinic.name}
             </span>
             <span className="block text-xs font-medium text-muted">
@@ -28,7 +28,7 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 text-[0.9375rem] font-semibold lg:flex">
+        <nav aria-label="Main" className="hidden items-center gap-1 text-[0.875rem] font-medium lg:flex">
           {NAV.map((item) => {
             const active = pathname === item.href || Boolean(pathname?.startsWith(`${item.href}/`));
             return (
@@ -37,7 +37,7 @@ export function SiteHeader() {
                 href={item.href}
                 aria-current={pathname === item.href ? "page" : undefined}
                 className={`inline-flex min-h-10 items-center rounded-xl px-3.5 transition-colors ${
-                  active ? "bg-brand-tint text-ink" : "text-charcoal hover:bg-ground hover:text-ink"
+                  active ? "text-brand underline decoration-brand decoration-[1.5px] underline-offset-[10px]" : "text-charcoal hover:text-brand"
                 }`}
               >
                 {item.label}

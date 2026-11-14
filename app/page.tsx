@@ -40,8 +40,12 @@ export default function Home() {
     <>
       <LegacyBookingLink />
 
-      {/* Hero: Crisp white architectural canvas with diagonal 3D DNA sculpture */}
-      <section className="relative overflow-hidden bg-white">
+      {/* Hero (design v5): white canvas, dotted grid fading in from the right, serif headline, squared CTA */}
+      <section className="relative overflow-hidden border-b border-line bg-white">
+        <div
+          aria-hidden="true"
+          className="dot-grid pointer-events-none absolute inset-x-0 bottom-0 top-[42%] opacity-70 [mask-image:linear-gradient(to_bottom,transparent_0%,black_30%,black_70%,transparent_100%)] sm:inset-y-0 sm:left-auto sm:right-0 sm:top-0 sm:w-[70%] sm:[mask-image:linear-gradient(to_left,black_0%,black_35%,transparent_72%)]"
+        />
         <div className="hero-mobile-screen relative mx-auto flex w-full max-w-7xl flex-col justify-between gap-2.5 px-5 pt-3.5 sm:justify-start sm:gap-4 sm:px-8 sm:pt-7 sm:pb-12 min-[72rem]:grid min-[72rem]:min-h-[650px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-16 xl:min-h-[680px] xl:grid-cols-[minmax(0,1fr)_350px]">
           {/* 1. Top-Left Content Block */}
           <div className="relative z-10 flex min-w-0 flex-col items-start gap-2.5 min-[390px]:gap-3 sm:gap-4 min-[72rem]:gap-5 min-[72rem]:max-w-[36rem] min-[72rem]:pt-2 min-[72rem]:pb-8 xl:max-w-[39rem]">
@@ -51,7 +55,7 @@ export default function Home() {
                 href={clinic.googleRating.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full border border-[#E4EAE6] bg-[#F7F9F7] px-2.5 py-0.5 sm:py-1 text-[11.5px] sm:text-xs font-semibold text-charcoal hover:border-[#C5D8CD] hover:bg-[#EFF5EE] transition-all shrink-0"
+                className="inline-flex items-center gap-1.5 rounded-sm border border-line-strong bg-white px-2.5 py-1 text-[11.5px] sm:text-xs font-semibold text-charcoal hover:border-brand transition-colors shrink-0"
                 aria-label={`Rated ${clinic.googleRating.score} out of 5 on Google with ${clinic.googleRating.count} reviews`}
               >
                 <GoogleIcon className="size-3.5 shrink-0" />
@@ -64,7 +68,7 @@ export default function Home() {
             </div>
 
             {/* Main Headline (>= 30px mobile, >= 36px tablet, >= 48px desktop) */}
-            <h1 className="hero-fade-in max-w-full font-sans font-semibold tracking-[-0.036em] text-[#171D1B] text-[clamp(1.875rem,8.3vw,2.35rem)] leading-[1.08] sm:tracking-[-0.035em] sm:text-[2.65rem] sm:leading-[1.07] min-[72rem]:text-[3.05rem] xl:text-[3.35rem]">
+            <h1 className="hero-fade-in max-w-full text-ink text-[clamp(2.05rem,9vw,2.6rem)] leading-[1.06] sm:text-[3rem] sm:leading-[1.05] min-[72rem]:text-[3.5rem] xl:text-[3.85rem]">
               Book a Specialist
               <span className="block">Appointment Today</span>
             </h1>
@@ -72,10 +76,10 @@ export default function Home() {
             {/* Primary CTA Button */}
             <Link
               href="/book"
-              className="hero-fade-in group inline-flex min-h-11 sm:min-h-13 items-center justify-center gap-2.5 rounded-xl bg-brand px-5 sm:px-7 py-2.5 sm:py-3 text-[1.0625rem] sm:text-[1.125rem] font-semibold text-white hover:bg-brand-dark transition-all"
+              className="hero-fade-in group inline-flex min-h-11 sm:min-h-13 items-center justify-center gap-2.5 rounded-md bg-brand px-5 sm:px-6 py-2.5 sm:py-3 text-[1rem] sm:text-[1.0625rem] font-semibold text-white hover:bg-brand-dark transition-all"
             >
               <span>Book Appointment</span>
-              <span className="inline-flex size-6 items-center justify-center rounded-lg bg-mint text-ink transition-transform duration-200 group-hover:translate-x-0.5">
+              <span className="inline-flex size-6 items-center justify-center rounded-sm bg-white/15 text-white transition-transform duration-200 group-hover:translate-x-0.5">
                 <span aria-hidden="true" className="text-xs font-bold leading-none">→</span>
               </span>
             </Link>
@@ -85,12 +89,12 @@ export default function Home() {
               {heroHighlights.map(({ lines, Icon }) => (
                 <div
                   key={lines.join(" ")}
-                  className="flex flex-col items-start gap-1.5 rounded-xl border border-[#EAEFEA] bg-[#F8FAF8]/95 p-2 sm:p-2.5 backdrop-blur-2xs"
+                  className="flex flex-col items-start gap-1.5 rounded-lg border border-line bg-white/90 p-2 sm:p-2.5"
                 >
-                  <span className="flex size-8 min-[390px]:size-9 sm:size-10 items-center justify-center rounded-lg bg-white text-[#1D2321] ring-1 ring-[#E4EAE6]">
+                  <span className="flex size-8 min-[390px]:size-9 sm:size-10 items-center justify-center rounded-md bg-brand-tint text-brand ring-1 ring-brand-line/70">
                     <Icon className="size-4 min-[390px]:size-4.5 sm:size-5" />
                   </span>
-                  <span className="text-[11px] min-[390px]:text-[12px] sm:text-[12.5px] font-semibold leading-[1.2] tracking-[-0.01em] text-[#2E3935]">
+                  <span className="text-[11px] min-[390px]:text-[12px] sm:text-[12.5px] font-medium leading-[1.25] text-charcoal">
                     {lines[0]}
                     <span className="block">{lines[1]}</span>
                   </span>
@@ -135,7 +139,7 @@ export default function Home() {
       <section aria-labelledby="services" className="bg-white">
         <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-20">
           <p className="eyebrow text-muted">In the clinic</p>
-          <h2 id="services" className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
+          <h2 id="services" className="mt-3 text-[2rem] leading-[1.08] text-ink sm:text-5xl">
             Tests and <em>medicines</em>
           </h2>
           <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -199,7 +203,7 @@ export default function Home() {
         <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:px-6 sm:py-20 lg:grid-cols-2 lg:items-center">
           <div>
             <p className="eyebrow text-muted">Visit us</p>
-            <h2 id="visit" className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
+            <h2 id="visit" className="mt-3 text-[2rem] leading-[1.08] text-ink sm:text-5xl">
               Opposite <em>SDH Hospital</em>
             </h2>
             <p className="mt-4 flex items-start gap-2 text-lg font-semibold">

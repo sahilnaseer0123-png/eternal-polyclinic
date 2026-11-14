@@ -13,7 +13,7 @@ export function SiteFooter() {
   const label = "mb-3 font-sans text-[13.5px] font-bold uppercase tracking-[0.14em] text-mint";
   const link = "inline-flex min-h-10 items-center gap-x-1 text-sm text-night-muted hover:text-white";
   return (
-    <footer className="bg-night pb-24 pt-12 text-ground sm:pt-16 lg:pb-12">
+    <footer className="dot-grid-night bg-night pb-24 pt-12 text-ground sm:pt-16 lg:pb-12">
       <div className="mx-auto grid max-w-6xl grid-cols-2 gap-x-8 gap-y-10 px-5 sm:px-6 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
         <div className="col-span-2 flex flex-col gap-3 lg:col-span-1">
           <Link href="/" className="flex min-h-11 items-center gap-3">

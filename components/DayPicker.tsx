@@ -67,12 +67,12 @@ export function DayPicker() {
 
   return (
     <div className="bg-white">
-      <section id="days" aria-labelledby="days-title" className="rounded-t-[2rem] sm:rounded-t-[2.75rem] border-t border-line/80 bg-ground scroll-mt-20">
+      <section id="days" aria-labelledby="days-title" className="rounded-t-none sm:rounded-t-none border-t border-line/80 bg-ground scroll-mt-20">
       <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-20">
         <p className="eyebrow text-muted">Visiting specialists</p>
         <h2 id="days-title" className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
           Who sits on{" "}
-          <em className="inline-block rounded-xl bg-brand-tint px-2.5 py-0.5 text-ink ring-1 ring-brand-line/70">
+          <em className="text-brand">
             {dayName}
           </em>
         </h2>
@@ -154,18 +154,18 @@ export function DayPicker() {
                       <p className="text-[15px] text-muted">{doctor.credentials ?? doctor.degree}</p>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {note && (
-                          <span className="inline-block rounded-full bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
+                          <span className="inline-block rounded-md bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
                             {note}
                           </span>
                         )}
                         {live?.state === "in_clinic" && (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-tint border border-brand-line px-3 py-1 text-xs font-bold text-ink">
+                          <span className="inline-flex items-center gap-1.5 rounded-md bg-brand-tint border border-brand-line px-3 py-1 text-xs font-bold text-ink">
                             <span className="size-1.5 rounded-full bg-[#22A05B]" aria-hidden="true" />
                             In Clinic Now
                           </span>
                         )}
                         {live?.state === "delayed" && (
-                          <span className="inline-block rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-xs font-bold text-amber-800">
+                          <span className="inline-block rounded-md bg-amber-50 border border-amber-200 px-3 py-1 text-xs font-bold text-amber-800">
                             Delayed ~{live.delayMinutes ?? 30}m
                           </span>
                         )}

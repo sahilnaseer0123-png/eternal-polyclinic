@@ -56,7 +56,7 @@ const LABELS: Record<string, string> = {
 export function StatusPill({ status, label }: { status: string; label?: string }) {
   const text = label ?? LABELS[status] ?? status.charAt(0).toUpperCase() + status.slice(1);
   return (
-    <span className={`inline-flex shrink-0 items-center rounded-full border px-2.5 py-0.5 text-xs font-bold ${TONES[status] ?? TONES.queued}`}>
+    <span className={`inline-flex shrink-0 items-center rounded-md border px-2.5 py-0.5 text-xs font-bold ${TONES[status] ?? TONES.queued}`}>
       {text}
     </span>
   );

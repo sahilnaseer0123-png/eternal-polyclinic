@@ -16,7 +16,7 @@ in under 60 seconds with no account. Reception confirms every request by phone.
 - Deploys stop silently if Cloudflare loses access to this repo (yellow "disconnected" banner in the Pages project).
   Fix: GitHub → Settings → Applications → Cloudflare Workers and Pages → Configure → Repository access must list
   BOTH tamyiz and eternal-polyclinic → Save. (Happened 23 Oct 2026.)
-- Font: Plus Jakarta Sans, self-hosted via `@fontsource-variable/plus-jakarta-sans`
+- Fonts: Newsreader (headings) + Inter (body), self-hosted via `@fontsource-variable/newsreader` and `@fontsource-variable/inter`
 - Server code: Cloudflare Pages Functions in `functions/` (the 23 Oct "no database" decision is superseded).
   - OPD register (appointments, doctor live status, overrides, custom doctors): one JSON blob in KV `EP_KV`
     (`functions/_lib/clinic-store.ts`). Online booking `functions/api/book.ts`, staff `functions/api/admin/state.ts`.
@@ -67,6 +67,14 @@ in under 60 seconds with no account. Reception confirms every request by phone.
   Page links shared by header, More sheet and footer live in `components/nav.ts` (a plain module: server and client can import it).
   Header (`SiteHeader`), footer and WhatsApp button (`SiteChrome`), and the phone/tablet bottom tab bar (`TabBar`: Home,
   Doctors, Book, More sheet) are mounted in `app/layout.tsx`.
+- Design v5 "Aveniq" (14 Nov 2026, branch `redesign-aveniq`; the owner picked a Dribbble reference and asked for the whole site
+  and /admin restyled with the content unchanged). It lives almost entirely in `app/globals.css` tokens: cool white ground `#F7F8F9`,
+  navy ink/night `#021623`, one deep teal-blue `brand` `#0D415C` (pale blue `brand-tint`, light blue `mint` on navy), Newsreader serif
+  for every h1-h3 and `.font-display` at weight 450 (an unlayered rule, so `font-semibold` on a heading does nothing; small `uppercase`
+  headings stay Inter), Inter body. Squared corners: the `--radius-*` theme values are 2-8px, so `rounded-xl/2xl/3xl` are already
+  square; `rounded-full` is kept only for status dots, progress bars and the WhatsApp button. `<p class="eyebrow">` renders as a boxed
+  uppercase tag. `dot-grid` / `dot-grid-night` utilities draw the dotted panels (hero, footer, delay-radar band). No shadows, 1px borders.
+  The descriptions of v3, v4 and Design C below are superseded where they conflict (colours, fonts, radii).
 - Design v3 "day-first" (2 Nov 2026, branch `redesign-v3`): light cream header, mist hero with a live `TodayCard`, night `#0B1917` footer only, cream ground, deep teal `brand`, mint on night, Fraunces headings (italic accent phrase) + Plus Jakarta Sans, 1px-border cards, no shadows, 12-14px radius buttons. Home = `components/DayPicker.tsx` (seven days, who sits; default day = today in clinic time, computed in the browser). The fake reviews page and its components were deleted (rule 7). The Booking form is the WhatsApp request again (no token slip). `/admin`: see Dashboard above (staff logins replace the PIN once the owner account exists). Inner pages inherit the new tokens; the older description below is superseded where it conflicts.
 - Design C (chosen 23 Oct 2026, mockups on the design canvas): ground `#f4f6f5`, white `card` surfaces (a utility in
   globals.css; pair with `rounded-3xl`) without borders, pill buttons, ink (`bg-ink`) for primary actions and the Today card,
@@ -96,7 +104,7 @@ in under 60 seconds with no account. Reception confirms every request by phone.
   sections below the fold use `.reveal` (one-time fade-in via `RevealOnScroll.tsx`), the More sheet slides up.
   All of it is off under prefers-reduced-motion. Home alternates bands: hero over `FeatherPattern`, specialists,
   teal "Book in 3 steps", tinted tests band. Never animate opacity on above-the-fold text (it delays LCP).
-- Fonts: headings h1–h3 use Bricolage Grotesque (`--font-display`, set in a base layer so utilities still win), body uses
+- Fonts (superseded by Design v5 above): headings h1–h3 used Bricolage Grotesque (`--font-display`, set in a base layer so utilities still win), body uses
   Plus Jakarta Sans. Both self-hosted via @fontsource-variable.
 - `app/manifest.ts` + `public/icons/`: add-to-home-screen app (standalone). Icons rendered from `brand/logo.svg`.
 - Footer (`SiteFooter`): clinic, hours, pages, contact columns; on phones Hours + Contact sit side by side and Pages wraps last.

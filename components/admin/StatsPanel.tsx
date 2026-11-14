@@ -88,7 +88,7 @@ export function StatsPanel() {
                 type="button"
                 aria-pressed={metric === k}
                 onClick={() => setMetric(k)}
-                className={`min-h-10 rounded-full px-4 text-sm font-semibold cursor-pointer ${metric === k ? "bg-ink text-white" : "border border-line text-charcoal hover:border-line-strong"}`}
+                className={`min-h-10 rounded-md px-4 text-sm font-semibold cursor-pointer ${metric === k ? "bg-ink text-white" : "border border-line text-charcoal hover:border-line-strong"}`}
               >
                 {label}
               </button>
@@ -101,7 +101,7 @@ export function StatsPanel() {
                 type="button"
                 aria-pressed={range === r}
                 onClick={() => setRange(r)}
-                className={`min-h-10 rounded-full px-4 text-sm font-semibold capitalize cursor-pointer ${range === r ? "bg-brand text-white" : "border border-line text-charcoal hover:border-line-strong"}`}
+                className={`min-h-10 rounded-md px-4 text-sm font-semibold capitalize cursor-pointer ${range === r ? "bg-brand text-white" : "border border-line text-charcoal hover:border-line-strong"}`}
               >
                 {r}
               </button>
