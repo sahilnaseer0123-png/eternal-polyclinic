@@ -90,7 +90,7 @@ export function HeroRightColumn() {
     <div id="today" className="rise rise-3 w-full">
       {/* Mobile (< 640px): Sleek full-width Live Clinic Status & Quick Desk Card */}
       <div className="sm:hidden">
-        <div className="rounded-2xl border border-line bg-ground p-3 min-[390px]:p-3.5">
+        <div className="rounded-2xl border border-line bg-ground p-2.5 min-[390px]:p-3">
           <div className="flex items-center justify-between gap-2 min-w-0">
             <p className="flex items-center gap-1.5 font-sans text-[10.5px] min-[390px]:text-[11px] font-bold uppercase tracking-[0.09em] text-ink whitespace-nowrap truncate">
               <SparkleCross className="size-3 text-accent shrink-0" />
@@ -102,13 +102,13 @@ export function HeroRightColumn() {
               {openBadge}
             </span>
           </div>
-          <p className="mt-1.5 text-[12px] min-[390px]:text-[12.5px] leading-[1.42] text-muted">
+          <p className="mt-1 line-clamp-2 text-[11.5px] min-[390px]:text-[12px] leading-[1.35] text-muted">
             {statusCopy}
           </p>
-          <div className="mt-2.5 flex flex-wrap items-center gap-2 border-t border-line/80 pt-2">
+          <div className="mt-2 grid grid-cols-2 gap-2 border-t border-line/80 pt-2">
             <a
               href="#days"
-              className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl bg-white px-3 text-xs font-semibold text-ink ring-1 ring-line hover:border-brand-line hover:text-accent transition-colors whitespace-nowrap"
+              className="inline-flex min-h-10 min-[390px]:min-h-11 items-center justify-center gap-1 rounded-xl bg-white px-2.5 text-[11.5px] min-[390px]:text-xs font-semibold text-ink ring-1 ring-line hover:border-brand-line hover:text-accent transition-colors whitespace-nowrap"
             >
               <span>See schedule</span>
               <span aria-hidden="true">↓</span>
@@ -117,10 +117,10 @@ export function HeroRightColumn() {
               href={clinic.reportRequestUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-11 flex-1 items-center justify-center gap-1 rounded-xl bg-brand-tint/70 px-3 text-xs font-semibold text-accent ring-1 ring-brand-line/80 hover:bg-brand-tint transition-colors tabular-nums lining-nums whitespace-nowrap"
+              className="inline-flex min-h-10 min-[390px]:min-h-11 items-center justify-center gap-1 rounded-xl bg-brand-tint/70 px-2.5 text-[11.5px] min-[390px]:text-xs font-semibold text-accent ring-1 ring-brand-line/80 hover:bg-brand-tint transition-colors tabular-nums lining-nums whitespace-nowrap"
             >
-              <span>Lab reports ({clinic.labTechPhoneDisplay})</span>
-              <span aria-hidden="true">↗</span>
+              <span className="min-[400px]:hidden">Lab reports ↗</span>
+              <span className="hidden min-[400px]:inline">Lab reports ({clinic.labTechPhoneDisplay}) ↗</span>
             </a>
           </div>
         </div>

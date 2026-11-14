@@ -47,9 +47,9 @@ export default function Home() {
       <section className="relative overflow-hidden bg-white">
         <div className="ep-hero-dot-bg pointer-events-none absolute inset-0 z-0 opacity-45 sm:opacity-60" aria-hidden="true" />
         <canvas className="ep-hero-dots pointer-events-none absolute inset-0 z-0 hidden lg:block h-full w-full" aria-hidden="true" />
-        <div className="hero-mobile-screen relative mx-auto flex w-full max-w-7xl flex-col justify-start gap-2.5 px-5 pt-3.5 sm:gap-4 sm:px-8 sm:pt-7 sm:pb-12 min-[72rem]:grid min-[72rem]:min-h-[650px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-16 xl:min-h-[680px] xl:grid-cols-[minmax(0,1fr)_350px]">
+        <div className="hero-mobile-screen relative mx-auto flex w-full max-w-7xl flex-col justify-start gap-2 px-4 pt-2.5 sm:gap-4 sm:px-8 sm:pt-7 sm:pb-12 min-[72rem]:grid min-[72rem]:min-h-[650px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-16 xl:min-h-[680px] xl:grid-cols-[minmax(0,1fr)_350px]">
           {/* 1. Top-Left Content Block */}
-          <div className="relative z-10 flex min-w-0 flex-col items-start gap-2.5 min-[390px]:gap-3 sm:gap-4 min-[72rem]:gap-5 min-[72rem]:max-w-[36rem] min-[72rem]:pt-2 min-[72rem]:pb-8 xl:max-w-[39rem]">
+          <div className="relative z-10 flex min-w-0 flex-col items-start gap-2 sm:gap-4 min-[72rem]:gap-5 min-[72rem]:max-w-[36rem] min-[72rem]:pt-2 min-[72rem]:pb-8 xl:max-w-[39rem]">
             {/* Google Rating Pill + Mobile Open Hours */}
             <div className="rise flex flex-wrap items-center gap-2">
               <a
@@ -74,45 +74,38 @@ export default function Home() {
             </div>
 
             {/* Main Headline (>= 30px mobile, >= 36px tablet, >= 48px desktop) */}
-            <h1 className="rise rise-1 max-w-full font-sans font-semibold tracking-[-0.036em] text-ink text-[clamp(1.875rem,8.3vw,2.35rem)] leading-[1.08] sm:tracking-[-0.035em] sm:text-[2.65rem] sm:leading-[1.07] min-[72rem]:text-[3.05rem] xl:text-[3.35rem]">
+            <h1 className="rise rise-1 max-w-full font-sans font-semibold tracking-[-0.036em] text-ink text-[clamp(1.65rem,7.4vw,2.15rem)] leading-[1.06] sm:tracking-[-0.035em] sm:text-[2.65rem] sm:leading-[1.07] min-[72rem]:text-[3.05rem] xl:text-[3.35rem]">
               Book a Specialist
               <span className="block">
                 Appointment <span className="ep-mark ep-mark-hero">Today</span>
               </span>
             </h1>
 
-            {/* Primary CTA Button + Mobile Quick Scroll Action */}
-            <div className="rise rise-2 flex flex-wrap items-center gap-2 sm:block">
+            {/* Primary CTA Button */}
+            <div className="rise rise-2">
               <Link
                 href="/book"
-                className="shadow-elevated group inline-flex min-h-11 sm:min-h-13 items-center justify-center gap-2.5 rounded-xl bg-brand px-4.5 min-[380px]:px-5 sm:px-7 py-2.5 sm:py-3 text-base min-[380px]:text-[1.0625rem] sm:text-[1.125rem] font-semibold text-white hover:bg-brand-dark transition-all"
+                className="shadow-elevated group inline-flex min-h-11 sm:min-h-13 items-center justify-center gap-2.5 rounded-xl bg-brand px-5 sm:px-7 py-2 sm:py-3 text-base min-[380px]:text-[1.0625rem] sm:text-[1.125rem] font-semibold text-white hover:bg-brand-dark transition-all"
               >
                 <span>Book Appointment</span>
                 <span className="btn-arrow inline-flex size-6 items-center justify-center rounded-lg bg-mint text-ink transition-transform duration-200 group-hover:translate-x-0.5">
                   <span aria-hidden="true" className="text-xs font-bold leading-none">→</span>
                 </span>
               </Link>
-              <a
-                href="#days"
-                className="sm:hidden inline-flex min-h-11 items-center justify-center gap-1 rounded-xl border border-line-strong bg-white px-3.5 text-sm font-semibold text-ink hover:border-brand transition-colors"
-              >
-                <span>Today&rsquo;s Doctors</span>
-                <span aria-hidden="true">↓</span>
-              </a>
             </div>
 
             {/* 4 Interactive Clinic-Accurate Value Proposition Shortcuts */}
-            <div className="rise rise-3 grid w-full max-w-[26rem] sm:max-w-[32rem] grid-cols-2 min-[380px]:grid-cols-4 gap-1.5 min-[390px]:gap-2 sm:gap-3 pt-0.5">
+            <div className="rise rise-3 grid w-full max-w-[26rem] sm:max-w-[32rem] grid-cols-4 gap-1.5 sm:gap-3 pt-0.5">
               {heroHighlights.map(({ lines, href, Icon }) => (
                 <Link
                   key={lines.join(" ")}
                   href={href}
-                  className="group flex flex-col items-start gap-1.5 rounded-xl border border-line bg-ground/95 p-2 sm:p-2.5 backdrop-blur-2xs hover:border-brand-line hover:bg-brand-tint/40 transition-colors"
+                  className="group flex flex-col items-start gap-1 sm:gap-1.5 rounded-xl border border-line bg-ground/95 p-1.5 sm:p-2.5 backdrop-blur-2xs hover:border-brand-line hover:bg-brand-tint/40 transition-colors"
                 >
-                  <span className="flex size-8 min-[390px]:size-9 sm:size-10 items-center justify-center rounded-lg bg-brand-tint text-accent ring-1 ring-brand-line/80 group-hover:scale-105 transition-transform">
-                    <Icon className="size-4 min-[390px]:size-4.5 sm:size-5" />
+                  <span className="flex size-7 min-[390px]:size-8 sm:size-10 items-center justify-center rounded-lg bg-brand-tint text-accent ring-1 ring-brand-line/80 group-hover:scale-105 transition-transform">
+                    <Icon className="size-3.5 min-[390px]:size-4 sm:size-5" />
                   </span>
-                  <span className="text-[11px] min-[390px]:text-[12px] sm:text-[12.5px] font-semibold leading-[1.2] tracking-[-0.01em] text-charcoal group-hover:text-ink">
+                  <span className="text-[10px] min-[375px]:text-[11px] sm:text-[12.5px] font-semibold leading-[1.15] tracking-[-0.01em] text-charcoal group-hover:text-ink">
                     {lines[0]}
                     <span className="block">{lines[1]}</span>
                   </span>
@@ -124,7 +117,7 @@ export default function Home() {
           {/* 2. Centerpiece Isometric Clinical & Live ECG Vector Illustration */}
           <div
             data-hero-art=""
-            className="ep-hero-art pointer-events-none relative z-0 mx-auto my-1.5 flex w-full max-w-[34rem] items-center justify-center select-none sm:my-4 min-[72rem]:absolute min-[72rem]:left-[34%] min-[72rem]:top-[3%] min-[72rem]:mx-0 min-[72rem]:my-0 min-[72rem]:max-w-none min-[72rem]:w-[58%] xl:left-[35%] xl:top-[2%] xl:w-[56%]"
+            className="ep-hero-art pointer-events-none relative z-0 mx-auto my-0 flex w-full max-w-[34rem] items-center justify-center select-none sm:my-4 min-[72rem]:absolute min-[72rem]:left-[34%] min-[72rem]:top-[3%] min-[72rem]:mx-0 min-[72rem]:my-0 min-[72rem]:max-w-none min-[72rem]:w-[58%] xl:left-[35%] xl:top-[2%] xl:w-[56%]"
           >
             <HeroClinicalArt />
           </div>

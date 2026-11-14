@@ -114,14 +114,20 @@ body {
   textarea {
     font-size: 16px;
   }
-  /* Compact bottom breathing room before #days on phones (hero flows naturally above fold) */
+  /* Compact bottom breathing room before #days on phones (hero fits above bottom TabBar) */
   .hero-mobile-screen {
-    padding-bottom: 1rem;
+    padding-bottom: 0.625rem;
   }
   .ep-il-hero {
-    max-height: 132px;
+    max-height: 92px;
     width: auto;
     max-width: 100%;
+  }
+}
+
+@media (min-width: 390px) and (max-width: 639px) {
+  .ep-il-hero {
+    max-height: 106px;
   }
 }
 
