@@ -4,6 +4,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { clinic, services } from "@/data/clinic";
+import { formatTimeShort } from "@/lib/schedule";
 import { DayPicker } from "@/components/DayPicker";
 import { ByAppointmentSection } from "@/components/ByAppointmentSection";
 import { HeroRightColumn } from "@/components/HeroRightColumn";
@@ -27,16 +28,17 @@ function UltrasoundWaveIcon({ className = "size-5" }: { className?: string }) {
 }
 
 const heroHighlights = [
-  { lines: ["Visiting", "Specialists"], Icon: StethoscopeIcon },
-  { lines: ["Ultrasound", "Scans"], Icon: UltrasoundWaveIcon },
-  { lines: ["PDF Lab", "Reports"], Icon: ReportIcon },
-  { lines: ["Same-Day", "Booking"], Icon: CalendarCheckIcon },
+  { lines: ["Visiting", "Specialists"], href: "#days", Icon: StethoscopeIcon },
+  { lines: ["Ultrasound", "Scans"], href: "/services#ultrasound", Icon: UltrasoundWaveIcon },
+  { lines: ["PDF Lab", "Reports"], href: "/services#digital-reports", Icon: ReportIcon },
+  { lines: ["Same-Day", "Booking"], href: "/book", Icon: CalendarCheckIcon },
 ] as const;
 
 // Every page names its own address for search engines (alternates.canonical); this is "/".
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default function Home() {
+  const openHoursShort = `Daily ${formatTimeShort(clinic.hours.open)} – ${formatTimeShort(clinic.hours.close)}`;
   return (
     <>
       <LegacyBookingLink />
@@ -48,8 +50,8 @@ export default function Home() {
         <div className="hero-mobile-screen relative mx-auto flex w-full max-w-7xl flex-col justify-start gap-2.5 px-5 pt-3.5 sm:gap-4 sm:px-8 sm:pt-7 sm:pb-12 min-[72rem]:grid min-[72rem]:min-h-[650px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-16 xl:min-h-[680px] xl:grid-cols-[minmax(0,1fr)_350px]">
           {/* 1. Top-Left Content Block */}
           <div className="relative z-10 flex min-w-0 flex-col items-start gap-2.5 min-[390px]:gap-3 sm:gap-4 min-[72rem]:gap-5 min-[72rem]:max-w-[36rem] min-[72rem]:pt-2 min-[72rem]:pb-8 xl:max-w-[39rem]">
-            {/* Google Rating Pill */}
-            <div className="rise flex items-center">
+            {/* Google Rating Pill + Mobile Open Hours */}
+            <div className="rise flex flex-wrap items-center gap-2">
               <a
                 href={clinic.googleRating.url}
                 target="_blank"
@@ -66,6 +68,9 @@ export default function Home() {
                   (<span data-count={clinic.googleRating.count}>{clinic.googleRating.count}</span>)
                 </span>
               </a>
+              <span className="inline-flex items-center rounded-full border border-line bg-ground/90 px-2.5 py-0.5 text-[11px] font-semibold text-charcoal tabular-nums sm:hidden">
+                {openHoursShort}
+              </span>
             </div>
 
             {/* Main Headline (>= 30px mobile, >= 36px tablet, >= 48px desktop) */}
@@ -76,32 +81,42 @@ export default function Home() {
               </span>
             </h1>
 
-            {/* Primary CTA Button */}
-            <Link
-              href="/book"
-              className="rise rise-2 shadow-elevated group inline-flex min-h-11 sm:min-h-13 items-center justify-center gap-2.5 rounded-xl bg-brand px-5 sm:px-7 py-2.5 sm:py-3 text-[1.0625rem] sm:text-[1.125rem] font-semibold text-white hover:bg-brand-dark transition-all"
-            >
-              <span>Book Appointment</span>
-              <span className="btn-arrow inline-flex size-6 items-center justify-center rounded-lg bg-mint text-ink transition-transform duration-200 group-hover:translate-x-0.5">
-                <span aria-hidden="true" className="text-xs font-bold leading-none">→</span>
-              </span>
-            </Link>
+            {/* Primary CTA Button + Mobile Quick Scroll Action */}
+            <div className="rise rise-2 flex flex-wrap items-center gap-2 sm:block">
+              <Link
+                href="/book"
+                className="shadow-elevated group inline-flex min-h-11 sm:min-h-13 items-center justify-center gap-2.5 rounded-xl bg-brand px-4.5 min-[380px]:px-5 sm:px-7 py-2.5 sm:py-3 text-base min-[380px]:text-[1.0625rem] sm:text-[1.125rem] font-semibold text-white hover:bg-brand-dark transition-all"
+              >
+                <span>Book Appointment</span>
+                <span className="btn-arrow inline-flex size-6 items-center justify-center rounded-lg bg-mint text-ink transition-transform duration-200 group-hover:translate-x-0.5">
+                  <span aria-hidden="true" className="text-xs font-bold leading-none">→</span>
+                </span>
+              </Link>
+              <a
+                href="#days"
+                className="sm:hidden inline-flex min-h-11 items-center justify-center gap-1 rounded-xl border border-line-strong bg-white px-3.5 text-sm font-semibold text-ink hover:border-brand transition-colors"
+              >
+                <span>Today&rsquo;s Doctors</span>
+                <span aria-hidden="true">↓</span>
+              </a>
+            </div>
 
-            {/* 4 Clinic-Accurate Value Proposition Icons */}
+            {/* 4 Interactive Clinic-Accurate Value Proposition Shortcuts */}
             <div className="rise rise-3 grid w-full max-w-[26rem] sm:max-w-[32rem] grid-cols-2 min-[380px]:grid-cols-4 gap-1.5 min-[390px]:gap-2 sm:gap-3 pt-0.5">
-              {heroHighlights.map(({ lines, Icon }) => (
-                <div
+              {heroHighlights.map(({ lines, href, Icon }) => (
+                <Link
                   key={lines.join(" ")}
-                  className="flex flex-col items-start gap-1.5 rounded-xl border border-line bg-ground/95 p-2 sm:p-2.5 backdrop-blur-2xs"
+                  href={href}
+                  className="group flex flex-col items-start gap-1.5 rounded-xl border border-line bg-ground/95 p-2 sm:p-2.5 backdrop-blur-2xs hover:border-brand-line hover:bg-brand-tint/40 transition-colors"
                 >
-                  <span className="flex size-8 min-[390px]:size-9 sm:size-10 items-center justify-center rounded-lg bg-brand-tint text-accent ring-1 ring-brand-line/80">
+                  <span className="flex size-8 min-[390px]:size-9 sm:size-10 items-center justify-center rounded-lg bg-brand-tint text-accent ring-1 ring-brand-line/80 group-hover:scale-105 transition-transform">
                     <Icon className="size-4 min-[390px]:size-4.5 sm:size-5" />
                   </span>
-                  <span className="text-[11px] min-[390px]:text-[12px] sm:text-[12.5px] font-semibold leading-[1.2] tracking-[-0.01em] text-charcoal">
+                  <span className="text-[11px] min-[390px]:text-[12px] sm:text-[12.5px] font-semibold leading-[1.2] tracking-[-0.01em] text-charcoal group-hover:text-ink">
                     {lines[0]}
                     <span className="block">{lines[1]}</span>
                   </span>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -109,7 +124,7 @@ export default function Home() {
           {/* 2. Centerpiece Isometric Clinical & Live ECG Vector Illustration */}
           <div
             data-hero-art=""
-            className="ep-hero-art pointer-events-none relative z-0 mx-auto my-3 flex w-full max-w-[34rem] items-center justify-center select-none sm:my-4 min-[72rem]:absolute min-[72rem]:left-[34%] min-[72rem]:top-[3%] min-[72rem]:mx-0 min-[72rem]:my-0 min-[72rem]:max-w-none min-[72rem]:w-[58%] xl:left-[35%] xl:top-[2%] xl:w-[56%]"
+            className="ep-hero-art pointer-events-none relative z-0 mx-auto my-1.5 flex w-full max-w-[34rem] items-center justify-center select-none sm:my-4 min-[72rem]:absolute min-[72rem]:left-[34%] min-[72rem]:top-[3%] min-[72rem]:mx-0 min-[72rem]:my-0 min-[72rem]:max-w-none min-[72rem]:w-[58%] xl:left-[35%] xl:top-[2%] xl:w-[56%]"
           >
             <HeroClinicalArt />
           </div>
@@ -128,26 +143,26 @@ export default function Home() {
 
       {/* Tests and medicines */}
       <section aria-labelledby="services" className="bg-white">
-        <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-20">
+        <div className="mx-auto max-w-6xl px-5 py-8 sm:px-6 sm:py-20">
           <div className="reveal">
             <p className="eyebrow text-muted">In the clinic</p>
-            <h2 id="services" className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
+            <h2 id="services" className="mt-2 sm:mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
               Tests and <em className="ep-mark">medicines</em>
             </h2>
           </div>
-          <ul className="reveal-group mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="reveal-group mt-5 sm:mt-8 grid grid-cols-2 gap-2.5 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3">
             {services.map((s) => (
               <li key={s.id} className="reveal" data-draw="">
                 <Link
                   href={`/services#${s.id}`}
-                  className="card card-hover flex h-full items-start gap-4 rounded-2xl p-5"
+                  className="card card-hover flex h-full flex-col sm:flex-row items-start gap-2.5 sm:gap-4 rounded-2xl p-3.5 sm:p-5"
                 >
-                  <span className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-accent ring-1 ring-brand-line/80">
-                    <ServiceIcon id={s.id} />
+                  <span className="flex size-10 sm:size-12 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-accent ring-1 ring-brand-line/80">
+                    <ServiceIcon id={s.id} className="size-5 sm:size-6" />
                   </span>
-                  <span>
-                    <span className="block text-lg font-semibold text-ink">{s.short}</span>
-                    <span className="block text-[15px] text-muted">{s.description}</span>
+                  <span className="min-w-0">
+                    <span className="block text-base sm:text-lg font-semibold leading-snug text-ink">{s.short}</span>
+                    <span className="mt-0.5 block line-clamp-2 sm:line-clamp-none text-xs sm:text-[15px] leading-snug text-muted">{s.description}</span>
                   </span>
                 </Link>
               </li>
@@ -155,16 +170,16 @@ export default function Home() {
           </ul>
 
           {/* Quick Reports WhatsApp prompt */}
-          <div className="reveal mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-line bg-ground p-5">
-            <div className="flex items-start sm:items-center gap-3.5">
+          <div className="reveal mt-4 sm:mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 sm:gap-4 rounded-2xl border border-line bg-ground p-4 sm:p-5">
+            <div className="flex items-start sm:items-center gap-3 sm:gap-3.5">
               <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-accent ring-1 ring-brand-line/80">
                 <ReportIcon className="size-5" />
               </span>
               <div>
-                <strong className="block text-base font-semibold text-ink">
+                <strong className="block text-sm sm:text-base font-semibold text-ink">
                   Collect Your Reports on WhatsApp
                 </strong>
-                <p className="text-sm text-muted">
+                <p className="text-xs sm:text-sm text-muted">
                   No need to travel back to Sopore. WhatsApp or call our lab technician ({clinic.labTechPhoneDisplay}) to receive your digital PDF report.
                 </p>
               </div>
@@ -193,29 +208,29 @@ export default function Home() {
 
       {/* Visit */}
       <section aria-labelledby="visit" className="bg-ground border-t border-line">
-        <div className="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:px-6 sm:py-20 lg:grid-cols-2 lg:items-center">
+        <div className="mx-auto grid max-w-6xl gap-5 sm:gap-8 px-5 py-8 sm:px-6 sm:py-20 lg:grid-cols-2 lg:items-center">
           <div className="reveal">
             <p className="eyebrow text-muted">Visit us</p>
-            <h2 id="visit" className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
+            <h2 id="visit" className="mt-2 sm:mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
               Opposite <em className="ep-mark">SDH Hospital</em>
             </h2>
-            <p className="mt-4 flex items-start gap-2 text-lg font-semibold">
+            <p className="mt-3 sm:mt-4 flex items-start gap-2 text-base sm:text-lg font-semibold">
               <MapPinIcon className="mt-1 size-5 shrink-0 text-brand" />
               <span>
                 {clinic.address}
-                <span className="block text-[15px] font-normal text-muted sm:text-base">{clinic.location.name} building</span>
+                <span className="block text-sm sm:text-base font-normal text-muted">{clinic.location.name} building</span>
               </span>
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-4 sm:mt-6 grid grid-cols-2 gap-2.5 sm:flex sm:flex-wrap sm:gap-3">
               <a
                 href={clinic.mapUrl}
-                className="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark"
+                className="col-span-2 sm:col-span-1 inline-flex min-h-12 items-center justify-center rounded-xl bg-brand px-6 text-base font-bold text-white hover:bg-brand-dark"
               >
                 Get directions
               </a>
               <a
                 href={`tel:${clinic.phone}`}
-                className="inline-flex min-h-12 items-center justify-center rounded-xl border-[1.5px] border-ink px-6 text-base font-bold hover:bg-ink hover:text-white"
+                className="inline-flex min-h-12 items-center justify-center rounded-xl border-[1.5px] border-ink px-3 sm:px-6 text-sm sm:text-base font-bold hover:bg-ink hover:text-white whitespace-nowrap"
               >
                 Call {clinic.phoneDisplay}
               </a>
@@ -223,10 +238,10 @@ export default function Home() {
                 href={clinic.locationShareUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-line-strong bg-white px-5 text-base font-bold text-charcoal hover:border-ink hover:text-brand transition-colors"
+                className="inline-flex min-h-12 items-center justify-center gap-1.5 sm:gap-2 rounded-xl border border-line-strong bg-white px-3 sm:px-5 text-sm sm:text-base font-bold text-charcoal hover:border-ink hover:text-brand transition-colors whitespace-nowrap"
                 title="Forward address and map link to family or drivers on WhatsApp"
               >
-                <WhatsAppIcon className="size-4.5 text-ink shrink-0" />
+                <WhatsAppIcon className="size-4 sm:size-4.5 text-ink shrink-0" />
                 <span>Share location</span>
               </a>
             </div>

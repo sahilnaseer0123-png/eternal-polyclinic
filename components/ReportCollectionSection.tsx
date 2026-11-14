@@ -8,9 +8,10 @@ export function ReportCollectionSection({
 }) {
   return (
     <div
-      className={`card relative overflow-hidden rounded-3xl border border-line bg-white p-6 sm:p-9 ${className}`}
+      id="digital-reports"
+      className={`card relative scroll-mt-24 overflow-hidden rounded-3xl border border-line bg-white p-4 sm:p-9 ${className}`}
     >
-      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-8">
+      <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5 sm:gap-8">
         {/* Left Column: Heading, Value Prop & Steps */}
         <div className="max-w-2xl">
           <div className="flex items-center gap-2 text-ink">
@@ -20,18 +21,23 @@ export function ReportCollectionSection({
             <span className="eyebrow text-muted">Save a Second Trip • Digital Reports</span>
           </div>
 
-          <h2 className="mt-3 text-2xl sm:text-3xl font-semibold tracking-[-0.03em] text-ink font-display">
+          <h2 className="mt-2.5 sm:mt-3 text-2xl sm:text-3xl font-semibold tracking-[-0.03em] text-ink font-display">
             Collect your lab &amp; scan reports <em className="ep-mark">on WhatsApp</em>
           </h2>
 
-          <p className="mt-2.5 text-base text-charcoal leading-relaxed">
-            Had blood tests, an ultrasound scan, or an echocardiogram done? There is no need to travel
-            back to Sopore from Baramulla, Kupwara, or Bandipora just to collect paper sheets. Send your
-            Bill or Token number directly to our lab technician, and we will dispatch your verified PDF report directly to your chat.
+          <p className="mt-2 sm:mt-2.5 text-sm sm:text-base text-charcoal leading-relaxed">
+            <span className="sm:hidden">
+              Send your Bill or Token number to our lab technician to receive your signed PDF report on WhatsApp.
+            </span>
+            <span className="hidden sm:inline">
+              Had blood tests, an ultrasound scan, or an echocardiogram done? There is no need to travel
+              back to Sopore from Baramulla, Kupwara, or Bandipora just to collect paper sheets. Send your
+              Bill or Token number directly to our lab technician, and we will dispatch your verified PDF report directly to your chat.
+            </span>
           </p>
 
           {/* 3 Simple Steps */}
-          <div className="reveal-group mt-6 grid gap-3 sm:grid-cols-3">
+          <div className="reveal-group mt-4 sm:mt-6 grid gap-2 sm:gap-3 sm:grid-cols-3">
             {[
               {
                 num: "1",
@@ -51,16 +57,16 @@ export function ReportCollectionSection({
             ].map((step) => (
               <div
                 key={step.num}
-                className="reveal rounded-2xl border border-line/70 bg-white/80 p-3.5 backdrop-blur-xs flex flex-col justify-between"
+                className="reveal rounded-2xl border border-line/70 bg-white/80 p-2.5 sm:p-3.5 backdrop-blur-xs flex items-center gap-3 sm:flex-col sm:items-start sm:justify-between sm:gap-0"
               >
-                <div>
-                  <span className="flex size-6 items-center justify-center rounded-md bg-brand-tint text-xs font-bold text-brand tabular-nums lining-nums">
-                    {step.num}
-                  </span>
-                  <strong className="block mt-2 text-sm font-bold text-ink">
+                <span className="flex size-7 sm:size-6 shrink-0 items-center justify-center rounded-md bg-brand-tint text-xs font-bold text-brand tabular-nums lining-nums">
+                  {step.num}
+                </span>
+                <div className="min-w-0">
+                  <strong className="block sm:mt-2 text-sm font-bold text-ink">
                     {step.title}
                   </strong>
-                  <p className="mt-0.5 text-xs text-muted leading-relaxed">
+                  <p className="mt-0.5 text-xs text-muted leading-snug sm:leading-relaxed">
                     {step.desc}
                   </p>
                 </div>

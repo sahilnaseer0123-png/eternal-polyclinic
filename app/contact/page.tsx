@@ -30,7 +30,36 @@ export default function ContactPage() {
         aria-label="Address and contact"
         className="mx-auto max-w-6xl px-4 sm:px-6 pb-24 sm:pb-16"
       >
-        <div className="reveal grid gap-8 card rounded-3xl p-6 sm:p-9 md:grid-cols-2">
+        {/* Mobile 1-Tap Quick Action Strip */}
+        <div className="mb-4 grid grid-cols-3 gap-2 sm:hidden">
+          <a
+            href={clinic.mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-brand px-2.5 text-xs font-bold text-white hover:bg-brand-dark"
+          >
+            <MapPinIcon className="size-3.5 shrink-0" />
+            <span>Directions</span>
+          </a>
+          <a
+            href={`tel:${clinic.phone}`}
+            className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-ink bg-white px-2.5 text-xs font-bold text-ink hover:bg-ground"
+          >
+            <PhoneIcon className="size-3.5 shrink-0" />
+            <span>Call</span>
+          </a>
+          <a
+            href={`https://wa.me/${clinic.whatsapp}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-line-strong bg-white px-2.5 text-xs font-bold text-ink hover:border-brand"
+          >
+            <WhatsAppIcon className="size-4 shrink-0 text-accent" />
+            <span>WhatsApp</span>
+          </a>
+        </div>
+
+        <div className="reveal grid gap-5 sm:gap-8 card rounded-3xl p-4 sm:p-9 md:grid-cols-2">
           {/* Left Column: Details & Photo */}
           <div className="flex flex-col gap-6">
             <figure>
@@ -175,7 +204,7 @@ export default function ContactPage() {
               </a>
             </div>
 
-            <div className="relative min-h-[22rem] flex-1 overflow-hidden rounded-2xl border border-line bg-ground md:min-h-[28rem]">
+            <div className="relative min-h-[16rem] sm:min-h-[22rem] flex-1 overflow-hidden rounded-2xl border border-line bg-ground md:min-h-[28rem]">
               <iframe
                 src={clinic.mapEmbedUrl}
                 title={`Map: ${clinic.name}, ${clinic.location.name}, Sopore`}

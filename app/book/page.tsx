@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { clinic } from "@/data/clinic";
 import { BookingSection, BookingSkeleton } from "@/components/BookingSection";
+import { MobileDetailsCard } from "@/components/MobileDetailsCard";
 import { PageIntro } from "@/components/SiteChrome";
 import { EmergencyNote } from "@/components/EmergencyNote";
 import { PhoneIcon, ShieldCheckIcon, WhatsAppIcon } from "@/components/Icons";
@@ -27,15 +28,18 @@ export default function BookPage() {
         <EmergencyNote />
       </div>
 
-      <div className="mx-auto grid max-w-6xl gap-8 px-5 pb-24 sm:px-6 sm:pb-16 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+      <div className="mx-auto grid max-w-6xl gap-5 sm:gap-8 px-5 pb-24 sm:px-6 sm:pb-16 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
         <Suspense fallback={<BookingSkeleton />}>
           <BookingSection />
         </Suspense>
 
-        <div className="no-print reveal-group flex flex-col gap-5">
-          <div className="reveal card rounded-3xl p-6">
-            <h2 className="font-display text-2xl font-medium tracking-tight">How it works</h2>
-            <ol className="mt-4 flex flex-col gap-4 text-base text-charcoal">
+        <div className="no-print reveal-group flex flex-col gap-3.5 sm:gap-5">
+          <MobileDetailsCard
+            id="book-how-it-works"
+            heading={<h2 className="font-display text-xl sm:text-2xl font-medium tracking-tight">How it works</h2>}
+            className="reveal card rounded-3xl p-4 sm:p-6"
+          >
+            <ol className="mt-3 sm:mt-4 flex flex-col gap-3 sm:gap-4 text-sm sm:text-base text-charcoal">
               {[
                 ["Choose", "a doctor, a day and a time."],
                 ["Confirm.", "Your slot is locked instantly and you get a digital token slip."],
@@ -44,7 +48,7 @@ export default function BookPage() {
                   : ["Keep your token.", "Screenshot or print it. Lost it? Use Find My Token with your mobile number."],
               ].map(([bold, rest], i) => (
                 <li key={bold} className="flex items-start gap-3">
-                  <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-brand-tint font-display text-lg font-medium text-brand tabular-nums lining-nums">
+                  <span className="flex size-7 sm:size-8 shrink-0 items-center justify-center rounded-lg bg-brand-tint font-display text-base sm:text-lg font-medium text-brand tabular-nums lining-nums">
                     {i + 1}
                   </span>
                   <span>
@@ -53,22 +57,27 @@ export default function BookPage() {
                 </li>
               ))}
             </ol>
-          </div>
+          </MobileDetailsCard>
 
-          <div className="reveal rounded-3xl bg-sand p-6">
-            <div className="flex items-center gap-2 text-brand">
-              <ShieldCheckIcon className="size-4" />
-              <span className="eyebrow">Your privacy</span>
-            </div>
-            <p className="mt-2 text-base text-charcoal">
+          <MobileDetailsCard
+            id="book-privacy"
+            heading={
+              <div className="flex items-center gap-2 text-brand">
+                <ShieldCheckIcon className="size-4" />
+                <span className="eyebrow">Your privacy</span>
+              </div>
+            }
+            className="reveal rounded-3xl bg-sand p-4 sm:p-6"
+          >
+            <p className="mt-2.5 sm:mt-2 text-sm sm:text-base text-charcoal">
               We save only your token, name, mobile number, optional area, doctor and slot in the clinic&apos;s PIN-protected register, to hold your slot{clinic.whatsappAutoConfirm ? " and send your WhatsApp confirmation" : ""}. We never ask why you are visiting, and public pages never show anyone&apos;s details.{" "}
               <Link href="/privacy" className="font-semibold text-brand underline">
                 Read the privacy notice
               </Link>
             </p>
-          </div>
+          </MobileDetailsCard>
 
-          <div className="reveal card rounded-3xl p-6">
+          <div className="reveal card rounded-3xl p-4 sm:p-6">
             <h2 className="font-display text-xl font-medium tracking-tight">Prefer to talk?</h2>
             <p className="mt-1 text-base text-muted">Reception answers during clinic hours.</p>
             <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">

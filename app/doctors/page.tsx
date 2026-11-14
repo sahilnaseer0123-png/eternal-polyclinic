@@ -17,6 +17,12 @@ export default function DoctorsPage() {
     <>
       <PageIntro title="Our doctors">
         Each specialist sits on fixed days every week with dedicated consultation slots.
+        <a
+          href="#schedule"
+          className="mt-2 inline-flex min-h-9 items-center gap-1.5 rounded-full border border-brand-line bg-brand-tint px-3.5 py-1 text-xs font-bold text-accent sm:hidden"
+        >
+          Jump to Weekly Timetable ↓
+        </a>
       </PageIntro>
 
       <section aria-labelledby="all-doctors" className="mx-auto max-w-6xl px-5 pb-6">

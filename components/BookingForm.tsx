@@ -41,7 +41,7 @@ const chip = (on: boolean) =>
   }`;
 const label = "text-xs font-bold uppercase tracking-[0.12em] text-muted";
 const input =
-  "min-h-12 w-full rounded-xl border border-line-strong bg-white px-3.5 text-base text-ink placeholder:text-muted/70 focus:border-brand focus:outline-none";
+  "min-h-12 w-full rounded-xl border border-line-strong bg-white px-3.5 text-lg sm:text-base text-ink placeholder:text-muted/70 focus:border-brand focus:outline-none";
 
 function FieldError({ id, message }: { id: string; message?: string }) {
   if (!message) return null;
@@ -154,7 +154,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
 
   if (tab === "find") {
     return (
-      <div className="card flex min-w-0 flex-col gap-6 rounded-3xl p-5 sm:p-9">
+      <div className="card flex min-w-0 flex-col gap-6 rounded-3xl p-4 sm:p-9">
         {tabs}
         <FindMyToken />
       </div>
@@ -205,7 +205,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
   }
 
   return (
-    <div ref={formRef} className="card flex min-w-0 flex-col gap-8 rounded-3xl p-5 sm:p-9">
+    <div ref={formRef} className="card flex min-w-0 flex-col gap-6 sm:gap-8 rounded-3xl p-4 sm:p-9">
       {tabs}
       <div className="flex items-center justify-between">
         <p className="eyebrow text-muted">Step {step} of 2</p>
@@ -217,20 +217,20 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
 
       {/* Doctor */}
       {!doctor ? (
-        <fieldset className="ep-day-swap flex min-w-0 flex-col gap-3">
+        <fieldset className="ep-day-swap flex w-full min-w-0 flex-col gap-3">
           <legend className="font-display text-2xl font-medium tracking-tight sm:text-3xl">Choose a doctor</legend>
-          <div className="mt-2 grid gap-2.5 sm:grid-cols-2">
+          <div className="mt-2 grid w-full min-w-0 grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-2.5">
             {activeDoctors.map((d) => (
               <button
                 key={d.id}
                 type="button"
                 onClick={() => chooseDoctor(d.id)}
-                className="flex min-h-16 items-center gap-3 rounded-2xl border border-line-strong bg-white p-3 text-left hover:border-brand"
+                className="flex min-h-14 sm:min-h-16 w-full min-w-0 overflow-hidden items-center gap-3 rounded-2xl border border-line-strong bg-white p-2.5 sm:p-3 text-left hover:border-brand"
               >
-                <DoctorMark doctor={d} className="size-11 rounded-full text-base" />
+                <DoctorMark doctor={d} className="size-10 sm:size-11 shrink-0 rounded-full text-sm sm:text-base" />
                 <span className="min-w-0 flex-1">
-                  <span className="block font-display text-lg font-medium leading-tight">{d.name ?? d.speciality}</span>
-                  <span className="block text-sm text-muted">
+                  <span className="block font-display text-base sm:text-lg font-medium leading-tight">{d.name ?? d.speciality}</span>
+                  <span className="block truncate text-xs sm:text-sm text-muted">
                     {isDoctorOnLeave(d) ? `${d.speciality} · ${d.availability}` : d.speciality}
                   </span>
                 </span>
@@ -290,7 +290,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
 
       {/* Day */}
       {doctor && dates.length > 0 && (
-        <fieldset className="ep-day-swap flex min-w-0 flex-col gap-3">
+        <fieldset className="ep-day-swap flex w-full min-w-0 flex-col gap-3">
           <legend className={label}>Day</legend>
           {doctor.opd.some((s) => s.recurrence === "alternate") && (
             <p className="text-xs font-medium text-muted">
@@ -329,7 +329,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
 
       {/* Time */}
       {doctor && date && (
-        <fieldset key={date} className="ep-day-swap flex min-w-0 flex-col gap-3">
+        <fieldset key={date} className="ep-day-swap flex w-full min-w-0 flex-col gap-3">
           <legend className={label}>Time</legend>
           <div className="grid grid-cols-2 min-[380px]:grid-cols-3 gap-2.5 sm:grid-cols-4">
             {slots.map((s) => {
@@ -363,7 +363,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
       {/* Details */}
       {doctor && dates.length > 0 && (
         <>
-          <fieldset className="flex min-w-0 flex-col gap-4">
+          <fieldset className="flex w-full min-w-0 flex-col gap-4">
             <legend className={`${label} mb-1`}>Your details</legend>
             <div>
               <label htmlFor="bk-name" className="mb-1.5 block text-sm font-bold">

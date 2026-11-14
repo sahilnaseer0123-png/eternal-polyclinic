@@ -6,7 +6,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { clinic } from "@/data/clinic";
-import { PhoneIcon } from "./Icons";
+import { PhoneIcon, WhatsAppIcon } from "./Icons";
 import { Logo } from "./Logo";
 import { NAV } from "./nav";
 
@@ -15,14 +15,14 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-30 [view-transition-name:site-header] border-b border-line bg-white/95 text-ink backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 sm:gap-4 px-4 py-2.5 sm:px-6">
-        <Link href="/" className="group flex min-h-11 items-center gap-2.5 sm:gap-3 min-w-0">
-          <Logo className="size-10 shrink-0" />
-          <span className="leading-tight">
-            <span className="block font-display text-lg font-semibold tracking-tight group-hover:text-brand">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 sm:gap-4 px-3 min-[375px]:px-3.5 py-2 sm:px-6 sm:py-2.5">
+        <Link href="/" className="group flex min-h-11 items-center gap-2 sm:gap-3 min-w-0">
+          <Logo className="size-9 sm:size-10 shrink-0" />
+          <span className="min-w-0 leading-tight">
+            <span className="block truncate font-display text-[15px] min-[375px]:text-base sm:text-lg font-semibold tracking-tight group-hover:text-brand">
               {clinic.name}
             </span>
-            <span className="block text-xs font-medium text-muted">
+            <span className="hidden min-[360px]:block truncate text-[11px] sm:text-xs font-medium text-muted">
               Sopore, Kashmir
             </span>
           </span>
@@ -60,7 +60,16 @@ export function SiteHeader() {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-2 shrink-0 lg:hidden">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 lg:hidden">
+          <a
+            href={`https://wa.me/${clinic.whatsapp}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Message on WhatsApp, ${clinic.whatsappDisplay}`}
+            className="hidden min-[380px]:inline-flex size-11 shrink-0 items-center justify-center rounded-xl border border-line-strong bg-white text-ink hover:border-brand hover:bg-ground transition-colors"
+          >
+            <WhatsAppIcon className="size-4.5 shrink-0 text-accent" />
+          </a>
           <a
             href={`tel:${clinic.phone}`}
             aria-label={`Call the clinic, ${clinic.phoneDisplay}`}

@@ -15,7 +15,28 @@ export default function ServicesPage() {
     <>
       <PageIntro title="Tests and services">No need to go elsewhere for scans, reports or medicines.</PageIntro>
       <section aria-label="Services" className="mx-auto max-w-6xl px-4 pb-24 sm:px-6 sm:pb-16">
-        <ul className="reveal-group grid gap-4 sm:grid-cols-2">
+        <div
+          aria-label="Jump to service"
+          className="sm:hidden -mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none]"
+        >
+          {services.map((s) => (
+            <a
+              key={s.id}
+              href={`#${s.id}`}
+              className="inline-flex min-h-10 shrink-0 items-center rounded-full border border-line-strong bg-white px-3.5 text-xs font-semibold text-ink hover:border-brand"
+            >
+              {s.short}
+            </a>
+          ))}
+          <a
+            href="#digital-reports"
+            className="inline-flex min-h-10 shrink-0 items-center rounded-full border border-brand-line bg-brand-tint px-3.5 text-xs font-bold text-accent"
+          >
+            PDF Reports
+          </a>
+        </div>
+
+        <ul className="reveal-group grid gap-3 sm:gap-4 sm:grid-cols-2">
           {services.map((service) => {
             const action = serviceActions(service);
             return (
@@ -23,26 +44,26 @@ export default function ServicesPage() {
                 key={service.id}
                 id={service.id}
                 data-draw=""
-                className="reveal card card-hover scroll-mt-24 flex flex-col justify-between gap-4 rounded-2xl p-6"
+                className="reveal card card-hover scroll-mt-24 flex flex-col justify-between gap-3 sm:gap-4 rounded-2xl p-4 sm:p-6"
               >
                 <div>
-                  <div className="flex items-center justify-between">
-                    <span className="flex size-12 items-center justify-center rounded-xl bg-brand-tint text-ink ring-1 ring-brand-line/70">
-                      <ServiceIcon id={service.id} className="size-6" />
+                  <div className="flex items-center gap-3 sm:block">
+                    <span className="flex size-10 sm:size-12 shrink-0 items-center justify-center rounded-xl bg-brand-tint text-ink ring-1 ring-brand-line/70">
+                      <ServiceIcon id={service.id} className="size-5 sm:size-6" />
                     </span>
+                    <h2 className="sm:mt-3 text-lg sm:text-2xl font-medium tracking-tight text-ink font-display">
+                      {service.name}
+                    </h2>
                   </div>
-                  <h2 className="mt-3 text-xl font-medium tracking-tight text-ink font-display sm:text-2xl">
-                    {service.name}
-                  </h2>
-                  <p className="mt-1 text-[15px] text-muted leading-relaxed">{service.description}</p>
+                  <p className="mt-2 sm:mt-1 text-sm sm:text-[15px] text-muted leading-relaxed">{service.description}</p>
                   {service.lead && (
-                    <p className="mt-3 text-xs font-bold text-ink">
+                    <p className="mt-2 sm:mt-3 text-xs font-bold text-ink">
                       Lead: <span className="font-medium text-muted">{service.lead}</span>
                     </p>
                   )}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2.5 border-t border-line/70 pt-4">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 border-t border-line/70 pt-3 sm:pt-4">
                   <a
                     href={action.whatsappUrl}
                     target="_blank"

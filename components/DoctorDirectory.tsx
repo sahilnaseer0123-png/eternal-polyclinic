@@ -128,18 +128,18 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                 key={doctor.id}
                 id={`doctor-${doctor.id}`}
                 style={{ "--mo-i": Math.min(idx, 7) } as CSSProperties}
-                className="ep-stagger-item bg-white flex flex-col justify-between rounded-2xl border border-line p-5 hover:border-brand-line transition-all duration-200"
+                className="ep-stagger-item bg-white flex flex-col justify-between rounded-2xl border border-line p-4 sm:p-5 hover:border-brand-line transition-all duration-200"
               >
                 <div>
                   {/* Doctor Identity Header */}
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-3 sm:gap-4">
                     <DoctorMark
                       doctor={doctor}
-                      className="size-14 shrink-0 rounded-xl"
+                      className="size-12 sm:size-14 shrink-0 rounded-xl"
                     />
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center justify-between gap-1.5">
-                        <span className="inline-block rounded-full bg-brand-tint border border-brand-line px-2 py-0.5 text-sm font-semibold text-brand">
+                        <span className="inline-block rounded-full bg-brand-tint border border-brand-line px-2 py-0.5 text-xs sm:text-sm font-semibold text-brand">
                           {doctor.categoryLabel}
                         </span>
                         {onLeave ? (
@@ -170,7 +170,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                           {doctor.speciality}
                         </p>
                       )}
-                      <p className="text-[15px] text-muted mt-0.5">
+                      <p className="line-clamp-1 sm:line-clamp-none text-xs sm:text-[15px] text-muted mt-0.5">
                         {[
                           doctor.degree &&
                           doctor.degree.toLowerCase() !==
@@ -188,7 +188,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                   </div>
 
                   {/* Structured Timings & Availability */}
-                  <div className="mt-4 rounded-xl border border-line bg-ground p-3 text-sm">
+                  <div className="mt-3 sm:mt-4 rounded-xl border border-line bg-ground p-2.5 sm:p-3 text-sm">
                     {hasOpd ? (
                       <div className="space-y-1.5">
                         {doctor.opd.map((s, idx) => {
@@ -231,15 +231,15 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                   </div>
 
                   {/* Conditions / Helps With */}
-                  <div className="mt-3.5 space-y-1.5">
-                    <span className="text-xs font-bold uppercase tracking-wider text-muted">
+                  <div className="mt-2.5 sm:mt-3.5 space-y-1.5">
+                    <span className="hidden sm:block text-xs font-bold uppercase tracking-wider text-muted">
                       Primary Conditions:
                     </span>
                     <div className="flex flex-wrap gap-1">
                       {doctor.concerns.slice(0, 3).map((c) => (
                         <span
                           key={c}
-                          className="inline-flex items-center rounded-full border border-line bg-white px-2 py-0.5 text-sm text-ink"
+                          className="inline-flex items-center rounded-full border border-line bg-white px-2 py-0.5 text-xs sm:text-sm text-ink"
                         >
                           {c}
                         </span>
@@ -249,7 +249,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                 </div>
 
                 {/* Refined Action Buttons */}
-                <div className="mt-5 grid grid-cols-2 gap-2 pt-2 border-t border-line/80">
+                <div className="mt-3.5 sm:mt-5 grid grid-cols-2 gap-2 pt-2 border-t border-line/80">
                   {builtIn ? (
                     <Link
                       href={`/doctors/${doctor.id}`}

@@ -36,9 +36,8 @@ function setupScrollReveals(timers: number[]) {
 
   document.querySelectorAll<HTMLElement>(".reveal:not(.is-visible)").forEach((el) => {
     const rect = el.getBoundingClientRect();
-    // Reserve ~64px at the bottom for the fixed mobile TabBar so elements hidden behind it
-    // wait to reveal until scrolled clearly into view.
-    if (rect.top < window.innerHeight - 64) {
+    // Reveal anything already above or within the current viewport (handles anchor jumps & restores).
+    if (rect.top < window.innerHeight - 40) {
       aboveFold.push(el);
     } else {
       belowFold.push(el);
@@ -58,12 +57,34 @@ function setupScrollReveals(timers: number[]) {
         }
       }
     },
-    { rootMargin: "0px 0px -44px 0px", threshold: 0.06 },
+    { rootMargin: "0px 0px -24px 0px", threshold: 0.02 },
   );
 
   belowFold.forEach((el) => observer.observe(el));
+
+  let scrollRaf = 0;
+  const sweepAboveViewport = () => {
+    scrollRaf = 0;
+    const limit = window.innerHeight - 24;
+    for (const el of belowFold) {
+      if (el.classList.contains("is-visible")) continue;
+      if (el.getBoundingClientRect().top < limit) {
+        markVisible(el);
+        observer.unobserve(el);
+      }
+    }
+  };
+  const onViewportMove = () => {
+    if (!scrollRaf) scrollRaf = requestAnimationFrame(sweepAboveViewport);
+  };
+  window.addEventListener("scroll", onViewportMove, { passive: true });
+  window.addEventListener("hashchange", onViewportMove);
+
   return () => {
     if (raf) cancelAnimationFrame(raf);
+    if (scrollRaf) cancelAnimationFrame(scrollRaf);
+    window.removeEventListener("scroll", onViewportMove);
+    window.removeEventListener("hashchange", onViewportMove);
     observer.disconnect();
   };
 }

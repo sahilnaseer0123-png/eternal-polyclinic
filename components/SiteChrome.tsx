@@ -13,8 +13,8 @@ export function SiteFooter() {
   const label = "mb-3 font-sans text-[13.5px] font-bold uppercase tracking-[0.14em] text-mint";
   const link = "inline-flex min-h-10 items-center gap-x-1 text-sm text-night-muted hover:text-white";
   return (
-    <footer className="bg-night pb-24 pt-12 text-ground sm:pt-16 lg:pb-12">
-      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-x-8 gap-y-10 px-5 sm:px-6 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
+    <footer className="bg-night pb-24 pt-8 text-ground sm:pt-16 lg:pb-12">
+      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-x-6 gap-y-6 px-5 sm:gap-x-8 sm:gap-y-10 sm:px-6 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
         <div className="col-span-2 flex flex-col gap-3 lg:col-span-1">
           <Link href="/" className="flex min-h-11 items-center gap-3">
             <Logo className="size-10 shrink-0" />
@@ -75,7 +75,7 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="mx-auto mt-12 flex max-w-6xl flex-wrap items-center justify-between gap-x-6 border-t border-night-line px-5 pt-5 text-sm text-night-muted sm:px-6">
+      <div className="mx-auto mt-8 sm:mt-12 flex max-w-6xl flex-wrap items-center justify-between gap-x-6 border-t border-night-line px-5 pt-5 text-sm text-night-muted sm:px-6">
         <p className="py-1">
           &copy; {new Date().getFullYear()} {clinic.name}, Sopore. Not an emergency service: go to SDH Hospital opposite
           (open 24 hours) or call{" "}
@@ -88,7 +88,7 @@ export function SiteFooter() {
           <Link href="/privacy" className="inline-flex min-h-10 items-center hover:text-white">
             Privacy notice
           </Link>
-          <Link href="/admin" className="inline-flex min-h-10 items-center text-night-muted/60 hover:text-white">
+          <Link href="/admin" className="inline-flex min-h-10 items-center text-night-muted hover:text-white">
             Staff
           </Link>
         </div>
@@ -129,7 +129,7 @@ export function PageIntro({
   className?: string;
 }) {
   return (
-    <div className={className ?? "mx-auto max-w-6xl px-5 pt-6 pb-3 sm:pt-8 sm:pb-4 sm:px-6"}>
+    <div className={className ?? "mx-auto max-w-6xl px-5 pt-4 pb-2.5 sm:pt-8 sm:pb-4 sm:px-6"}>
       <h1 className="rise text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
         {title}
       </h1>

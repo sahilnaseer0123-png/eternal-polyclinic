@@ -68,7 +68,7 @@ export function DayPicker() {
   return (
     <div className="bg-white">
       <section id="days" aria-labelledby="days-title" className="rounded-t-[2rem] sm:rounded-t-[2.75rem] border-t border-line/80 bg-ground scroll-mt-20">
-      <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-20">
+      <div className="mx-auto max-w-6xl px-5 py-8 sm:px-6 sm:py-20">
         <div className="reveal">
           <p className="eyebrow text-muted">Visiting specialists</p>
           <h2 id="days-title" className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
@@ -79,7 +79,7 @@ export function DayPicker() {
           </h2>
         </div>
 
-        <div role="group" aria-label="Choose a day" className="mt-8 grid grid-cols-7 gap-1 min-[390px]:gap-1.5 sm:gap-3">
+        <div role="group" aria-label="Choose a day" className="mt-5 sm:mt-8 grid grid-cols-7 gap-1 min-[390px]:gap-1.5 sm:gap-3">
           {DAY_ORDER.map((day) => {
             const count = sittingsOn(day).length;
             const on = day === selected;
@@ -113,9 +113,9 @@ export function DayPicker() {
           })}
         </div>
 
-        <div aria-live="polite" className="reveal mt-6 min-h-40 sm:mt-8">
+        <div aria-live="polite" className="reveal mt-5 min-h-36 sm:min-h-40 sm:mt-8">
           {list.length === 0 ? (
-            <p key={selected} className="card ep-day-swap rounded-2xl p-6 text-base text-muted sm:text-lg">
+            <p key={selected} className="card ep-day-swap rounded-2xl p-5 sm:p-6 text-base text-muted sm:text-lg">
               No specialist OPD on {dayName}. Pick another day above, or call{" "}
               <a href={`tel:${clinic.phone}`} className="font-bold text-brand underline">
                 {clinic.phoneDisplay}
@@ -132,7 +132,7 @@ export function DayPicker() {
               )}
             </p>
           ) : (
-            <ul key={selected} className="flex flex-col gap-3">
+            <ul key={selected} className="flex flex-col gap-2.5 sm:gap-3">
               {list.map(({ doctor, session }, idx) => {
                 const note = noteFor(session);
                 const live = today === selected ? statuses[doctor.id] : undefined;
@@ -141,45 +141,71 @@ export function DayPicker() {
                   <li
                     key={`${doctor.id}-${session.day}`}
                     style={{ "--mo-i": Math.min(idx, 6) } as CSSProperties}
-                    className="card ep-stagger-item grid gap-3 rounded-2xl p-4 sm:grid-cols-[11rem_1fr_auto] sm:items-center sm:gap-6 sm:p-6"
+                    className="card ep-stagger-item grid gap-2 rounded-2xl p-3.5 sm:grid-cols-[11rem_1fr_auto] sm:items-center sm:gap-6 sm:p-6"
                   >
-                    <p className="font-display text-xl font-medium tracking-tight sm:text-2xl tabular-nums lining-nums">
+                    <p className="hidden sm:block font-display text-xl font-medium tracking-tight sm:text-2xl tabular-nums lining-nums">
                       {formatTime(session.start)}
                       <span className="block text-[15px] font-normal text-muted tabular-nums lining-nums">to {formatTime(session.end)}</span>
                     </p>
                     <div className="min-w-0">
-                      <h3 className="font-display text-xl font-medium leading-snug tracking-tight sm:text-[1.5625rem]">
-                        <Link href={profileHref} className="hover:text-brand">
-                          {doctor.name ?? doctor.speciality}
-                        </Link>
-                      </h3>
-                      <p className="text-base font-semibold text-accent">{doctor.speciality}</p>
-                      <p className="text-[15px] text-muted">{doctor.credentials ?? doctor.degree}</p>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {note && (
-                          <span className="inline-block rounded-full bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
-                            {note}
-                          </span>
-                        )}
+                      <div className="mb-1 flex flex-wrap items-center gap-1.5 sm:mb-0">
+                        <span className="sm:hidden inline-flex items-center rounded-md border border-line bg-ground px-2 py-0.5 text-xs font-bold text-ink tabular-nums lining-nums">
+                          {formatTime(session.start)} – {formatTime(session.end)}
+                        </span>
                         {live?.state === "in_clinic" && (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-tint border border-brand-line px-3 py-1 text-xs font-bold text-ink">
+                          <span className="sm:hidden inline-flex items-center gap-1 rounded-full bg-brand-tint border border-brand-line px-2 py-0.5 text-[11px] font-bold text-ink">
                             <span className="size-1.5 rounded-full bg-[#22A05B]" aria-hidden="true" />
                             In Clinic Now
                           </span>
                         )}
                         {live?.state === "delayed" && (
-                          <span className="inline-block rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-xs font-bold text-amber-800">
+                          <span className="sm:hidden inline-block rounded-full bg-amber-50 border border-amber-200 px-2 py-0.5 text-[11px] font-bold text-amber-800">
                             Delayed ~{live.delayMinutes ?? 30}m
                           </span>
                         )}
                       </div>
+                      <h3 className="font-display text-lg sm:text-[1.5625rem] font-medium leading-snug tracking-tight">
+                        <Link href={profileHref} className="hover:text-brand">
+                          {doctor.name ?? doctor.speciality}
+                        </Link>
+                      </h3>
+                      <p className="text-sm sm:text-base font-semibold text-accent">{doctor.speciality}</p>
+                      <p className="line-clamp-1 sm:line-clamp-none text-xs sm:text-[15px] text-muted">{doctor.credentials ?? doctor.degree}</p>
+                      {(note || live?.state === "in_clinic" || live?.state === "delayed") && (
+                        <div className="mt-1.5 sm:mt-2 flex flex-wrap gap-2">
+                          {note && (
+                            <span className="inline-block rounded-full bg-sand px-2.5 sm:px-3 py-0.5 sm:py-1 text-[11px] sm:text-xs font-semibold text-charcoal">
+                              {note}
+                            </span>
+                          )}
+                          {live?.state === "in_clinic" && (
+                            <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-brand-tint border border-brand-line px-3 py-1 text-xs font-bold text-ink">
+                              <span className="size-1.5 rounded-full bg-[#22A05B]" aria-hidden="true" />
+                              In Clinic Now
+                            </span>
+                          )}
+                          {live?.state === "delayed" && (
+                            <span className="hidden sm:inline-block rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-xs font-bold text-amber-800">
+                              Delayed ~{live.delayMinutes ?? 30}m
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
-                    <Link
-                      href={`/book?doctor=${doctor.id}`}
-                      className="inline-flex min-h-11 items-center justify-center rounded-xl bg-brand px-5 text-base font-bold text-white hover:bg-brand-dark"
-                    >
-                      Book this doctor
-                    </Link>
+                    <div className="flex items-center justify-between gap-2 pt-1.5 border-t border-line/60 sm:border-0 sm:pt-0">
+                      <Link
+                        href={profileHref}
+                        className="sm:hidden inline-flex min-h-11 items-center text-xs font-semibold text-muted hover:text-ink"
+                      >
+                        View profile →
+                      </Link>
+                      <Link
+                        href={`/book?doctor=${doctor.id}`}
+                        className="inline-flex min-h-11 items-center justify-center rounded-xl bg-brand px-4 sm:px-5 text-sm sm:text-base font-bold text-white hover:bg-brand-dark shrink-0"
+                      >
+                        Book this doctor
+                      </Link>
+                    </div>
                   </li>
                 );
               })}

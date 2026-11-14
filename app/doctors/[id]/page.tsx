@@ -47,18 +47,33 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
         <ChevronRightIcon className="size-4 rotate-180" /> All doctors
       </Link>
 
-      <div className="mt-3 grid items-start gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-8">
+      <div className="mt-3 grid items-start gap-4 sm:gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] lg:gap-8">
         {/* Who */}
-        <section className="rise card flex flex-col gap-4 rounded-3xl p-5 sm:flex-row sm:items-start sm:gap-6 sm:p-8">
-          <DoctorMark doctor={doctor} className="size-20 shrink-0 rounded-full text-4xl sm:size-28 sm:text-5xl lg:size-24 lg:text-4xl" />
+        <section className="rise card flex flex-col gap-3 sm:gap-4 rounded-3xl p-4 sm:flex-row sm:items-start sm:gap-6 sm:p-8">
+          <div className="flex items-center gap-3.5 sm:contents">
+            <DoctorMark doctor={doctor} className="size-14 shrink-0 rounded-full text-2xl sm:size-28 sm:text-5xl lg:size-24 lg:text-4xl" />
+            <div className="min-w-0 flex-1 sm:hidden">
+              <span className="inline-flex items-center gap-1 rounded-full bg-brand-tint px-2.5 py-0.5 text-xs font-semibold text-brand">
+                <CategoryIcon category={doctor.category} className="size-3.5" />
+                {doctor.categoryLabel}
+              </span>
+              <h1 className="mt-1 text-2xl font-semibold leading-tight tracking-[-0.03em] [overflow-wrap:anywhere] text-ink font-display">
+                {title(doctor)}
+              </h1>
+              <p className="mt-0.5 text-sm font-semibold text-brand">
+                {doctor.name ? doctor.speciality : "Specialist Consultant"}
+                {doctor.degree && ` · ${doctor.degree}`}
+              </p>
+            </div>
+          </div>
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-full bg-brand-tint px-3 py-1 text-xs font-semibold text-brand">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-brand-tint px-3 py-1 text-xs font-semibold text-brand">
                 <CategoryIcon category={doctor.category} className="size-3.5" />
                 {doctor.categoryLabel}
               </span>
               {doctor.opd.length > 0 && (
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-brand/10 border border-brand/20 px-3 py-1 text-xs font-bold text-brand">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-brand/10 border border-brand/20 px-2.5 sm:px-3 py-1 text-xs font-bold text-brand">
                   <span className="size-1.5 rounded-full bg-brand animate-pulse" />
                   <NextAvailable
                     doctorId={doctor.id}
@@ -70,31 +85,31 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
                 </span>
               )}
               {doctor.experienceYears && (
-                <span className="inline-flex items-center rounded-full bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
+                <span className="inline-flex items-center rounded-full bg-sand px-2.5 sm:px-3 py-1 text-xs font-semibold text-charcoal">
                   {doctor.experienceYears}+ Yrs Exp.
                 </span>
               )}
-              <span className="inline-flex items-center rounded-full bg-sand px-3 py-1 text-xs font-semibold text-charcoal">
+              <span className="inline-flex items-center rounded-full bg-sand px-2.5 sm:px-3 py-1 text-xs font-semibold text-charcoal">
                 No registration fee
               </span>
               <DoctorLiveBadge doctorId={doctor.id} />
             </div>
 
-            <h1 className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] [overflow-wrap:anywhere] sm:text-5xl text-ink font-display">
+            <h1 className="hidden sm:block mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] [overflow-wrap:anywhere] sm:text-5xl text-ink font-display">
               {title(doctor)}
             </h1>
-            <p className="mt-1 text-base font-semibold text-brand">
+            <p className="hidden sm:block mt-1 text-base font-semibold text-brand">
               {doctor.name ? doctor.speciality : "Specialist Consultant"}
               {doctor.degree && ` · ${doctor.degree}`}
             </p>
             {doctor.designation && (
-              <p className="mt-2 text-sm font-semibold text-charcoal flex items-center gap-1.5">
+              <p className="mt-2 text-xs sm:text-sm font-semibold text-charcoal flex items-center gap-1.5">
                 <HospitalIcon className="size-4 shrink-0 text-brand" />
                 <span>{doctor.designation}</span>
               </p>
             )}
             {doctor.credentials && (
-              <p className="mt-1.5 text-[15px] text-muted leading-relaxed">
+              <p className="mt-1 sm:mt-1.5 text-sm sm:text-[15px] text-muted leading-relaxed">
                 {doctor.credentials}
               </p>
             )}
@@ -228,9 +243,9 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
         <h2 id="others" className="font-display text-2xl font-medium tracking-tight sm:text-3xl text-ink">
           Other <em className="ep-mark">Visiting Specialists</em>
         </h2>
-        <ul className="reveal-group mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+        <ul className="reveal-group -mx-5 mt-4 flex gap-3 overflow-x-auto px-5 pb-2 snap-x snap-mandatory [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-4 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
           {others.map((d) => (
-            <li key={d.id} className="reveal">
+            <li key={d.id} className="reveal min-w-[240px] max-w-[260px] shrink-0 snap-start sm:min-w-0 sm:max-w-none">
               <Link href={`/doctors/${d.id}`} className="card card-hover flex items-center gap-3.5 rounded-2xl p-4 group">
                 <DoctorMark doctor={d} className="size-12 rounded-full text-xl" />
                 <span className="flex min-w-0 flex-1 flex-col leading-snug">

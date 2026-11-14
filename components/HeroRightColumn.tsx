@@ -88,72 +88,41 @@ export function HeroRightColumn() {
 
   return (
     <div id="today" className="rise rise-3 w-full">
-      {/* Mobile (< 640px): Full-screen balanced twin-panel live clinic + studio stethoscope card */}
+      {/* Mobile (< 640px): Sleek full-width Live Clinic Status & Quick Desk Card */}
       <div className="sm:hidden">
-        <div className="flex items-stretch gap-2.5 min-[390px]:gap-3">
-          <div className="flex min-h-[120px] min-[390px]:min-h-[132px] min-w-0 flex-1 flex-col justify-between rounded-2xl border border-line bg-ground p-3 min-[390px]:p-3.5">
-            <div className="flex items-center justify-between gap-1.5 min-w-0">
-              <p className="flex items-center gap-1.5 font-sans text-[10.5px] min-[390px]:text-[11px] font-bold uppercase tracking-[0.09em] text-ink whitespace-nowrap truncate">
-                <SparkleCross className="size-3 text-accent shrink-0" />
-                <span className="min-[440px]:hidden">{statusHeadingCompact}</span>
-                <span className="hidden min-[440px]:inline">{statusHeading}</span>
-              </p>
-              <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-charcoal ring-1 ring-line shrink-0 whitespace-nowrap">
-                <span className="size-1.5 rounded-full bg-[#22A05B]" aria-hidden="true" />
-                {openBadge}
-              </span>
-            </div>
-            <p className="mt-2 text-[12px] min-[390px]:text-[12.5px] leading-[1.45] text-muted">
-              {statusCopy}
+        <div className="rounded-2xl border border-line bg-ground p-3 min-[390px]:p-3.5">
+          <div className="flex items-center justify-between gap-2 min-w-0">
+            <p className="flex items-center gap-1.5 font-sans text-[10.5px] min-[390px]:text-[11px] font-bold uppercase tracking-[0.09em] text-ink whitespace-nowrap truncate">
+              <SparkleCross className="size-3 text-accent shrink-0" />
+              <span className="min-[440px]:hidden">{statusHeadingCompact}</span>
+              <span className="hidden min-[440px]:inline">{statusHeading}</span>
             </p>
+            <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10.5px] font-semibold text-charcoal ring-1 ring-line shrink-0 whitespace-nowrap">
+              <span className="size-1.5 rounded-full bg-[#22A05B]" aria-hidden="true" />
+              {openBadge}
+            </span>
           </div>
-
-          <Link
-            href="/book"
-            aria-label="Book an appointment"
-            className="group relative w-[96px] min-[385px]:w-[112px] min-[420px]:w-[124px] shrink-0 overflow-hidden rounded-2xl border border-line bg-sand"
-          >
-            <img
-              src="/photos/stethoscope-card.webp"
-              alt=""
-              aria-hidden="true"
-              width={180}
-              height={180}
-              loading="eager"
-              decoding="async"
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-            <span className="absolute right-2 top-2 inline-flex size-6.5 items-center justify-center rounded-lg bg-brand-tint/95 text-accent shadow-2xs ring-1 ring-brand-line/80">
-              <ArrowUpRight className="size-3" />
-            </span>
-            <span className="absolute bottom-2 left-2 rounded-md bg-white/92 backdrop-blur-xs px-2 py-0.5 text-[10.5px] font-semibold tracking-[-0.01em] text-ink ring-1 ring-black/6">
-              Book
-            </span>
-          </Link>
-        </div>
-
-        <div className="mt-2.5 min-[390px]:mt-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-line pt-1.5 px-0.5">
-          <a
-            href="#days"
-            className="group inline-flex min-h-11 items-center gap-1.5 text-[12.5px] min-[390px]:text-[13px] font-semibold text-ink hover:text-accent transition-colors shrink-0"
-          >
-            <span className="underline decoration-line-strong underline-offset-4 group-hover:decoration-brand-dark">
-              See schedule
-            </span>
-            <span className="btn-arrow inline-flex size-5.5 items-center justify-center rounded-md bg-brand-tint text-accent ring-1 ring-brand-line">
-              <ArrowUpRight className="size-3" />
-            </span>
-          </a>
-
-          <a
-            href={clinic.reportRequestUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-11 items-center gap-1 text-[12px] min-[390px]:text-[12.5px] font-semibold text-muted hover:text-accent transition-colors tabular-nums lining-nums shrink-0"
-          >
-            <span>Lab reports ({clinic.labTechPhoneDisplay})</span>
-            <span aria-hidden="true">↗</span>
-          </a>
+          <p className="mt-1.5 text-[12px] min-[390px]:text-[12.5px] leading-[1.42] text-muted">
+            {statusCopy}
+          </p>
+          <div className="mt-2.5 flex flex-wrap items-center gap-2 border-t border-line/80 pt-2">
+            <a
+              href="#days"
+              className="inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-xl bg-white px-3 text-xs font-semibold text-ink ring-1 ring-line hover:border-brand-line hover:text-accent transition-colors whitespace-nowrap"
+            >
+              <span>See schedule</span>
+              <span aria-hidden="true">↓</span>
+            </a>
+            <a
+              href={clinic.reportRequestUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 flex-1 items-center justify-center gap-1 rounded-xl bg-brand-tint/70 px-3 text-xs font-semibold text-accent ring-1 ring-brand-line/80 hover:bg-brand-tint transition-colors tabular-nums lining-nums whitespace-nowrap"
+            >
+              <span>Lab reports ({clinic.labTechPhoneDisplay})</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         </div>
       </div>
 
