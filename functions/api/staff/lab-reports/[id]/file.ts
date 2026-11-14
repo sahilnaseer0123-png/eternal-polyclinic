@@ -4,7 +4,7 @@
 //     presses Mark Ready, so the file can be checked before the patient gets it.
 // GET /api/staff/lab-reports/:id/file   view the PDF (owner, reception, lab), never cached.
 
-import { jsonResponse, toHex, type CfPagesContext } from "../../../../_lib/clinic-store";
+import { jsonResponse, toHex, withSecurityHeaders, type CfPagesContext } from "../../../../_lib/clinic-store";
 import { audit } from "../../../../_lib/db";
 import { bad } from "../../../../_lib/http";
 import { pdfKey } from "../../../../_lib/notify";
@@ -90,13 +90,15 @@ export async function onRequestGet(context: CfPagesContext): Promise<Response> {
   const data = await context.env.EP_KV.get(String(row.file_key), "arrayBuffer");
   if (!data) return bad("The PDF is missing from storage. Upload it again.", 404);
   await audit(db, staff.id, "lab.view_pdf", `report:${id}`);
-  return new Response(data, {
-    headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `inline; filename="${String(row.file_name ?? "report.pdf").replace(/"/g, "")}"`,
-      "Cache-Control": "private, no-store",
-      "X-Content-Type-Options": "nosniff",
-      "X-Robots-Tag": "noindex",
-    },
-  });
+  return withSecurityHeaders(
+    new Response(data, {
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `inline; filename="${String(row.file_name ?? "report.pdf").replace(/"/g, "")}"`,
+        "Cache-Control": "private, no-store",
+        "X-Content-Type-Options": "nosniff",
+        "X-Robots-Tag": "noindex",
+      },
+    }),
+  );
 }

@@ -128,7 +128,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                 key={doctor.id}
                 id={`doctor-${doctor.id}`}
                 style={{ "--mo-i": Math.min(idx, 7) } as CSSProperties}
-                className="ep-stagger-item bg-white flex flex-col justify-between rounded-2xl border border-line p-4 sm:p-5 hover:border-brand-line transition-all duration-200"
+                className="ep-stagger-item bg-white flex flex-col justify-between rounded-2xl border border-line p-4 sm:p-5 hover:border-brand-line transition-[transform,background-color,border-color,color,box-shadow] duration-200"
               >
                 <div>
                   {/* Doctor Identity Header */}

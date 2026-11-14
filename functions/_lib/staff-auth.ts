@@ -17,6 +17,7 @@ import {
   getSigningSecret,
   hmacSha256Hex,
   parseCookie,
+  peekSigningSecret,
   randomHex,
   resolveStorageDriver,
   toHex,
@@ -177,8 +178,19 @@ export async function loginStaff(
 async function signingSecret(env: CloudEnv): Promise<string> {
   const driver = resolveStorageDriver(env);
   if (driver) return getSigningSecret(driver, env);
-  if (env.SESSION_SECRET && env.SESSION_SECRET.length >= 16) return env.SESSION_SECRET;
+  if (env.SESSION_SECRET && env.SESSION_SECRET.length >= 16 && env.SESSION_SECRET !== env.ADMIN_PIN?.trim()) {
+    return env.SESSION_SECRET;
+  }
   throw new Error("No signing secret available");
+}
+
+async function peekStaffSigningSecret(env: CloudEnv): Promise<string | null> {
+  const driver = resolveStorageDriver(env);
+  if (driver) return peekSigningSecret(driver, env);
+  if (env.SESSION_SECRET && env.SESSION_SECRET.length >= 16 && env.SESSION_SECRET !== env.ADMIN_PIN?.trim()) {
+    return env.SESSION_SECRET;
+  }
+  return null;
 }
 
 async function createStaffCookie(env: CloudEnv, row: Pick<StaffRow, "id" | "session_version">, isHttps: boolean): Promise<string> {
@@ -204,12 +216,8 @@ export async function staffFromRequest(request: Request, env: CloudEnv): Promise
   const [idStr, verStr, expStr, nonce, sig] = parts;
   const exp = Number(expStr);
   if (!Number.isFinite(exp) || exp < Math.floor(Date.now() / 1000)) return null;
-  let secret: string;
-  try {
-    secret = await signingSecret(env);
-  } catch {
-    return null;
-  }
+  const secret = await peekStaffSigningSecret(env);
+  if (!secret) return null;
   const expected = await hmacSha256Hex(secret, `staff:${idStr}.${verStr}.${expStr}.${nonce}`);
   if (!constantTimeEqual(sig, expected)) return null;
   await ensureSchema(db);

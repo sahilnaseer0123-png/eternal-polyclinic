@@ -3,9 +3,10 @@
 // Ready → actual PDF on WhatsApp + secure link, patient access, retries, webhooks, owner summary, statistics.
 
 import assert from "node:assert/strict";
-import { test } from "node:test";
+import { beforeEach, test } from "node:test";
 import { doctors } from "@/data/clinic";
 import { createMemoryKV, createSessionCookie, resolveStorageDriver, type CfPagesContext, type CloudEnv } from "@/functions/_lib/clinic-store";
+import { resetRateLimits } from "@/functions/_lib/rate-limit";
 import type { Appointment } from "@/lib/appointments";
 import { nextOpdDates, timeSlots, clinicClock } from "@/lib/schedule";
 import { onRequestGet as authGet, onRequestPost as authPost } from "@/functions/api/admin/auth";
@@ -27,6 +28,8 @@ import { createTestD1, fakeWhatsApp, tinyPdf } from "./helpers/d1";
 
 const BASE = "https://eternalpolyclinic.com";
 const META = { WHATSAPP_ACCESS_TOKEN: "test-token", WHATSAPP_PHONE_NUMBER_ID: "1234567890", WHATSAPP_TEMPLATE_APPOINTMENT: "appointment_confirmation", WHATSAPP_TEMPLATE_LAB_REPORT: "lab_report_ready", WHATSAPP_APP_SECRET: "app-secret", WHATSAPP_VERIFY_TOKEN: "verify" };
+
+beforeEach(() => resetRateLimits());
 
 function makeEnv(extra: Partial<CloudEnv> = {}): CloudEnv {
   return { EP_KV: createMemoryKV(), EP_SQL: createTestD1(), SESSION_SECRET: "test-secret-0123456789abcdef", ...extra };
@@ -122,11 +125,12 @@ test("staff accounts: PIN only until the owner account exists; roles enforced", 
   assert.equal(me.staff.role, "owner");
   assert.equal(me.staffMode, "accounts");
 
-  // Wrong password x5 locks the account
+  // Wrong password x5 locks the account (simulated from lab terminal IP)
+  const labHeaders = { "CF-Connecting-IP": "198.51.100.10" };
   for (let i = 0; i < 5; i++) {
-    await authPost(ctx(env, "/api/admin/auth", { method: "POST", body: json({ action: "login", username: "lab1", password: "nope-nope-1" }) }));
+    await authPost(ctx(env, "/api/admin/auth", { method: "POST", headers: labHeaders, body: json({ action: "login", username: "lab1", password: "nope-nope-1" }) }));
   }
-  const locked = await authPost(ctx(env, "/api/admin/auth", { method: "POST", body: json({ action: "login", username: "lab1", password: "password-123" }) }));
+  const locked = await authPost(ctx(env, "/api/admin/auth", { method: "POST", headers: labHeaders, body: json({ action: "login", username: "lab1", password: "password-123" }) }));
   assert.equal(locked.status, 401);
   assert.match((await locked.json()).error, /Too many wrong tries/);
 

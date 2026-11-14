@@ -89,7 +89,7 @@ export function DayPicker() {
                 type="button"
                 aria-pressed={on}
                 onClick={() => setPicked(day)}
-                className={`flex min-h-16 flex-col items-center justify-center rounded-xl border px-0.5 min-[390px]:px-1 py-2 text-center transition-all duration-200 sm:min-h-24 sm:rounded-2xl ${
+                className={`flex min-h-16 flex-col items-center justify-center rounded-xl border px-0.5 min-[390px]:px-1 py-2 text-center transition-[transform,background-color,border-color,color,box-shadow] duration-200 sm:min-h-24 sm:rounded-2xl ${
                   on
                     ? "border-brand bg-brand text-white shadow-elevated"
                     : "border-line-strong bg-white text-ink hover:border-brand"

@@ -2,6 +2,7 @@
 
 import { getSigningSecret, jsonResponse, resolveStorageDriver, type CfPagesContext, type CloudEnv } from "./clinic-store";
 import { ensureSchema, type SqlDatabase } from "./db";
+import { checkSameOrigin } from "./rate-limit";
 import { authorize, type StaffAccount, type StaffRole } from "./staff-auth";
 
 export async function readJson<T>(request: Request): Promise<T | null> {
@@ -21,11 +22,17 @@ export function bad(error: string, status = 400): Response {
   return jsonResponse({ ok: false, error }, status);
 }
 
+const MUTATING_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
+
 /** Signs-in check + database for a staff endpoint. Returns a Response to send back on failure. */
 export async function staffGate(
   context: CfPagesContext,
   roles: StaffRole[],
 ): Promise<{ staff: StaffAccount; db: SqlDatabase } | Response> {
+  if (MUTATING_METHODS.has(context.request.method.toUpperCase())) {
+    const originErr = checkSameOrigin(context.request);
+    if (originErr) return originErr;
+  }
   const access = await authorize(context, roles, { requireDatabase: true });
   if (!access.ok) return bad(access.error, access.status);
   if (!access.staff) return bad("Please sign in with a staff account.", 401);

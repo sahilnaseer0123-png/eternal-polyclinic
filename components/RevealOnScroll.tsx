@@ -51,21 +51,20 @@ function setupScrollReveals(timers: number[]) {
   const observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting || entry.boundingClientRect.top < 0) {
           markVisible(entry.target as HTMLElement);
           observer.unobserve(entry.target);
         }
       }
     },
-    { rootMargin: "0px 0px -24px 0px", threshold: 0.02 },
+    { rootMargin: "40px 2400px 40px 2400px", threshold: 0.01 },
   );
 
   belowFold.forEach((el) => observer.observe(el));
 
-  let scrollRaf = 0;
+  let settleTimer = 0;
   const sweepAboveViewport = () => {
-    scrollRaf = 0;
-    const limit = window.innerHeight - 24;
+    const limit = window.innerHeight + 40;
     for (const el of belowFold) {
       if (el.classList.contains("is-visible")) continue;
       if (el.getBoundingClientRect().top < limit) {
@@ -74,17 +73,19 @@ function setupScrollReveals(timers: number[]) {
       }
     }
   };
-  const onViewportMove = () => {
-    if (!scrollRaf) scrollRaf = requestAnimationFrame(sweepAboveViewport);
+  const onScrollSettle = () => {
+    window.clearTimeout(settleTimer);
+    settleTimer = window.setTimeout(sweepAboveViewport, 90);
   };
-  window.addEventListener("scroll", onViewportMove, { passive: true });
-  window.addEventListener("hashchange", onViewportMove);
+  const onHashJump = () => requestAnimationFrame(sweepAboveViewport);
+  window.addEventListener("scroll", onScrollSettle, { passive: true });
+  window.addEventListener("hashchange", onHashJump);
 
   return () => {
     if (raf) cancelAnimationFrame(raf);
-    if (scrollRaf) cancelAnimationFrame(scrollRaf);
-    window.removeEventListener("scroll", onViewportMove);
-    window.removeEventListener("hashchange", onViewportMove);
+    window.clearTimeout(settleTimer);
+    window.removeEventListener("scroll", onScrollSettle);
+    window.removeEventListener("hashchange", onHashJump);
     observer.disconnect();
   };
 }
@@ -218,11 +219,16 @@ function setupHeroDots() {
 
 function setupScrollState() {
   let scrollTimer = 0;
+  let active = false;
 
   const onScroll = () => {
-    document.body.classList.add("is-scrolling");
+    if (!active) {
+      active = true;
+      document.body.classList.add("is-scrolling");
+    }
     window.clearTimeout(scrollTimer);
     scrollTimer = window.setTimeout(() => {
+      active = false;
       document.body.classList.remove("is-scrolling");
     }, 180);
   };
@@ -235,6 +241,24 @@ function setupScrollState() {
   };
 }
 
+function setupHeroVisibility() {
+  const hero = document.querySelector<HTMLElement>(".ep-il-hero");
+  if (!hero || typeof IntersectionObserver === "undefined") return () => {};
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        hero.classList.toggle("is-offscreen", !entry.isIntersecting);
+      }
+    },
+    { threshold: 0 },
+  );
+  observer.observe(hero);
+  return () => {
+    observer.disconnect();
+    hero.classList.remove("is-offscreen");
+  };
+}
+
 export function RevealOnScroll() {
   const pathname = usePathname();
 
@@ -244,12 +268,14 @@ export function RevealOnScroll() {
     const stopCountUps = runCountUps();
     const stopDots = setupHeroDots();
     const stopScroll = setupScrollState();
+    const stopHero = setupHeroVisibility();
 
     return () => {
       stopReveals();
       stopCountUps();
       stopDots();
       stopScroll();
+      stopHero();
       timers.forEach((id) => window.clearTimeout(id));
     };
   }, [pathname]);

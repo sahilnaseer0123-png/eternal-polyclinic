@@ -168,8 +168,38 @@ export function clinicTodayKey(now: Date = new Date()): string {
 }
 
 // ---------------------------------------------------------------------------
-// JSON Response Helpers
+// JSON & Security Header Response Helpers
 // ---------------------------------------------------------------------------
+
+export const SECURITY_HEADERS: Record<string, string> = {
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+  "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+};
+
+const HTML_CSP =
+  "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.whatsapp.com https://wa.me; frame-src 'self' blob: https://www.google.com https://maps.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'";
+
+/** Attaches standard HTTP security headers (and sandbox/strict CSP on PDF or HTML responses). */
+export function withSecurityHeaders(response: Response): Response {
+  const headers = new Headers(response.headers);
+  for (const [key, value] of Object.entries(SECURITY_HEADERS)) {
+    if (!headers.has(key)) headers.set(key, value);
+  }
+  const ct = (headers.get("Content-Type") ?? "").toLowerCase();
+  if (ct.startsWith("application/pdf") && !headers.has("Content-Security-Policy")) {
+    headers.set("Content-Security-Policy", "default-src 'none'; sandbox");
+  } else if (ct.startsWith("text/html") && !headers.has("Content-Security-Policy")) {
+    headers.set("Content-Security-Policy", HTML_CSP);
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
 
 export function jsonResponse(
   body: unknown,
@@ -179,6 +209,7 @@ export function jsonResponse(
   return new Response(JSON.stringify(body), {
     status,
     headers: {
+      ...SECURITY_HEADERS,
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store, no-cache, must-revalidate",
       ...extraHeaders,
@@ -244,12 +275,19 @@ export function constantTimeEqual(a: string, b: string): boolean {
   return diff === 0;
 }
 
-export async function getSigningSecret(driver: KeyValueDriver, env: CloudEnv): Promise<string> {
-  if (env.SESSION_SECRET && env.SESSION_SECRET.length >= 16) {
+/** Read-only lookup of the session HMAC secret so unauthenticated requests never trigger KV/D1 writes. */
+export async function peekSigningSecret(driver: KeyValueDriver, env: CloudEnv): Promise<string | null> {
+  if (env.SESSION_SECRET && env.SESSION_SECRET.length >= 16 && env.SESSION_SECRET !== env.ADMIN_PIN?.trim()) {
     return env.SESSION_SECRET;
   }
   const existing = await driver.get(AUTH_SECRET_KEY);
   if (existing && existing.length >= 32) return existing;
+  return null;
+}
+
+export async function getSigningSecret(driver: KeyValueDriver, env: CloudEnv): Promise<string> {
+  const existing = await peekSigningSecret(driver, env);
+  if (existing) return existing;
   const created = randomHex(32);
   await driver.put(AUTH_SECRET_KEY, created);
   return created;
@@ -350,7 +388,8 @@ export async function verifyRequestSession(
   if (!Number.isFinite(expiresAt) || expiresAt < Math.floor(Date.now() / 1000)) {
     return false;
   }
-  const secret = await getSigningSecret(driver, env);
+  const secret = await peekSigningSecret(driver, env);
+  if (!secret) return false;
   const expectedSig = await hmacSha256Hex(secret, `${expStr}.${nonce}`);
   return constantTimeEqual(sig, expectedSig);
 }

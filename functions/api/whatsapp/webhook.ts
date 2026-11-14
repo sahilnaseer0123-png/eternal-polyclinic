@@ -3,7 +3,7 @@
 // POST delivery updates (sent / delivered / read / failed). Every request must carry a valid
 //      X-Hub-Signature-256 made with WHATSAPP_APP_SECRET; anything else is rejected.
 
-import { constantTimeEqual, toHex, type CfPagesContext } from "../../_lib/clinic-store";
+import { constantTimeEqual, toHex, withSecurityHeaders, type CfPagesContext } from "../../_lib/clinic-store";
 import { applyDeliveryUpdate, type NotificationStatus } from "../../_lib/notify";
 
 export async function onRequestGet(context: CfPagesContext): Promise<Response> {
@@ -14,9 +14,14 @@ export async function onRequestGet(context: CfPagesContext): Promise<Response> {
     url.searchParams.get("hub.mode") === "subscribe" &&
     constantTimeEqual(url.searchParams.get("hub.verify_token") ?? "", expected)
   ) {
-    return new Response(url.searchParams.get("hub.challenge") ?? "", { status: 200 });
+    return withSecurityHeaders(
+      new Response(url.searchParams.get("hub.challenge") ?? "", {
+        status: 200,
+        headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" },
+      }),
+    );
   }
-  return new Response("Forbidden", { status: 403 });
+  return withSecurityHeaders(new Response("Forbidden", { status: 403 }));
 }
 
 export async function verifyMetaSignature(secret: string, rawBody: ArrayBuffer, header: string | null): Promise<boolean> {
@@ -32,17 +37,17 @@ type MetaPayload = { entry?: { changes?: { value?: { statuses?: MetaStatus[] } }
 export async function onRequestPost(context: CfPagesContext): Promise<Response> {
   const secret = context.env.WHATSAPP_APP_SECRET;
   const db = context.env.EP_SQL;
-  if (!secret || !db) return new Response("Not configured", { status: 503 });
+  if (!secret || !db) return withSecurityHeaders(new Response("Not configured", { status: 503 }));
 
   const raw = await context.request.arrayBuffer();
   if (!(await verifyMetaSignature(secret, raw, context.request.headers.get("X-Hub-Signature-256")))) {
-    return new Response("Bad signature", { status: 401 });
+    return withSecurityHeaders(new Response("Bad signature", { status: 401 }));
   }
   let payload: MetaPayload;
   try {
     payload = JSON.parse(new TextDecoder().decode(raw)) as MetaPayload;
   } catch {
-    return new Response("Bad JSON", { status: 400 });
+    return withSecurityHeaders(new Response("Bad JSON", { status: 400 }));
   }
 
   for (const entry of payload.entry ?? []) {
@@ -59,5 +64,5 @@ export async function onRequestPost(context: CfPagesContext): Promise<Response> 
     }
   }
   // Always 200 for a valid signed request, or Meta retries for days.
-  return new Response("OK", { status: 200 });
+  return withSecurityHeaders(new Response("OK", { status: 200 }));
 }

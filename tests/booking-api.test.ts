@@ -1,10 +1,13 @@
-import { test } from "node:test";
+import { beforeEach, test } from "node:test";
 import assert from "node:assert/strict";
 import { doctors } from "@/data/clinic";
 import { nextOpdDates, timeSlots } from "@/lib/schedule";
 import { createMemoryKV, type CloudEnv } from "@/functions/_lib/clinic-store";
+import { resetRateLimits } from "@/functions/_lib/rate-limit";
 import { buildPatientConfirmationMessage } from "@/functions/_lib/whatsapp";
 import { onRequestDelete, onRequestGet, onRequestPost } from "@/functions/api/book";
+
+beforeEach(() => resetRateLimits());
 
 const URL_BASE = "https://eternalpolyclinic.com/api/book";
 

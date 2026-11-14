@@ -145,7 +145,10 @@ body {
 
 @keyframes rise {
   from {
-    transform: translateY(14px);
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -161,21 +164,32 @@ body {
 
 @keyframes ep-wipe {
   from {
-    background-size: 0% 88%;
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
   }
 }
 
 .ep-mark {
   position: relative;
+  z-index: 0;
   display: inline-block;
   padding: 0.02em 0.32em;
   border-radius: 0.42rem;
-  background-image: linear-gradient(120deg, #DBEAFE 0%, #EFF6FF 100%);
-  background-repeat: no-repeat;
-  background-position: 0 50%;
-  background-size: 100% 90%;
   color: var(--color-brand-dark);
+}
+
+.ep-mark::before {
+  content: "";
+  position: absolute;
+  inset: 5% 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-image: linear-gradient(120deg, #DBEAFE 0%, #EFF6FF 100%);
   box-shadow: inset 0 -2px 0 rgba(29, 78, 216, 0.22);
+  transform-origin: left center;
+  transform: scaleX(1);
 }
 
 .ep-hero-dot-bg {
@@ -287,7 +301,8 @@ body {
 
   html.reveal-ready .reveal:not(.is-visible) {
     opacity: 0;
-    transform: translateY(22px);
+    transform: translate3d(0, 18px, 0);
+    will-change: transform, opacity;
   }
 
   html.reveal-ready .reveal.is-visible {
@@ -299,12 +314,13 @@ body {
     transition-delay: calc(var(--mo-i, 0) * 70ms);
   }
 
-  html.reveal-ready .reveal:not(.is-visible) .ep-mark {
-    background-size: 0% 88%;
+  html.reveal-ready .reveal:not(.is-visible) .ep-mark::before {
+    transform: scaleX(0);
   }
 
-  html.reveal-ready .reveal.is-visible .ep-mark,
-  .ep-mark-hero {
+  html.reveal-ready .reveal.is-visible .ep-mark::before,
+  .ep-mark-hero::before {
+    will-change: transform;
     animation: ep-wipe 0.65s var(--mo-ease) 0.25s backwards;
   }
 
@@ -354,6 +370,11 @@ body {
   .ep-il-hero .ln.ecg-pulse {
     stroke-dasharray: 0.24 0.76;
     animation: ep-ecg-sweep 2.8s linear infinite;
+  }
+
+  .ep-il-hero.is-offscreen .il-float,
+  .ep-il-hero.is-offscreen .ln.ecg-pulse {
+    animation-play-state: paused;
   }
 
   /* Sequential vector line draw for hero illustration + medical service icons across all screens */
@@ -433,7 +454,7 @@ body {
 /* The More menu slides up; its backdrop fades in. */
 @keyframes sheet-in {
   from {
-    transform: translateY(16px);
+    transform: translate3d(0, 16px, 0);
     opacity: 0;
   }
 }

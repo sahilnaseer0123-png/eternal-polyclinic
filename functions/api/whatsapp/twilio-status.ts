@@ -2,7 +2,7 @@
 // Set this URL as the "Status callback URL" of the Twilio WhatsApp sender.
 // Every request must carry a valid X-Twilio-Signature (HMAC-SHA1 with TWILIO_AUTH_TOKEN).
 
-import { constantTimeEqual, type CfPagesContext } from "../../_lib/clinic-store";
+import { constantTimeEqual, withSecurityHeaders, type CfPagesContext } from "../../_lib/clinic-store";
 import { applyDeliveryUpdate, type NotificationStatus } from "../../_lib/notify";
 
 export async function twilioSignature(authToken: string, url: string, params: URLSearchParams): Promise<string> {
@@ -27,11 +27,11 @@ const MAP: Record<string, NotificationStatus> = {
 export async function onRequestPost(context: CfPagesContext): Promise<Response> {
   const token = context.env.TWILIO_AUTH_TOKEN;
   const db = context.env.EP_SQL;
-  if (!token || !db) return new Response("Not configured", { status: 503 });
+  if (!token || !db) return withSecurityHeaders(new Response("Not configured", { status: 503 }));
   const params = new URLSearchParams(await context.request.text());
   const expected = await twilioSignature(token, context.request.url, params);
   if (!constantTimeEqual(context.request.headers.get("X-Twilio-Signature") ?? "", expected)) {
-    return new Response("Bad signature", { status: 401 });
+    return withSecurityHeaders(new Response("Bad signature", { status: 401 }));
   }
   const sid = params.get("MessageSid");
   const status = MAP[params.get("MessageStatus") ?? ""];
@@ -39,5 +39,5 @@ export async function onRequestPost(context: CfPagesContext): Promise<Response> 
     const detail = params.get("ErrorCode") ? `Twilio error ${params.get("ErrorCode")}` : undefined;
     await applyDeliveryUpdate(db, sid, status, detail);
   }
-  return new Response("OK", { status: 200 });
+  return withSecurityHeaders(new Response("OK", { status: 200 }));
 }

@@ -17,6 +17,7 @@ import {
 } from "../_lib/clinic-store";
 import { afterAppointmentSaved } from "../_lib/notify";
 import { setAppointmentRecordStatus } from "../_lib/patients";
+import { checkRateLimit, checkSameOrigin, clientIp, rateLimitResponse } from "../_lib/rate-limit";
 
 type PublicBookingBody = {
   doctorId?: string;
@@ -29,6 +30,11 @@ type PublicBookingBody = {
 };
 
 export async function onRequestPost(context: CfPagesContext): Promise<Response> {
+  const originErr = checkSameOrigin(context.request);
+  if (originErr) return originErr;
+  const rl = checkRateLimit("book_post", clientIp(context.request), 12, 10 * 60 * 1000);
+  if (!rl.ok) return rateLimitResponse(rl.retryAfterSec);
+
   const driver = resolveStorageDriver(context.env);
   if (!driver) {
     return jsonResponse(
@@ -187,6 +193,9 @@ export async function onRequestPost(context: CfPagesContext): Promise<Response> 
 }
 
 export async function onRequestGet(context: CfPagesContext): Promise<Response> {
+  const rl = checkRateLimit("book_get", clientIp(context.request), 20, 5 * 60 * 1000);
+  if (!rl.ok) return rateLimitResponse(rl.retryAfterSec);
+
   const driver = resolveStorageDriver(context.env);
   if (!driver) {
     return jsonResponse({ ok: false, configured: false, appointments: [] }, 503);
@@ -226,6 +235,11 @@ export async function onRequestGet(context: CfPagesContext): Promise<Response> {
 }
 
 export async function onRequestDelete(context: CfPagesContext): Promise<Response> {
+  const originErr = checkSameOrigin(context.request);
+  if (originErr) return originErr;
+  const rl = checkRateLimit("book_delete", clientIp(context.request), 10, 5 * 60 * 1000);
+  if (!rl.ok) return rateLimitResponse(rl.retryAfterSec);
+
   const driver = resolveStorageDriver(context.env);
   if (!driver) {
     return jsonResponse({ ok: false, configured: false }, 503);

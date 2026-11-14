@@ -1,4 +1,4 @@
-import { test } from "node:test";
+import { beforeEach, test } from "node:test";
 import assert from "node:assert/strict";
 import { clinic, serviceActions, services } from "@/data/clinic";
 import {
@@ -8,9 +8,12 @@ import {
   resolveStorageDriver,
   type CloudEnv,
 } from "@/functions/_lib/clinic-store";
+import { resetRateLimits } from "@/functions/_lib/rate-limit";
 import { onRequestGet as getLive } from "@/functions/api/live";
 import { onRequestGet as getAuth, onRequestPost as postAuth } from "@/functions/api/admin/auth";
 import { onRequestGet as getState, onRequestPost as postState } from "@/functions/api/admin/state";
+
+beforeEach(() => resetRateLimits());
 
 function extractCookieValue(setCookieHeader: string | null): string {
   assert.ok(setCookieHeader, "Expected Set-Cookie header");

@@ -16,6 +16,7 @@ import {
 } from "../../_lib/clinic-store";
 import { afterAppointmentSaved } from "../../_lib/notify";
 import { backfillFromRegister, markAppointmentRecordDeleted, setAppointmentRecordStatus } from "../../_lib/patients";
+import { checkSameOrigin } from "../../_lib/rate-limit";
 import { authorize } from "../../_lib/staff-auth";
 
 function statePayload(state: Awaited<ReturnType<typeof readClinicState>>) {
@@ -52,6 +53,9 @@ export async function onRequestGet(context: CfPagesContext): Promise<Response> {
 }
 
 export async function onRequestPost(context: CfPagesContext): Promise<Response> {
+  const originErr = checkSameOrigin(context.request);
+  if (originErr) return originErr;
+
   const driver = resolveStorageDriver(context.env);
   if (!driver) {
     return jsonResponse({ ok: false, configured: false }, 503);

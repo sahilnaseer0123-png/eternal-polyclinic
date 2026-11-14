@@ -5,10 +5,11 @@
 // the link was made for can be opened; nothing about other patients is reachable.
 // Returns the PDF itself (never a public file URL); basic details travel in the X-Report header.
 
-import { jsonResponse, type CfPagesContext } from "../../_lib/clinic-store";
+import { jsonResponse, withSecurityHeaders, type CfPagesContext } from "../../_lib/clinic-store";
 import { ensureSchema } from "../../_lib/db";
 import { readJson } from "../../_lib/http";
 import { reportLinkHash } from "../../_lib/notify";
+import { checkRateLimit, checkSameOrigin, clientIp, rateLimitResponse } from "../../_lib/rate-limit";
 
 const MAX_FAILED = 8;
 
@@ -32,6 +33,11 @@ function deny(message: string, status: number) {
 }
 
 export async function onRequestPost(context: CfPagesContext): Promise<Response> {
+  const originErr = checkSameOrigin(context.request);
+  if (originErr) return originErr;
+  const rl = checkRateLimit("report_view", clientIp(context.request), 15, 10 * 60 * 1000);
+  if (!rl.ok) return rateLimitResponse(rl.retryAfterSec);
+
   const db = context.env.EP_SQL;
   const kv = context.env.EP_KV;
   if (!db || !kv) return deny("Reports can't be opened online right now. Please call the clinic.", 503);
@@ -85,14 +91,16 @@ export async function onRequestPost(context: CfPagesContext): Promise<Response> 
     fileName: link.file_name ?? "Lab-report.pdf",
     expiresAt: link.expires_at,
   };
-  return new Response(data, {
-    headers: {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": `inline; filename="${meta.fileName.replace(/"/g, "")}"`,
-      "Cache-Control": "private, no-store",
-      "X-Content-Type-Options": "nosniff",
-      "X-Robots-Tag": "noindex",
-      "X-Report": encodeURIComponent(JSON.stringify(meta)),
-    },
-  });
+  return withSecurityHeaders(
+    new Response(data, {
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `inline; filename="${meta.fileName.replace(/"/g, "")}"`,
+        "Cache-Control": "private, no-store",
+        "X-Content-Type-Options": "nosniff",
+        "X-Robots-Tag": "noindex",
+        "X-Report": encodeURIComponent(JSON.stringify(meta)),
+      },
+    }),
+  );
 }

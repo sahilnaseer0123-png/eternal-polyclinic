@@ -21,6 +21,7 @@ import {
   type CfPagesContext,
 } from "../../_lib/clinic-store";
 import { audit } from "../../_lib/db";
+import { checkRateLimit, checkSameOrigin, clientIp, rateLimitResponse } from "../../_lib/rate-limit";
 import {
   clearStaffCookie,
   createStaff,
@@ -83,6 +84,9 @@ type AuthPostBody = {
 
 export async function onRequestPost(context: CfPagesContext): Promise<Response> {
   const { env, request } = context;
+  const originErr = checkSameOrigin(request);
+  if (originErr) return originErr;
+
   const driver = resolveStorageDriver(env);
   if (!driver) {
     return jsonResponse(
@@ -103,6 +107,11 @@ export async function onRequestPost(context: CfPagesContext): Promise<Response> 
   const accounts = db ? await staffCount(db) : 0;
 
   if (body.action === "logout") {
+    const staff = await staffFromRequest(request, env);
+    const legacy = !staff && (await verifyRequestSession(request, driver, env));
+    if (!staff && !legacy) {
+      return jsonResponse({ ok: false, error: "Unauthorized" }, 401);
+    }
     const res = jsonResponse({ ok: true });
     res.headers.append("Set-Cookie", clearSessionCookie(isHttps));
     res.headers.append("Set-Cookie", clearStaffCookie(isHttps));
@@ -110,6 +119,9 @@ export async function onRequestPost(context: CfPagesContext): Promise<Response> 
   }
 
   if (body.action === "login") {
+    const rl = checkRateLimit("auth_login", clientIp(request), 8, 15 * 60 * 1000);
+    if (!rl.ok) return rateLimitResponse(rl.retryAfterSec);
+
     // Staff account sign-in
     if (typeof body.username === "string" && body.username.trim()) {
       if (!db) return jsonResponse({ ok: false, error: "Staff accounts need the clinic database (EP_SQL)." }, 503);
@@ -140,6 +152,9 @@ export async function onRequestPost(context: CfPagesContext): Promise<Response> 
   }
 
   if (body.action === "setup_owner") {
+    const rl = checkRateLimit("auth_login", clientIp(request), 8, 15 * 60 * 1000);
+    if (!rl.ok) return rateLimitResponse(rl.retryAfterSec);
+
     if (!db) return jsonResponse({ ok: false, error: "Staff accounts need the clinic database (EP_SQL)." }, 503);
     if (accounts > 0) return jsonResponse({ ok: false, error: "The owner account already exists. Sign in instead." }, 409);
     const pinOk = await verifyAdminPin(typeof body.pin === "string" ? body.pin : "", driver, env);
