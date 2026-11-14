@@ -30,7 +30,7 @@ export default function ContactPage() {
         aria-label="Address and contact"
         className="mx-auto max-w-6xl px-4 sm:px-6 pb-24 sm:pb-16"
       >
-        <div className="grid gap-8 card rounded-3xl p-6 sm:p-9 md:grid-cols-2">
+        <div className="reveal grid gap-8 card rounded-3xl p-6 sm:p-9 md:grid-cols-2">
           {/* Left Column: Details & Photo */}
           <div className="flex flex-col gap-6">
             <figure>
@@ -194,7 +194,7 @@ export default function ContactPage() {
         </div>
 
         {/* Digital Lab & Scan Reports on WhatsApp */}
-        <ReportCollectionSection className="mt-8" />
+        <ReportCollectionSection className="reveal mt-8" />
       </section>
     </>
   );

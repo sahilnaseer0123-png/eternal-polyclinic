@@ -34,9 +34,9 @@ export function ByAppointmentSection() {
                   Call {clinic.phoneDisplay}
                 </a>
               </div>
-              <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+              <ul className="reveal-group mt-6 grid gap-3 sm:grid-cols-2">
                 {byAppointment.map((d) => (
-                  <li key={d.id} className="flex flex-col justify-between rounded-2xl bg-white p-5 shadow-xs">
+                  <li key={d.id} className="reveal flex flex-col justify-between rounded-2xl bg-white p-5 shadow-xs">
                     <div>
                       <h3 className="font-display text-xl font-medium tracking-tight sm:text-2xl">
                         <Link href={`/doctors/${d.id}`} className="hover:text-brand transition-colors">

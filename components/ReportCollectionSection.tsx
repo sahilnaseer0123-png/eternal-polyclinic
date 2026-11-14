@@ -21,7 +21,7 @@ export function ReportCollectionSection({
           </div>
 
           <h2 className="mt-3 text-2xl sm:text-3xl font-semibold tracking-[-0.03em] text-ink font-display">
-            Collect your lab &amp; scan reports <em>on WhatsApp</em>
+            Collect your lab &amp; scan reports <em className="ep-mark">on WhatsApp</em>
           </h2>
 
           <p className="mt-2.5 text-base text-charcoal leading-relaxed">
@@ -31,7 +31,7 @@ export function ReportCollectionSection({
           </p>
 
           {/* 3 Simple Steps */}
-          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <div className="reveal-group mt-6 grid gap-3 sm:grid-cols-3">
             {[
               {
                 num: "1",
@@ -51,7 +51,7 @@ export function ReportCollectionSection({
             ].map((step) => (
               <div
                 key={step.num}
-                className="rounded-2xl border border-line/70 bg-white/80 p-3.5 backdrop-blur-xs flex flex-col justify-between"
+                className="reveal rounded-2xl border border-line/70 bg-white/80 p-3.5 backdrop-blur-xs flex flex-col justify-between"
               >
                 <div>
                   <span className="flex size-6 items-center justify-center rounded-md bg-brand-tint text-xs font-bold text-brand tabular-nums lining-nums">

@@ -22,7 +22,7 @@ export default function FaqPage() {
           <Faq />
 
           {/* Help card */}
-          <div className="mt-8 card rounded-3xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="reveal mt-8 card rounded-3xl p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h3 className="font-display text-xl font-medium text-ink">
                 Have a question not covered above?

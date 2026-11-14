@@ -132,10 +132,10 @@ export function HeroRightColumn() {
           </Link>
         </div>
 
-        <div className="mt-2.5 min-[390px]:mt-3 flex items-center justify-between gap-2 border-t border-line pt-1.5 px-0.5">
+        <div className="mt-2.5 min-[390px]:mt-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-line pt-1.5 px-0.5">
           <a
             href="#days"
-            className="group inline-flex min-h-10 items-center gap-1.5 text-[12.5px] min-[390px]:text-[13px] font-semibold text-ink hover:text-accent transition-colors shrink-0"
+            className="group inline-flex min-h-11 items-center gap-1.5 text-[12.5px] min-[390px]:text-[13px] font-semibold text-ink hover:text-accent transition-colors shrink-0"
           >
             <span className="underline decoration-line-strong underline-offset-4 group-hover:decoration-brand-dark">
               See schedule
@@ -149,7 +149,7 @@ export function HeroRightColumn() {
             href={clinic.reportRequestUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-10 items-center gap-1 text-[12px] min-[390px]:text-[12.5px] font-semibold text-muted hover:text-accent transition-colors tabular-nums lining-nums shrink-0"
+            className="inline-flex min-h-11 items-center gap-1 text-[12px] min-[390px]:text-[12.5px] font-semibold text-muted hover:text-accent transition-colors tabular-nums lining-nums shrink-0"
           >
             <span>Lab reports ({clinic.labTechPhoneDisplay})</span>
             <span aria-hidden="true">↗</span>

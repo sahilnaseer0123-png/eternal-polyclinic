@@ -165,7 +165,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
     const apt = confirmed.apt;
     const waCopy = `https://wa.me/?text=${encodeURIComponent(confirmationTicketText(apt))}`;
     return (
-      <div className="flex min-w-0 flex-col gap-4" aria-live="polite">
+      <div className="ep-day-swap flex min-w-0 flex-col gap-4" aria-live="polite">
         <div className="no-print">{tabs}</div>
         <TokenSlip apt={apt} whatsappSent={confirmed.whatsappSent} />
         {formMessage && (
@@ -217,7 +217,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
 
       {/* Doctor */}
       {!doctor ? (
-        <fieldset className="flex min-w-0 flex-col gap-3">
+        <fieldset className="ep-day-swap flex min-w-0 flex-col gap-3">
           <legend className="font-display text-2xl font-medium tracking-tight sm:text-3xl">Choose a doctor</legend>
           <div className="mt-2 grid gap-2.5 sm:grid-cols-2">
             {activeDoctors.map((d) => (
@@ -240,7 +240,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
           <FieldError id="err-doctor" message={errors.doctorId} />
         </fieldset>
       ) : (
-        <div className="flex items-center gap-3.5 rounded-2xl border border-line bg-ground p-3.5">
+        <div className="ep-day-swap flex items-center gap-3.5 rounded-2xl border border-line bg-ground p-3.5">
           <DoctorMark doctor={doctor} className="size-12 rounded-full text-lg" />
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
@@ -277,7 +277,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
       )}
 
       {doctor && dates.length === 0 && (
-        <p className="rounded-2xl bg-sand p-4 text-base text-charcoal">
+        <p className="ep-day-swap rounded-2xl bg-sand p-4 text-base text-charcoal">
           {onLeave
             ? `${doctor.name ?? doctor.speciality} is currently marked ${doctor.availability?.toLowerCase() ?? "on leave"}. Please call `
             : `${doctor.name ?? doctor.speciality} sees patients by appointment. Please call `}
@@ -290,7 +290,7 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
 
       {/* Day */}
       {doctor && dates.length > 0 && (
-        <fieldset className="flex min-w-0 flex-col gap-3">
+        <fieldset className="ep-day-swap flex min-w-0 flex-col gap-3">
           <legend className={label}>Day</legend>
           {doctor.opd.some((s) => s.recurrence === "alternate") && (
             <p className="text-xs font-medium text-muted">
@@ -329,9 +329,9 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
 
       {/* Time */}
       {doctor && date && (
-        <fieldset className="flex min-w-0 flex-col gap-3">
+        <fieldset key={date} className="ep-day-swap flex min-w-0 flex-col gap-3">
           <legend className={label}>Time</legend>
-          <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4">
+          <div className="grid grid-cols-2 min-[380px]:grid-cols-3 gap-2.5 sm:grid-cols-4">
             {slots.map((s) => {
               const taken = bookedSlots.includes(s);
               return (
@@ -347,8 +347,8 @@ export function BookingForm({ nowMs, initialDoctorId = "" }: { nowMs: number; in
                   }}
                   className={
                     taken
-                      ? "min-h-12 rounded-xl border border-line bg-ground px-1 text-[0.9375rem] font-semibold text-muted/60 line-through cursor-not-allowed"
-                      : `${chip(s === time)} min-h-12 px-1 text-[0.9375rem] font-semibold`
+                      ? "min-h-12 whitespace-nowrap rounded-xl border border-line bg-ground px-1.5 text-[0.9375rem] font-semibold text-muted/60 line-through cursor-not-allowed"
+                      : `${chip(s === time)} min-h-12 whitespace-nowrap px-1.5 text-[0.9375rem] font-semibold`
                   }
                 >
                   {formatTime(s)}
@@ -553,7 +553,7 @@ function FindMyToken() {
   const printed = results?.find((r) => r.token === printing);
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="ep-day-swap flex flex-col gap-5">
       <form onSubmit={search} className="no-print flex flex-col gap-4">
         <h2 className="font-display text-2xl font-medium tracking-tight sm:text-3xl">Find my token</h2>
         <div>

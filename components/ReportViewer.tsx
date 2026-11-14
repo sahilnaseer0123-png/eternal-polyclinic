@@ -86,7 +86,7 @@ export function ReportViewer() {
   }
 
   return (
-    <div className="card mx-auto flex w-full max-w-md flex-col gap-4 rounded-3xl p-5 sm:p-7">
+    <div className="rise card mx-auto flex w-full max-w-md flex-col gap-4 rounded-3xl p-5 sm:p-7">
       <div>
         <p className="eyebrow text-muted">Secure lab report</p>
         <h1 className="mt-2 font-display text-2xl font-semibold tracking-tight text-ink">Open your report</h1>

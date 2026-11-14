@@ -188,11 +188,11 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
       {doctor.facilities && doctor.facilities.length > 0 && (
         <section aria-labelledby="facilities" className="reveal mt-8 sm:mt-12">
           <h2 id="facilities" className="font-display text-2xl font-medium tracking-tight sm:text-3xl text-ink">
-            Specialized Facilities &amp; In-Clinic Procedures
+            Specialized Facilities &amp; <em className="ep-mark">In-Clinic Procedures</em>
           </h2>
-          <ul className="mt-4 flex flex-wrap gap-2.5">
+          <ul className="reveal-group mt-4 flex flex-wrap gap-2.5">
             {doctor.facilities.map((f) => (
-              <li key={f} className="card card-hover flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-charcoal">
+              <li key={f} className="reveal card card-hover flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-charcoal">
                 <CheckIcon className="size-4 text-brand shrink-0" />
                 <span>{f}</span>
               </li>
@@ -204,12 +204,12 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
       {/* Common reasons to visit */}
       <section aria-labelledby="reasons" className="reveal mt-8 sm:mt-12">
         <h2 id="reasons" className="font-display text-2xl font-medium tracking-tight sm:text-3xl text-ink">
-          When to consult {doctor.name ? doctor.name : `a ${doctor.speciality.toLowerCase()}`}
+          When to consult <em className="ep-mark">{doctor.name ? doctor.name : `a ${doctor.speciality.toLowerCase()}`}</em>
         </h2>
         <p className="mt-1 text-sm text-muted">Common symptoms, evaluations, and clinical conditions treated</p>
-        <ul className="mt-4 flex flex-wrap gap-2">
+        <ul className="reveal-group mt-4 flex flex-wrap gap-2">
           {doctor.concerns.map((c) => (
-            <li key={c} className="card card-hover rounded-full px-4 py-2 text-sm font-medium text-charcoal">
+            <li key={c} className="reveal card card-hover rounded-full px-4 py-2 text-sm font-medium text-charcoal">
               {c}
             </li>
           ))}
@@ -226,11 +226,11 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
       {/* Other doctors */}
       <section aria-labelledby="others" className="reveal mt-8 sm:mt-12">
         <h2 id="others" className="font-display text-2xl font-medium tracking-tight sm:text-3xl text-ink">
-          Other Visiting Specialists
+          Other <em className="ep-mark">Visiting Specialists</em>
         </h2>
-        <ul className="mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+        <ul className="reveal-group mt-4 grid gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           {others.map((d) => (
-            <li key={d.id}>
+            <li key={d.id} className="reveal">
               <Link href={`/doctors/${d.id}`} className="card card-hover flex items-center gap-3.5 rounded-2xl p-4 group">
                 <DoctorMark doctor={d} className="size-12 rounded-full text-xl" />
                 <span className="flex min-w-0 flex-1 flex-col leading-snug">

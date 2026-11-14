@@ -6,7 +6,7 @@
 // Before the browser takes over, the page shows the first weekday with its schedule (same height, no jump).
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { clinic, type Doctor, type OpdSession, type Weekday } from "@/data/clinic";
 import { isBuiltInDoctor, isDoctorOnLeave, useActiveDoctors, useDoctorStatuses } from "@/lib/appointments";
 import { addDays, clinicClock, DAY_NAMES, formatTime, sessionOn } from "@/lib/schedule";
@@ -73,13 +73,13 @@ export function DayPicker() {
           <p className="eyebrow text-muted">Visiting specialists</p>
           <h2 id="days-title" className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
             Who sits on{" "}
-            <em className="inline-block rounded-xl bg-brand-tint px-2.5 py-0.5 text-ink ring-1 ring-brand-line/70">
+            <em key={selected} className="ep-mark inline-block rounded-xl px-2.5 py-0.5 ring-1 ring-brand-line/70">
               {dayName}
             </em>
           </h2>
         </div>
 
-        <div role="group" aria-label="Choose a day" className="mt-8 grid grid-cols-7 gap-1.5 sm:gap-3">
+        <div role="group" aria-label="Choose a day" className="mt-8 grid grid-cols-7 gap-1 min-[390px]:gap-1.5 sm:gap-3">
           {DAY_ORDER.map((day) => {
             const count = sittingsOn(day).length;
             const on = day === selected;
@@ -89,7 +89,7 @@ export function DayPicker() {
                 type="button"
                 aria-pressed={on}
                 onClick={() => setPicked(day)}
-                className={`flex min-h-16 flex-col items-center justify-center rounded-xl border px-1 py-2 text-center transition-all duration-200 sm:min-h-24 sm:rounded-2xl ${
+                className={`flex min-h-16 flex-col items-center justify-center rounded-xl border px-0.5 min-[390px]:px-1 py-2 text-center transition-all duration-200 sm:min-h-24 sm:rounded-2xl ${
                   on
                     ? "border-brand bg-brand text-white shadow-elevated"
                     : "border-line-strong bg-white text-ink hover:border-brand"
@@ -104,7 +104,7 @@ export function DayPicker() {
                   {count === 0 ? "No OPD" : count === 1 ? "specialist" : "specialists"}
                 </span>
                 {today === day && (
-                  <span className={`text-[0.625rem] sm:text-[0.6875rem] font-bold uppercase tracking-tight sm:tracking-wider ${on ? "text-mint" : "text-ink"}`}>
+                  <span className={`text-[9px] min-[390px]:text-[10px] sm:text-[11px] leading-none font-bold uppercase tracking-tight sm:tracking-wider ${on ? "text-mint" : "text-ink"}`}>
                     Today
                   </span>
                 )}
@@ -115,7 +115,7 @@ export function DayPicker() {
 
         <div aria-live="polite" className="reveal mt-6 min-h-40 sm:mt-8">
           {list.length === 0 ? (
-            <p className="card rounded-2xl p-6 text-base text-muted sm:text-lg">
+            <p key={selected} className="card ep-day-swap rounded-2xl p-6 text-base text-muted sm:text-lg">
               No specialist OPD on {dayName}. Pick another day above, or call{" "}
               <a href={`tel:${clinic.phone}`} className="font-bold text-brand underline">
                 {clinic.phoneDisplay}
@@ -132,15 +132,16 @@ export function DayPicker() {
               )}
             </p>
           ) : (
-            <ul className="flex flex-col gap-3">
-              {list.map(({ doctor, session }) => {
+            <ul key={selected} className="flex flex-col gap-3">
+              {list.map(({ doctor, session }, idx) => {
                 const note = noteFor(session);
                 const live = today === selected ? statuses[doctor.id] : undefined;
                 const profileHref = isBuiltInDoctor(doctor.id) ? `/doctors/${doctor.id}` : `/book?doctor=${doctor.id}`;
                 return (
                   <li
                     key={`${doctor.id}-${session.day}`}
-                    className="card grid gap-3 rounded-2xl p-4 sm:grid-cols-[11rem_1fr_auto] sm:items-center sm:gap-6 sm:p-6"
+                    style={{ "--mo-i": Math.min(idx, 6) } as CSSProperties}
+                    className="card ep-stagger-item grid gap-3 rounded-2xl p-4 sm:grid-cols-[11rem_1fr_auto] sm:items-center sm:gap-6 sm:p-6"
                   >
                     <p className="font-display text-xl font-medium tracking-tight sm:text-2xl tabular-nums lining-nums">
                       {formatTime(session.start)}

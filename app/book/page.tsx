@@ -32,8 +32,8 @@ export default function BookPage() {
           <BookingSection />
         </Suspense>
 
-        <div className="no-print flex flex-col gap-5">
-          <div className="card rounded-3xl p-6">
+        <div className="no-print reveal-group flex flex-col gap-5">
+          <div className="reveal card rounded-3xl p-6">
             <h2 className="font-display text-2xl font-medium tracking-tight">How it works</h2>
             <ol className="mt-4 flex flex-col gap-4 text-base text-charcoal">
               {[
@@ -55,7 +55,7 @@ export default function BookPage() {
             </ol>
           </div>
 
-          <div className="rounded-3xl bg-sand p-6">
+          <div className="reveal rounded-3xl bg-sand p-6">
             <div className="flex items-center gap-2 text-brand">
               <ShieldCheckIcon className="size-4" />
               <span className="eyebrow">Your privacy</span>
@@ -68,7 +68,7 @@ export default function BookPage() {
             </p>
           </div>
 
-          <div className="card rounded-3xl p-6">
+          <div className="reveal card rounded-3xl p-6">
             <h2 className="font-display text-xl font-medium tracking-tight">Prefer to talk?</h2>
             <p className="mt-1 text-base text-muted">Reception answers during clinic hours.</p>
             <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">

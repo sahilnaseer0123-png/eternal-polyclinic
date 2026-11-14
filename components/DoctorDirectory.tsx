@@ -5,7 +5,7 @@
 // /doctors?type=skin opens with that chip chosen (see app/doctors/page.tsx).
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, type CSSProperties } from "react";
 import { categories, clinic, services, type DoctorCategory } from "@/data/clinic";
 import { isBuiltInDoctor, isDoctorOnLeave, useActiveDoctors, useDoctorStatuses } from "@/lib/appointments";
 import { DAY_NAMES, formatTime } from "@/lib/schedule";
@@ -74,7 +74,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
 
   return (
     <div className="flex flex-col gap-3.5 sm:gap-4">
-      <div>
+      <div className="rise rise-1">
         <label htmlFor="find" className="sr-only">
           Find a doctor or service
         </label>
@@ -93,7 +93,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
         </div>
       </div>
 
-      <div role="group" aria-label="Filter doctors by speciality" className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:mx-0 sm:w-auto sm:px-0 sm:flex-wrap w-[calc(100%+2.5rem)] max-w-none">
+      <div role="group" aria-label="Filter doctors by speciality" className="rise rise-2 -mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:mx-0 sm:w-auto sm:px-0 sm:flex-wrap w-[calc(100%+2.5rem)] max-w-none">
         {options.map((o) => {
           const on = filter === o.id;
           return (
@@ -117,8 +117,8 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
       </p>
 
       {shown.length > 0 ? (
-        <ul className="grid gap-3.5 sm:gap-4 md:grid-cols-2">
-          {shown.map((doctor) => {
+        <ul key={filter} className="grid gap-3.5 sm:gap-4 md:grid-cols-2">
+          {shown.map((doctor, idx) => {
             const onLeave = isDoctorOnLeave(doctor);
             const hasOpd = doctor.opd.length > 0 && !onLeave;
             const builtIn = isBuiltInDoctor(doctor.id);
@@ -127,7 +127,8 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
               <li
                 key={doctor.id}
                 id={`doctor-${doctor.id}`}
-                className="bg-white flex flex-col justify-between rounded-2xl border border-line p-5 hover:border-brand-line transition-all duration-200"
+                style={{ "--mo-i": Math.min(idx, 7) } as CSSProperties}
+                className="ep-stagger-item bg-white flex flex-col justify-between rounded-2xl border border-line p-5 hover:border-brand-line transition-all duration-200"
               >
                 <div>
                   {/* Doctor Identity Header */}
@@ -200,7 +201,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                           return (
                             <div
                               key={idx}
-                              className="flex items-center justify-between text-ink"
+                              className="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 text-ink"
                             >
                               <span className="font-semibold text-ink">
                                 {dayLabel}
@@ -211,7 +212,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                             </div>
                           );
                         })}
-                        <div className="flex items-center justify-between border-t border-line pt-1.5 text-sm">
+                        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-0.5 border-t border-line pt-1.5 text-sm">
                           <span className="text-muted">Next available slot</span>
                           <NextAvailable
                             doctorId={doctor.id}
@@ -252,14 +253,14 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                   {builtIn ? (
                     <Link
                       href={`/doctors/${doctor.id}`}
-                      className="inline-flex min-h-10 items-center justify-center rounded-xl border border-line bg-white px-3 text-center text-sm font-semibold text-ink hover:bg-ground transition-colors"
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-white px-3 text-center text-sm font-semibold text-ink hover:bg-ground transition-colors"
                     >
                       View Details
                     </Link>
                   ) : (
                     <a
                       href={`tel:${clinic.phone}`}
-                      className="inline-flex min-h-10 items-center justify-center rounded-xl border border-line bg-white px-3 text-center text-sm font-semibold text-ink hover:bg-ground transition-colors"
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-white px-3 text-center text-sm font-semibold text-ink hover:bg-ground transition-colors"
                     >
                       Call Helpline
                     </a>
@@ -267,14 +268,14 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                   {hasOpd ? (
                     <Link
                       href={`/book?doctor=${doctor.id}`}
-                      className="inline-flex min-h-10 items-center justify-center rounded-xl bg-brand px-3 text-center text-sm font-semibold text-white hover:bg-brand-dark transition-colors"
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl bg-brand px-3 text-center text-sm font-semibold text-white hover:bg-brand-dark transition-colors"
                     >
                       Book OPD →
                     </Link>
                   ) : (
                     <a
                       href={`tel:${clinic.phone}`}
-                      className="inline-flex min-h-10 items-center justify-center rounded-xl bg-ink px-3 text-center text-sm font-semibold text-white hover:bg-brand transition-colors"
+                      className="inline-flex min-h-11 items-center justify-center rounded-xl bg-ink px-3 text-center text-sm font-semibold text-white hover:bg-brand transition-colors"
                     >
                       Call Helpline
                     </a>

@@ -15,14 +15,15 @@ export default function ServicesPage() {
     <>
       <PageIntro title="Tests and services">No need to go elsewhere for scans, reports or medicines.</PageIntro>
       <section aria-label="Services" className="mx-auto max-w-6xl px-4 pb-24 sm:px-6 sm:pb-16">
-        <ul className="grid gap-4 sm:grid-cols-2">
+        <ul className="reveal-group grid gap-4 sm:grid-cols-2">
           {services.map((service) => {
             const action = serviceActions(service);
             return (
               <li
                 key={service.id}
                 id={service.id}
-                className="card card-hover scroll-mt-24 flex flex-col justify-between gap-4 rounded-2xl p-6"
+                data-draw=""
+                className="reveal card card-hover scroll-mt-24 flex flex-col justify-between gap-4 rounded-2xl p-6"
               >
                 <div>
                   <div className="flex items-center justify-between">
@@ -65,7 +66,7 @@ export default function ServicesPage() {
         </ul>
 
         {/* Digital Lab & Scan Reports on WhatsApp */}
-        <div className="mt-8">
+        <div className="reveal mt-8">
           <ReportCollectionSection />
         </div>
       </section>

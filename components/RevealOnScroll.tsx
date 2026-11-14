@@ -31,12 +31,23 @@ function setupScrollReveals(timers: number[]) {
     return () => {};
   }
 
+  const aboveFold: HTMLElement[] = [];
+  const belowFold: HTMLElement[] = [];
+
   document.querySelectorAll<HTMLElement>(".reveal:not(.is-visible)").forEach((el) => {
     const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight + 50) {
-      markVisible(el);
+    // Reserve ~64px at the bottom for the fixed mobile TabBar so elements hidden behind it
+    // wait to reveal until scrolled clearly into view.
+    if (rect.top < window.innerHeight - 64) {
+      aboveFold.push(el);
+    } else {
+      belowFold.push(el);
     }
   });
+
+  const raf = aboveFold.length
+    ? requestAnimationFrame(() => aboveFold.forEach(markVisible))
+    : 0;
 
   const observer = new IntersectionObserver(
     (entries) => {
@@ -47,11 +58,14 @@ function setupScrollReveals(timers: number[]) {
         }
       }
     },
-    { rootMargin: "0px 0px 40px 0px", threshold: 0.01 },
+    { rootMargin: "0px 0px -44px 0px", threshold: 0.06 },
   );
 
-  document.querySelectorAll<HTMLElement>(".reveal:not(.is-visible)").forEach((el) => observer.observe(el));
-  return () => observer.disconnect();
+  belowFold.forEach((el) => observer.observe(el));
+  return () => {
+    if (raf) cancelAnimationFrame(raf);
+    observer.disconnect();
+  };
 }
 
 function runCountUps() {

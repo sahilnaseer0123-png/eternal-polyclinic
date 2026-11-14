@@ -130,11 +130,11 @@ export function PageIntro({
 }) {
   return (
     <div className={className ?? "mx-auto max-w-6xl px-5 pt-6 pb-3 sm:pt-8 sm:pb-4 sm:px-6"}>
-      <h1 className="text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
+      <h1 className="rise text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
         {title}
       </h1>
       {children && (
-        <div className="mt-2 max-w-2xl text-muted sm:mt-2.5 sm:text-lg leading-relaxed">
+        <div className="rise rise-1 mt-2 max-w-2xl text-muted sm:mt-2.5 sm:text-lg leading-relaxed">
           {children}
         </div>
       )}

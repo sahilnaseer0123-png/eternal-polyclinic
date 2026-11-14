@@ -109,12 +109,9 @@ body {
   body {
     font-size: 0.9375rem;
   }
-  /* Full-screen mobile hero: SiteHeader is 65px (4.0625rem) sticky at top; 4rem leaves a 1px buffer
-     so the next section (#days) always begins below 100svh. Bottom padding clears the 65px fixed TabBar + safe area. */
+  /* Compact bottom breathing room before #days on phones (hero flows naturally above fold without a 78px gap) */
   .hero-mobile-screen {
-    min-height: calc(100vh - 4rem);
-    min-height: calc(100svh - 4rem);
-    padding-bottom: calc(4.85rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: 1.5rem;
   }
 }
 
@@ -342,10 +339,8 @@ body {
     stroke-dasharray: 0.24 0.76;
     animation: ep-ecg-sweep 2.8s linear infinite;
   }
-}
 
-/* Desktop SVG stroke draw for hero clinical illustration and scroll-entry medical icons */
-@media (prefers-reduced-motion: no-preference) and (min-width: 900px) and (hover: hover) and (pointer: fine) {
+  /* Sequential vector line draw for hero illustration + medical service icons across all screens */
   @keyframes ep-hero-draw {
     from {
       stroke-dashoffset: 1;
@@ -384,6 +379,30 @@ body {
     stroke-dasharray: 120;
     stroke-dashoffset: 0;
     transition: stroke-dashoffset 0.85s var(--mo-ease) calc(var(--mo-i, 0) * 70ms + 120ms);
+  }
+
+  /* Interactive list swaps, category cascades, booking step transitions & FAQ accordions */
+  @keyframes ep-card-in {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 12px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .ep-day-swap {
+    animation: ep-card-in 0.36s var(--mo-ease) both;
+  }
+
+  .ep-stagger-item {
+    animation: ep-card-in 0.42s var(--mo-ease) calc(var(--mo-i, 0) * 45ms) both;
+  }
+
+  details[open] > .ep-details-body {
+    animation: ep-card-in 0.28s var(--mo-ease) both;
   }
 }
 

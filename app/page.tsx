@@ -41,11 +41,11 @@ export default function Home() {
     <>
       <LegacyBookingLink />
 
-      {/* Hero: Crisp white architectural canvas with diagonal 3D DNA sculpture */}
+      {/* Hero: Crisp white architectural canvas with isometric Clinical & Live ECG illustration */}
       <section className="relative overflow-hidden bg-white">
-        <div className="ep-hero-dot-bg pointer-events-none absolute inset-0 z-0 hidden lg:block opacity-60" aria-hidden="true" />
+        <div className="ep-hero-dot-bg pointer-events-none absolute inset-0 z-0 opacity-45 sm:opacity-60" aria-hidden="true" />
         <canvas className="ep-hero-dots pointer-events-none absolute inset-0 z-0 hidden lg:block h-full w-full" aria-hidden="true" />
-        <div className="hero-mobile-screen relative mx-auto flex w-full max-w-7xl flex-col justify-between gap-2.5 px-5 pt-3.5 sm:justify-start sm:gap-4 sm:px-8 sm:pt-7 sm:pb-12 min-[72rem]:grid min-[72rem]:min-h-[650px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-16 xl:min-h-[680px] xl:grid-cols-[minmax(0,1fr)_350px]">
+        <div className="hero-mobile-screen relative mx-auto flex w-full max-w-7xl flex-col justify-start gap-2.5 px-5 pt-3.5 sm:gap-4 sm:px-8 sm:pt-7 sm:pb-12 min-[72rem]:grid min-[72rem]:min-h-[650px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-16 xl:min-h-[680px] xl:grid-cols-[minmax(0,1fr)_350px]">
           {/* 1. Top-Left Content Block */}
           <div className="relative z-10 flex min-w-0 flex-col items-start gap-2.5 min-[390px]:gap-3 sm:gap-4 min-[72rem]:gap-5 min-[72rem]:max-w-[36rem] min-[72rem]:pt-2 min-[72rem]:pb-8 xl:max-w-[39rem]">
             {/* Google Rating Pill */}
@@ -88,7 +88,7 @@ export default function Home() {
             </Link>
 
             {/* 4 Clinic-Accurate Value Proposition Icons */}
-            <div className="rise rise-3 grid w-full max-w-[26rem] sm:max-w-[32rem] grid-cols-4 gap-1.5 min-[390px]:gap-2 sm:gap-3 pt-0.5">
+            <div className="rise rise-3 grid w-full max-w-[26rem] sm:max-w-[32rem] grid-cols-2 min-[380px]:grid-cols-4 gap-1.5 min-[390px]:gap-2 sm:gap-3 pt-0.5">
               {heroHighlights.map(({ lines, Icon }) => (
                 <div
                   key={lines.join(" ")}
@@ -174,14 +174,14 @@ export default function Home() {
                 href={clinic.reportRequestUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-brand px-4 text-sm font-bold text-white shadow-subtle hover:bg-brand-dark active:translate-y-0.5 transition-all"
+                className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-brand px-4 text-sm font-bold text-white shadow-subtle hover:bg-brand-dark active:translate-y-0.5 transition-all"
               >
                 <WhatsAppIcon className="size-4 shrink-0" />
                 <span>Get Report</span>
               </a>
               <a
                 href={`tel:${clinic.labTechPhone}`}
-                className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl border border-line-strong bg-white px-4 text-sm font-semibold text-ink hover:border-brand transition-colors"
+                className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-line-strong bg-white px-4 text-sm font-semibold text-ink hover:border-brand transition-colors"
               >
                 <PhoneIcon className="size-3.5 shrink-0 text-brand" />
                 <span>Call Lab ({clinic.labTechPhoneDisplay})</span>
@@ -255,7 +255,7 @@ export default function Home() {
                   href={clinic.googleRating.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl border border-line-strong bg-ground px-4 text-xs font-bold uppercase tracking-wider text-charcoal hover:border-brand hover:text-brand transition-colors whitespace-nowrap shrink-0"
+                  className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl border border-line-strong bg-ground px-4 text-xs font-bold uppercase tracking-wider text-charcoal hover:border-brand hover:text-brand transition-colors whitespace-nowrap shrink-0"
                 >
                   <span>Review on Google</span>
                   <span aria-hidden="true">↗</span>
