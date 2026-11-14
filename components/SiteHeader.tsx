@@ -14,7 +14,7 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-30 [view-transition-name:site-header] border-b border-line bg-white/95 text-ink backdrop-blur-md">
+    <header className="sticky top-0 z-30 [view-transition-name:site-header] border-b border-line bg-white text-ink">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-2 sm:gap-4 px-3 min-[375px]:px-3.5 py-2 sm:px-6 sm:py-2.5">
         <Link href="/" className="group flex min-h-11 items-center gap-2 sm:gap-3 min-w-0">
           <Logo className="size-9 sm:size-10 shrink-0" />

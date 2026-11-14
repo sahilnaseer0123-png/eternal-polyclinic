@@ -84,7 +84,7 @@ export default function Home() {
                 <Link
                   key={lines.join(" ")}
                   href={href}
-                  className="group flex flex-col items-start gap-1.5 rounded-xl border border-line bg-ground/95 p-2 sm:p-2.5 backdrop-blur-2xs hover:border-brand-line hover:bg-brand-tint/40 transition-colors"
+                  className="group flex flex-col items-start gap-1.5 rounded-xl border border-line bg-ground p-2 sm:p-2.5 hover:border-brand-line hover:bg-brand-tint/40 transition-colors"
                 >
                   <span className="flex size-8 min-[390px]:size-9 sm:size-10 items-center justify-center rounded-lg bg-brand-tint text-accent ring-1 ring-brand-line/80 group-hover:scale-105 transition-transform">
                     <Icon className="size-4 min-[390px]:size-4.5 sm:size-5" />

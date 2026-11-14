@@ -22,7 +22,7 @@ function setupScrollReveals(timers: number[]) {
     el.classList.add("is-visible");
     const timer = window.setTimeout(() => {
       el.style.removeProperty("--mo-i");
-    }, 1100);
+    }, 600);
     timers.push(timer);
   };
 
@@ -50,21 +50,23 @@ function setupScrollReveals(timers: number[]) {
 
   const observer = new IntersectionObserver(
     (entries) => {
+      let anyTriggered = false;
       for (const entry of entries) {
         if (entry.isIntersecting || entry.boundingClientRect.top < 0) {
           markVisible(entry.target as HTMLElement);
           observer.unobserve(entry.target);
+          anyTriggered = true;
         }
       }
+      if (anyTriggered) sweepAboveViewport();
     },
-    { rootMargin: "40px 2400px 40px 2400px", threshold: 0.01 },
+    { rootMargin: "80px 2400px 80px 2400px", threshold: 0.01 },
   );
 
   belowFold.forEach((el) => observer.observe(el));
 
-  let settleTimer = 0;
-  const sweepAboveViewport = () => {
-    const limit = window.innerHeight + 40;
+  function sweepAboveViewport() {
+    const limit = window.innerHeight + 80;
     for (const el of belowFold) {
       if (el.classList.contains("is-visible")) continue;
       if (el.getBoundingClientRect().top < limit) {
@@ -72,19 +74,15 @@ function setupScrollReveals(timers: number[]) {
         observer.unobserve(el);
       }
     }
-  };
-  const onScrollSettle = () => {
-    window.clearTimeout(settleTimer);
-    settleTimer = window.setTimeout(sweepAboveViewport, 90);
-  };
+  }
+
+  const fallbackTimer = window.setTimeout(sweepAboveViewport, 350);
   const onHashJump = () => requestAnimationFrame(sweepAboveViewport);
-  window.addEventListener("scroll", onScrollSettle, { passive: true });
   window.addEventListener("hashchange", onHashJump);
 
   return () => {
     if (raf) cancelAnimationFrame(raf);
-    window.clearTimeout(settleTimer);
-    window.removeEventListener("scroll", onScrollSettle);
+    window.clearTimeout(fallbackTimer);
     window.removeEventListener("hashchange", onHashJump);
     observer.disconnect();
   };
@@ -218,18 +216,21 @@ function setupHeroDots() {
 }
 
 function setupScrollState() {
+  const waFloat = document.querySelector<HTMLElement>(".ep-wa-float");
+  if (!waFloat || !FINE_POINTER()) return () => {};
+
   let scrollTimer = 0;
   let active = false;
 
   const onScroll = () => {
     if (!active) {
       active = true;
-      document.body.classList.add("is-scrolling");
+      waFloat.classList.add("is-scrolling");
     }
     window.clearTimeout(scrollTimer);
     scrollTimer = window.setTimeout(() => {
       active = false;
-      document.body.classList.remove("is-scrolling");
+      waFloat.classList.remove("is-scrolling");
     }, 180);
   };
 
@@ -237,7 +238,7 @@ function setupScrollState() {
   return () => {
     window.removeEventListener("scroll", onScroll);
     window.clearTimeout(scrollTimer);
-    document.body.classList.remove("is-scrolling");
+    waFloat.classList.remove("is-scrolling");
   };
 }
 

@@ -137,7 +137,6 @@ body {
 :where(a, button)[class*="rounded-"] {
   transition:
     transform 0.16s var(--mo-ease),
-    box-shadow 0.2s ease,
     background-color 0.2s ease,
     border-color 0.2s ease,
     color 0.2s ease;
@@ -279,39 +278,38 @@ body {
   /* Transform-only hero arrival so above-the-fold text is visible on first paint (LCP). */
   .rise,
   .hero-fade-in {
-    animation: rise 0.58s var(--mo-ease) both;
+    animation: rise 0.38s var(--mo-ease) both;
   }
   .rise-1 {
-    animation-delay: 60ms;
+    animation-delay: 35ms;
   }
   .rise-2 {
-    animation-delay: 120ms;
+    animation-delay: 70ms;
   }
   .rise-3 {
-    animation-delay: 180ms;
+    animation-delay: 105ms;
   }
   .rise-4 {
-    animation-delay: 240ms;
+    animation-delay: 140ms;
   }
 
   a:hover .btn-arrow,
   button:hover .btn-arrow {
-    animation: mo-nudge 0.55s var(--mo-ease);
+    animation: mo-nudge 0.45s var(--mo-ease);
   }
 
   html.reveal-ready .reveal:not(.is-visible) {
     opacity: 0;
-    transform: translate3d(0, 18px, 0);
-    will-change: transform, opacity;
+    transform: translate3d(0, 10px, 0);
   }
 
   html.reveal-ready .reveal.is-visible {
     opacity: 1;
     transform: none;
     transition:
-      opacity 0.72s var(--mo-ease),
-      transform 0.72s var(--mo-ease);
-    transition-delay: calc(var(--mo-i, 0) * 70ms);
+      opacity 0.42s var(--mo-ease),
+      transform 0.42s var(--mo-ease);
+    transition-delay: calc(var(--mo-i, 0) * 40ms);
   }
 
   html.reveal-ready .reveal:not(.is-visible) .ep-mark::before {
@@ -320,21 +318,22 @@ body {
 
   html.reveal-ready .reveal.is-visible .ep-mark::before,
   .ep-mark-hero::before {
-    will-change: transform;
-    animation: ep-wipe 0.65s var(--mo-ease) 0.25s backwards;
+    animation: ep-wipe 0.48s var(--mo-ease) 0.14s backwards;
   }
 
-  body.is-scrolling .ep-wa-float {
+  .ep-wa-float.is-scrolling {
     opacity: 0.55;
     transform: translateY(6px) scale(0.95);
   }
 
-  /* Calm vertical levitation on clinical slips + continuous traveling ECG pulse (zero rotation wobble) */
+  /* Calm compositor-only settle + opacity pulse on ECG (zero SVG stroke-dashoffset main-thread repaint) */
   @keyframes ep-hero-settle {
     from {
+      opacity: 0;
       transform: translate3d(0, 8px, 0);
     }
     to {
+      opacity: 1;
       transform: translate3d(0, 0, 0);
     }
   }
@@ -349,27 +348,29 @@ body {
     }
   }
 
-  @keyframes ep-ecg-sweep {
-    from {
-      stroke-dashoffset: 1;
+  @keyframes ep-ecg-pulse-opacity {
+    0%,
+    100% {
+      opacity: 0.3;
     }
-    to {
-      stroke-dashoffset: -1;
+    50% {
+      opacity: 1;
     }
   }
 
   .ep-hero-art {
-    animation: ep-hero-settle 0.65s var(--mo-ease) 0.04s backwards;
-  }
-
-  .ep-il-hero .il-float {
-    animation: ep-slip-float 4.6s ease-in-out calc(var(--f, 0) * -0.58s) infinite;
-    will-change: transform;
+    animation: ep-hero-settle 0.45s var(--mo-ease) 0.04s backwards;
   }
 
   .ep-il-hero .ln.ecg-pulse {
     stroke-dasharray: 0.24 0.76;
-    animation: ep-ecg-sweep 2.8s linear infinite;
+    animation: ep-ecg-pulse-opacity 2.4s ease-in-out infinite;
+  }
+
+  @media (min-width: 640px) {
+    .ep-il-hero .il-float {
+      animation: ep-slip-float 4.6s ease-in-out calc(var(--f, 0) * -0.58s) infinite;
+    }
   }
 
   .ep-il-hero.is-offscreen .il-float,
@@ -377,52 +378,11 @@ body {
     animation-play-state: paused;
   }
 
-  /* Sequential vector line draw for hero illustration + medical service icons across all screens */
-  @keyframes ep-hero-draw {
-    from {
-      stroke-dashoffset: 1;
-      fill-opacity: 0;
-    }
-    to {
-      stroke-dashoffset: 0;
-      fill-opacity: 1;
-    }
-  }
-
-  @keyframes ep-flow-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  .ep-il-hero .ln:not(.flow):not(.ecg-pulse) {
-    stroke-dasharray: 1;
-    animation: ep-hero-draw 0.85s var(--mo-ease) calc(120ms + var(--d, 0) * 8ms) backwards;
-  }
-
-  .ep-il-hero .ln.flow {
-    animation: ep-flow-in 0.55s ease-out calc(260ms + var(--d, 0) * 8ms) backwards;
-  }
-
-  html.reveal-ready [data-draw]:not(.is-visible) svg :is(path, rect, circle, polyline):not([fill="currentColor"]) {
-    stroke-dasharray: 120;
-    stroke-dashoffset: 120;
-  }
-
-  html.reveal-ready [data-draw].is-visible svg :is(path, rect, circle, polyline):not([fill="currentColor"]) {
-    stroke-dasharray: 120;
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 0.85s var(--mo-ease) calc(var(--mo-i, 0) * 70ms + 120ms);
-  }
-
-  /* Interactive list swaps, category cascades, booking step transitions & FAQ accordions */
+  /* Interactive list swaps, category cascades, disclosure panels & FAQ accordions */
   @keyframes ep-card-in {
     from {
       opacity: 0;
-      transform: translate3d(0, 12px, 0);
+      transform: translate3d(0, 8px, 0);
     }
     to {
       opacity: 1;
@@ -431,15 +391,15 @@ body {
   }
 
   .ep-day-swap {
-    animation: ep-card-in 0.36s var(--mo-ease) both;
+    animation: ep-card-in 0.24s var(--mo-ease) both;
   }
 
   .ep-stagger-item {
-    animation: ep-card-in 0.42s var(--mo-ease) calc(var(--mo-i, 0) * 45ms) both;
+    animation: ep-card-in 0.28s var(--mo-ease) calc(var(--mo-i, 0) * 30ms) both;
   }
 
   details[open] > .ep-details-body {
-    animation: ep-card-in 0.28s var(--mo-ease) both;
+    animation: ep-card-in 0.2s var(--mo-ease) both;
   }
 }
 
@@ -528,18 +488,16 @@ body {
   }
 }
 
-/* Page-to-page motion (components/PageTransition.tsx). The old page leaves fast; the new one fades in
-   and rises 12px. Header, tab bar and WhatsApp button are pinned so only the page moves. */
+/* Page-to-page motion (components/PageTransition.tsx). Crisp pure cross-fade without double-rise.
+   Header, tab bar and WhatsApp button are pinned so only the page cross-fades cleanly. */
 ::view-transition {
   pointer-events: none;
 }
 ::view-transition-old(.page-exit) {
-  animation: 120ms ease-in both vt-fade reverse;
+  animation: 90ms ease-out both vt-fade reverse;
 }
 ::view-transition-new(.page-enter) {
-  animation:
-    200ms ease-out 60ms both vt-fade,
-    340ms var(--mo-ease) both vt-rise;
+  animation: 180ms ease-out both vt-fade;
 }
 ::view-transition-group(site-header),
 ::view-transition-group(tab-bar),
@@ -560,11 +518,6 @@ body {
 @keyframes vt-fade {
   from {
     opacity: 0;
-  }
-}
-@keyframes vt-rise {
-  from {
-    translate: 0 12px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

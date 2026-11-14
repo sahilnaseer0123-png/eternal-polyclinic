@@ -68,7 +68,7 @@ export function TabBar() {
             aria-label="Close menu"
             tabIndex={-1}
             onClick={() => setOpen(false)}
-            className="fade-in fixed inset-0 z-40 bg-ink/40 backdrop-blur-xs"
+            className="fade-in fixed inset-0 z-40 bg-ink/45"
           />
           <nav
             id="more-menu"
@@ -136,7 +136,7 @@ export function TabBar() {
 
       <nav
         aria-label="Quick links"
-        className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 [view-transition-name:tab-bar] border-t border-line bg-white/95 backdrop-blur-md px-1 min-[380px]:px-2 pb-[max(0.25rem,env(safe-area-inset-bottom))] pt-1"
+        className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 [view-transition-name:tab-bar] border-t border-line bg-white px-1 min-[380px]:px-2 pb-[max(0.25rem,env(safe-area-inset-bottom))] pt-1"
       >
         {TABS.map(({ href, label, Icon }) => {
           const on = pathname === href || (href !== "/" && Boolean(pathname?.startsWith(href)));
