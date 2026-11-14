@@ -87,7 +87,7 @@ export function HeroRightColumn() {
   }
 
   return (
-    <div id="today" className="w-full">
+    <div id="today" className="rise rise-3 w-full">
       {/* Mobile (< 640px): Full-screen balanced twin-panel live clinic + studio stethoscope card */}
       <div className="sm:hidden">
         <div className="flex items-stretch gap-2.5 min-[390px]:gap-3">
@@ -123,7 +123,7 @@ export function HeroRightColumn() {
               decoding="async"
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
-            <span className="absolute right-2 top-2 inline-flex size-6.5 items-center justify-center rounded-lg bg-[#DFF5CA]/95 text-[#15221B] shadow-2xs ring-1 ring-[#CBE8B0]/80">
+            <span className="absolute right-2 top-2 inline-flex size-6.5 items-center justify-center rounded-lg bg-brand-tint/95 text-brand shadow-2xs ring-1 ring-brand-line/80">
               <ArrowUpRight className="size-3" />
             </span>
             <span className="absolute bottom-2 left-2 rounded-md bg-white/92 backdrop-blur-xs px-2 py-0.5 text-[10.5px] font-semibold tracking-[-0.01em] text-[#171D1B] ring-1 ring-black/6">
@@ -140,7 +140,7 @@ export function HeroRightColumn() {
             <span className="underline decoration-[#CBD5D0] underline-offset-4 group-hover:decoration-brand">
               See schedule
             </span>
-            <span className="inline-flex size-5.5 items-center justify-center rounded-md bg-[#DFF5CA] text-[#15221B]">
+            <span className="btn-arrow inline-flex size-5.5 items-center justify-center rounded-md bg-brand-tint text-brand ring-1 ring-brand-line">
               <ArrowUpRight className="size-3" />
             </span>
           </a>
@@ -170,7 +170,7 @@ export function HeroRightColumn() {
                 <span className="size-1.5 rounded-full bg-[#22A05B]" aria-hidden="true" />
                 {openBadge}
               </span>
-              <span className="inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-[#DFF5CA] text-[#15221B] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+              <span className="btn-arrow inline-flex size-7 shrink-0 items-center justify-center rounded-lg bg-brand-tint text-brand ring-1 ring-brand-line transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                 <ArrowUpRight className="size-3.5" />
               </span>
             </div>
@@ -214,7 +214,7 @@ export function HeroRightColumn() {
               <span className="underline decoration-[#CBD5D0] underline-offset-4 group-hover:decoration-brand">
                 See schedule
               </span>
-              <span className="inline-flex size-6 items-center justify-center rounded-md bg-[#DFF5CA] text-[#15221B] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+              <span className="btn-arrow inline-flex size-6 items-center justify-center rounded-md bg-brand-tint text-brand ring-1 ring-brand-line transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                 <ArrowUpRight className="size-3" />
               </span>
             </a>

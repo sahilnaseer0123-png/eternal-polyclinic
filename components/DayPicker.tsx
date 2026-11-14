@@ -69,13 +69,15 @@ export function DayPicker() {
     <div className="bg-white">
       <section id="days" aria-labelledby="days-title" className="rounded-t-[2rem] sm:rounded-t-[2.75rem] border-t border-line/80 bg-ground scroll-mt-20">
       <div className="mx-auto max-w-6xl px-5 py-12 sm:px-6 sm:py-20">
-        <p className="eyebrow text-muted">Visiting specialists</p>
-        <h2 id="days-title" className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
-          Who sits on{" "}
-          <em className="inline-block rounded-xl bg-brand-tint px-2.5 py-0.5 text-ink ring-1 ring-brand-line/70">
-            {dayName}
-          </em>
-        </h2>
+        <div className="reveal">
+          <p className="eyebrow text-muted">Visiting specialists</p>
+          <h2 id="days-title" className="mt-3 text-[2rem] font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
+            Who sits on{" "}
+            <em className="inline-block rounded-xl bg-brand-tint px-2.5 py-0.5 text-ink ring-1 ring-brand-line/70">
+              {dayName}
+            </em>
+          </h2>
+        </div>
 
         <div role="group" aria-label="Choose a day" className="mt-8 grid grid-cols-7 gap-1.5 sm:gap-3">
           {DAY_ORDER.map((day) => {
@@ -87,9 +89,9 @@ export function DayPicker() {
                 type="button"
                 aria-pressed={on}
                 onClick={() => setPicked(day)}
-                className={`flex min-h-16 flex-col items-center justify-center rounded-xl border px-1 py-2 text-center sm:min-h-24 sm:rounded-2xl ${
+                className={`flex min-h-16 flex-col items-center justify-center rounded-xl border px-1 py-2 text-center transition-all duration-200 sm:min-h-24 sm:rounded-2xl ${
                   on
-                    ? "border-brand bg-brand text-white"
+                    ? "border-brand bg-brand text-white shadow-elevated"
                     : "border-line-strong bg-white text-ink hover:border-brand"
                 }`}
               >
@@ -111,7 +113,7 @@ export function DayPicker() {
           })}
         </div>
 
-        <div aria-live="polite" className="mt-6 min-h-40 sm:mt-8">
+        <div aria-live="polite" className="reveal mt-6 min-h-40 sm:mt-8">
           {list.length === 0 ? (
             <p className="card rounded-2xl p-6 text-base text-muted sm:text-lg">
               No specialist OPD on {dayName}. Pick another day above, or call{" "}

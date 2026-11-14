@@ -15,12 +15,12 @@ export function ByAppointmentSection() {
       
         <section aria-labelledby="by-appointment" className="bg-ground">
           <div className="mx-auto max-w-6xl px-5 pb-12 sm:px-6 sm:pb-20">
-            <div className="rounded-3xl bg-sand p-6 sm:p-10">
+            <div className="reveal rounded-3xl bg-sand p-6 sm:p-10">
               <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
                 <div>
                   <p className="eyebrow text-muted">By appointment</p>
                   <h2 id="by-appointment" className="mt-3 text-3xl font-semibold leading-[1.08] tracking-[-0.035em] text-ink sm:text-5xl">
-                    Any day, <em>by appointment</em>
+                    Any day, <em className="ep-mark">by appointment</em>
                   </h2>
                   <p className="mt-3 max-w-xl text-base text-muted">
                     These specialists don&rsquo;t sit on fixed days. Call reception to fix a time.
