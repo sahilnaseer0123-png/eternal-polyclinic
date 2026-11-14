@@ -116,10 +116,10 @@ body {
   }
   /* Compact bottom breathing room before #days on phones (hero fits above bottom TabBar) */
   .hero-mobile-screen {
-    padding-bottom: 0.625rem;
+    padding-bottom: 1rem;
   }
   .ep-il-hero {
-    max-height: 92px;
+    max-height: 128px;
     width: auto;
     max-width: 100%;
   }
@@ -127,7 +127,7 @@ body {
 
 @media (min-width: 390px) and (max-width: 639px) {
   .ep-il-hero {
-    max-height: 106px;
+    max-height: 144px;
   }
 }
 

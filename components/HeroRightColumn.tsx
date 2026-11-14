@@ -34,7 +34,6 @@ export function HeroRightColumn() {
   const statuses = useDoctorStatuses();
 
   let statusHeading = "IN THE CLINIC TODAY";
-  let statusHeadingCompact = "TODAY'S CLINIC";
   let statusCopy = `Visiting specialists, ultrasound scans, diagnostic lab & pharmacy open daily (${formatTime(clinic.hours.open)} – ${formatTime(clinic.hours.close)}).`;
   let openBadge = "Open daily";
 
@@ -58,7 +57,6 @@ export function HeroRightColumn() {
 
     const today = sittingsOn(dateKey, true);
     statusHeading = `TODAY · ${DAY_NAMES[weekday].toUpperCase()}`;
-    statusHeadingCompact = `TODAY · ${DAY_NAMES[weekday].slice(0, 3).toUpperCase()}`;
 
     if (today.length > 0) {
       const names = today
@@ -88,44 +86,6 @@ export function HeroRightColumn() {
 
   return (
     <div id="today" className="rise rise-3 w-full">
-      {/* Mobile (< 640px): Sleek full-width Live Clinic Status & Quick Desk Card */}
-      <div className="sm:hidden">
-        <div className="rounded-2xl border border-line bg-ground p-2.5 min-[390px]:p-3">
-          <div className="flex items-center justify-between gap-2 min-w-0">
-            <p className="flex items-center gap-1.5 font-sans text-[10.5px] min-[390px]:text-[11px] font-bold uppercase tracking-[0.09em] text-ink whitespace-nowrap truncate">
-              <SparkleCross className="size-3 text-accent shrink-0" />
-              <span className="min-[440px]:hidden">{statusHeadingCompact}</span>
-              <span className="hidden min-[440px]:inline">{statusHeading}</span>
-            </p>
-            <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 text-[10.5px] font-semibold text-charcoal ring-1 ring-line shrink-0 whitespace-nowrap">
-              <span className="size-1.5 rounded-full bg-[#22A05B]" aria-hidden="true" />
-              {openBadge}
-            </span>
-          </div>
-          <p className="mt-1 line-clamp-2 text-[11.5px] min-[390px]:text-[12px] leading-[1.35] text-muted">
-            {statusCopy}
-          </p>
-          <div className="mt-2 grid grid-cols-2 gap-2 border-t border-line/80 pt-2">
-            <a
-              href="#days"
-              className="inline-flex min-h-10 min-[390px]:min-h-11 items-center justify-center gap-1 rounded-xl bg-white px-2.5 text-[11.5px] min-[390px]:text-xs font-semibold text-ink ring-1 ring-line hover:border-brand-line hover:text-accent transition-colors whitespace-nowrap"
-            >
-              <span>See schedule</span>
-              <span aria-hidden="true">↓</span>
-            </a>
-            <a
-              href={clinic.reportRequestUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex min-h-10 min-[390px]:min-h-11 items-center justify-center gap-1 rounded-xl bg-brand-tint/70 px-2.5 text-[11.5px] min-[390px]:text-xs font-semibold text-accent ring-1 ring-brand-line/80 hover:bg-brand-tint transition-colors tabular-nums lining-nums whitespace-nowrap"
-            >
-              <span className="min-[400px]:hidden">Lab reports ↗</span>
-              <span className="hidden min-[400px]:inline">Lab reports ({clinic.labTechPhoneDisplay}) ↗</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
       {/* Tablet & Desktop (>= 640px): Two-block right column */}
       <div className="hidden sm:grid sm:grid-cols-2 sm:gap-5 min-[72rem]:grid-cols-1 min-[72rem]:gap-6 w-full">
         {/* 1. Split Appointment Card */}

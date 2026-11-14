@@ -4,7 +4,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { clinic, services } from "@/data/clinic";
-import { formatTimeShort } from "@/lib/schedule";
 import { DayPicker } from "@/components/DayPicker";
 import { ByAppointmentSection } from "@/components/ByAppointmentSection";
 import { HeroRightColumn } from "@/components/HeroRightColumn";
@@ -13,7 +12,6 @@ import { LegacyBookingLink } from "@/components/LegacyBookingLink";
 import { ReceptionPhoto } from "@/components/ClinicPhoto";
 import { EmergencyNote } from "@/components/EmergencyNote";
 import {
-  CalendarCheckIcon,
   GoogleIcon,
   MapPinIcon,
   PhoneIcon,
@@ -27,18 +25,21 @@ function UltrasoundWaveIcon({ className = "size-5" }: { className?: string }) {
   return <ServiceIcon id="ultrasound" className={className} />;
 }
 
+function PharmacyIcon({ className = "size-5" }: { className?: string }) {
+  return <ServiceIcon id="pharmacy" className={className} />;
+}
+
 const heroHighlights = [
   { lines: ["Visiting", "Specialists"], href: "#days", Icon: StethoscopeIcon },
   { lines: ["Ultrasound", "Scans"], href: "/services#ultrasound", Icon: UltrasoundWaveIcon },
   { lines: ["PDF Lab", "Reports"], href: "/services#digital-reports", Icon: ReportIcon },
-  { lines: ["Same-Day", "Booking"], href: "/book", Icon: CalendarCheckIcon },
+  { lines: ["In-House", "Pharmacy"], href: "/services#pharmacy", Icon: PharmacyIcon },
 ] as const;
 
 // Every page names its own address for search engines (alternates.canonical); this is "/".
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 export default function Home() {
-  const openHoursShort = `Daily ${formatTimeShort(clinic.hours.open)} – ${formatTimeShort(clinic.hours.close)}`;
   return (
     <>
       <LegacyBookingLink />
@@ -47,34 +48,11 @@ export default function Home() {
       <section className="relative overflow-hidden bg-white">
         <div className="ep-hero-dot-bg pointer-events-none absolute inset-0 z-0 opacity-45 sm:opacity-60" aria-hidden="true" />
         <canvas className="ep-hero-dots pointer-events-none absolute inset-0 z-0 hidden lg:block h-full w-full" aria-hidden="true" />
-        <div className="hero-mobile-screen relative mx-auto flex w-full max-w-7xl flex-col justify-start gap-2 px-4 pt-2.5 sm:gap-4 sm:px-8 sm:pt-7 sm:pb-12 min-[72rem]:grid min-[72rem]:min-h-[650px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-16 xl:min-h-[680px] xl:grid-cols-[minmax(0,1fr)_350px]">
+        <div className="hero-mobile-screen relative mx-auto flex w-full max-w-7xl flex-col justify-start gap-3 px-5 pt-4 sm:gap-4 sm:px-8 sm:pt-7 sm:pb-12 min-[72rem]:grid min-[72rem]:min-h-[650px] min-[72rem]:grid-cols-[minmax(0,1fr)_336px] min-[72rem]:gap-8 min-[72rem]:px-10 min-[72rem]:pt-11 min-[72rem]:pb-16 xl:min-h-[680px] xl:grid-cols-[minmax(0,1fr)_350px]">
           {/* 1. Top-Left Content Block */}
-          <div className="relative z-10 flex min-w-0 flex-col items-start gap-2 sm:gap-4 min-[72rem]:gap-5 min-[72rem]:max-w-[36rem] min-[72rem]:pt-2 min-[72rem]:pb-8 xl:max-w-[39rem]">
-            {/* Google Rating Pill + Mobile Open Hours */}
-            <div className="rise flex flex-wrap items-center gap-2">
-              <a
-                href={clinic.googleRating.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full border border-line bg-ground/90 px-2.5 py-0.5 sm:py-1 text-[11.5px] sm:text-xs font-semibold text-charcoal hover:border-brand-line hover:bg-brand-tint/50 transition-colors shrink-0"
-                aria-label={`Rated ${clinic.googleRating.score} out of 5 on Google with ${clinic.googleRating.count} reviews`}
-              >
-                <GoogleIcon className="size-3.5 shrink-0" />
-                <span className="font-bold text-ink tabular-nums lining-nums">{clinic.googleRating.score}</span>
-                <span className="text-[#F59E0B] text-xs leading-none tracking-tighter" aria-hidden="true">
-                  ★★★★★
-                </span>
-                <span className="text-muted tabular-nums lining-nums">
-                  (<span data-count={clinic.googleRating.count}>{clinic.googleRating.count}</span>)
-                </span>
-              </a>
-              <span className="inline-flex items-center rounded-full border border-line bg-ground/90 px-2.5 py-0.5 text-[11px] font-semibold text-charcoal tabular-nums sm:hidden">
-                {openHoursShort}
-              </span>
-            </div>
-
+          <div className="relative z-10 flex min-w-0 flex-col items-start gap-3 sm:gap-4 min-[72rem]:gap-5 min-[72rem]:max-w-[36rem] min-[72rem]:pt-2 min-[72rem]:pb-8 xl:max-w-[39rem]">
             {/* Main Headline (>= 30px mobile, >= 36px tablet, >= 48px desktop) */}
-            <h1 className="rise rise-1 max-w-full font-sans font-semibold tracking-[-0.036em] text-ink text-[clamp(1.65rem,7.4vw,2.15rem)] leading-[1.06] sm:tracking-[-0.035em] sm:text-[2.65rem] sm:leading-[1.07] min-[72rem]:text-[3.05rem] xl:text-[3.35rem]">
+            <h1 className="rise rise-1 max-w-full font-sans font-semibold tracking-[-0.036em] text-ink text-[clamp(1.85rem,8.2vw,2.35rem)] leading-[1.08] sm:tracking-[-0.035em] sm:text-[2.65rem] sm:leading-[1.07] min-[72rem]:text-[3.05rem] xl:text-[3.35rem]">
               Book a Specialist
               <span className="block">
                 Appointment <span className="ep-mark ep-mark-hero">Today</span>
@@ -85,7 +63,7 @@ export default function Home() {
             <div className="rise rise-2">
               <Link
                 href="/book"
-                className="shadow-elevated group inline-flex min-h-11 sm:min-h-13 items-center justify-center gap-2.5 rounded-xl bg-brand px-5 sm:px-7 py-2 sm:py-3 text-base min-[380px]:text-[1.0625rem] sm:text-[1.125rem] font-semibold text-white hover:bg-brand-dark transition-all"
+                className="shadow-elevated group inline-flex min-h-12 sm:min-h-13 items-center justify-center gap-2.5 rounded-xl bg-brand px-5.5 sm:px-7 py-2.5 sm:py-3 text-base min-[380px]:text-[1.0625rem] sm:text-[1.125rem] font-semibold text-white hover:bg-brand-dark transition-all"
               >
                 <span>Book Appointment</span>
                 <span className="btn-arrow inline-flex size-6 items-center justify-center rounded-lg bg-mint text-ink transition-transform duration-200 group-hover:translate-x-0.5">
@@ -95,17 +73,17 @@ export default function Home() {
             </div>
 
             {/* 4 Interactive Clinic-Accurate Value Proposition Shortcuts */}
-            <div className="rise rise-3 grid w-full max-w-[26rem] sm:max-w-[32rem] grid-cols-4 gap-1.5 sm:gap-3 pt-0.5">
+            <div className="rise rise-3 grid w-full max-w-[26rem] sm:max-w-[32rem] grid-cols-4 gap-1.5 min-[390px]:gap-2 sm:gap-3 pt-0.5">
               {heroHighlights.map(({ lines, href, Icon }) => (
                 <Link
                   key={lines.join(" ")}
                   href={href}
-                  className="group flex flex-col items-start gap-1 sm:gap-1.5 rounded-xl border border-line bg-ground/95 p-1.5 sm:p-2.5 backdrop-blur-2xs hover:border-brand-line hover:bg-brand-tint/40 transition-colors"
+                  className="group flex flex-col items-start gap-1.5 rounded-xl border border-line bg-ground/95 p-2 sm:p-2.5 backdrop-blur-2xs hover:border-brand-line hover:bg-brand-tint/40 transition-colors"
                 >
-                  <span className="flex size-7 min-[390px]:size-8 sm:size-10 items-center justify-center rounded-lg bg-brand-tint text-accent ring-1 ring-brand-line/80 group-hover:scale-105 transition-transform">
-                    <Icon className="size-3.5 min-[390px]:size-4 sm:size-5" />
+                  <span className="flex size-8 min-[390px]:size-9 sm:size-10 items-center justify-center rounded-lg bg-brand-tint text-accent ring-1 ring-brand-line/80 group-hover:scale-105 transition-transform">
+                    <Icon className="size-4 min-[390px]:size-4.5 sm:size-5" />
                   </span>
-                  <span className="text-[10px] min-[375px]:text-[11px] sm:text-[12.5px] font-semibold leading-[1.15] tracking-[-0.01em] text-charcoal group-hover:text-ink">
+                  <span className="text-[10px] min-[375px]:text-[11px] min-[390px]:text-[11.5px] sm:text-[12.5px] font-semibold leading-[1.18] tracking-[-0.01em] text-charcoal group-hover:text-ink">
                     {lines[0]}
                     <span className="block">{lines[1]}</span>
                   </span>
@@ -122,8 +100,8 @@ export default function Home() {
             <HeroClinicalArt />
           </div>
 
-          {/* 3. Right-Side Compact Appointment & Live Clinic Cards */}
-          <div className="relative z-10 w-full min-[72rem]:self-end min-[72rem]:pt-46 xl:pt-50">
+          {/* 3. Right-Side Compact Appointment & Live Clinic Cards (tablet & desktop) */}
+          <div className="hidden sm:block relative z-10 w-full min-[72rem]:self-end min-[72rem]:pt-46 xl:pt-50">
             <HeroRightColumn />
           </div>
         </div>
