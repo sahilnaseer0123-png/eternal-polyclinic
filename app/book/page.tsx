@@ -36,7 +36,7 @@ export default function BookPage() {
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <a
-                href={`https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent("Hello Eternal Polyclinic, I would like to enquire about doctor OPD timings.")}`}
+                href={`https://wa.me/${clinic.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-brand px-5 text-base font-bold text-white shadow-button hover:bg-brand-dark transition-colors whitespace-nowrap"

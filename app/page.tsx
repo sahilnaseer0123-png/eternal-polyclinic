@@ -62,19 +62,19 @@ export default function Home() {
             {/* Primary CTA Buttons */}
             <div className="rise rise-2 flex flex-wrap items-center gap-2.5 sm:gap-3">
               <a
-                href={`https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent("Hello Eternal Polyclinic, I would like to enquire about doctor OPD timings.")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shadow-elevated group inline-flex min-h-12 sm:min-h-13 items-center justify-center gap-2 rounded-xl bg-brand px-5 sm:px-7 py-2.5 sm:py-3 text-sm sm:text-base font-bold text-white hover:bg-brand-dark transition-all whitespace-nowrap"
+                href="#days"
+                className="shadow-elevated group inline-flex min-h-12 sm:min-h-13 items-center justify-center gap-2.5 rounded-xl bg-brand px-5 sm:px-7 py-2.5 sm:py-3 text-sm sm:text-base font-bold text-white hover:bg-brand-dark transition-all whitespace-nowrap"
               >
-                <WhatsAppIcon className="size-4 shrink-0 text-white" />
-                <span>WhatsApp Enquiry</span>
+                <span>Check OPD Schedule</span>
+                <span className="btn-arrow inline-flex size-6 items-center justify-center rounded-lg bg-mint text-ink transition-transform duration-200 group-hover:translate-x-0.5">
+                  <span aria-hidden="true" className="text-xs font-bold leading-none">→</span>
+                </span>
               </a>
               <Link
                 href="/doctors"
                 className="inline-flex min-h-12 sm:min-h-13 items-center justify-center rounded-xl border border-line-strong bg-white px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-ink hover:border-brand hover:bg-ground transition-all whitespace-nowrap"
               >
-                Find a Doctor
+                View All Doctors
               </Link>
             </div>
 

@@ -2,9 +2,10 @@
 /* eslint-disable @next/next/no-img-element */
 
 // Right-column compact cards for the Healist-inspired home hero:
-// 1. "Enquire on WhatsApp" twin-panel split card (action card + studio stethoscope visual)
+// 1. "Visiting Specialists" twin-panel split card (info card + studio stethoscope visual)
 // 2. "In the clinic today" live OPD & digital WhatsApp lab reports block (computed in clinic IST time)
 
+import Link from "next/link";
 import { clinic } from "@/data/clinic";
 import { isDoctorOnLeave, useActiveDoctors, useDoctorStatuses } from "@/lib/appointments";
 import { addDays, clinicClock, DAY_NAMES, formatTime, formatTimeShort, sessionOn, weekdayOf } from "@/lib/schedule";
@@ -87,11 +88,9 @@ export function HeroRightColumn() {
     <div id="today" className="rise rise-3 w-full">
       {/* Tablet & Desktop (>= 640px): Two-block right column */}
       <div className="hidden sm:grid sm:grid-cols-2 sm:gap-5 min-[72rem]:grid-cols-1 min-[72rem]:gap-6 w-full">
-        {/* 1. Split Enquiry Card */}
-        <a
-          href={`https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent("Hello Eternal Polyclinic, I would like to enquire about doctor OPD timings.")}`}
-          target="_blank"
-          rel="noopener noreferrer"
+        {/* 1. Split Specialists Card */}
+        <Link
+          href="/doctors"
           className="group flex items-stretch gap-2.5 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink"
         >
           <div className="flex min-h-[126px] flex-1 flex-col justify-between rounded-2xl border border-line bg-ground p-4 transition-colors group-hover:border-brand-line group-hover:bg-brand-tint/50">
@@ -106,12 +105,12 @@ export function HeroRightColumn() {
             </div>
             <div>
               <span className="block font-sans text-[0.95rem] font-semibold leading-[1.22] tracking-[-0.015em] text-ink">
-                Enquire on
+                Visiting
                 <br />
-                WhatsApp
+                Specialists
               </span>
               <span className="mt-1 block text-[11px] leading-snug text-muted">
-                OPD timings &amp; reception
+                Profiles, degrees &amp; OPD days
               </span>
             </div>
           </div>
@@ -127,7 +126,7 @@ export function HeroRightColumn() {
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           </div>
-        </a>
+        </Link>
 
         {/* 2. Compact Today's OPD & Digital Lab Reports Info Block */}
         <div className="flex flex-col justify-between rounded-2xl border border-line bg-ground/60 p-4 min-[72rem]:border-0 min-[72rem]:bg-transparent min-[72rem]:p-0">

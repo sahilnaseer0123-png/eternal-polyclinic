@@ -11,7 +11,6 @@ import { clinic, type Doctor, type OpdSession, type Weekday } from "@/data/clini
 import { isBuiltInDoctor, isDoctorOnLeave, useActiveDoctors, useDoctorStatuses } from "@/lib/appointments";
 import { addDays, clinicClock, DAY_NAMES, formatTime, sessionOn } from "@/lib/schedule";
 import { useClinicMinute } from "./useClinicMinute";
-import { WhatsAppIcon } from "./Icons";
 
 const DAY_ORDER: Weekday[] = [0, 1, 2, 3, 4, 5, 6];
 
@@ -193,22 +192,13 @@ export function DayPicker() {
                         </div>
                       )}
                     </div>
-                    <div className="flex items-center justify-between gap-2 pt-1.5 border-t border-line/60 sm:border-0 sm:pt-0">
+                    <div className="flex items-center justify-end gap-2 pt-1.5 border-t border-line/60 sm:border-0 sm:pt-0">
                       <Link
                         href={profileHref}
-                        className="sm:hidden inline-flex min-h-11 items-center text-xs font-semibold text-muted hover:text-ink"
+                        className="inline-flex min-h-10 sm:min-h-11 w-full sm:w-auto items-center justify-center rounded-xl border border-line-strong bg-white px-4 sm:px-5 text-xs sm:text-sm font-bold text-ink hover:border-brand hover:bg-ground shrink-0 whitespace-nowrap transition-colors"
                       >
                         View profile →
                       </Link>
-                      <a
-                        href={`https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(`Hello Eternal Polyclinic, I would like to enquire about ${doctor.name ?? doctor.speciality} (${doctor.speciality}) OPD timings.`)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-brand px-4 sm:px-5 text-xs sm:text-sm font-bold text-white hover:bg-brand-dark shrink-0 whitespace-nowrap transition-colors"
-                      >
-                        <WhatsAppIcon className="size-4 shrink-0" />
-                        <span>Enquire on WhatsApp</span>
-                      </a>
                     </div>
                   </li>
                 );

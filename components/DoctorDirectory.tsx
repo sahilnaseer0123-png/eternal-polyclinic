@@ -11,7 +11,7 @@ import { isBuiltInDoctor, isDoctorOnLeave, useActiveDoctors, useDoctorStatuses }
 import { DAY_NAMES, formatTime } from "@/lib/schedule";
 import { DoctorMark } from "./DoctorMark";
 import { NextAvailable } from "./NextAvailable";
-import { ChevronRightIcon, SearchIcon, ServiceIcon, WhatsAppIcon } from "./Icons";
+import { ChevronRightIcon, SearchIcon, ServiceIcon } from "./Icons";
 
 export type Filter = "all" | DoctorCategory;
 
@@ -249,38 +249,20 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                 </div>
 
                 {/* Refined Action Buttons */}
-                <div className="mt-3.5 sm:mt-5 grid grid-cols-2 gap-2 pt-2 border-t border-line/80">
+                <div className="mt-3.5 sm:mt-5 pt-2 border-t border-line/80">
                   {builtIn ? (
                     <Link
                       href={`/doctors/${doctor.id}`}
-                      className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-white px-3 text-center text-sm font-semibold text-ink hover:bg-ground transition-colors"
+                      className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-line-strong bg-white px-4 text-center text-sm font-semibold text-ink hover:border-brand hover:bg-ground transition-colors"
                     >
-                      View Details
+                      View Doctor Profile →
                     </Link>
                   ) : (
                     <a
                       href={`tel:${clinic.phone}`}
-                      className="inline-flex min-h-11 items-center justify-center rounded-xl border border-line bg-white px-3 text-center text-sm font-semibold text-ink hover:bg-ground transition-colors"
+                      className="inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-line-strong bg-white px-4 text-center text-sm font-semibold text-ink hover:border-brand hover:bg-ground transition-colors"
                     >
-                      Call Helpline
-                    </a>
-                  )}
-                  {hasOpd ? (
-                    <a
-                      href={`https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(`Hello Eternal Polyclinic, I would like to enquire about ${doctor.name ?? doctor.speciality} (${doctor.speciality}) OPD timings.`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-brand px-3 text-center text-sm font-semibold text-white hover:bg-brand-dark transition-colors whitespace-nowrap"
-                    >
-                      <WhatsAppIcon className="size-4 shrink-0" />
-                      <span>WhatsApp</span>
-                    </a>
-                  ) : (
-                    <a
-                      href={`tel:${clinic.phone}`}
-                      className="inline-flex min-h-11 items-center justify-center rounded-xl bg-ink px-3 text-center text-sm font-semibold text-white hover:bg-brand transition-colors"
-                    >
-                      Call Helpline
+                      Call {clinic.phoneDisplay}
                     </a>
                   )}
                 </div>

@@ -221,13 +221,11 @@ export function serviceActions(service: Service): {
   }
 
   const text =
-    `*Scan / Test Booking | ${clinic.name}*\n` +
-    `Hello, I would like to confirm timings and book a slot for *${service.name}*.\n\n` +
-    `• Patient Name: \n` +
-    `• Preferred Day: `;
+    `*Service Inquiry | ${clinic.name}*\n` +
+    `Hello, I would like to ask about timings for *${service.name}*.`;
   return {
     whatsappUrl: `https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(text)}`,
-    whatsappLabel: "Book on WhatsApp",
+    whatsappLabel: "Ask on WhatsApp",
     phoneHref: `tel:${clinic.phone}`,
     phoneLabel: `Call ${clinic.phoneDisplay}`,
   };

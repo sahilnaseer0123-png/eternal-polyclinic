@@ -146,7 +146,7 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
                   />
                 </p>
                 <p className="mt-1 text-xs text-muted">
-                  Message reception on WhatsApp or call during clinic hours to confirm OPD timings.
+                  Check OPD sitting days above. For general enquiries, call or WhatsApp reception during clinic hours.
                 </p>
               </div>
             )}
@@ -157,19 +157,19 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
             {doctor.opd.length > 0 ? (
               <>
                 <a
-                  href={`https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(`Hello ${clinic.name}, I would like to enquire about ${title(doctor)} (${doctor.speciality}) OPD timings.`)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand px-5 text-base font-bold text-white shadow-button hover:bg-brand-dark transition-colors"
-                >
-                  <WhatsAppIcon className="size-4.5 shrink-0" />
-                  <span>WhatsApp Enquiry</span>
-                </a>
-                <a
                   href={`tel:${clinic.phone}`}
-                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-5 text-base font-bold hover:bg-ink hover:text-white"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-brand px-5 text-base font-bold text-white hover:bg-brand-dark transition-colors"
                 >
                   <PhoneIcon className="size-4" /> Call {clinic.phoneDisplay}
+                </a>
+                <a
+                  href={`https://wa.me/${clinic.whatsapp}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-5 text-base font-bold hover:bg-ink hover:text-white transition-colors"
+                >
+                  <WhatsAppIcon className="size-4.5 shrink-0" />
+                  <span>WhatsApp Desk</span>
                 </a>
               </>
             ) : (
@@ -181,13 +181,13 @@ export default async function DoctorPage({ params }: PageProps<"/doctors/[id]">)
                   <PhoneIcon className="size-4" /> Call {clinic.phoneDisplay}
                 </a>
                 <a
-                  href={`https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(`Hello ${clinic.name}, I would like to enquire about an appointment with ${title(doctor)} (${doctor.speciality}).`)}`}
+                  href={`https://wa.me/${clinic.whatsapp}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-ink px-5 text-base font-bold hover:bg-ink hover:text-white"
                 >
                   <WhatsAppIcon className="size-4.5 shrink-0" />
-                  <span>WhatsApp Reception</span>
+                  <span>WhatsApp Desk</span>
                 </a>
               </>
             )}
