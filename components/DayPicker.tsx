@@ -11,6 +11,7 @@ import { clinic, type Doctor, type OpdSession, type Weekday } from "@/data/clini
 import { isBuiltInDoctor, isDoctorOnLeave, useActiveDoctors, useDoctorStatuses } from "@/lib/appointments";
 import { addDays, clinicClock, DAY_NAMES, formatTime, sessionOn } from "@/lib/schedule";
 import { useClinicMinute } from "./useClinicMinute";
+import { WhatsAppIcon } from "./Icons";
 
 const DAY_ORDER: Weekday[] = [0, 1, 2, 3, 4, 5, 6];
 
@@ -136,7 +137,7 @@ export function DayPicker() {
               {list.map(({ doctor, session }, idx) => {
                 const note = noteFor(session);
                 const live = today === selected ? statuses[doctor.id] : undefined;
-                const profileHref = isBuiltInDoctor(doctor.id) ? `/doctors/${doctor.id}` : `/book?doctor=${doctor.id}`;
+                const profileHref = isBuiltInDoctor(doctor.id) ? `/doctors/${doctor.id}` : `/doctors`;
                 return (
                   <li
                     key={`${doctor.id}-${session.day}`}
@@ -199,12 +200,15 @@ export function DayPicker() {
                       >
                         View profile →
                       </Link>
-                      <Link
-                        href={`/book?doctor=${doctor.id}`}
-                        className="inline-flex min-h-11 items-center justify-center rounded-xl bg-brand px-4 sm:px-5 text-sm sm:text-base font-bold text-white hover:bg-brand-dark shrink-0"
+                      <a
+                        href={`https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(`Hello Eternal Polyclinic, I would like to enquire about ${doctor.name ?? doctor.speciality} (${doctor.speciality}) OPD timings.`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-brand px-4 sm:px-5 text-xs sm:text-sm font-bold text-white hover:bg-brand-dark shrink-0 whitespace-nowrap transition-colors"
                       >
-                        Book this doctor
-                      </Link>
+                        <WhatsAppIcon className="size-4 shrink-0" />
+                        <span>Enquire on WhatsApp</span>
+                      </a>
                     </div>
                   </li>
                 );

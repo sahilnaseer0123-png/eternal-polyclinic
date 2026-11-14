@@ -52,23 +52,29 @@ export default function Home() {
           {/* 1. Top-Left Content Block */}
           <div className="relative z-10 flex min-w-0 flex-col items-start gap-3 sm:gap-4 min-[72rem]:gap-5 min-[72rem]:max-w-[36rem] min-[72rem]:pt-2 min-[72rem]:pb-8 xl:max-w-[39rem]">
             {/* Main Headline (>= 30px mobile, >= 36px tablet, >= 48px desktop) */}
-            <h1 className="rise rise-1 max-w-full font-sans font-semibold tracking-[-0.036em] text-ink text-[clamp(1.85rem,8.2vw,2.35rem)] leading-[1.08] sm:tracking-[-0.035em] sm:text-[2.65rem] sm:leading-[1.07] min-[72rem]:text-[3.05rem] xl:text-[3.35rem]">
-              Book a Specialist
+            <h1 className="rise rise-1 max-w-full font-sans font-semibold tracking-[-0.036em] text-ink text-[clamp(1.65rem,7.2vw,2.2rem)] leading-[1.08] sm:tracking-[-0.035em] sm:text-[2.65rem] sm:leading-[1.07] min-[72rem]:text-[3.05rem] xl:text-[3.35rem]">
+              Specialist Doctors &amp;{" "}
               <span className="block">
-                Appointment <span className="ep-mark ep-mark-hero">Today</span>
+                Diagnostics in <span className="ep-mark ep-mark-hero">Sopore</span>
               </span>
             </h1>
 
-            {/* Primary CTA Button */}
-            <div className="rise rise-2">
-              <Link
-                href="/book"
-                className="shadow-elevated group inline-flex min-h-12 sm:min-h-13 items-center justify-center gap-2.5 rounded-xl bg-brand px-5.5 sm:px-7 py-2.5 sm:py-3 text-base min-[380px]:text-[1.0625rem] sm:text-[1.125rem] font-semibold text-white hover:bg-brand-dark transition-all"
+            {/* Primary CTA Buttons */}
+            <div className="rise rise-2 flex flex-wrap items-center gap-2.5 sm:gap-3">
+              <a
+                href={`https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent("Hello Eternal Polyclinic, I would like to enquire about doctor OPD timings.")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shadow-elevated group inline-flex min-h-12 sm:min-h-13 items-center justify-center gap-2 rounded-xl bg-brand px-5 sm:px-7 py-2.5 sm:py-3 text-sm sm:text-base font-bold text-white hover:bg-brand-dark transition-all whitespace-nowrap"
               >
-                <span>Book Appointment</span>
-                <span className="btn-arrow inline-flex size-6 items-center justify-center rounded-lg bg-mint text-ink transition-transform duration-200 group-hover:translate-x-0.5">
-                  <span aria-hidden="true" className="text-xs font-bold leading-none">→</span>
-                </span>
+                <WhatsAppIcon className="size-4 shrink-0 text-white" />
+                <span>WhatsApp Enquiry</span>
+              </a>
+              <Link
+                href="/doctors"
+                className="inline-flex min-h-12 sm:min-h-13 items-center justify-center rounded-xl border border-line-strong bg-white px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-ink hover:border-brand hover:bg-ground transition-all whitespace-nowrap"
+              >
+                Find a Doctor
               </Link>
             </div>
 

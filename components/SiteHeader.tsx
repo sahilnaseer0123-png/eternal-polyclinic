@@ -52,24 +52,18 @@ export function SiteHeader() {
             <PhoneIcon className="size-4 shrink-0" />
             <span className="hidden xl:inline">{clinic.phoneDisplay}</span>
           </a>
-          <Link
-            href="/book"
-            className="ml-1 inline-flex min-h-11 items-center rounded-xl bg-brand px-4 xl:px-5 font-semibold text-white hover:bg-brand-dark whitespace-nowrap shrink-0 transition-colors"
-          >
-            Book a visit
-          </Link>
-        </nav>
-
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 lg:hidden">
           <a
             href={`https://wa.me/${clinic.whatsapp}`}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Message on WhatsApp, ${clinic.whatsappDisplay}`}
-            className="hidden min-[380px]:inline-flex size-11 shrink-0 items-center justify-center rounded-xl border border-line-strong bg-white text-ink hover:border-brand hover:bg-ground transition-colors"
+            className="ml-1 inline-flex min-h-11 items-center gap-2 rounded-xl bg-brand px-4 xl:px-5 font-semibold text-white hover:bg-brand-dark whitespace-nowrap shrink-0 transition-colors"
           >
-            <WhatsAppIcon className="size-4.5 shrink-0 text-accent" />
+            <WhatsAppIcon className="size-4 shrink-0" />
+            <span>WhatsApp</span>
           </a>
+        </nav>
+
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 lg:hidden">
           <a
             href={`tel:${clinic.phone}`}
             aria-label={`Call the clinic, ${clinic.phoneDisplay}`}
@@ -78,13 +72,16 @@ export function SiteHeader() {
             <PhoneIcon className="size-4 shrink-0" />
             <span className="hidden sm:inline">{clinic.phoneDisplay}</span>
           </a>
-          <Link
-            href="/book"
-            className="inline-flex min-h-11 items-center rounded-xl bg-brand px-3.5 text-sm font-semibold text-white hover:bg-brand-dark whitespace-nowrap shrink-0"
+          <a
+            href={`https://wa.me/${clinic.whatsapp}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Message clinic on WhatsApp ${clinic.whatsappDisplay}`}
+            className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-brand px-3.5 text-sm font-semibold text-white hover:bg-brand-dark whitespace-nowrap shrink-0 transition-colors"
           >
-            <span className="sm:hidden">Book</span>
-            <span className="hidden sm:inline">Book a visit</span>
-          </Link>
+            <WhatsAppIcon className="size-4 shrink-0" />
+            <span>WhatsApp</span>
+          </a>
         </div>
       </div>
     </header>

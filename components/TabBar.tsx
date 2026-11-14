@@ -22,7 +22,7 @@ import {
 const TABS = [
   { href: "/", label: "Home", Icon: HomeIcon },
   { href: "/doctors", label: "Doctors", Icon: UserIcon },
-  { href: "/book", label: "Book", Icon: CalendarIcon },
+  { href: "/#days", label: "OPD Days", Icon: CalendarIcon },
   { href: "/services", label: "Services", Icon: StethoscopeIcon },
 ] as const;
 
@@ -30,7 +30,6 @@ const MENU_LINKS = [
   { href: "/", label: "Home" },
   { href: "/doctors", label: "Doctors & OPD" },
   { href: "/services", label: "Tests & Scans" },
-  { href: "/book", label: "Book Visit" },
   { href: "/report", label: "Lab Report" },
   { href: "/faq", label: "FAQ" },
   { href: "/contact", label: "Visit & Map" },
@@ -143,7 +142,7 @@ export function TabBar() {
           const on = pathname === href || (href !== "/" && Boolean(pathname?.startsWith(href)));
           const pillCls = on
             ? "bg-brand text-white"
-            : href === "/book"
+            : href === "/#days"
               ? "bg-brand-tint text-accent ring-1 ring-brand-line/70"
               : "";
           return (

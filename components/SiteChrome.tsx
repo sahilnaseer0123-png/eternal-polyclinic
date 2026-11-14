@@ -43,7 +43,7 @@ export function SiteFooter() {
         <nav aria-label="Footer" className="order-last col-span-2 sm:order-none sm:col-span-1">
           <h2 className={label}>Pages</h2>
           <ul className="flex flex-wrap gap-x-5 sm:flex-col">
-            {[...NAV, { href: "/book", label: "Book a visit" }].map((item) => (
+            {NAV.map((item) => (
               <li key={item.href}>
                 <Link href={item.href} className={link}>
                   {item.label}

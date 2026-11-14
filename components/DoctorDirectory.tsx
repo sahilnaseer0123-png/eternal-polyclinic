@@ -11,7 +11,7 @@ import { isBuiltInDoctor, isDoctorOnLeave, useActiveDoctors, useDoctorStatuses }
 import { DAY_NAMES, formatTime } from "@/lib/schedule";
 import { DoctorMark } from "./DoctorMark";
 import { NextAvailable } from "./NextAvailable";
-import { ChevronRightIcon, SearchIcon, ServiceIcon } from "./Icons";
+import { ChevronRightIcon, SearchIcon, ServiceIcon, WhatsAppIcon } from "./Icons";
 
 export type Filter = "all" | DoctorCategory;
 
@@ -159,7 +159,7 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                       </div>
                       <h3 className="text-lg sm:text-xl font-medium tracking-tight text-ink mt-1 leading-snug font-display">
                         <Link
-                          href={builtIn ? `/doctors/${doctor.id}` : `/book?doctor=${doctor.id}`}
+                          href={builtIn ? `/doctors/${doctor.id}` : `/doctors`}
                           className="hover:text-brand transition-colors"
                         >
                           {doctor.name ?? doctor.speciality}
@@ -266,12 +266,15 @@ export function DoctorDirectory({ initialFilter = "all", initialQuery = "" }: { 
                     </a>
                   )}
                   {hasOpd ? (
-                    <Link
-                      href={`/book?doctor=${doctor.id}`}
-                      className="inline-flex min-h-11 items-center justify-center rounded-xl bg-brand px-3 text-center text-sm font-semibold text-white hover:bg-brand-dark transition-colors"
+                    <a
+                      href={`https://wa.me/${clinic.whatsapp}?text=${encodeURIComponent(`Hello Eternal Polyclinic, I would like to enquire about ${doctor.name ?? doctor.speciality} (${doctor.speciality}) OPD timings.`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-brand px-3 text-center text-sm font-semibold text-white hover:bg-brand-dark transition-colors whitespace-nowrap"
                     >
-                      Book OPD →
-                    </Link>
+                      <WhatsAppIcon className="size-4 shrink-0" />
+                      <span>WhatsApp</span>
+                    </a>
                   ) : (
                     <a
                       href={`tel:${clinic.phone}`}

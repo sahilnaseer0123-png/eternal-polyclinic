@@ -20,14 +20,14 @@ export const faqs: Faq[] = [
     answer: `Don't book online. ${clinic.name} is not an emergency service. Go to ${clinic.emergency.place}, or call ${clinic.emergency.phone}.`,
   },
   {
-    question: "Do I need an account to book?",
+    question: "How do I enquire about an OPD consultation?",
     answer:
-      `No. Choose a doctor, a day and a time, add your name and mobile number, and tap Confirm Appointment. Your slot is locked instantly, you get a digital token slip on screen${clinic.whatsappAutoConfirm ? ", and a confirmation is sent to your WhatsApp" : " (take a screenshot)"}. Lost the slip? Use Find My Token with your mobile number.`,
+      `Online booking is currently paused. Browse the Doctors page or Home schedule to see which specialist sits on which day, then message reception on WhatsApp (${clinic.whatsappDisplay}) or call ${clinic.phoneDisplay} during clinic hours.`,
   },
   {
-    question: "Will anyone know why I'm visiting?",
+    question: "What privacy do I have when contacting the clinic?",
     answer:
-      `The website only asks for your name, mobile number, and optional village/area, never the reason for your visit. Your booking is kept in the clinic's register only to hold your slot.${clinic.whatsappAutoConfirm ? " The WhatsApp confirmation names your doctor, never the speciality, but like any WhatsApp message it stays in your chat, so delete it if others use your phone." : ""}`,
+      "The website never collects your medical reason for visiting and does not store public booking profiles. When contacting reception by phone or WhatsApp, your enquiry stays private between you and the clinic desk.",
   },
   {
     question: "How much does a consultation cost?",
